@@ -17,6 +17,7 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	private let popupContent: () -> PopupContent
 	
 	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupInteractionStyle
+	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupCloseButtonStyle
 	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupBarStyle
 	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupBarProgressViewStyle
 	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: Bool
@@ -39,6 +40,7 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 		let state = LNPopupState(isBarPresented: _isBarPresented,
 								 isPopupOpen: _isPopupOpen,
 								 interactionStyle: popupInteractionStyle,
+								 closeButtonStyle: popupCloseButtonStyle,
 								 barStyle: popupBarStyle,
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,

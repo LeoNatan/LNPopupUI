@@ -16,6 +16,10 @@ internal struct LNPopupBarStyleKey: EnvironmentKey {
 	static let defaultValue: LNPopupBarStyle = .default
 }
 
+internal struct LNPopupCloseButtonStyleKey: EnvironmentKey {
+	static let defaultValue: LNPopupCloseButtonStyle = .default
+}
+
 internal struct LNPopupBarProgressViewStyleKey: EnvironmentKey {
 	static let defaultValue: LNPopupBarProgressViewStyle = .default
 }
@@ -28,6 +32,11 @@ internal extension EnvironmentValues {
 	var popupInteractionStyle: LNPopupInteractionStyle {
 		get { self[LNPopupInteractionStyleKey.self] }
 		set { self[LNPopupInteractionStyleKey.self] = newValue }
+	}
+	
+	var popupCloseButtonStyle: LNPopupCloseButtonStyle {
+		get { self[LNPopupCloseButtonStyleKey.self] }
+		set { self[LNPopupCloseButtonStyleKey.self] = newValue }
 	}
 	
 	var popupBarStyle: LNPopupBarStyle {

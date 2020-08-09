@@ -90,6 +90,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		}()
 		
 		target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
+		target.popupContentView.popupCloseButtonStyle = state.closeButtonStyle
 		target.popupPresentationDelegate = self
 		target.popupInteractionStyle = state.interactionStyle
 		target.popupBar.barStyle = state.barStyle

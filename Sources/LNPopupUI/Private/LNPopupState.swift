@@ -13,6 +13,7 @@ internal struct LNPopupState<PopupContent: View> {
 	@Binding var isBarPresented: Bool
 	@Binding var isPopupOpen: Bool
 	let interactionStyle: LNPopupInteractionStyle
+	let closeButtonStyle: LNPopupCloseButtonStyle
 	let barStyle: LNPopupBarStyle
 	let barProgressViewStyle: LNPopupBarProgressViewStyle
 	let barMarqueeScrollEnabled: Bool

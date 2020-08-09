@@ -29,6 +29,13 @@ public extension View {
 		return environment(\.popupInteractionStyle, style)
 	}
 	
+	/// Sets the popup close button style.
+	///
+	/// - Parameter style: The popup close button style.
+	func popupCloseButtonStyle(_ style: LNPopupCloseButtonStyle) -> some View {
+		return environment(\.popupCloseButtonStyle, style)
+	}
+	
 	/// Sets the popup bar style.
 	///
 	/// - Parameter style: The popup bar style.
