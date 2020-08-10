@@ -11,6 +11,16 @@ import LNPopupController
 import LoremIpsum
 import Combine
 
+struct BlurView: UIViewRepresentable {
+	var style: UIBlurEffect.Style = .systemMaterial
+	func makeUIView(context: Context) -> UIVisualEffectView {
+		return UIVisualEffectView(effect: UIBlurEffect(style: style))
+	}
+	func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+		uiView.effect = UIBlurEffect(style: style)
+	}
+}
+
 struct PlayerView: View {
 	let song: RandomTitleSong
 	@State var playbackProgress: Float = Float.random(in: 0..<1)
@@ -95,6 +105,15 @@ struct PlayerView: View {
 			   minHeight: 0,
 			   maxHeight: .infinity,
 			   alignment: .top)
+		.background({
+			ZStack {
+				Image(song.imageName)
+					.resizable()
+					.aspectRatio(contentMode: .fill)
+				BlurView()
+			}
+			.ignoresSafeArea()
+		}())
 		.popupTitle(song.title)
 		.popupImage(song.imageName)
 		.popupProgress(playbackProgress)
