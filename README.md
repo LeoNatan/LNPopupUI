@@ -27,7 +27,7 @@ Check the demo project for a quick recreation of Apple’s music app.
 ### Features
 
 * Available for iOS 13 and above, as a SPM package for SwiftUI
-* A SwiftUI wrapper of my [LNPopupController framework](https://github.com/LeoNatan/LNPopupController), the library works internally with SwiftUI’s generated UIKit content to present the framework in a native manner
+* A SwiftUI library, wrapping my [LNPopupController framework](https://github.com/LeoNatan/LNPopupController); the library works internally with SwiftUI’s generated UIKit content to present the framework in a native manner
 
 ## Adding to Your Project
 
@@ -47,7 +47,7 @@ And the dependency in your target:
 .target(name: "BestExampleApp", dependencies: ["LNPopupUI"]),
 ```
 
-## Using the Framework
+## Using the Library
 
 ### Project Integration
 
@@ -168,13 +168,13 @@ To hide the popup close button, set the `popupCloseButtonStyle` to `LNPopupClose
 
 #### Full Right-to-Left Support
 
-The framework has full right-to-left support.
+The library has full right-to-left support.
 
 <img src="./Supplements/rtl_english.png" width="360"/> <img src="./Supplements/rtl_hebrew.png" width="360"/>
 
 ## Acknowledgements
 
-The framework uses:
+The library uses:
 * [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel) Copyright (c) 2011-2020 Charles Powell
 
 Additionally, the demo project uses:
