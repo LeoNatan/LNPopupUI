@@ -35,7 +35,7 @@ struct PlayerView: View {
 		VStack {
 			Image(song.imageName)
 				.resizable()
-				.cornerRadius(20)
+				.clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
 				.aspectRatio(contentMode: .fit)
 				.padding([.leading, .trailing], 20)
 				.padding([.top], 40)

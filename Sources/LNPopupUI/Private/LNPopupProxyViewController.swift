@@ -10,7 +10,7 @@ import UIKit
 import LNPopupController
 
 internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingController<Content>, LNPopupPresentationDelegate where Content: View, PopupContent: View {
-	var currentPopupState: LNPopupState<PopupContent>? = nil
+	var currentPopupState: LNPopupState<PopupContent>! = nil
 	var popupViewController: UIViewController?
 	
 	var leadingBarItemsController: UIHostingController<AnyView>? = nil
@@ -18,8 +18,28 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	var leadingBarButtonItem: UIBarButtonItem? = nil
 	var trailingBarButtonItem: UIBarButtonItem? = nil
 	
+	var readyForHandling = false {
+		didSet {
+			if let waitingStateHandle = waitingStateHandle {
+				waitingStateHandle(false)
+				self.waitingStateHandle = nil
+			}
+		}
+	}
+	var waitingStateHandle: ((Bool) -> Void)?
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+	}
+	
+	override func didMove(toParent parent: UIViewController?) {
+		super.didMove(toParent: parent)
+	}
+	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		
+		readyForHandling = true
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
@@ -42,7 +62,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			let size = vc.sizeThatFits(in: CGSize(width: .max, height: .max))
 			NSLayoutConstraint.activate([
 				vc.view.widthAnchor.constraint(equalToConstant: size.width),
-				vc.view.heightAnchor.constraint(equalToConstant: min(44, size.height)),
+				vc.view.heightAnchor.constraint(equalToConstant: size.height),
 			])
 			
 			barButtonItem!.customView = vc.view
@@ -53,7 +73,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			let size = vc!.sizeThatFits(in: CGSize(width: .max, height: .max))
 			NSLayoutConstraint.activate([
 				vc!.view.widthAnchor.constraint(equalToConstant: size.width),
-				vc!.view.heightAnchor.constraint(equalToConstant: min(44, size.height)),
+				vc!.view.heightAnchor.constraint(equalToConstant: size.height),
 			])
 			
 			barButtonItem = UIBarButtonItem(customView: vc!.view)
@@ -65,47 +85,55 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	func handlePopupState(_ state: LNPopupState<PopupContent>) {
 		currentPopupState = state
 		
-		let view = {
-			state.content()
-				.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
-					self?.popupViewController?.popupItem.title = titleData?.title
-					self?.popupViewController?.popupItem.subtitle = titleData?.subtitle
-				}
-				.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
-					self?.popupViewController?.popupItem.image = image
-				}
-				.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
-					self?.popupViewController?.popupItem.progress = progress ?? 0.0
-				}
-				.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
-					if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
-						self.createOrUpdateHostingControllerForAnyView(&self.leadingBarItemsController, view: anyView, barButtonItem: &self.leadingBarButtonItem, targetBarButtons: { popupItem.leadingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+		let handler : (Bool) -> Void = { animated in
+			let view = {
+				self.currentPopupState.content()
+					.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
+						self?.popupViewController?.popupItem.title = titleData?.title
+						self?.popupViewController?.popupItem.subtitle = titleData?.subtitle
 					}
-				}
-				.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
-					if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
-						self.createOrUpdateHostingControllerForAnyView(&self.trailingBarItemsController, view: anyView, barButtonItem: &self.trailingBarButtonItem, targetBarButtons: { popupItem.trailingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+					.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
+						self?.popupViewController?.popupItem.image = image
 					}
-				}
-		}()
-		
-		target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
-		target.popupContentView.popupCloseButtonStyle = state.closeButtonStyle
-		target.popupPresentationDelegate = self
-		target.popupInteractionStyle = state.interactionStyle
-		target.popupBar.barStyle = state.barStyle
-		target.popupBar.progressViewStyle = state.barProgressViewStyle
-		target.popupBar.marqueeScrollEnabled = state.barMarqueeScrollEnabled
-		if state.isBarPresented == true {
-			if popupViewController == nil {
-				popupViewController = LNPopupUIContentController(rootView: view)
-			} else {
-				cast(value: popupViewController!, to: view.self).rootView = view
-			}
+					.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
+						self?.popupViewController?.popupItem.progress = progress ?? 0.0
+					}
+					.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
+						if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
+							self.createOrUpdateHostingControllerForAnyView(&self.leadingBarItemsController, view: anyView, barButtonItem: &self.leadingBarButtonItem, targetBarButtons: { popupItem.leadingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+						}
+					}
+					.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
+						if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
+							self.createOrUpdateHostingControllerForAnyView(&self.trailingBarItemsController, view: anyView, barButtonItem: &self.trailingBarButtonItem, targetBarButtons: { popupItem.trailingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+						}
+					}
+			}()
 			
-			target.presentPopupBar(withContentViewController: popupViewController!, openPopup: state.isPopupOpen, animated: true, completion: nil)
+			self.target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
+			self.target.popupContentView.popupCloseButtonStyle = self.currentPopupState.closeButtonStyle
+			self.target.popupPresentationDelegate = self
+			self.target.popupInteractionStyle = self.currentPopupState.interactionStyle
+			self.target.popupBar.barStyle = self.currentPopupState.barStyle
+			self.target.popupBar.progressViewStyle = self.currentPopupState.barProgressViewStyle
+			self.target.popupBar.marqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled
+			if self.currentPopupState.isBarPresented == true {
+				if self.popupViewController == nil {
+					self.popupViewController = LNPopupUIContentController(rootView: view)
+				} else {
+					self.cast(value: self.popupViewController!, to: view.self).rootView = view
+				}
+				
+				self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen, animated: animated, completion: nil)
+			} else {
+				self.target.dismissPopupBar(animated: true, completion: nil)
+			}
+		}
+		
+		if readyForHandling {
+			handler(true)
 		} else {
-			target.dismissPopupBar(animated: true, completion: nil)
+			waitingStateHandle = handler
 		}
 	}
 	
@@ -113,12 +141,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 //		print("Child: \(target!)")
 		super.addChild(childController)
 		
-		self.popupPresentationDelegate = nil
-		if let state = currentPopupState, state.isBarPresented == true {
-			dismissPopupBar(animated: false)
-			childController.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: state.isPopupOpen, animated: false, completion: nil)
-			childController.popupPresentationDelegate = nil
-		}
+		readyForHandling = true
 	}
 	
 	//MARK: LNPopupPresentationDelegate
