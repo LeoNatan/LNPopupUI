@@ -28,22 +28,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	var waitingStateHandle: ((Bool) -> Void)?
 	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-	}
-	
-	override func didMove(toParent parent: UIViewController?) {
-		super.didMove(toParent: parent)
-	}
-	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		
+	@objc func _ln_popup_viewDidMoveToWindow() {
 		readyForHandling = true
-	}
-	
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
 	}
 	
 	fileprivate func cast<T>(value: Any, to type: T) -> LNPopupUIContentController<T> where T: View {
@@ -64,7 +50,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				vc.view.widthAnchor.constraint(equalToConstant: size.width),
 				vc.view.heightAnchor.constraint(equalToConstant: size.height),
 			])
-			
+
 			barButtonItem!.customView = vc.view
 		} else {
 			vc = UIHostingController<AnyView>(rootView: view)
@@ -85,31 +71,31 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	func handlePopupState(_ state: LNPopupState<PopupContent>) {
 		currentPopupState = state
 		
+		let view = {
+			self.currentPopupState.content()
+				.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
+					self?.popupViewController?.popupItem.title = titleData?.title
+					self?.popupViewController?.popupItem.subtitle = titleData?.subtitle
+				}
+				.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
+					self?.popupViewController?.popupItem.image = image
+				}
+				.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
+					self?.popupViewController?.popupItem.progress = progress ?? 0.0
+				}
+				.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
+					if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
+						self.createOrUpdateHostingControllerForAnyView(&self.leadingBarItemsController, view: anyView, barButtonItem: &self.leadingBarButtonItem, targetBarButtons: { popupItem.leadingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+					}
+				}
+				.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
+					if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
+						self.createOrUpdateHostingControllerForAnyView(&self.trailingBarItemsController, view: anyView, barButtonItem: &self.trailingBarButtonItem, targetBarButtons: { popupItem.trailingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+					}
+				}
+		}()
+		
 		let handler : (Bool) -> Void = { animated in
-			let view = {
-				self.currentPopupState.content()
-					.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
-						self?.popupViewController?.popupItem.title = titleData?.title
-						self?.popupViewController?.popupItem.subtitle = titleData?.subtitle
-					}
-					.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
-						self?.popupViewController?.popupItem.image = image
-					}
-					.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
-						self?.popupViewController?.popupItem.progress = progress ?? 0.0
-					}
-					.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
-						if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
-							self.createOrUpdateHostingControllerForAnyView(&self.leadingBarItemsController, view: anyView, barButtonItem: &self.leadingBarButtonItem, targetBarButtons: { popupItem.leadingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
-						}
-					}
-					.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
-						if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
-							self.createOrUpdateHostingControllerForAnyView(&self.trailingBarItemsController, view: anyView, barButtonItem: &self.trailingBarButtonItem, targetBarButtons: { popupItem.trailingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
-						}
-					}
-			}()
-			
 			self.target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
 			self.target.popupContentView.popupCloseButtonStyle = self.currentPopupState.closeButtonStyle
 			self.target.popupPresentationDelegate = self

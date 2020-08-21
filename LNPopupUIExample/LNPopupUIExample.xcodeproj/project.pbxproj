@@ -14,9 +14,9 @@
 		395781DE24DC5D2800A604D1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 395781DD24DC5D2800A604D1 /* Preview Assets.xcassets */; };
 		395781E124DC5D2800A604D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 395781DF24DC5D2800A604D1 /* LaunchScreen.storyboard */; };
 		395781F324DC692300A604D1 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781F224DC692300A604D1 /* PlayerView.swift */; };
-		396B439224DC899A00D84FC7 /* LNPopupUI in Frameworks */ = {isa = PBXBuildFile; productRef = 396B439124DC899A00D84FC7 /* LNPopupUI */; };
-		396B439324DC8A1000D84FC7 /* LNPopupUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 396B439124DC899A00D84FC7 /* LNPopupUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		396B439624DC8EF100D84FC7 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 396B439524DC8EF100D84FC7 /* LoremIpsum */; };
+		39E18E3B24F059F50096391B /* LNPopupUI in Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; };
+		39E18E3C24F059F50096391B /* LNPopupUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,7 +26,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				396B439324DC8A1000D84FC7 /* LNPopupUI in Embed Frameworks */,
+				39E18E3C24F059F50096391B /* LNPopupUI in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,8 +51,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				396B439224DC899A00D84FC7 /* LNPopupUI in Frameworks */,
 				396B439624DC8EF100D84FC7 /* LoremIpsum in Frameworks */,
+				39E18E3B24F059F50096391B /* LNPopupUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,8 +125,8 @@
 			);
 			name = LNPopupUIExample;
 			packageProductDependencies = (
-				396B439124DC899A00D84FC7 /* LNPopupUI */,
 				396B439524DC8EF100D84FC7 /* LoremIpsum */,
+				39E18E3A24F059F50096391B /* LNPopupUI */,
 			);
 			productName = LNPopupUIExample;
 			productReference = 395781D124DC5D2700A604D1 /* LNPopupUIExample.app */;
@@ -401,14 +401,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		396B439124DC899A00D84FC7 /* LNPopupUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LNPopupUI;
-		};
 		396B439524DC8EF100D84FC7 /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 396B439424DC8EF100D84FC7 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
 			productName = LoremIpsum;
+		};
+		39E18E3A24F059F50096391B /* LNPopupUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LNPopupUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

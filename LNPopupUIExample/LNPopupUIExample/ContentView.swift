@@ -27,12 +27,13 @@ fileprivate var songs: [RandomTitleSong] = {
 }()
 
 struct RandomTitlesListView : View {
-	private let title = LoremIpsum.title
+	private let title: String
 	
 	@Binding var isPopupPresented: Bool
 	private let onSongSelect: (RandomTitleSong) -> Void
 	
-	init(_ isPopupPresented: Binding<Bool>, onSongSelect: @escaping (RandomTitleSong) -> Void) {
+	init(_ title: String, _ isPopupPresented: Binding<Bool>, onSongSelect: @escaping (RandomTitleSong) -> Void) {
+		self.title = title
 		self._isPopupPresented = isPopupPresented
 		self.onSongSelect = onSongSelect
 	}
@@ -77,34 +78,36 @@ struct ContentView: View {
 	
 	@State var currentSong: RandomTitleSong? {
 		didSet {
-			isPopupPresented = true
+			DispatchQueue.main.async {
+				isPopupPresented = true
+			}
 		}
 	}
 	
     var body: some View {
 		TabView {
-			RandomTitlesListView($isPopupPresented, onSongSelect: { song in
+			RandomTitlesListView("Music", $isPopupPresented, onSongSelect: { song in
 				currentSong = song
 			})
 				.tabItem {
 					Text("Music")
 					Image(systemName: "play.circle.fill")
 				}
-			RandomTitlesListView($isPopupPresented, onSongSelect: { song in
+			RandomTitlesListView("Artists", $isPopupPresented, onSongSelect: { song in
 				currentSong = song
 			})
 				.tabItem {
 					Text("Artists")
 					Image(systemName: "music.mic")
 				}
-			RandomTitlesListView($isPopupPresented, onSongSelect: { song in
+			RandomTitlesListView("Composers", $isPopupPresented, onSongSelect: { song in
 				currentSong = song
 			})
 				.tabItem {
 					Text("Composers")
 					Image(systemName: "music.quarternote.3")
 				}
-			RandomTitlesListView($isPopupPresented, onSongSelect: { song in
+			RandomTitlesListView("Recents", $isPopupPresented, onSongSelect: { song in
 				currentSong = song
 			})
 				.tabItem {
