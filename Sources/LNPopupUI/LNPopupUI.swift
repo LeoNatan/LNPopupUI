@@ -96,36 +96,9 @@ public extension View {
 	/// Configures the view's popup bar image.
 	///
 	/// - Parameters:
-	///   - name: The name of the image resource to lookup.
-	///   - bundle: The bundle to search for the image resource and localization content. If `nil`, uses the main `Bundle`. Defaults to `nil`.
-	func popupImage(_ name: String, bundle: Bundle? = nil) -> some View {
-		return self.preference(key: LNPopupImagePreferenceKey.self, value: UIImage(named: name, in: bundle, with: nil))
-	}
-	
-	/// Configures the view's popup bar image with a system symbol image.
-	///
-	/// - Parameters:
-	///   - systemName: The name of the system symbol image. Use the SF Symbols app to look up the names of system symbol images.
-	func popupImage(systemName: String) -> some View {
-		return self.preference(key: LNPopupImagePreferenceKey.self, value: UIImage(systemName: systemName))
-	}
-	
-	/// Configures the view's popup bar image based on a @c UIImage.
-	///
-	/// - Parameters:
-	///   - uiImage: The image to use
-	func popupImage(_ uiImage: UIImage) -> some View {
-		return self.preference(key: LNPopupImagePreferenceKey.self, value: uiImage)
-	}
-	
-	/// Configures the view's popup bar image based on a @c CGImage.
-	///
-	/// - Parameters:
-	///   - cgImage: the base graphical image
-	///   - scale: the scale factor the image is intended for (e.g. 1.0, 2.0, 3.0)
-	///   - orientation: the orientation of the image
-	func popupImage(_ cgImage: CGImage, scale: CGFloat, orientation: UIImage.Orientation = .up) -> some View {
-		return self.preference(key: LNPopupImagePreferenceKey.self, value: UIImage(cgImage: cgImage, scale: scale, orientation: orientation))
+	///   - image: The image to use.
+	func popupImage(_ image: Image) -> some View {
+		return self.preference(key: LNPopupImagePreferenceKey.self, value: image)
 	}
 	
 	/// Configures the view's popup bar progress.
@@ -174,5 +147,46 @@ public extension View {
 		return self
 			.preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView((leading()))))
 			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView((trailing()))))
+	}
+}
+
+public extension View {
+	/// Configures the view's popup bar image.
+	///
+	/// - Parameters:
+	///   - name: The name of the image resource to lookup.
+	///   - bundle: The bundle to search for the image resource and localization content. If `nil`, uses the main `Bundle`. Defaults to `nil`.
+	@available(*, deprecated)
+	func popupImage(_ name: String, bundle: Bundle? = nil) -> some View {
+		return self.popupImage(Image(name, bundle: bundle))
+	}
+	
+	/// Configures the view's popup bar image with a system symbol image.
+	///
+	/// - Parameters:
+	///   - systemName: The name of the system symbol image. Use the SF Symbols app to look up the names of system symbol images.
+	@available(*, deprecated)
+	func popupImage(systemName: String) -> some View {
+		return self.popupImage(Image(systemName: systemName))
+	}
+	
+	/// Configures the view's popup bar image based on a @c UIImage.
+	///
+	/// - Parameters:
+	///   - uiImage: The image to use
+	@available(*, deprecated)
+	func popupImage(_ uiImage: UIImage) -> some View {
+		return self.popupImage(Image(uiImage: uiImage))
+	}
+	
+	/// Configures the view's popup bar image based on a @c CGImage.
+	///
+	/// - Parameters:
+	///   - cgImage: the base graphical image
+	///   - scale: the scale factor the image is intended for (e.g. 1.0, 2.0, 3.0)
+	///   - orientation: the orientation of the image
+	@available(*, deprecated)
+	func popupImage(_ cgImage: CGImage, scale: CGFloat, orientation: UIImage.Orientation = .up) -> some View {
+		return self.popupImage(Image(decorative: cgImage, scale: scale, orientation: UIImageOrientationToImageOrientation(orientation)))
 	}
 }

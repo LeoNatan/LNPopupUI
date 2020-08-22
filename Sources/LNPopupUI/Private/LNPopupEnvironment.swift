@@ -54,3 +54,26 @@ internal extension EnvironmentValues {
 		set { self[LNPopupBarMarqueeScrollEnabledKey.self] = newValue }
 	}
 }
+
+internal func UIImageOrientationToImageOrientation(_ o: UIImage.Orientation) -> Image.Orientation {
+	switch o {
+	case .up:
+		return .up
+	case .down:
+		return .down
+	case .left:
+		return .left
+	case .right:
+		return .right
+	case .upMirrored:
+		return .upMirrored
+	case .downMirrored:
+		return .downMirrored
+	case .leftMirrored:
+		return .leftMirrored
+	case .rightMirrored:
+		return .rightMirrored
+	@unknown default:
+		return Image.Orientation(rawValue: UInt8(o.rawValue))!
+	}
+}

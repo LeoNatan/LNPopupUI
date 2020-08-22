@@ -31,7 +31,7 @@ internal struct LNPopupProgressPreferenceKey: LNPopupNullablePreferenceKey {
 }
 
 internal struct LNPopupImagePreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = UIImage?
+	typealias Value = Image?
 }
 
 internal struct LNPopupLeadingBarItemsPreferenceKey: LNPopupNullablePreferenceKey {

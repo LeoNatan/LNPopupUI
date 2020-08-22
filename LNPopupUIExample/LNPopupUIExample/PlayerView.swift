@@ -115,7 +115,7 @@ struct PlayerView: View {
 			.ignoresSafeArea()
 		}())
 		.popupTitle(song.title)
-		.popupImage(song.imageName)
+		.popupImage(Image(song.imageName))
 		.popupProgress(playbackProgress)
 		.popupBarItems(leading: {
 			HStack(spacing: 20) {
