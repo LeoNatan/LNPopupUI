@@ -85,7 +85,7 @@ VStack {
 	//...
 }
 .popupTitle(song.title)
-.popupImage(song.imageName)
+.popupImage(Image(song.imageName))
 .popupProgress(playbackProgress)
 .popupBarItems({
 	HStack(spacing: 20) {
