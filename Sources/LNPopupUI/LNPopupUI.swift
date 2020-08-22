@@ -110,6 +110,24 @@ public extension View {
 		return self.preference(key: LNPopupImagePreferenceKey.self, value: UIImage(systemName: systemName))
 	}
 	
+	/// Configures the view's popup bar image based on a @c UIImage.
+	///
+	/// - Parameters:
+	///   - uiImage: The image to use
+	func popupImage(_ uiImage: UIImage) -> some View {
+		return self.preference(key: LNPopupImagePreferenceKey.self, value: uiImage)
+	}
+	
+	/// Configures the view's popup bar image based on a @c CGImage.
+	///
+	/// - Parameters:
+	///   - cgImage: the base graphical image
+	///   - scale: the scale factor the image is intended for (e.g. 1.0, 2.0, 3.0)
+	///   - orientation: the orientation of the image
+	func popupImage(_ cgImage: CGImage, scale: CGFloat, orientation: UIImage.Orientation = .up) -> some View {
+		return self.preference(key: LNPopupImagePreferenceKey.self, value: UIImage(cgImage: cgImage, scale: scale, orientation: orientation))
+	}
+	
 	/// Configures the view's popup bar progress.
 	///
 	/// - Parameters:
