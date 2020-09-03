@@ -9,6 +9,13 @@ import SwiftUI
 import UIKit
 import LNPopupController
 
+internal struct LNPopupBarCustomView {
+	let wantsDefaultTapGesture: Bool
+	let wantsDefaultPanGesture: Bool
+	let wantsDefaultHighlightGesture: Bool
+	let popupBarCustomBarView: AnyView
+}
+
 internal struct LNPopupState<PopupContent: View> {
 	@Binding var isBarPresented: Bool
 	@Binding var isPopupOpen: Bool
@@ -17,5 +24,6 @@ internal struct LNPopupState<PopupContent: View> {
 	let barStyle: LNPopupBarStyle
 	let barProgressViewStyle: LNPopupBarProgressViewStyle
 	let barMarqueeScrollEnabled: Bool
+	let customBarView: LNPopupBarCustomView?
 	let content: () -> PopupContent
 }

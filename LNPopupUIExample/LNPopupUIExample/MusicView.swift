@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MusicView.swift
 //  LNPopupUIExample
 //
 //  Created by Leo Natan on 8/6/20.
@@ -27,14 +27,17 @@ fileprivate var songs: [RandomTitleSong] = {
 }()
 
 struct RandomTitlesListView : View {
+	@Environment(\.presentationMode) var presentationMode
 	private let title: String
 	
 	@Binding var isPopupPresented: Bool
 	private let onSongSelect: (RandomTitleSong) -> Void
+	private let onDismiss: () -> Void
 	
-	init(_ title: String, _ isPopupPresented: Binding<Bool>, onSongSelect: @escaping (RandomTitleSong) -> Void) {
+	init(_ title: String, _ isPopupPresented: Binding<Bool>, onDismiss: @escaping () -> Void, onSongSelect: @escaping (RandomTitleSong) -> Void) {
 		self.title = title
 		self._isPopupPresented = isPopupPresented
+		self.onDismiss = onDismiss
 		self.onSongSelect = onSongSelect
 	}
 	
@@ -66,13 +69,15 @@ struct RandomTitlesListView : View {
 			.listStyle(PlainListStyle())
 			.navigationBarTitle(title)
 			.navigationBarTitleDisplayMode(.inline)
-			.navigationBarItems(trailing: Image(systemName: isPopupPresented ? "rectangle.bottomthird.inset.fill" : "rectangle"))
+			.navigationBarItems(leading: Image(systemName: isPopupPresented ? "rectangle.bottomthird.inset.fill" : "rectangle"), trailing: Button("Gallery") {
+				onDismiss()
+			})
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
 	}
 }
 
-struct ContentView: View {
+struct MusicView: View {
 	@State var isPopupPresented: Bool = false
 	@State var isPopupOpen: Bool = false
 	
@@ -84,43 +89,49 @@ struct ContentView: View {
 		}
 	}
 	
-    var body: some View {
+	private let onDismiss: () -> Void
+	
+	init(onDismiss: @escaping () -> Void) {
+		self.onDismiss = onDismiss
+	}
+	
+	var body: some View {
 		TabView {
-			RandomTitlesListView("Music", $isPopupPresented, onSongSelect: { song in
+			RandomTitlesListView("Music", $isPopupPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})
-				.tabItem {
-					Text("Music")
-					Image(systemName: "play.circle.fill")
-				}
-			RandomTitlesListView("Artists", $isPopupPresented, onSongSelect: { song in
+			.tabItem {
+				Text("Music")
+				Image(systemName: "play.circle.fill")
+			}
+			RandomTitlesListView("Artists", $isPopupPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})
-				.tabItem {
-					Text("Artists")
-					Image(systemName: "music.mic")
-				}
-			RandomTitlesListView("Composers", $isPopupPresented, onSongSelect: { song in
+			.tabItem {
+				Text("Artists")
+				Image(systemName: "music.mic")
+			}
+			RandomTitlesListView("Composers", $isPopupPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})
-				.tabItem {
-					Text("Composers")
-					Image(systemName: "music.quarternote.3")
-				}
-			RandomTitlesListView("Recents", $isPopupPresented, onSongSelect: { song in
+			.tabItem {
+				Text("Composers")
+				Image(systemName: "music.quarternote.3")
+			}
+			RandomTitlesListView("Recents", $isPopupPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})
-				.tabItem {
-					Text("Recents")
-					Image(systemName: "clock.fill")
-				}
+			.tabItem {
+				Text("Recents")
+				Image(systemName: "clock.fill")
+			}
 		}
 		.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
 			if let currentSong = currentSong {
 				PlayerView(song: currentSong)
 			}
 		}
-//		.popupInteractionStyle(.drag)
+		//		.popupInteractionStyle(.drag)
 		.popupBarStyle(.prominent)
 		.popupBarProgressViewStyle(.top)
 		.popupBarMarqueeScrollEnabled(true)
@@ -128,7 +139,7 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+	static var previews: some View {
+		MusicView(onDismiss: {})
+	}
 }

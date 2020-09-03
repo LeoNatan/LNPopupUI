@@ -104,9 +104,24 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			self.target.popupContentView.popupCloseButtonStyle = self.currentPopupState.closeButtonStyle
 			self.target.popupPresentationDelegate = self
 			self.target.popupInteractionStyle = self.currentPopupState.interactionStyle
-			self.target.popupBar.barStyle = self.currentPopupState.barStyle
 			self.target.popupBar.progressViewStyle = self.currentPopupState.barProgressViewStyle
 			self.target.popupBar.marqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled
+			if let customBarView = self.currentPopupState.customBarView {
+				let rv: LNPopupUICustomPopupBarController
+				if let customController = self.target.popupBar.customBarViewController as? LNPopupUICustomPopupBarController {
+					rv = customController
+					rv.setAnyView(customBarView.popupBarCustomBarView)
+				} else {
+					rv = LNPopupUICustomPopupBarController(anyView: customBarView.popupBarCustomBarView)
+					self.target.popupBar.customBarViewController = rv
+				}
+				rv._wantsDefaultTapGestureRecognizer = customBarView.wantsDefaultTapGesture
+				rv._wantsDefaultPanGestureRecognizer = customBarView.wantsDefaultPanGesture
+				rv._wantsDefaultHighlightGestureRecognizer = customBarView.wantsDefaultHighlightGesture
+			} else {
+				self.target.popupBar.customBarViewController = nil
+				self.target.popupBar.barStyle = self.currentPopupState.barStyle
+			}
 			if self.currentPopupState.isBarPresented == true {
 				if self.popupViewController == nil {
 					self.popupViewController = LNPopupUIContentController(rootView: view)

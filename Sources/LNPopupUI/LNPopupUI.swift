@@ -38,6 +38,8 @@ public extension View {
 	
 	/// Sets the popup bar style.
 	///
+	/// Setting a custom popup bar view will methis this modifier have no effect.
+	///
 	/// - Parameter style: The popup bar style.
 	func popupBarStyle(_ style: LNPopupBarStyle) -> some View {
 		return environment(\.popupBarStyle, style)
@@ -55,6 +57,22 @@ public extension View {
 	/// - Parameter enabled: Marquee scroll enabled.
 	func popupBarMarqueeScrollEnabled(_ enabled: Bool) -> some View {
 		return environment(\.popupBarMarqueeScrollEnabled, enabled)
+	}
+	
+	/// Sets a custom popup bar view, instead of the default system-provided bars.
+	///
+	/// If a custom bar view is provided, setting the popup bar style has no effect.
+	///
+	/// - Parameters:
+	///   - wantsDefaultTapGesture: Indicates whether the default tap gesture recognizer should be added to the popup bar.
+	///   - wantsDefaultPanGesture: Indicates whether the default pan gesture recognizer should be added to the popup bar.
+	///   - wantsDefaultHighlightGesture: Indicates whether the default highlight gesture recognizer should be added to the popup bar.
+	///   - popupBarContent: A closure returning the content of the popup bar custom view
+	func popupBarCustomView<PopupBarContent>(wantsDefaultTapGesture: Bool = true,
+											 wantsDefaultPanGesture: Bool = true,
+											 wantsDefaultHighlightGesture: Bool = true,
+											 @ViewBuilder popupBarContent: @escaping () -> PopupBarContent) -> some View where PopupBarContent : View {
+		return environment(\.popupBarCustomBarView, LNPopupBarCustomView(wantsDefaultTapGesture: wantsDefaultTapGesture, wantsDefaultPanGesture: wantsDefaultPanGesture, wantsDefaultHighlightGesture: wantsDefaultHighlightGesture, popupBarCustomBarView: AnyView(popupBarContent())))
 	}
 }
 

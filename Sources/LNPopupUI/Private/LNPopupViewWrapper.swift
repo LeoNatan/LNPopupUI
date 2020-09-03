@@ -21,6 +21,7 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupBarStyle
 	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupBarProgressViewStyle
 	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: Bool
+	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupBarCustomView?
 	
 	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>, popupContent: @escaping () -> PopupContent, @ViewBuilder content: @escaping () -> Content) {
 		self._isBarPresented = isBarPresented
@@ -44,6 +45,7 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 								 barStyle: popupBarStyle,
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
+								 customBarView: popupBarCustomBarView,
 								 content: popupContent)
 		uiViewController.handlePopupState(state)
 	}

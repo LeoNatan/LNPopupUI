@@ -28,6 +28,10 @@ internal struct LNPopupBarMarqueeScrollEnabledKey: EnvironmentKey {
 	static let defaultValue: Bool = false
 }
 
+internal struct LNPopupBarCustomViewKey: EnvironmentKey {
+	static let defaultValue: LNPopupBarCustomView? = nil
+}
+
 internal extension EnvironmentValues {
 	var popupInteractionStyle: LNPopupInteractionStyle {
 		get { self[LNPopupInteractionStyleKey.self] }
@@ -52,6 +56,11 @@ internal extension EnvironmentValues {
 	var popupBarMarqueeScrollEnabled: Bool {
 		get { self[LNPopupBarMarqueeScrollEnabledKey.self] }
 		set { self[LNPopupBarMarqueeScrollEnabledKey.self] = newValue }
+	}
+	
+	var popupBarCustomBarView: LNPopupBarCustomView? {
+		get { self[LNPopupBarCustomViewKey.self] }
+		set { self[LNPopupBarCustomViewKey.self] = newValue }
 	}
 }
 
