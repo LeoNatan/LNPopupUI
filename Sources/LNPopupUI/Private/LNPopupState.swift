@@ -26,4 +26,6 @@ internal struct LNPopupState<PopupContent: View> {
 	let barMarqueeScrollEnabled: Bool
 	let customBarView: LNPopupBarCustomView?
 	let content: () -> PopupContent
+	let onOpen: (() -> Void)?
+	let onClose: (() -> Void)?
 }

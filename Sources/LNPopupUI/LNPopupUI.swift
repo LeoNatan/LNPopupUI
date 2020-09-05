@@ -15,9 +15,11 @@ public extension View {
 	/// - Parameters:
 	///   - isBarPresented: A binding to whether the popup bar is presented.
 	///   - isPopupOpen: A binding to whether the popup is open. (optional)
+	///   - onOpen: A closure executed when the popup opens. (optional)
+	///   - onClose: A closure executed when the popup closes. (optional)
 	///   - popupContent: A closure returning the content of the popup.
-	func popup<PopupContent>(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, @ViewBuilder popupContent: @escaping () -> PopupContent) -> some View where PopupContent : View {
-		return LNPopupViewWrapper<Self, PopupContent>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), popupContent: popupContent) {
+	func popup<PopupContent>(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, onOpen: (() -> Void)? = nil, onClose: (() -> Void)? = nil, @ViewBuilder popupContent: @escaping () -> PopupContent) -> some View where PopupContent : View {
+		return LNPopupViewWrapper<Self, PopupContent>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
 			self
 		}.edgesIgnoringSafeArea(.all)
 	}

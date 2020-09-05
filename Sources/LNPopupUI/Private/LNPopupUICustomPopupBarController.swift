@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  LNPopupUICustomPopupBarController.swift
+//  LNPopupUI
 //
-//  Created by Leo Natan (Wix) on 9/3/20.
+//  Created by Leo Natan on 9/3/20.
 //
 
 import SwiftUI

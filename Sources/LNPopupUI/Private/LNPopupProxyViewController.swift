@@ -161,9 +161,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	
 	func popupPresentationControllerDidOpenPopup(_ popupPresentationController: UIViewController, animated: Bool) {
 		currentPopupState?.isPopupOpen = true
+		
+		currentPopupState?.onOpen?()
 	}
 	
 	func popupPresentationControllerDidClosePopup(_ popupPresentationController: UIViewController, animated: Bool) {
 		currentPopupState?.isPopupOpen = false
+		
+		currentPopupState?.onClose?()
 	}
 }

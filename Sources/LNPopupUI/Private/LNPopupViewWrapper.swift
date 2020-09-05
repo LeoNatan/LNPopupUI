@@ -15,6 +15,8 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Binding private var isPopupOpen: Bool
 	private let passthroughContent: () -> Content
 	private let popupContent: () -> PopupContent
+	private let onOpen: (() -> Void)?
+	private let onClose: (() -> Void)?
 	
 	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupInteractionStyle
 	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupCloseButtonStyle
@@ -23,11 +25,13 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: Bool
 	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupBarCustomView?
 	
-	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>, popupContent: @escaping () -> PopupContent, @ViewBuilder content: @escaping () -> Content) {
+	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>, onOpen: (() -> Void)?, onClose: (() -> Void)?,  popupContent: @escaping () -> PopupContent, @ViewBuilder content: @escaping () -> Content) {
 		self._isBarPresented = isBarPresented
 		self._isPopupOpen = isOpen
 		passthroughContent = content
 		self.popupContent = popupContent
+		self.onOpen = onOpen
+		self.onClose = onClose
 	}
 	
 	func makeUIViewController(context: UIViewControllerRepresentableContext<LNPopupViewWrapper>) -> LNPopupProxyViewController<Content, PopupContent> {
@@ -46,7 +50,9 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
 								 customBarView: popupBarCustomBarView,
-								 content: popupContent)
+								 content: popupContent,
+								 onOpen: onOpen,
+								 onClose: onClose)
 		uiViewController.handlePopupState(state)
 	}
 }
