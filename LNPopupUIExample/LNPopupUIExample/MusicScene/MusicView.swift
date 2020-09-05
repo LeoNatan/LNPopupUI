@@ -50,7 +50,7 @@ struct RandomTitlesListView : View {
 					HStack {
 						Image(song.imageName)
 							.resizable()
-							.frame(width: 60, height: 60)
+							.frame(width: 48, height: 48)
 							.cornerRadius(8)
 							.padding(2.5)
 						
