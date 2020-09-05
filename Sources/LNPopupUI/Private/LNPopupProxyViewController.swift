@@ -21,14 +21,16 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	var readyForHandling = false {
 		didSet {
 			if let waitingStateHandle = waitingStateHandle {
-				waitingStateHandle(false)
 				self.waitingStateHandle = nil
+				waitingStateHandle(false)
 			}
 		}
 	}
 	var waitingStateHandle: ((Bool) -> Void)?
 	
-	@objc func _ln_popup_viewDidMoveToWindow() {
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
 		readyForHandling = true
 	}
 	
