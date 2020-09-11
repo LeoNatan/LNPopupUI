@@ -11,17 +11,13 @@ import LNPopupUI
 
 struct NavDemoView : View {
 	@State private var isPopupPresented: Bool = true
-	private let onDismiss: () -> Void
+	let onDismiss: () -> Void
 	@Environment(\.colorScheme) private var environmentColorScheme
 	@State private var forcedColorScheme: ColorScheme?
 	
-	init(onDismiss: @escaping () -> Void) {
-		self.onDismiss = onDismiss
-	}
-	
 	var body: some View {
 		NavigationView {
-			ConstraintsDemoView()
+			SafeAreaDemoView(includeLink: true)
 				.navigationBarTitle("Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {
@@ -57,30 +53,6 @@ struct NavDemoView : View {
 		}
 		.colorScheme(forcedColorScheme ?? environmentColorScheme)
 		.navigationViewStyle(StackNavigationViewStyle())
-		.popup(isBarPresented: $isPopupPresented, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
-			ZStack {
-				Color.red.ignoresSafeArea()
-				ConstraintsDemoView(includeLink: false)
-			}
-			.popupTitle(LoremIpsum.title, subtitle: LoremIpsum.sentence)
-			.popupImage(Image("genre\(Int.random(in: 1..<31))"))
-			.popupBarItems({
-				HStack(spacing: 20) {
-					Button(action: {
-						print("Play")
-					}) {
-						Image(systemName: "play.fill")
-					}
-					
-					Button(action: {
-						print("Next")
-					}) {
-						Image(systemName: "forward.fill")
-					}
-				}
-				.font(.system(size: 20))
-			})
-		}
-		.popupCloseButtonStyle(.round)
+		.popupDemo(isBarPresented: $isPopupPresented)
 	}
 }

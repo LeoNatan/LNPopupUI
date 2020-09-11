@@ -19,7 +19,7 @@ struct SceneSelection: View {
 	var body: some View {
 		NavigationView {
 			List {
-				Section(header: Text("Standard Scenes").frame(height: 48, alignment: .bottom)) {
+				Section(header: Text("Standard Scenes (Chevron + Snap)").frame(height: 48, alignment: .bottom)) {
 					Button("Tab View + Navigation View") {
 						tabnavPresented.toggle()
 					}
@@ -61,7 +61,7 @@ struct SceneSelection: View {
 					}
 					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $viewPresented, content: {
-						ViewDemoView {
+						ViewDemoView() {
 							viewPresented.toggle()
 						}
 					})
@@ -78,7 +78,7 @@ struct SceneSelection: View {
 					})
 				}
 				Section(header: Text("Custom Popup Bar")) {
-					Button("Custom Popup Bar with SwiftUI") {
+					Button("Custom Popup Bar + UIKit Popup Content Controller") {
 						mapSheetPresented.toggle()
 					}
 					.foregroundColor(Color(.label))

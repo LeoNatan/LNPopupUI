@@ -24,6 +24,20 @@ public extension View {
 		}.edgesIgnoringSafeArea(.all)
 	}
 	
+	/// Presents a popup bar with popup content.
+	///
+	/// - Parameters:
+	///   - isBarPresented: A binding to whether the popup bar is presented.
+	///   - isPopupOpen: A binding to whether the popup is open. (optional)
+	///   - onOpen: A closure executed when the popup opens. (optional)
+	///   - onClose: A closure executed when the popup closes. (optional)
+	///   - popupContentController: A UIKit view controller to use as the popup content controller.
+	func popup(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, onOpen: (() -> Void)? = nil, onClose: (() -> Void)? = nil, popupContentController: UIViewController) -> some View {
+		return LNPopupViewWrapper<Self, EmptyView>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContentController: popupContentController) {
+			self
+		}.edgesIgnoringSafeArea(.all)
+	}
+	
 	/// Sets the popup interaction style.
 	///
 	/// - Parameter style: The popup interaction style.

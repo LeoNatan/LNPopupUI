@@ -42,10 +42,14 @@ struct CustomBarMapView: View {
 	
 	@State private var region = CustomBarMapView.defaultRegion
 	
+	let popupContentController: UIViewController
+	
 	private let onDismiss: () -> Void
 	
 	init(onDismiss: @escaping () -> Void) {
 		self.onDismiss = onDismiss
+		
+		popupContentController = LNUIKitPopupContentController()
 	}
 	
 	@State var input: String = ""
@@ -67,10 +71,7 @@ struct CustomBarMapView: View {
 			.background(Color(.systemBackground).cornerRadius(15))
 			.padding(10)
 		}
-		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen) {
-			Color.red
-				.ignoresSafeArea()
-		}
+		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen, popupContentController: popupContentController)
 		.popupBarCustomView(wantsDefaultTapGesture: false, wantsDefaultPanGesture: false, wantsDefaultHighlightGesture: false) {
 			ZStack(alignment: .trailing) {
 				HStack {

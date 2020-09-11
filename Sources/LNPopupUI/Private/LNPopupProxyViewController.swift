@@ -70,11 +70,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		}
 	}
 	
-	func handlePopupState(_ state: LNPopupState<PopupContent>) {
-		currentPopupState = state
-		
+	func viewHandler(_ state: LNPopupState<PopupContent>) -> (() -> Void) {
 		let view = {
-			self.currentPopupState.content()
+			return self.currentPopupState.content!()
 				.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
 					self?.popupViewController?.popupItem.title = titleData?.title
 					self?.popupViewController?.popupItem.subtitle = titleData?.subtitle
@@ -101,6 +99,28 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				}
 		}()
 		
+		return {
+			if self.popupViewController == nil {
+				self.popupViewController = LNPopupUIContentController(rootView: view)
+			} else {
+				self.cast(value: self.popupViewController!, to: view.self).rootView = view
+			}
+		}
+	}
+	
+	func viewControllerHandler(_ state: LNPopupState<PopupContent>) -> (() -> Void) {
+		let viewController = state.contentController!
+		
+		return {
+			self.popupViewController = viewController
+		}
+	}
+	
+	func handlePopupState(_ state: LNPopupState<PopupContent>) {
+		currentPopupState = state
+		
+		let popupContentHandler = state.content != nil ? viewHandler(state) : viewControllerHandler(state)
+
 		let handler : (Bool) -> Void = { animated in
 			self.target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
 			self.target.popupContentView.popupCloseButtonStyle = self.currentPopupState.closeButtonStyle
@@ -125,11 +145,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				self.target.popupBar.barStyle = self.currentPopupState.barStyle
 			}
 			if self.currentPopupState.isBarPresented == true {
-				if self.popupViewController == nil {
-					self.popupViewController = LNPopupUIContentController(rootView: view)
-				} else {
-					self.cast(value: self.popupViewController!, to: view.self).rootView = view
-				}
+				popupContentHandler()
 				
 				self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen, animated: animated, completion: nil)
 			} else {

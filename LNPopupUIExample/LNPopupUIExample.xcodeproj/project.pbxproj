@@ -24,6 +24,7 @@
 		39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA71250415E800E5FD41 /* ViewDemoView.swift */; };
 		39E18E3B24F059F50096391B /* LNPopupUI in Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; };
 		39E18E3C24F059F50096391B /* LNPopupUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,6 +59,7 @@
 		39AAAA6D25040FF400E5FD41 /* ConstraintsDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintsDemoView.swift; sourceTree = "<group>"; };
 		39AAAA6F2504144300E5FD41 /* TabDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDemoView.swift; sourceTree = "<group>"; };
 		39AAAA71250415E800E5FD41 /* ViewDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDemoView.swift; sourceTree = "<group>"; };
+		39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNUIKitPopupContentController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 		398DB7B1250401F800CD89DB /* MapScene */ = {
 			isa = PBXGroup;
 			children = (
+				39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */,
 				398404ED2500451E006C9011 /* MapView.swift */,
 			);
 			path = MapScene;
@@ -239,6 +242,7 @@
 				395781D924DC5D2700A604D1 /* MusicView.swift in Sources */,
 				398404EA25003925006C9011 /* SceneSelection.swift in Sources */,
 				39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */,
+				39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */,
 				395781F324DC692300A604D1 /* PlayerView.swift in Sources */,
 				398DB7AD250400BE00CD89DB /* NavDemoView.swift in Sources */,
 			);
