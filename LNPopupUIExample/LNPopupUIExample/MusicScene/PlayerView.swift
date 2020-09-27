@@ -124,7 +124,7 @@ struct PlayerView: View {
 			}())
 		}
 		.popupTitle(song.title)
-		.popupImage(Image(song.imageName))
+		.popupImage(Image(song.imageName).resizable())
 		.popupProgress(playbackProgress)
 		.popupBarItems({
 			HStack(spacing: 20) {

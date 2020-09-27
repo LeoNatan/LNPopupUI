@@ -35,6 +35,8 @@ struct EnlargingButton: View {
 }
 
 struct CustomBarMapView: View {
+	@Environment(\.colorScheme) var colorScheme
+	
 	static private let center = CLLocationCoordinate2D(latitude: 40.6892, longitude: -74.0445)
 	static private let defaultRegion = MKCoordinateRegion(center: CustomBarMapView.center, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
 	
@@ -63,13 +65,12 @@ struct CustomBarMapView: View {
 			Button(action: {
 				onDismiss()
 			}, label: {
-				Image(systemName: "chevron.left.circle.fill")
-					.resizable()
+				Image(systemName: "chevron.left")
 					.renderingMode(.template)
-					.frame(width: 30, height: 30, alignment: .center)
+					.font(.title2)
 			})
-			.background(Color(.systemBackground).cornerRadius(15))
-			.padding(10)
+			.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
+			.padding()
 		}
 		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen, popupContentController: popupContentController)
 		.popupBarCustomView(wantsDefaultTapGesture: false, wantsDefaultPanGesture: false, wantsDefaultHighlightGesture: false) {
@@ -85,16 +86,29 @@ struct CustomBarMapView: View {
 				Button(action: {
 					isPopupOpen.toggle()
 				}, label: {
-					Image(systemName: "chevron.up.square.fill")
-						.resizable()
+					Image(systemName: "chevron.up")
 						.renderingMode(.template)
-						.frame(width: 30, height: 30, alignment: .center)
 				})
-				.background(Color(.systemBackground).cornerRadius(15))
-				.padding(10)
+				.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
+				.padding()
 			}
 		}
 	}
+}
+
+struct MyButtonStyle: ButtonStyle {
+	let colorScheme: ColorScheme
+	
+	func makeBody(configuration: Self.Configuration) -> some View {
+		configuration.label
+			.font(.title2)
+			.frame(width: 15, height: 15, alignment: .center)
+			.padding(10)
+			.foregroundColor(.white)
+			.background(configuration.isPressed ? Color(red: 116 / 255.0, green: 185 / 255.0, blue: 1.0) : Color.blue)
+			.cornerRadius(10.0)
+	}
+	
 }
 
 struct MapView_Previews: PreviewProvider {

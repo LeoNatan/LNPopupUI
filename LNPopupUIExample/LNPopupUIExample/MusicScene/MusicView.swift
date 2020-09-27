@@ -47,12 +47,11 @@ struct RandomTitlesListView : View {
 				Button(action: {
 					onSongSelect(song)
 				}) {
-					HStack {
+					HStack(spacing: 20) {
 						Image(song.imageName)
 							.resizable()
 							.frame(width: 48, height: 48)
 							.cornerRadius(8)
-							.padding(2.5)
 						
 						VStack(alignment: .leading) {
 							Text(song.title)
@@ -126,6 +125,7 @@ struct MusicView: View {
 				Image(systemName: "clock.fill")
 			}
 		}
+		.accentColor(.pink)
 		.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
 			if let currentSong = currentSong {
 				PlayerView(song: currentSong)
