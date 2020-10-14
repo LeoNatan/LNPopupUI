@@ -8,6 +8,8 @@
 import SwiftUI
 import LNPopupUI
 
+fileprivate let introWebController = WebController()
+
 struct SceneSelection: View {
 	@State var tabnavPresented: Bool = false
 	@State var tabPresented: Bool = false
@@ -96,27 +98,8 @@ struct SceneSelection: View {
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
 		.ignoresSafeArea()
-		.popup(isBarPresented: Binding.constant(true)) {
-			SafeAreaDemoView(offset: true)
-				.popupTitle("Welcome to LNPopupUI!")
-				.popupImage(Image("genre10"))
-				.popupBarItems({
-					HStack(spacing: 20) {
-						Button(action: {
-							print("Play")
-						}) {
-							Image(systemName: "play.fill")
-						}
-						
-						Button(action: {
-							print("Next")
-						}) {
-							Image(systemName: "forward.fill")
-						}
-					}
-					.font(.system(size: 20))
-				})
-		}
+		.popup(isBarPresented: Binding.constant(true), popupContentController: introWebController)
+		.popupCloseButtonStyle(.round)
 		.popupBarMarqueeScrollEnabled(true)
 	}
 }

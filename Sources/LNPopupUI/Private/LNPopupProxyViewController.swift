@@ -122,7 +122,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		let popupContentHandler = state.content != nil ? viewHandler(state) : viewControllerHandler(state)
 
 		let handler : (Bool) -> Void = { animated in
-			self.target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
+			if state.content != nil {
+				self.target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
+			}
 			self.target.popupContentView.popupCloseButtonStyle = self.currentPopupState.closeButtonStyle
 			self.target.popupPresentationDelegate = self
 			self.target.popupInteractionStyle = self.currentPopupState.interactionStyle
