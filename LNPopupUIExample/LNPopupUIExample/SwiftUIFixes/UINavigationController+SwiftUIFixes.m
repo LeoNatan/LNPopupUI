@@ -15,7 +15,6 @@
 	if(self.viewControllers.count > 0)
 	{
 		viewController.hidesBottomBarWhenPushed = viewController.toolbarItems.count == 0;
-		NSLog(@"%@", @(viewController.hidesBottomBarWhenPushed));
 	}
 	
 	[self _ln_pushViewController:viewController animated:animated];
