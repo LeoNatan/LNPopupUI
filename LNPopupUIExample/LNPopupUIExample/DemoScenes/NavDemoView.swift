@@ -17,7 +17,7 @@ struct NavDemoView : View {
 	
 	var body: some View {
 		NavigationView {
-			SafeAreaDemoView(includeLink: true)
+			SafeAreaDemoView(includeLink: true, onDismiss: onDismiss)
 				.navigationBarTitle("Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {

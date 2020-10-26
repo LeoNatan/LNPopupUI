@@ -9,13 +9,29 @@ import SwiftUI
 import LNPopupUI
 import LoremIpsum
 
+extension View {
+	@ViewBuilder
+	func ifLet<V, Transform: View>(
+		_ value: V?,
+		transform: (Self, V) -> Transform
+	) -> some View {
+		if let value = value {
+			transform(self, value)
+		} else {
+			self
+		}
+	}
+}
+
 struct SafeAreaDemoView : View {
 	let includeLink: Bool
 	let offset: Bool
+	let onDismiss: (() -> Void)?
 	
-	init(includeLink: Bool = false, offset: Bool = false) {
+	init(includeLink: Bool = false, offset: Bool = false, onDismiss: (() -> Void)? = nil) {
 		self.includeLink = includeLink
 		self.offset = offset
+		self.onDismiss = onDismiss
 	}
 	
 	var body: some View {
@@ -32,14 +48,21 @@ struct SafeAreaDemoView : View {
 					maxHeight: .infinity,
 					alignment: .top)
 			if includeLink {
-				NavigationLink("Next ▸", destination: SafeAreaDemoView(includeLink: includeLink).navigationTitle("LNPopupUI"))
+				NavigationLink("Next ▸", destination: SafeAreaDemoView(includeLink: includeLink, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
 					.padding()
 			}
 		}
 		.padding(4)
 		.font(.system(.headline))
+		.ifLet(onDismiss) { view, onDismiss in
+			view.navigationBarItems(trailing: Button("Gallery") {
+				onDismiss()
+			})
+		}
 	}
 }
+
+//return view
 
 extension View {
 	func popupDemo(isBarPresented: Binding<Bool>) -> some View {
@@ -64,7 +87,7 @@ extension View {
 				.font(.system(size: 20))
 			})
 		}
-//		.popupCloseButtonStyle(.round)
+		.popupCloseButtonStyle(.chevron)
 //		.popupInteractionStyle(.drag)
 	}
 }

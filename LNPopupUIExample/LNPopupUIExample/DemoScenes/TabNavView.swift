@@ -14,7 +14,7 @@ struct InnerNavView : View {
 	
 	var body: some View {
 		NavigationView {
-			SafeAreaDemoView(includeLink: true)
+			SafeAreaDemoView(includeLink: true, onDismiss: onDismiss)
 				.navigationBarTitle("Tab View + Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
 				.navigationBarItems(trailing: Button("Gallery") {

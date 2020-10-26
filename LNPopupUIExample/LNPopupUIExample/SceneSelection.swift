@@ -99,7 +99,7 @@ struct SceneSelection: View {
 		.navigationViewStyle(StackNavigationViewStyle())
 		.ignoresSafeArea()
 		.popup(isBarPresented: Binding.constant(true), popupContentController: introWebController)
-		.popupCloseButtonStyle(.round)
+		.popupCloseButtonStyle(.none)
 		.popupBarMarqueeScrollEnabled(true)
 	}
 }
