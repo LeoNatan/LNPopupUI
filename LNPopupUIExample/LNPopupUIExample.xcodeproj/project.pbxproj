@@ -44,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3944C7D625494C5E00D94EAC /* LNPopupUIExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupUIExample.entitlements; sourceTree = "<group>"; };
 		395781D124DC5D2700A604D1 /* LNPopupUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		395781D424DC5D2700A604D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		395781D624DC5D2700A604D1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -101,6 +102,7 @@
 		395781D324DC5D2700A604D1 /* LNPopupUIExample */ = {
 			isa = PBXGroup;
 			children = (
+				3944C7D625494C5E00D94EAC /* LNPopupUIExample.entitlements */,
 				39F1673E2546E07000F56FE0 /* SwiftUIFixes */,
 				398DB7AF250401DB00CD89DB /* DemoScenes */,
 				398DB7B0250401E300CD89DB /* MusicScene */,
@@ -411,6 +413,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = LNPopupUIExample/LNPopupUIExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"LNPopupUIExample/Preview Content\"";
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
@@ -423,6 +426,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupUIExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -435,6 +439,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = LNPopupUIExample/LNPopupUIExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"LNPopupUIExample/Preview Content\"";
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
@@ -447,6 +452,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupUIExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
