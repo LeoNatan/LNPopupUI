@@ -65,7 +65,7 @@ To present the popup, call the `popup(isBarPresented:isPopupOpen:content)` metho
 
 ```swift
 TabView {
-	//...
+	//Top content view
 }
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
 	PlayerView(song: currentSong)
@@ -82,7 +82,7 @@ Popup bar content is provided as modifiers of the popup content view.
 
 ```swift
 VStack {
-	//...
+	//Popup content view
 }
 .popupTitle(song.title)
 .popupImage(Image(song.imageName))
@@ -123,8 +123,8 @@ The defaults are:
 Customizing the popup bar style is achieved by calling the `.popupBarStyle()` modifier.
 
 ```swift
-.popup(isBarPresented: $isPopupPresented) {
-	//...
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	//Popup content view
 }
 .popupBarStyle(.compact)
 ```
@@ -134,8 +134,8 @@ Customizing the popup bar style is achieved by calling the `.popupBarStyle()` mo
 Customizing the popup interaction style is achieved by calling the `.popupInteractionStyle()` modifier.
 
 ```swift
-.popup(isBarPresented: $isPopupPresented) {
-	//...
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	//Popup content view
 }
 .popupInteractionStyle(.drag)
 ```
@@ -145,8 +145,8 @@ Customizing the popup interaction style is achieved by calling the `.popupIntera
 Customizing the popup bar progress view style is achieved by calling the `.popupBarProgressViewStyle()` modifier.
 
 ```swift
-.popup(isBarPresented: $isPopupPresented) {
-	//...
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	//Popup content view
 }
 .popupBarProgressViewStyle(.top)
 ```
@@ -158,8 +158,8 @@ To hide the progress view, set the bar progress view style to `.none`.
 Customizing the popup close button style is achieved by calling the `.popupCloseButtonStyle()` modifier.
 
 ```swift
-.popup(isBarPresented: $isPopupPresented) {
-	//...
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	//Popup content view
 }
 .popupCloseButtonStyle(.round)
 ```
