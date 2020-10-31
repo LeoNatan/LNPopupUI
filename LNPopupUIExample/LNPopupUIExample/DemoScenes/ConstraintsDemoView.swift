@@ -27,11 +27,15 @@ struct SafeAreaDemoView : View {
 	let includeLink: Bool
 	let offset: Bool
 	let onDismiss: (() -> Void)?
+	let colorSeed: String
+	let colorIndex: Int
 	
-	init(includeLink: Bool = false, offset: Bool = false, onDismiss: (() -> Void)? = nil) {
+	init(colorSeed: String = "nil", colorIndex: Int = 0, includeLink: Bool = false, offset: Bool = false, onDismiss: (() -> Void)? = nil) {
 		self.includeLink = includeLink
 		self.offset = offset
 		self.onDismiss = onDismiss
+		self.colorSeed = colorSeed
+		self.colorIndex = colorIndex
 	}
 	
 	var body: some View {
@@ -48,11 +52,12 @@ struct SafeAreaDemoView : View {
 					maxHeight: .infinity,
 					alignment: .top)
 			if includeLink {
-				NavigationLink("Next ▸", destination: SafeAreaDemoView(includeLink: includeLink, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
+				NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeLink: includeLink, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
 					.padding()
 			}
 		}
 		.padding(4)
+		.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
 		.font(.system(.headline))
 		.ifLet(onDismiss) { view, onDismiss in
 			view.navigationBarItems(trailing: Button("Gallery") {
@@ -67,7 +72,7 @@ struct SafeAreaDemoView : View {
 extension View {
 	func popupDemo(isBarPresented: Binding<Bool>) -> some View {
 		return self.popup(isBarPresented: isBarPresented, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
-			SafeAreaDemoView(offset: true)
+			SafeAreaDemoView(colorSeed: "Popup", offset: true)
 			.popupTitle(LoremIpsum.title, subtitle: LoremIpsum.sentence)
 			.popupImage(Image("genre\(Int.random(in: 1..<31))"))
 			.popupBarItems({
@@ -77,7 +82,7 @@ extension View {
 					}) {
 						Image(systemName: "play.fill")
 					}
-					
+
 					Button(action: {
 						print("Next")
 					}) {
@@ -87,7 +92,6 @@ extension View {
 				.font(.system(size: 20))
 			})
 		}
-		.popupCloseButtonStyle(.chevron)
-//		.popupInteractionStyle(.drag)
+		.popupInteractionStyle(.drag)
 	}
 }

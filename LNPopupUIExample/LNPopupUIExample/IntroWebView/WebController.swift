@@ -8,6 +8,7 @@
 import UIKit
 import WebKit
 
+//This is implemented in UIKit because web view is much easier to use here for now.
 class WebController: UIViewController {
 	private let webView = WKWebView()
 
@@ -28,7 +29,12 @@ class WebController: UIViewController {
 		popupItem.title = "Welcome to LNPopupUI"
 		popupItem.image = UIImage(named: "genre10")
 		popupItem.barButtonItems = [
-			UIBarButtonItem(image: UIImage(systemName: "suit.heart.fill"), style: .done, target: nil, action: nil)
+			UIBarButtonItem(image: UIImage(systemName: "suit.heart.fill"), style: .done, target: self, action: #selector(self.navigate(_:)))
 		]
     }
+	
+	@objc
+	private func navigate(_ sender: AnyObject) {
+		UIApplication.shared.open(URL(string: "https://github.com/LeoNatan/LNPopupUI")!, options: [:])
+	}
 }

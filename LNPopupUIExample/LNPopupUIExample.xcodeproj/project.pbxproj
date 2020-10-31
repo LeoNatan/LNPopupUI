@@ -15,6 +15,7 @@
 		395781E124DC5D2800A604D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 395781DF24DC5D2800A604D1 /* LaunchScreen.storyboard */; };
 		395781F324DC692300A604D1 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781F224DC692300A604D1 /* PlayerView.swift */; };
 		396B439624DC8EF100D84FC7 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 396B439524DC8EF100D84FC7 /* LoremIpsum */; };
+		3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B338254D7772004AEBC9 /* UIColor+SeedColors.swift */; };
 		398404EA25003925006C9011 /* SceneSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398404E925003925006C9011 /* SceneSelection.swift */; };
 		398404EE2500451E006C9011 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398404ED2500451E006C9011 /* MapView.swift */; };
 		3985A1E525378E73004AA4D7 /* WebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3985A1E425378E73004AA4D7 /* WebController.swift */; };
@@ -55,6 +56,7 @@
 		395781E224DC5D2800A604D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		395781EA24DC5DE800A604D1 /* LNPopupUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LNPopupUI; path = ..; sourceTree = "<group>"; };
 		395781F224DC692300A604D1 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		3971B338254D7772004AEBC9 /* UIColor+SeedColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SeedColors.swift"; sourceTree = "<group>"; };
 		398404E925003925006C9011 /* SceneSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneSelection.swift; sourceTree = "<group>"; };
 		398404ED2500451E006C9011 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		3985A1E425378E73004AA4D7 /* WebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebController.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				3944C7D625494C5E00D94EAC /* LNPopupUIExample.entitlements */,
+				3971B335254D769B004AEBC9 /* ColorUtils */,
 				39F1673E2546E07000F56FE0 /* SwiftUIFixes */,
 				398DB7AF250401DB00CD89DB /* DemoScenes */,
 				398DB7B0250401E300CD89DB /* MusicScene */,
@@ -132,6 +135,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3971B335254D769B004AEBC9 /* ColorUtils */ = {
+			isa = PBXGroup;
+			children = (
+				3971B338254D7772004AEBC9 /* UIColor+SeedColors.swift */,
+			);
+			path = ColorUtils;
 			sourceTree = "<group>";
 		};
 		3985A1E325378E57004AA4D7 /* IntroWebView */ = {
@@ -262,6 +273,7 @@
 			files = (
 				3985A1E525378E73004AA4D7 /* WebController.swift in Sources */,
 				395781D524DC5D2700A604D1 /* AppDelegate.swift in Sources */,
+				3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */,
 				398404EE2500451E006C9011 /* MapView.swift in Sources */,
 				39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */,
 				39AAAA6C25040FA900E5FD41 /* TabNavView.swift in Sources */,
