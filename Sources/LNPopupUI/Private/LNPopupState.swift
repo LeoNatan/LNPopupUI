@@ -25,6 +25,7 @@ internal struct LNPopupState<PopupContent: View> {
 	let barProgressViewStyle: LNPopupBarProgressViewStyle
 	let barMarqueeScrollEnabled: Bool
 	let customBarView: LNPopupBarCustomView?
+	let contextMenu: AnyView?
 	let content: (() -> PopupContent)?
 	let contentController: UIViewController?
 	let onOpen: (() -> Void)?

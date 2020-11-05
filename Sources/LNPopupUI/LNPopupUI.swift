@@ -90,6 +90,10 @@ public extension View {
 											 @ViewBuilder popupBarContent: @escaping () -> PopupBarContent) -> some View where PopupBarContent : View {
 		return environment(\.popupBarCustomBarView, LNPopupBarCustomView(wantsDefaultTapGesture: wantsDefaultTapGesture, wantsDefaultPanGesture: wantsDefaultPanGesture, wantsDefaultHighlightGesture: wantsDefaultHighlightGesture, popupBarCustomBarView: AnyView(popupBarContent())))
 	}
+	
+	func popupBarContextMenu<MenuItems>(@ViewBuilder menuItems: () -> MenuItems) -> some View where MenuItems : View {
+		return environment(\.popupBarContextMenu, AnyView(menuItems()))
+	}
 }
 
 public extension View {

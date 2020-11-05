@@ -104,11 +104,7 @@ VStack {
 })
 ```
 
-
-
 ### Appearance and Behavior
-
-#### Modern Look and Feel
 
 `LNPopupUI` provides two distinct style of popup look and feel, one based on modern Music app look and feel, and one based on the previous, iOS 9-style look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9-style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current operating system version.
 
@@ -118,7 +114,7 @@ The defaults are:
 * Chevron close button style
 * No progress view style
 
-##### Bar Style
+#### Bar Style
 
 Customizing the popup bar style is achieved by calling the `.popupBarStyle()` modifier.
 
@@ -129,7 +125,7 @@ Customizing the popup bar style is achieved by calling the `.popupBarStyle()` mo
 .popupBarStyle(.compact)
 ```
 
-##### Interaction Style
+#### Interaction Style
 
 Customizing the popup interaction style is achieved by calling the `.popupInteractionStyle()` modifier.
 
@@ -140,7 +136,7 @@ Customizing the popup interaction style is achieved by calling the `.popupIntera
 .popupInteractionStyle(.drag)
 ```
 
-##### Progress View Style
+#### Progress View Style
 
 Customizing the popup bar progress view style is achieved by calling the `.popupBarProgressViewStyle()` modifier.
 
@@ -153,7 +149,7 @@ Customizing the popup bar progress view style is achieved by calling the `.popup
 
 To hide the progress view, set the bar progress view style to `.none`.
 
-##### Close Button Style
+#### Close Button Style
 
 Customizing the popup close button style is achieved by calling the `.popupCloseButtonStyle()` modifier.
 
@@ -165,6 +161,46 @@ Customizing the popup close button style is achieved by calling the `.popupClose
 ```
 
 To hide the popup close button, set the `popupCloseButtonStyle` to `LNPopupCloseButtonStyleNone` / `.none`.
+
+#### Custom Popup Bar View
+
+You can display your own view as the popup bar, instead of the system-provided ones, by using the `.popupBarCustomView()` modifier.
+
+```swift
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	//Popup content view
+}
+.popupBarCustomView(wantsDefaultTapGesture: false, wantsDefaultPanGesture: false, wantsDefaultHighlightGesture: false) {
+  //Custom popup bar view content
+}
+```
+
+The `wantsDefaultTapGesture`, `wantsDefaultPanGesture` and `wantsDefaultHighlightGesture` arguments control whether the default system gestures of the popup bar should be enabled or disabled.
+
+#### Context Menus
+
+You can add a context menu to your popup bar by calling the `.popupBarContextMenu()` modifier.
+
+```swift
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	//Popup content view
+}
+.popupBarContextMenu {
+	Button(action: {
+		print("Context Menu Item 1")
+	}) {
+		Text("Context Menu Item 1")
+		Image(systemName: "globe")
+	}
+	
+	Button(action: {
+		print("Context Menu Item 2")
+	}) {
+		Text("Context Menu Item 2")
+		Image(systemName: "location.circle")
+	}
+}
+```
 
 #### Full Right-to-Left Support
 

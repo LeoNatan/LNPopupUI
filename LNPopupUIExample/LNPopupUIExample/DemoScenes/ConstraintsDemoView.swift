@@ -21,6 +21,18 @@ extension View {
 			self
 		}
 	}
+	
+	@ViewBuilder
+	func `if`<Transform: View>(
+		_ value: Bool,
+		transform: (Self) -> Transform
+	) -> some View {
+		if value {
+			transform(self)
+		} else {
+			self
+		}
+	}
 }
 
 struct SafeAreaDemoView : View {
@@ -70,7 +82,7 @@ struct SafeAreaDemoView : View {
 //return view
 
 extension View {
-	func popupDemo(isBarPresented: Binding<Bool>) -> some View {
+	func popupDemo(isBarPresented: Binding<Bool>, includeContextMenu: Bool = false) -> some View {
 		return self.popup(isBarPresented: isBarPresented, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true)
 			.popupTitle(LoremIpsum.title, subtitle: LoremIpsum.sentence)
@@ -92,6 +104,23 @@ extension View {
 				.font(.system(size: 20))
 			})
 		}
-		.popupInteractionStyle(.drag)
+//		.popupInteractionStyle(.drag)
+		.if(includeContextMenu) { view in
+			view.popupBarContextMenu {
+				Button(action: {
+					print("Context Menu Item 1")
+				}) {
+					Text("Context Menu Item 1")
+					Image(systemName: "globe")
+				}
+				
+				Button(action: {
+					print("Context Menu Item 2")
+				}) {
+					Text("Context Menu Item 2")
+					Image(systemName: "location.circle")
+				}
+			}
+		}
 	}
 }

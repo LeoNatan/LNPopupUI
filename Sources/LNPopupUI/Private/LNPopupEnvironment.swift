@@ -32,6 +32,10 @@ internal struct LNPopupBarCustomViewKey: EnvironmentKey {
 	static let defaultValue: LNPopupBarCustomView? = nil
 }
 
+internal struct LNPopupBarContextMenuKey: EnvironmentKey {
+	static let defaultValue: AnyView? = nil
+}
+
 internal extension EnvironmentValues {
 	var popupInteractionStyle: LNPopupInteractionStyle {
 		get { self[LNPopupInteractionStyleKey.self] }
@@ -61,6 +65,11 @@ internal extension EnvironmentValues {
 	var popupBarCustomBarView: LNPopupBarCustomView? {
 		get { self[LNPopupBarCustomViewKey.self] }
 		set { self[LNPopupBarCustomViewKey.self] = newValue }
+	}
+	
+	var popupBarContextMenu: AnyView? {
+		get { self[LNPopupBarContextMenuKey.self] }
+		set { self[LNPopupBarContextMenuKey.self] = newValue }
 	}
 }
 

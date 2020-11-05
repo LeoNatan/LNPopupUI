@@ -9,9 +9,12 @@ import SwiftUI
 import UIKit
 import LNPopupController
 
-internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingController<Content>, LNPopupPresentationDelegate where Content: View, PopupContent: View {
+internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingController<Content>, LNPopupPresentationDelegate, UIContextMenuInteractionDelegate where Content: View, PopupContent: View {
 	var currentPopupState: LNPopupState<PopupContent>! = nil
 	var popupViewController: UIViewController?
+	
+	var popupContextMenuViewController: UIHostingController<AnyView>?
+	var popupContextMenuInteraction: UIContextMenuInteraction?
 	
 	var leadingBarItemsController: UIHostingController<AnyView>? = nil
 	var trailingBarItemsController: UIHostingController<AnyView>? = nil
@@ -146,6 +149,34 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				self.target.popupBar.customBarViewController = nil
 				self.target.popupBar.barStyle = self.currentPopupState.barStyle
 			}
+			
+			if let contextMenu = self.currentPopupState.contextMenu {
+				let contextHost = AnyView(Color.green.contextMenu {
+					contextMenu
+				})
+				
+				if self.popupContextMenuViewController == nil {
+					self.popupContextMenuViewController = UIHostingController(rootView: contextHost)
+					self.popupContextMenuViewController!.view!.translatesAutoresizingMaskIntoConstraints = true
+					self.popupContextMenuViewController!.view!.frame = CGRect(x: -1000000, y: -1000000, width: 3, height: 3)
+					self.target.popupBar.addSubview(self.popupContextMenuViewController!.view!)
+				} else {
+					self.popupContextMenuViewController!.rootView = contextHost
+				}
+				
+				if self.popupContextMenuInteraction == nil {
+					self.popupContextMenuInteraction = UIContextMenuInteraction(delegate: self)
+					self.target.popupBar.addInteraction(self.popupContextMenuInteraction!)
+				}
+			} else {
+				self.popupContextMenuViewController?.view?.removeFromSuperview()
+				self.popupContextMenuViewController = nil
+				if let popupContextMenuInteraction = self.popupContextMenuInteraction {
+					self.target.popupBar.removeInteraction(popupContextMenuInteraction)
+				}
+				self.popupContextMenuInteraction = nil
+			}
+			
 			if self.currentPopupState.isBarPresented == true {
 				popupContentHandler()
 				
@@ -167,6 +198,28 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		super.addChild(childController)
 		
 		readyForHandling = true
+	}
+	
+	//MARK: UIContextMenuInteractionDelegate
+	
+	fileprivate func actualInteraction() -> UIContextMenuInteraction? {
+		return self.popupContextMenuViewController?.view?.interactions.first(where: { $0 is UIContextMenuInteraction }) as? UIContextMenuInteraction
+	}
+	
+	func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+		return actualInteraction()?.delegate?.contextMenuInteraction(interaction, configurationForMenuAtLocation: CGPoint(x: 1.0, y: 1.0))
+	}
+	
+	func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
+		actualInteraction()?.delegate?.contextMenuInteraction?(interaction, willPerformPreviewActionForMenuWith: configuration, animator: animator)
+	}
+
+	func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+		actualInteraction()?.delegate?.contextMenuInteraction?(interaction, willEndFor: configuration, animator: animator)
+	}
+
+	func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willDisplayMenuFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+		actualInteraction()?.delegate?.contextMenuInteraction?(interaction, willDisplayMenuFor: configuration, animator: animator)
 	}
 	
 	//MARK: LNPopupPresentationDelegate

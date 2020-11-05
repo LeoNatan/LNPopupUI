@@ -12,9 +12,15 @@ import LNPopupUI
 struct ViewDemoView : View {
 	@State private var isPopupPresented: Bool = true
 	let onDismiss: () -> Void
+	let contextMenu: Bool
+	
+	init(contextMenu: Bool = false, onDismiss: @escaping () -> Void) {
+		self.contextMenu = contextMenu
+		self.onDismiss = onDismiss
+	}
 	
 	var body: some View {
 		InnerView(onDismiss: onDismiss)
-			.popupDemo(isBarPresented: $isPopupPresented)
+			.popupDemo(isBarPresented: $isPopupPresented, includeContextMenu: contextMenu)
 	}
 }

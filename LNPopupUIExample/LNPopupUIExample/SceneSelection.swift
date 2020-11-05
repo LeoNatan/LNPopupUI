@@ -68,6 +68,15 @@ struct SceneSelection: View {
 							viewPresented.toggle()
 						}
 					})
+					Button("View + Context Menu Interaction") {
+						viewPresented.toggle()
+					}
+					.foregroundColor(Color(.label))
+					.fullScreenCover(isPresented: $viewPresented, content: {
+						ViewDemoView(contextMenu: true) {
+							viewPresented.toggle()
+						}
+					})
 				}
 				Section(header: Text("Demo App")) {
 					Button("Apple Music") {
