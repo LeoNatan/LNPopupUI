@@ -10,11 +10,17 @@ import LoremIpsum
 import LNPopupUI
 
 struct InnerView : View {
+	let tabIdx: Int?
 	let onDismiss: () -> Void
+	
+	init(tabIdx: Int? = nil, onDismiss: @escaping ()-> Void) {
+		self.tabIdx = tabIdx
+		self.onDismiss = onDismiss
+	}
 	
 	var body: some View {
 		ZStack(alignment: .topTrailing) {
-			SafeAreaDemoView()
+			SafeAreaDemoView(colorSeed: tabIdx != nil ? "tab_\(tabIdx!)" : "nil")
 			Button("Gallery") {
 				onDismiss()
 			}.padding()
@@ -32,22 +38,27 @@ struct TabDemoView : View {
 	
 	var body: some View {
 		TabView{
-			InnerView(onDismiss: onDismiss)
+			InnerView(tabIdx:0, onDismiss: onDismiss)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(onDismiss: onDismiss)
+			InnerView(tabIdx:1, onDismiss: onDismiss)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(onDismiss: onDismiss)
+			InnerView(tabIdx:2, onDismiss: onDismiss)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(onDismiss: onDismiss)
+			InnerView(tabIdx:3, onDismiss: onDismiss)
+				.tabItem {
+					Image(systemName: "star.fill")
+					Text("Tab")
+				}
+			InnerView(tabIdx:4, onDismiss: onDismiss)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")

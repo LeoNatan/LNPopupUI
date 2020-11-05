@@ -10,11 +10,12 @@ import LoremIpsum
 import LNPopupUI
 
 struct InnerNavView : View {
+	let tabIdx: Int
 	let onDismiss: () -> Void
 	
 	var body: some View {
 		NavigationView {
-			SafeAreaDemoView(includeLink: true, onDismiss: onDismiss)
+			SafeAreaDemoView(colorSeed:"tab_\(tabIdx)", includeLink: true, onDismiss: onDismiss)
 				.navigationBarTitle("Tab View + Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
 				.navigationBarItems(trailing: Button("Gallery") {
@@ -35,22 +36,27 @@ struct TabNavView : View {
 	
 	var body: some View {
 		TabView{
-			InnerNavView(onDismiss: onDismiss)
+			InnerNavView(tabIdx:0, onDismiss: onDismiss)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerNavView(onDismiss: onDismiss)
+			InnerNavView(tabIdx:1, onDismiss: onDismiss)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerNavView(onDismiss: onDismiss)
+			InnerNavView(tabIdx:2, onDismiss: onDismiss)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerNavView(onDismiss: onDismiss)
+			InnerNavView(tabIdx:3, onDismiss: onDismiss)
+				.tabItem {
+					Image(systemName: "star.fill")
+					Text("Tab")
+				}
+			InnerNavView(tabIdx:4, onDismiss: onDismiss)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
