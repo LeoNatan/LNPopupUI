@@ -38,13 +38,15 @@ extension View {
 struct SafeAreaDemoView : View {
 	let includeLink: Bool
 	let offset: Bool
+	let isPopupOpen: Binding<Bool>?
 	let onDismiss: (() -> Void)?
 	let colorSeed: String
 	let colorIndex: Int
 	
-	init(colorSeed: String = "nil", colorIndex: Int = 0, includeLink: Bool = false, offset: Bool = false, onDismiss: (() -> Void)? = nil) {
+	init(colorSeed: String = "nil", colorIndex: Int = 0, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, onDismiss: (() -> Void)? = nil) {
 		self.includeLink = includeLink
 		self.offset = offset
+		self.isPopupOpen = isPopupOpen
 		self.onDismiss = onDismiss
 		self.colorSeed = colorSeed
 		self.colorIndex = colorIndex
@@ -55,7 +57,13 @@ struct SafeAreaDemoView : View {
 			VStack {
 				Text("Top").offset(x: offset ? 40.0 : 0.0)
 				Spacer()
-				Text("Center")
+				if let isPopupOpen = isPopupOpen {
+					Button("Custom Close Button") {
+						isPopupOpen.wrappedValue = false
+					}.foregroundColor(Color(.label))
+				} else {
+					Text("Center")
+				}
 				Spacer()
 				Text("Bottom")
 			}.frame(minWidth: 0,
@@ -82,27 +90,27 @@ struct SafeAreaDemoView : View {
 //return view
 
 extension View {
-	func popupDemo(isBarPresented: Binding<Bool>, includeContextMenu: Bool = false) -> some View {
-		return self.popup(isBarPresented: isBarPresented, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
-			SafeAreaDemoView(colorSeed: "Popup", offset: true)
-			.popupTitle(LoremIpsum.title, subtitle: LoremIpsum.sentence)
-			.popupImage(Image("genre\(Int.random(in: 1..<31))"))
-			.popupBarItems({
-				HStack(spacing: 20) {
-					Button(action: {
-						print("Play")
-					}) {
-						Image(systemName: "play.fill")
+	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>, includeContextMenu: Bool = false) -> some View {
+		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
+			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
+				.popupTitle(demoContent.title, subtitle: demoContent.subtitle)
+				.popupImage(Image("genre\(demoContent.imageNumber)"))
+				.popupBarItems({
+					HStack(spacing: 20) {
+						Button(action: {
+							print("Play")
+						}) {
+							Image(systemName: "play.fill")
+						}
+						
+						Button(action: {
+							print("Next")
+						}) {
+							Image(systemName: "forward.fill")
+						}
 					}
-
-					Button(action: {
-						print("Next")
-					}) {
-						Image(systemName: "forward.fill")
-					}
-				}
-				.font(.system(size: 20))
-			})
+					.font(.system(size: 20))
+				})
 		}
 //		.popupInteractionStyle(.drag)
 		.if(includeContextMenu) { view in

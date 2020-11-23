@@ -28,7 +28,7 @@ struct SceneSelection: View {
 					}
 					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $tabnavPresented, content: {
-						TabNavView {
+						TabNavView(demoContent: DemoContent()) {
 							tabnavPresented.toggle()
 						}
 					})
@@ -37,7 +37,7 @@ struct SceneSelection: View {
 					}
 					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $tabPresented, content: {
-						TabDemoView {
+						TabDemoView(demoContent: DemoContent()) {
 							tabPresented.toggle()
 						}
 					})
@@ -46,7 +46,7 @@ struct SceneSelection: View {
 					}
 					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $navPresented, content: {
-						NavDemoView {
+						NavDemoView(demoContent: DemoContent()) {
 							navPresented.toggle()
 						}
 					})
@@ -55,7 +55,7 @@ struct SceneSelection: View {
 					}
 					.foregroundColor(Color(.label))
 					.sheet(isPresented: $viewSheetPresented, content: {
-						NavDemoView {
+						NavDemoView(demoContent: DemoContent()) {
 							viewSheetPresented.toggle()
 						}
 					})
@@ -64,7 +64,7 @@ struct SceneSelection: View {
 					}
 					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $viewPresented, content: {
-						ViewDemoView() {
+						ViewDemoView(demoContent: DemoContent()) {
 							viewPresented.toggle()
 						}
 					})
@@ -73,7 +73,7 @@ struct SceneSelection: View {
 					}
 					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $viewPresented, content: {
-						ViewDemoView(contextMenu: true) {
+						ViewDemoView(demoContent: DemoContent(), contextMenu: true) {
 							viewPresented.toggle()
 						}
 					})

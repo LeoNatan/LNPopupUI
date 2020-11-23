@@ -46,30 +46,32 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	fileprivate func createOrUpdateHostingControllerForAnyView(_ vc: inout UIHostingController<AnyView>?, view: AnyView, barButtonItem: inout UIBarButtonItem?, targetBarButtons: ([UIBarButtonItem]) -> Void, leadSpacing: Bool, trailingSpacing: Bool) {
-		if let vc = vc {
-			vc.rootView = view
-			vc.view.removeConstraints(vc.view.constraints)
-			vc.view.setNeedsLayout()
-			let size = vc.sizeThatFits(in: CGSize(width: .max, height: .max))
-			NSLayoutConstraint.activate([
-				vc.view.widthAnchor.constraint(equalToConstant: size.width),
-				vc.view.heightAnchor.constraint(equalToConstant: size.height),
-			])
+		UIView.performWithoutAnimation {
+			if let vc = vc, target is UITabBarController || target is UINavigationController || target is UISplitViewController {
+				vc.rootView = view
+				vc.view.removeConstraints(vc.view.constraints)
+				vc.view.setNeedsLayout()
+				let size = vc.sizeThatFits(in: CGSize(width: .max, height: .max))
+				NSLayoutConstraint.activate([
+					vc.view.widthAnchor.constraint(equalToConstant: size.width),
+					vc.view.heightAnchor.constraint(equalToConstant: size.height),
+				])
 
-			barButtonItem!.customView = vc.view
-		} else {
-			vc = UIHostingController<AnyView>(rootView: view)
-			vc!.view.backgroundColor = .clear
-			vc!.view.translatesAutoresizingMaskIntoConstraints = false
-			let size = vc!.sizeThatFits(in: CGSize(width: .max, height: .max))
-			NSLayoutConstraint.activate([
-				vc!.view.widthAnchor.constraint(equalToConstant: size.width),
-				vc!.view.heightAnchor.constraint(equalToConstant: size.height),
-			])
-			
-			barButtonItem = UIBarButtonItem(customView: vc!.view)
-			
-			targetBarButtons([barButtonItem!])
+				barButtonItem!.customView = vc.view
+			} else {
+				vc = UIHostingController<AnyView>(rootView: view)
+				vc!.view.backgroundColor = .clear
+				vc!.view.translatesAutoresizingMaskIntoConstraints = false
+				let size = vc!.sizeThatFits(in: CGSize(width: .max, height: .max))
+				NSLayoutConstraint.activate([
+					vc!.view.widthAnchor.constraint(equalToConstant: size.width),
+					vc!.view.heightAnchor.constraint(equalToConstant: size.height),
+				])
+				
+				barButtonItem = UIBarButtonItem(customView: vc!.view)
+				
+				targetBarButtons([barButtonItem!])
+			}
 		}
 	}
 	
@@ -179,8 +181,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			
 			if self.currentPopupState.isBarPresented == true {
 				popupContentHandler()
-				
-				print(self.target.popupPresentationState.rawValue)
 				
 				if self.target.popupPresentationState.rawValue >= LNPopupPresentationState.barPresented.rawValue {
 					if self.currentPopupState.isPopupOpen == true {

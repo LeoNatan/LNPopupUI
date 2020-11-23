@@ -10,17 +10,20 @@ import LoremIpsum
 import LNPopupUI
 
 struct ViewDemoView : View {
-	@State private var isPopupPresented: Bool = true
+	@State private var isBarPresented: Bool = true
+	@State private var isPopupOpen: Bool = false
 	let onDismiss: () -> Void
 	let contextMenu: Bool
+	let demoContent: DemoContent
 	
-	init(contextMenu: Bool = false, onDismiss: @escaping () -> Void) {
+	init(demoContent: DemoContent, contextMenu: Bool = false, onDismiss: @escaping () -> Void) {
 		self.contextMenu = contextMenu
 		self.onDismiss = onDismiss
+		self.demoContent = demoContent
 	}
 	
 	var body: some View {
 		InnerView(onDismiss: onDismiss)
-			.popupDemo(isBarPresented: $isPopupPresented, includeContextMenu: contextMenu)
+			.popupDemo(demoContent:demoContent, isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen, includeContextMenu: contextMenu)
 	}
 }

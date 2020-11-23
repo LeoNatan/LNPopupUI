@@ -10,7 +10,9 @@ import LoremIpsum
 import LNPopupUI
 
 struct NavDemoView : View {
-	@State private var isPopupPresented: Bool = true
+	@State private var isBarPresented: Bool = true
+	@State private var isPopupOpen: Bool = false
+	let demoContent: DemoContent
 	let onDismiss: () -> Void
 	@Environment(\.colorScheme) private var environmentColorScheme
 	@State private var forcedColorScheme: ColorScheme?
@@ -23,7 +25,7 @@ struct NavDemoView : View {
 				.toolbar {
 					ToolbarItem(placement: .bottomBar) {
 						Button("Present Bar") {
-							isPopupPresented = true
+							isBarPresented = true
 						}
 					}
 					ToolbarItem(placement: .bottomBar) {
@@ -43,7 +45,7 @@ struct NavDemoView : View {
 					}
 					ToolbarItem(placement: .bottomBar) {
 						Button("Dismiss Bar") {
-							isPopupPresented = false
+							isBarPresented = false
 						}
 					}
 				}
@@ -53,6 +55,6 @@ struct NavDemoView : View {
 		}
 		.colorScheme(forcedColorScheme ?? environmentColorScheme)
 		.navigationViewStyle(StackNavigationViewStyle())
-		.popupDemo(isBarPresented: $isPopupPresented)
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen)
 	}
 }

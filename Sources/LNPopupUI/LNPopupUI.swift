@@ -7,6 +7,7 @@
 
 import SwiftUI
 import LNPopupController
+import Combine
 
 public extension View {
 	
@@ -19,9 +20,13 @@ public extension View {
 	///   - onClose: A closure executed when the popup closes. (optional)
 	///   - popupContent: A closure returning the content of the popup.
 	func popup<PopupContent>(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, onOpen: (() -> Void)? = nil, onClose: (() -> Void)? = nil, @ViewBuilder popupContent: @escaping () -> PopupContent) -> some View where PopupContent : View {
-		return LNPopupViewWrapper<Self, PopupContent>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
-			self
-		}.edgesIgnoringSafeArea(.all)
+		return ZStack {
+			Text(isBarPresented.wrappedValue ? "1" : "2").hidden()
+			Text(isPopupOpen?.wrappedValue ?? false ? "3" : "4").hidden()
+			LNPopupViewWrapper<Self, PopupContent>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
+				self
+			}.edgesIgnoringSafeArea(.all)
+		}
 	}
 	
 	/// Presents a popup bar with popup content.
@@ -154,7 +159,7 @@ public extension View {
 	/// - Parameter content: A view that appears on the trailing edge of the popup bar.
 	func popupBarItems<Content>(@ViewBuilder _ content: () -> Content) -> some View where Content : View {
 		return self
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(content())))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(content().edgesIgnoringSafeArea(.all))))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -164,7 +169,7 @@ public extension View {
 	/// - Parameter leading: A view that appears on the leading edge of the popup bar.
 	func popupBarItems<LeadingContent>(@ViewBuilder leading: () -> LeadingContent) -> some View where LeadingContent: View {
 		return self
-			.preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(leading())))
+			.preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(leading().edgesIgnoringSafeArea(.all))))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -172,7 +177,7 @@ public extension View {
 	/// - Parameter trailing: A view that appears on the trailing edge of the popup bar.
 	func popupBarItems<TrailingContent>(@ViewBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: View {
 		return self
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(trailing())))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(trailing().edgesIgnoringSafeArea(.all))))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
