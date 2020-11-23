@@ -180,7 +180,17 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			if self.currentPopupState.isBarPresented == true {
 				popupContentHandler()
 				
-				self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen, animated: animated, completion: nil)
+				print(self.target.popupPresentationState.rawValue)
+				
+				if self.target.popupPresentationState.rawValue >= LNPopupPresentationState.barPresented.rawValue {
+					if self.currentPopupState.isPopupOpen == true {
+						self.target.openPopup(animated: true, completion: nil)
+					} else {
+						self.target.closePopup(animated: true, completion: nil)
+					}
+				} else {
+					self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen, animated: animated, completion: nil)
+				}
 			} else {
 				self.target.dismissPopupBar(animated: true, completion: nil)
 			}
