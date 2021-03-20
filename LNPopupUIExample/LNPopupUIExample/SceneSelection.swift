@@ -19,6 +19,9 @@ struct SceneSelection: View {
 	@State var musicSheetPresented: Bool = false
 	@State var mapSheetPresented: Bool = false
 	
+	@State var settingsPresented: Bool = false
+	let settingsView = SettingsView()
+	
 	var body: some View {
 		NavigationView {
 			List {
@@ -103,12 +106,24 @@ struct SceneSelection: View {
 			}
 			.listStyle(GroupedListStyle())
 			.navigationBarTitle("LNPopupUI")
+			.toolbar {
+				ToolbarItem(placement: .navigationBarTrailing) {
+					Button {
+						settingsPresented.toggle()
+					} label: {
+						Image("gears")
+					}
+				}
+			}
 			.navigationBarTitleDisplayMode(.inline)
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
 		.ignoresSafeArea()
 		.popup(isBarPresented: Binding.constant(true), popupContentController: introWebController)
 		.popupBarMarqueeScrollEnabled(true)
+		.sheet(isPresented: $settingsPresented) {
+			settingsView
+		}
 	}
 }
 

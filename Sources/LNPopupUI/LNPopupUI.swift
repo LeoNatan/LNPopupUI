@@ -80,6 +80,20 @@ public extension View {
 		return environment(\.popupBarMarqueeScrollEnabled, enabled)
 	}
 	
+	/// Enables or disables the popup bar extension under the safe area.
+	///
+	/// - Parameter enabled: Extend the popup bar under safe area.
+	func popupBarShouldExtendPopupBarUnderSafeArea(_ enabled: Bool) -> some View {
+		return environment(\.popupBarShouldExtendPopupBarUnderSafeArea, enabled)
+	}
+	
+	/// Sets the popup bar's background style. Use `nil` or `LNBackgroundStyleInherit` to use the most appropriate background style for the environment.
+	///
+	/// - Parameter style: The popup bar's background style.
+	func popupBarBackgroundStyle(_ style: UIBlurEffect.Style?) -> some View {
+		return environment(\.popupBarBackgroundStyle, style)
+	}
+	
 	/// Sets a custom popup bar view, instead of the default system-provided bars.
 	///
 	/// If a custom bar view is provided, setting the popup bar style has no effect.
@@ -213,7 +227,7 @@ public extension View {
 		return self.popupImage(Image(systemName: systemName))
 	}
 	
-	/// Configures the view's popup bar image based on a @c UIImage.
+	/// Configures the view's popup bar image based on a `UIImage`.
 	///
 	/// - Parameters:
 	///   - uiImage: The image to use
@@ -222,7 +236,7 @@ public extension View {
 		return self.popupImage(Image(uiImage: uiImage))
 	}
 	
-	/// Configures the view's popup bar image based on a @c CGImage.
+	/// Configures the view's popup bar image based on a `CGImage`.
 	///
 	/// - Parameters:
 	///   - cgImage: the base graphical image

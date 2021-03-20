@@ -28,6 +28,14 @@ internal struct LNPopupBarMarqueeScrollEnabledKey: EnvironmentKey {
 	static let defaultValue: Bool = false
 }
 
+internal struct LNPopupBarShouldExtendPopupBarUnderSafeAreaKey: EnvironmentKey {
+	static let defaultValue: Bool = true
+}
+
+internal struct LNPopupBarBackgroundStyleKey: EnvironmentKey {
+	static let defaultValue: UIBlurEffect.Style? = nil
+}
+
 internal struct LNPopupBarCustomViewKey: EnvironmentKey {
 	static let defaultValue: LNPopupBarCustomView? = nil
 }
@@ -60,6 +68,16 @@ internal extension EnvironmentValues {
 	var popupBarMarqueeScrollEnabled: Bool {
 		get { self[LNPopupBarMarqueeScrollEnabledKey.self] }
 		set { self[LNPopupBarMarqueeScrollEnabledKey.self] = newValue }
+	}
+	
+	var popupBarShouldExtendPopupBarUnderSafeArea: Bool {
+		get { self[LNPopupBarShouldExtendPopupBarUnderSafeAreaKey.self] }
+		set { self[LNPopupBarShouldExtendPopupBarUnderSafeAreaKey.self] = newValue }
+	}
+	
+	var popupBarBackgroundStyle: UIBlurEffect.Style? {
+		get { self[LNPopupBarBackgroundStyleKey.self] }
+		set { self[LNPopupBarBackgroundStyleKey.self] = newValue }
 	}
 	
 	var popupBarCustomBarView: LNPopupBarCustomView? {

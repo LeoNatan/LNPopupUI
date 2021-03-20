@@ -24,6 +24,8 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupBarStyle
 	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupBarProgressViewStyle
 	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: Bool
+	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: Bool
+	@Environment(\.popupBarBackgroundStyle) var popupBarBackgroundStyle: UIBlurEffect.Style?
 	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupBarCustomView?
 	@Environment(\.popupBarContextMenu) var popupBarContextMenu: AnyView?
 	
@@ -50,8 +52,10 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 								 interactionStyle: popupInteractionStyle,
 								 closeButtonStyle: popupCloseButtonStyle,
 								 barStyle: popupBarStyle,
+								 barBackgroundStyle: popupBarBackgroundStyle ?? LNBackgroundStyleInherit,
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
+								 popupBarShouldExtendPopupBarUnderSafeArea: popupBarShouldExtendPopupBarUnderSafeArea,
 								 customBarView: popupBarCustomBarView,
 								 contextMenu: popupBarContextMenu,
 								 content: popupContent,

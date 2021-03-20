@@ -22,8 +22,10 @@ internal struct LNPopupState<PopupContent: View> {
 	let interactionStyle: LNPopupInteractionStyle
 	let closeButtonStyle: LNPopupCloseButtonStyle
 	let barStyle: LNPopupBarStyle
+	let barBackgroundStyle: UIBlurEffect.Style
 	let barProgressViewStyle: LNPopupBarProgressViewStyle
 	let barMarqueeScrollEnabled: Bool
+	let popupBarShouldExtendPopupBarUnderSafeArea: Bool
 	let customBarView: LNPopupBarCustomView?
 	let contextMenu: AnyView?
 	let content: (() -> PopupContent)?

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import LNPopupUI
+import LNPopupController
 import LoremIpsum
 
 extension View {
@@ -95,6 +96,7 @@ extension View {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
 				.popupTitle(demoContent.title, subtitle: demoContent.subtitle)
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
+				.popupProgress(0.5)
 				.popupBarItems({
 					HStack(spacing: 20) {
 						Button(action: {
@@ -112,7 +114,17 @@ extension View {
 					.font(.system(size: 20))
 				})
 		}
-//		.popupInteractionStyle(.drag)
+		.popupBarStyle(LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))!)
+		.popupInteractionStyle(LNPopupInteractionStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsInteractionStyle))!)
+		.popupBarProgressViewStyle(LNPopupBarProgressViewStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsProgressViewStyle))!)
+		.popupCloseButtonStyle(LNPopupCloseButtonStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsCloseButtonStyle))!)
+		.if(UserDefaults.standard.object(forKey: PopupSettingsMarqueeStyle) != nil) { view in
+			view.popupBarMarqueeScrollEnabled(UserDefaults.standard.bool(forKey: PopupSettingsMarqueeStyle))
+		}
+		.if(UserDefaults.standard.object(forKey: PopupSettingsVisualEffectViewBlurEffect) != nil) { view in
+			view.popupBarBackgroundStyle(UIBlurEffect.Style(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsVisualEffectViewBlurEffect)))
+		}
+		.popupBarShouldExtendPopupBarUnderSafeArea(UserDefaults.standard.bool(forKey: PopupSettingsExtendBar))
 		.if(includeContextMenu) { view in
 			view.popupBarContextMenu {
 				Button(action: {

@@ -68,9 +68,16 @@ struct RandomTitlesListView : View {
 			.listStyle(PlainListStyle())
 			.navigationBarTitle(title)
 			.navigationBarTitleDisplayMode(.inline)
-			.navigationBarItems(leading: Image(systemName: isPopupPresented ? "rectangle.bottomthird.inset.fill" : "rectangle"), trailing: Button("Gallery") {
-				onDismiss()
-			})
+			.toolbar {
+				ToolbarItem(placement: .navigationBarLeading) {
+					Image(systemName: isPopupPresented ? "rectangle.bottomthird.inset.fill" : "rectangle")
+				}
+				ToolbarItem(placement: .navigationBarTrailing) {
+					Button("Gallery") {
+						onDismiss()
+					}
+				}
+			}
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
 	}
