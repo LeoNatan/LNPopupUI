@@ -28,6 +28,8 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Environment(\.popupBarBackgroundStyle) var popupBarBackgroundStyle: UIBlurEffect.Style?
 	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupBarCustomView?
 	@Environment(\.popupBarContextMenu) var popupBarContextMenu: AnyView?
+	@Environment(\.popupBarCustomizer) var popupBarCustomizer: ((LNPopupBar) -> Void)?
+	@Environment(\.popupContentViewCustomizer) var popupContentViewCustomizer: ((LNPopupContentView) -> Void)?
 	
 	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContent: (() -> PopupContent)? = nil, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
 		self._isBarPresented = isBarPresented
@@ -61,7 +63,9 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 								 content: popupContent,
 								 contentController: popupContentController,
 								 onOpen: onOpen,
-								 onClose: onClose)
+								 onClose: onClose,
+								 barCustomizer: popupBarCustomizer,
+								 contentViewCustomizer: popupContentViewCustomizer)
 		uiViewController.handlePopupState(state)
 	}
 }

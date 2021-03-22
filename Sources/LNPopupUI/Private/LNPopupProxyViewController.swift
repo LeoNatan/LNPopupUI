@@ -181,6 +181,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				self.popupContextMenuInteraction = nil
 			}
 			
+			self.currentPopupState.barCustomizer?(self.target.popupBar)
+			self.currentPopupState.contentViewCustomizer?(self.target.popupContentView)
+			
 			if self.currentPopupState.isBarPresented == true {
 				popupContentHandler()
 				

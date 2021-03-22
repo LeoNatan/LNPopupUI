@@ -32,4 +32,6 @@ internal struct LNPopupState<PopupContent: View> {
 	let contentController: UIViewController?
 	let onOpen: (() -> Void)?
 	let onClose: (() -> Void)?
+	let barCustomizer: ((LNPopupBar) -> Void)?
+	let contentViewCustomizer: ((LNPopupContentView) -> Void)?
 }

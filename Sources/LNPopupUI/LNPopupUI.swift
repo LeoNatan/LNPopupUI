@@ -110,8 +110,58 @@ public extension View {
 		return environment(\.popupBarCustomBarView, LNPopupBarCustomView(wantsDefaultTapGesture: wantsDefaultTapGesture, wantsDefaultPanGesture: wantsDefaultPanGesture, wantsDefaultHighlightGesture: wantsDefaultHighlightGesture, popupBarCustomBarView: AnyView(popupBarContent())))
 	}
 	
+	/// Adds a context menu to the popup bar.
+	///
+	/// Use contextual menus to add actions that change depending on the user's
+	/// current focus and task.
+	///
+	/// The following example creates a popup bar with a contextual menu.
+	/// Note that the actions invoked by the menu selection could be coded
+	/// directly inside the button closures or, as shown below, invoked via
+	/// function references.
+	///
+	///		func selectHearts() { ... }
+	///		func selectClubs() { ... }
+	///		func selectSpades() { ... }
+	///		func selectDiamonds() { ... }
+	///
+	///		TabView {
+	///		}
+	///		.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	///			PlayerView(song: currentSong)
+	///		}
+	///		.popupBarContextMenu {
+	///			Button("♥️ - Hearts", action: selectHearts)
+	///			Button("♣️ - Clubs", action: selectClubs)
+	///			Button("♠️ - Spades", action: selectSpades)
+	///			Button("♦️ - Diamonds", action: selectDiamonds)
+	///		}
+	///
+	/// - Parameter menuItems: A `contextMenu` that contains one or more menu items.
 	func popupBarContextMenu<MenuItems>(@ViewBuilder menuItems: () -> MenuItems) -> some View where MenuItems : View {
 		return environment(\.popupBarContextMenu, AnyView(menuItems()))
+	}
+	
+	/// Gives a low-level access to the `LNPopupBar` object for customization, beyond what is exposed by LNPopupUI.
+	///
+	///	The popup bar customization closure is called after all other popup bar modifiers have been applied.
+	///
+	/// - Parameters:
+	///   - customizer: A customizing closure that is called to customize the popup bar object.
+	///   - popupBar: The popup bar to customize.
+	func popupBarCustomizer(_ customizer: @escaping (_ popupBar: LNPopupBar) -> Void) -> some View {
+		return environment(\.popupBarCustomizer, customizer)
+	}
+	
+	/// Gives a low-level access to the `LNPopupContentView` object for customization, beyond what is exposed by LNPopupUI.
+	///
+	///	The popup content view customization closure is called after all other popup content view modifiers have been applied.
+	///
+	/// - Parameters:
+	///   - customizer: A customizing closure that is called to customize the popup content view object.
+	///   - popupContentView: The popup content view to customize.
+	func popupContentViewCustomizer(_ customizer: @escaping (_ popupContentView: LNPopupContentView) -> Void) -> some View {
+		return environment(\.popupContentViewCustomizer, customizer)
 	}
 }
 

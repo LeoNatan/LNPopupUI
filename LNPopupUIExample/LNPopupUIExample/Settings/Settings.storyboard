@@ -568,6 +568,30 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Customizations" id="5N7-Di-fpw">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="Nzg-UC-dQ6" style="IBUITableViewCellStyleDefault" id="Cj6-vg-Ukc">
+                                        <rect key="frame" x="20" y="1895" width="374" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Cj6-vg-Ukc" id="PhZ-T2-yds">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Nzg-UC-dQ6">
+                                                    <rect key="frame" x="15" y="0.0" width="351" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="accessoryView" destination="L7U-zD-OqE" id="VpU-ME-dMU"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="cgm-yQ-Jfx" id="N9D-cb-IPZ"/>
@@ -601,30 +625,6 @@
                             </tableViewCellContentView>
                             <connections>
                                 <outlet property="accessoryView" destination="wcV-TD-yJG" id="KTm-rU-FVV"/>
-                            </connections>
-                        </tableViewCell>
-                    </cells>
-                </tableViewSection>
-                <tableViewSection headerTitle="Customizations" id="5N7-Di-fpw">
-                    <cells>
-                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="Nzg-UC-dQ6" style="IBUITableViewCellStyleDefault" id="Cj6-vg-Ukc">
-                            <rect key="frame" x="20" y="1989" width="374" height="44"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Cj6-vg-Ukc" id="PhZ-T2-yds">
-                                <rect key="frame" x="0.0" y="0.0" width="374" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <subviews>
-                                    <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Nzg-UC-dQ6">
-                                        <rect key="frame" x="15" y="0.0" width="351" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </tableViewCellContentView>
-                            <connections>
-                                <outlet property="accessoryView" destination="L7U-zD-OqE" id="VpU-ME-dMU"/>
                             </connections>
                         </tableViewCell>
                     </cells>

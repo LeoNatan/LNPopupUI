@@ -124,6 +124,19 @@ extension View {
 		.if(UserDefaults.standard.object(forKey: PopupSettingsVisualEffectViewBlurEffect) != nil) { view in
 			view.popupBarBackgroundStyle(UIBlurEffect.Style(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsVisualEffectViewBlurEffect)))
 		}
+		.if(UserDefaults.standard.bool(forKey: PopupSettingsEnableCustomizations)) { view in
+			view.popupBarCustomizer { popupBar in
+				let paragraphStyle = NSMutableParagraphStyle()
+				paragraphStyle.alignment = .right
+				paragraphStyle.lineBreakMode = .byTruncatingTail
+				
+				popupBar.inheritsVisualStyleFromDockingView = false
+				popupBar.backgroundStyle = .dark
+				popupBar.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
+				popupBar.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+				popupBar.tintColor = .yellow
+			}
+		}
 		.popupBarShouldExtendPopupBarUnderSafeArea(UserDefaults.standard.bool(forKey: PopupSettingsExtendBar))
 		.if(includeContextMenu) { view in
 			view.popupBarContextMenu {
