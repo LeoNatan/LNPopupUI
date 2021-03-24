@@ -1,7 +1,5 @@
 # LNPopupUI
 
-<img src="./Supplements/Artwork.png" width=256/>
-
 `LNPopupUI` is a SwiftUI library for presenting views as popups, much like the Apple Music and Podcasts apps.
 
 This is a SwiftUI wrapper of my [LNPopupController framework](https://github.com/LeoNatan/LNPopupController), adapted to work with SwiftUI.
@@ -10,7 +8,7 @@ This is a SwiftUI wrapper of my [LNPopupController framework](https://github.com
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/graphs/contributors) ![](https://img.shields.io/badge/swift%20package%20manager-compatible-green)
 
-<img src="./Supplements/open_modern_popup.gif" width="360"/>
+<p align="center"><img src="./Supplements/open_modern_popup.gif" width="360"/></p>
 
 See a video of the modern popup look & feel [here](https://vimeo.com/194064291) and a video of the classic popup look & feel [here](https://vimeo.com/137020302).
 
@@ -204,7 +202,7 @@ You can add a context menu to your popup bar by calling the `.popupBarContextMen
 
 The library has full right-to-left support.
 
-<img src="./Supplements/rtl_english.png" width="360"/> <img src="./Supplements/rtl_hebrew.png" width="360"/>
+<p align="center"><img src="./Supplements/rtl_english.png" width="360"/> <img src="./Supplements/rtl_hebrew.png" width="360"/></p>
 
 ## Acknowledgements
 
