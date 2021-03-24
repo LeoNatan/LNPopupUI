@@ -10,9 +10,7 @@ This is a SwiftUI wrapper of my [LNPopupController framework](https://github.com
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/graphs/contributors) ![](https://img.shields.io/badge/swift%20package%20manager-compatible-green)
 
-<img src="./Supplements/open_modern_popup.gif" width="360"/> <img src="./Supplements/close_modern_popup.gif" width="360"/>
-
-<img src="./Supplements/taps.gif" width="360"/> <img src="./Supplements/swipes.gif" width="360"/>
+<img src="./Supplements/open_modern_popup.gif" width="360"/>
 
 See a video of the modern popup look & feel [here](https://vimeo.com/194064291) and a video of the classic popup look & feel [here](https://vimeo.com/137020302).
 
