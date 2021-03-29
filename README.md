@@ -63,12 +63,12 @@ To present the popup, call the `popup(isBarPresented:isPopupOpen:content)` metho
 TabView {
 	//Top content view
 }
-.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+.popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
 	PlayerView(song: currentSong)
 }
 ```
 
-To present and dismiss the popup bar programmatically, toggle the `isPopupPresented` bound var. To open or close the popup programmatically, toggle the `isPopupOpen` bound var.
+To present and dismiss the popup bar programmatically, toggle the `isPopupBarPresented` bound var. To open or close the popup programmatically, toggle the `isPopupOpen` bound var.
 
 For more information, see the documentation in [LNPopupUI.swift](https://github.com/LeoNatan/LNPopupUI/blob/master/Sources/LNPopupUI/LNPopupUI.swift).
 
