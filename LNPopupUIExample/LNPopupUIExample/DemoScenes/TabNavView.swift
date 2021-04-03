@@ -68,3 +68,9 @@ struct TabNavView : View {
 		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen)
 	}
 }
+
+struct TabNavView_Previews: PreviewProvider {
+	static var previews: some View {
+		TabNavView(demoContent: DemoContent(), onDismiss: {})
+	}
+}

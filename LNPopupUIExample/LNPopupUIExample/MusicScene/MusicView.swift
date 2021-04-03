@@ -84,13 +84,13 @@ struct RandomTitlesListView : View {
 }
 
 struct MusicView: View {
-	@State var isPopupPresented: Bool = false
+	@State var isPopupBarPresented: Bool = false
 	@State var isPopupOpen: Bool = false
 	
 	@State var currentSong: RandomTitleSong? {
 		didSet {
 			DispatchQueue.main.async {
-				isPopupPresented = true
+				isPopupBarPresented = true
 			}
 		}
 	}
@@ -103,28 +103,28 @@ struct MusicView: View {
 	
 	var body: some View {
 		TabView {
-			RandomTitlesListView("Music", $isPopupPresented, onDismiss:onDismiss, onSongSelect: { song in
+			RandomTitlesListView("Music", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})
 			.tabItem {
 				Text("Music")
 				Image(systemName: "play.circle.fill")
 			}
-			RandomTitlesListView("Artists", $isPopupPresented, onDismiss:onDismiss, onSongSelect: { song in
+			RandomTitlesListView("Artists", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})
 			.tabItem {
 				Text("Artists")
 				Image(systemName: "music.mic")
 			}
-			RandomTitlesListView("Composers", $isPopupPresented, onDismiss:onDismiss, onSongSelect: { song in
+			RandomTitlesListView("Composers", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})
 			.tabItem {
 				Text("Composers")
 				Image(systemName: "music.quarternote.3")
 			}
-			RandomTitlesListView("Recents", $isPopupPresented, onDismiss:onDismiss, onSongSelect: { song in
+			RandomTitlesListView("Recents", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})
 			.tabItem {
@@ -133,7 +133,7 @@ struct MusicView: View {
 			}
 		}
 		.accentColor(.pink)
-		.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+		.popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
 			if let currentSong = currentSong {
 				PlayerView(song: currentSong)
 			}

@@ -58,3 +58,9 @@ struct NavDemoView : View {
 		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen)
 	}
 }
+
+struct NavDemoView_Previews: PreviewProvider {
+	static var previews: some View {
+		NavDemoView(demoContent: DemoContent(), onDismiss: {})
+	}
+}

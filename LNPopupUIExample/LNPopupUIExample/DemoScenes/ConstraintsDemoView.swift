@@ -157,3 +157,12 @@ extension View {
 		}
 	}
 }
+
+struct SafeAreaDemoView_Previews: PreviewProvider {
+	static var previews: some View {
+		SafeAreaDemoView()
+		SafeAreaDemoView(colorSeed: "offset", offset: true)
+		SafeAreaDemoView(colorSeed: "includeLink", includeLink: true)
+		SafeAreaDemoView(colorSeed: "colorIndex", colorIndex: 4)
+	}
+}

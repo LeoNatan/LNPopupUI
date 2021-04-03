@@ -20,7 +20,6 @@ struct SceneSelection: View {
 	@State var mapSheetPresented: Bool = false
 	
 	@State var settingsPresented: Bool = false
-	let settingsView = SettingsView()
 	
 	var body: some View {
 		NavigationView {
@@ -122,7 +121,7 @@ struct SceneSelection: View {
 		.popup(isBarPresented: Binding.constant(true), popupContentController: introWebController)
 		.popupBarMarqueeScrollEnabled(true)
 		.sheet(isPresented: $settingsPresented) {
-			settingsView
+			SettingsView()
 		}
 	}
 }

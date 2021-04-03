@@ -27,3 +27,9 @@ struct ViewDemoView : View {
 			.popupDemo(demoContent:demoContent, isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen, includeContextMenu: contextMenu)
 	}
 }
+
+struct ViewDemoView_Previews: PreviewProvider {
+	static var previews: some View {
+		ViewDemoView(demoContent: DemoContent(), onDismiss: {})
+	}
+}
