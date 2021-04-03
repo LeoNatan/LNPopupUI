@@ -68,6 +68,8 @@ TabView {
 }
 ```
 
+<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/></p>
+
 To present and dismiss the popup bar programmatically, toggle the `isPopupBarPresented` bound var. To open or close the popup programmatically, toggle the `isPopupOpen` bound var.
 
 For more information, see the documentation in [LNPopupUI.swift](https://github.com/LeoNatan/LNPopupUI/blob/master/Sources/LNPopupUI/LNPopupUI.swift).
@@ -121,6 +123,8 @@ Customizing the popup bar style is achieved by calling the `.popupBarStyle()` mo
 .popupBarStyle(.compact)
 ```
 
+<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+
 #### Interaction Style
 
 Customizing the popup interaction style is achieved by calling the `.popupInteractionStyle()` modifier.
@@ -131,6 +135,8 @@ Customizing the popup interaction style is achieved by calling the `.popupIntera
 }
 .popupInteractionStyle(.drag)
 ```
+
+<p align="center"><img src="./Supplements/interaction_snap.gif" width="360"/> <img src="./Supplements/interaction_drag.gif" width="360"/></p>
 
 #### Progress View Style
 
@@ -145,6 +151,8 @@ Customizing the popup bar progress view style is achieved by calling the `.popup
 
 To hide the progress view, set the bar progress view style to `.none`.
 
+<p align="center"><img src="./Supplements/progress_view_none.png" width="360"/><br/><br/><img src="./Supplements/progress_view_top.png" width="360"/><br/><br/><img src="./Supplements/progress_view_bottom.png" width="360"/></p>
+
 #### Close Button Style
 
 Customizing the popup close button style is achieved by calling the `.popupCloseButtonStyle()` modifier.
@@ -157,6 +165,8 @@ Customizing the popup close button style is achieved by calling the `.popupClose
 ```
 
 To hide the popup close button, set the `popupCloseButtonStyle` to `LNPopupCloseButtonStyleNone` / `.none`.
+
+<p align="center"><img src="./Supplements/close_button_none.png" width="360"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="360"/><br/><br/><img src="./Supplements/close_button_round.png" width="360"/></p>
 
 #### Custom Popup Bar View
 
@@ -172,6 +182,8 @@ You can display your own view as the popup bar, instead of the system-provided o
 ```
 
 The `wantsDefaultTapGesture`, `wantsDefaultPanGesture` and `wantsDefaultHighlightGesture` arguments control whether the default system gestures of the popup bar should be enabled or disabled.
+
+<p align="center"><img src="./Supplements/custom_bar.png" width="360"/></p>
 
 #### Context Menus
 
@@ -197,6 +209,31 @@ You can add a context menu to your popup bar by calling the `.popupBarContextMen
 	}
 }
 ```
+
+<p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="360"/></p>
+
+#### Lower-level Bar Customization
+
+LNPopup exposes the `.popupBarCustomizer()` modifier, which allows lower-level customization through the UIKit `LNPopupBar` object.
+
+```swift
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	//Popup content view
+}
+.popupBarCustomizer { popupBar in
+	let paragraphStyle = NSMutableParagraphStyle()
+	paragraphStyle.alignment = .right
+	paragraphStyle.lineBreakMode = .byTruncatingTail
+
+	popupBar.inheritsVisualStyleFromDockingView = false
+	popupBar.backgroundStyle = .dark
+	popupBar.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
+	popupBar.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+	popupBar.tintColor = .yellow
+}
+```
+
+<p align="center"><img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/></p>
 
 #### Full Right-to-Left Support
 
