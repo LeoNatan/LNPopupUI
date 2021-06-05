@@ -75,9 +75,13 @@ public extension View {
 	
 	/// Enables or disables the popup bar marquee scrolling. When enabled, titles and subtitles that are longer than the space available will scroll text over time.
 	///
-	/// - Parameter enabled: Marquee scroll enabled.
-	func popupBarMarqueeScrollEnabled(_ enabled: Bool) -> some View {
-		return environment(\.popupBarMarqueeScrollEnabled, enabled)
+	/// - Parameters:
+	///   - enabled: Marquee scroll enabled.
+	///   - scrollRate: The scroll rate, in points, of the title and subtitle marquee animation.
+	///   - delay: The delay, in seconds, before starting the title and subtitle marquee animation.
+	///   - coordinateAnimations: Coordinate the title and subtitle marquee scroll animations.
+	func popupBarMarqueeScrollEnabled(_ enabled: Bool, scrollRate: CGFloat? = nil, delay: TimeInterval? = nil, coordinateAnimations: Bool? = nil) -> some View {
+		return environment(\.popupBarMarqueeScrollEnabled, enabled).environment(\.popupBarMarqueeRate, scrollRate).environment(\.popupBarMarqueeDelay, delay).environment(\.popupBarCoordinateMarqueeAnimations, coordinateAnimations)
 	}
 	
 	/// Enables or disables the popup bar extension under the safe area.

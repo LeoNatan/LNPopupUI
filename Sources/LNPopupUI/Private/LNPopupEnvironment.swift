@@ -25,7 +25,19 @@ internal struct LNPopupBarProgressViewStyleKey: EnvironmentKey {
 }
 
 internal struct LNPopupBarMarqueeScrollEnabledKey: EnvironmentKey {
-	static let defaultValue: Bool = false
+	static let defaultValue: Bool? = nil
+}
+
+internal struct LNPopupBarMarqueeRateKey: EnvironmentKey {
+	static let defaultValue: CGFloat? = nil
+}
+
+internal struct LNPopupBarMarqueeDelayKey: EnvironmentKey {
+	static let defaultValue: TimeInterval? = nil
+}
+
+internal struct LNPopupBarCoordinateMarqueeAnimationsKey: EnvironmentKey {
+	static let defaultValue: Bool? = nil
 }
 
 internal struct LNPopupBarShouldExtendPopupBarUnderSafeAreaKey: EnvironmentKey {
@@ -73,9 +85,24 @@ internal extension EnvironmentValues {
 		set { self[LNPopupBarProgressViewStyleKey.self] = newValue }
 	}
 	
-	var popupBarMarqueeScrollEnabled: Bool {
+	var popupBarMarqueeScrollEnabled: Bool? {
 		get { self[LNPopupBarMarqueeScrollEnabledKey.self] }
 		set { self[LNPopupBarMarqueeScrollEnabledKey.self] = newValue }
+	}
+	
+	var popupBarMarqueeRate: CGFloat? {
+		get { self[LNPopupBarMarqueeRateKey.self] }
+		set { self[LNPopupBarMarqueeRateKey.self] = newValue }
+	}
+	
+	var popupBarMarqueeDelay: TimeInterval? {
+		get { self[LNPopupBarMarqueeDelayKey.self] }
+		set { self[LNPopupBarMarqueeDelayKey.self] = newValue }
+	}
+	
+	var popupBarCoordinateMarqueeAnimations: Bool? {
+		get { self[LNPopupBarCoordinateMarqueeAnimationsKey.self] }
+		set { self[LNPopupBarCoordinateMarqueeAnimationsKey.self] = newValue }
 	}
 	
 	var popupBarShouldExtendPopupBarUnderSafeArea: Bool {

@@ -24,7 +24,10 @@ internal struct LNPopupState<PopupContent: View> {
 	let barStyle: LNPopupBarStyle
 	let barBackgroundStyle: UIBlurEffect.Style
 	let barProgressViewStyle: LNPopupBarProgressViewStyle
-	let barMarqueeScrollEnabled: Bool
+	let barMarqueeScrollEnabled: Bool?
+	let marqueeRate: CGFloat?
+	let marqueeDelay: TimeInterval?
+	let coordinateMarqueeAnimations: Bool?
 	let popupBarShouldExtendPopupBarUnderSafeArea: Bool
 	let customBarView: LNPopupBarCustomView?
 	let contextMenu: AnyView?

@@ -134,7 +134,18 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			self.target.popupPresentationDelegate = self
 			self.target.popupInteractionStyle = self.currentPopupState.interactionStyle
 			self.target.popupBar.progressViewStyle = self.currentPopupState.barProgressViewStyle
-			self.target.popupBar.marqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled
+			if let barMarqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled {
+				self.target.popupBar.marqueeScrollEnabled = barMarqueeScrollEnabled
+			}
+			if let marqueeRate = self.currentPopupState.marqueeRate {
+				self.target.popupBar.marqueeScrollRate = marqueeRate
+			}
+			if let marqueeDelay = self.currentPopupState.marqueeDelay {
+				self.target.popupBar.marqueeScrollDelay = marqueeDelay
+			}
+			if let coordinateMarqueeAnimations = self.currentPopupState.coordinateMarqueeAnimations {
+				self.target.popupBar.coordinateMarqueeScroll = coordinateMarqueeAnimations
+			}
 			self.target.shouldExtendPopupBarUnderSafeArea = self.currentPopupState.popupBarShouldExtendPopupBarUnderSafeArea
 			if let customBarView = self.currentPopupState.customBarView {
 				let rv: LNPopupUICustomPopupBarController

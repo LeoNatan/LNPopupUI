@@ -23,7 +23,10 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupCloseButtonStyle
 	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupBarStyle
 	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupBarProgressViewStyle
-	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: Bool
+	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: Bool?
+	@Environment(\.popupBarMarqueeRate) var popupBarMarqueeRate: CGFloat?
+	@Environment(\.popupBarMarqueeDelay) var popupBarMarqueeDelay: TimeInterval?
+	@Environment(\.popupBarCoordinateMarqueeAnimations) var popupBarCoordinateMarqueeAnimations: Bool?
 	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: Bool
 	@Environment(\.popupBarBackgroundStyle) var popupBarBackgroundStyle: UIBlurEffect.Style?
 	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupBarCustomView?
@@ -57,6 +60,9 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 								 barBackgroundStyle: popupBarBackgroundStyle ?? LNBackgroundStyleInherit,
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
+								 marqueeRate: popupBarMarqueeRate,
+								 marqueeDelay: popupBarMarqueeDelay,
+								 coordinateMarqueeAnimations: popupBarCoordinateMarqueeAnimations,
 								 popupBarShouldExtendPopupBarUnderSafeArea: popupBarShouldExtendPopupBarUnderSafeArea,
 								 customBarView: popupBarCustomBarView,
 								 contextMenu: popupBarContextMenu,
