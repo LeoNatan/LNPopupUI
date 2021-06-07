@@ -201,7 +201,7 @@ public extension View {
 	///   - title: The title to display.
 	///   - subtitle: The subtitle to display. Defaults to `nil`.
 	func popupTitle(verbatim title: String, subtitle: String? = nil) -> some View {
-		return self.preference(key: LNPopupTitlePreferenceKey.self, value: LNPopupTitleData(title: title, subtitle: subtitle))
+		return preference(key: LNPopupTitlePreferenceKey.self, value: LNPopupTitleData(title: title, subtitle: subtitle))
 	}
 	
 	/// Configures the view's popup bar image.
@@ -209,7 +209,7 @@ public extension View {
 	/// - Parameters:
 	///   - image: The image to use.
 	func popupImage(_ image: Image) -> some View {
-		return self.preference(key: LNPopupImagePreferenceKey.self, value: image)
+		return preference(key: LNPopupImagePreferenceKey.self, value: image)
 	}
 	
 	/// Configures the view's popup bar progress.
@@ -217,7 +217,7 @@ public extension View {
 	/// - Parameters:
 	///   - progress: The popup bar progress.
 	func popupProgress(_ progress: Float) -> some View {
-		return self.preference(key: LNPopupProgressPreferenceKey.self, value: progress)
+		return preference(key: LNPopupProgressPreferenceKey.self, value: progress)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -226,8 +226,7 @@ public extension View {
 	///
 	/// - Parameter content: A view that appears on the trailing edge of the popup bar.
 	func popupBarItems<Content>(@ViewBuilder _ content: () -> Content) -> some View where Content : View {
-		return self
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(content().edgesIgnoringSafeArea(.all))))
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(content().edgesIgnoringSafeArea(.all))))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -236,16 +235,14 @@ public extension View {
 	///
 	/// - Parameter leading: A view that appears on the leading edge of the popup bar.
 	func popupBarItems<LeadingContent>(@ViewBuilder leading: () -> LeadingContent) -> some View where LeadingContent: View {
-		return self
-			.preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(leading().edgesIgnoringSafeArea(.all))))
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(leading().edgesIgnoringSafeArea(.all))))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
 	///
 	/// - Parameter trailing: A view that appears on the trailing edge of the popup bar.
 	func popupBarItems<TrailingContent>(@ViewBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: View {
-		return self
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(trailing().edgesIgnoringSafeArea(.all))))
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(trailing().edgesIgnoringSafeArea(.all))))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -255,9 +252,15 @@ public extension View {
 	/// - Parameter leading: A view that appears on the leading edge of the popup bar.
 	/// - Parameter trailing: A view that appears on the trailing edge of the popup bar.
 	func popupBarItems<LeadingContent, TrailingContent>(@ViewBuilder leading: () -> LeadingContent, @ViewBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
-		return self
-			.preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView((leading()))))
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView((leading()))))
 			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView((trailing()))))
+	}
+	
+	/// Designates this view as the popup interaction container. Only gestures within this view will be considered for popup interaction, such as dismissal.
+	///
+	/// @note This method layers a background view behind this view. The background view might interfere with interaction of elements behind it. Use with care.
+	func popupInteractionContainer() -> some View {
+		return background(LNPopupUIInteractionContainerBackgroundView()).preference(key: LNPopupWantsInteractionContainerKey.self, value: true)
 	}
 }
 
@@ -269,7 +272,7 @@ public extension View {
 	///   - bundle: The bundle to search for the image resource and localization content. If `nil`, uses the main `Bundle`. Defaults to `nil`.
 	@available(*, deprecated)
 	func popupImage(_ name: String, bundle: Bundle? = nil) -> some View {
-		return self.popupImage(Image(name, bundle: bundle))
+		return popupImage(Image(name, bundle: bundle))
 	}
 	
 	/// Configures the view's popup bar image with a system symbol image.
@@ -278,7 +281,7 @@ public extension View {
 	///   - systemName: The name of the system symbol image. Use the SF Symbols app to look up the names of system symbol images.
 	@available(*, deprecated)
 	func popupImage(systemName: String) -> some View {
-		return self.popupImage(Image(systemName: systemName))
+		return popupImage(Image(systemName: systemName))
 	}
 	
 	/// Configures the view's popup bar image based on a `UIImage`.
@@ -287,7 +290,7 @@ public extension View {
 	///   - uiImage: The image to use
 	@available(*, deprecated)
 	func popupImage(_ uiImage: UIImage) -> some View {
-		return self.popupImage(Image(uiImage: uiImage))
+		return popupImage(Image(uiImage: uiImage))
 	}
 	
 	/// Configures the view's popup bar image based on a `CGImage`.
@@ -298,6 +301,6 @@ public extension View {
 	///   - orientation: the orientation of the image
 	@available(*, deprecated)
 	func popupImage(_ cgImage: CGImage, scale: CGFloat, orientation: UIImage.Orientation = .up) -> some View {
-		return self.popupImage(Image(decorative: cgImage, scale: scale, orientation: UIImageOrientationToImageOrientation(orientation)))
+		return popupImage(Image(decorative: cgImage, scale: scale, orientation: UIImageOrientationToImageOrientation(orientation)))
 	}
 }

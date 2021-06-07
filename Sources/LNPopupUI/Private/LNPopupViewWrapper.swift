@@ -75,3 +75,14 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 		uiViewController.handlePopupState(state)
 	}
 }
+
+internal class LNPopupUIInteractionContainerView : UIView {
+}
+
+internal struct LNPopupUIInteractionContainerBackgroundView : UIViewRepresentable {
+	func makeUIView(context: Context) -> LNPopupUIInteractionContainerView {
+		return LNPopupUIInteractionContainerView()
+	}
+	
+	func updateUIView(_ uiView: LNPopupUIInteractionContainerView, context: Context) { }
+}
