@@ -80,17 +80,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	func viewHandler(_ state: LNPopupState<PopupContent>) -> (() -> Void) {
 		let view = {
 			return self.currentPopupState.content!()
-				.onPreferenceChange(LNPopupWantsInteractionContainerKey.self) { [weak self] value in
-					guard let value = value, value == true else {
-						return
-					}
-					
-					guard let self = self else {
-						return
-					}
-					
-					self.popupViewController!.setValue(true, forKey: "wantsInteractionContainerLookup")
-				}
 				.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
 					self?.popupViewController?.popupItem.title = titleData?.title
 					self?.popupViewController?.popupItem.subtitle = titleData?.subtitle

@@ -22,10 +22,6 @@ internal struct LNPopupAnyViewWrapper : Equatable {
 	}
 }
 
-internal struct LNPopupWantsInteractionContainerKey: LNPopupNullablePreferenceKey {
-	typealias Value = Bool?
-}
-
 internal struct LNPopupTitlePreferenceKey: LNPopupNullablePreferenceKey {
 	typealias Value = LNPopupTitleData?
 }

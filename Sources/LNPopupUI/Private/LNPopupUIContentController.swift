@@ -10,12 +10,10 @@ import SwiftUI
 import UIKit
 
 internal class LNPopupUIContentController<Content> : UIHostingController<Content> where Content: View {
-	@objc var wantsInteractionContainerLookup: Bool = false
+	@objc var _ln_interactionLimitRect: CGRect = .zero
 	
 	private class func firstSubview<T: UIView>(of view: UIView, ofType: T.Type) -> T? {
-		
 		if let view = view as? T {
-			print(view.value(forKey: "recursiveDescription") ?? "")
 			return view
 		}
 		
@@ -36,11 +34,10 @@ internal class LNPopupUIContentController<Content> : UIHostingController<Content
 		return LNPopupUIContentController.firstSubview(of: view, ofType: LNPopupUIInteractionContainerView.self)
 	}
 	
-	override var viewForPopupInteractionGestureRecognizer: UIView {
-		guard wantsInteractionContainerLookup == true else {
-			return super.viewForPopupInteractionGestureRecognizer
-		}
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
 		
-		return interactionContainerSubview() ?? super.viewForPopupInteractionGestureRecognizer
+		let viewToLimitInteractionTo = interactionContainerSubview() ?? super.viewForPopupInteractionGestureRecognizer
+		_ln_interactionLimitRect = view.convert(viewToLimitInteractionTo.bounds, from: viewToLimitInteractionTo)
 	}
 }

@@ -260,7 +260,7 @@ public extension View {
 	///
 	/// @note This method layers a background view behind this view. The background view might interfere with interaction of elements behind it. Use with care.
 	func popupInteractionContainer() -> some View {
-		return background(LNPopupUIInteractionContainerBackgroundView()).preference(key: LNPopupWantsInteractionContainerKey.self, value: true)
+		return background(LNPopupUIInteractionContainerBackgroundView())
 	}
 }
 
