@@ -19,16 +19,17 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	private let onOpen: (() -> Void)?
 	private let onClose: (() -> Void)?
 	
-	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupInteractionStyle
-	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupCloseButtonStyle
-	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupBarStyle
-	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupBarProgressViewStyle
+	@Environment(\.popupBarInheritsAppearanceFromDockingView) var popupBarInheritsAppearanceFromDockingView: Bool?
+	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupInteractionStyle?
+	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupCloseButtonStyle?
+	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupBarStyle?
+	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupBarProgressViewStyle?
 	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: Bool?
 	@Environment(\.popupBarMarqueeRate) var popupBarMarqueeRate: CGFloat?
 	@Environment(\.popupBarMarqueeDelay) var popupBarMarqueeDelay: TimeInterval?
 	@Environment(\.popupBarCoordinateMarqueeAnimations) var popupBarCoordinateMarqueeAnimations: Bool?
-	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: Bool
-	@Environment(\.popupBarBackgroundStyle) var popupBarBackgroundStyle: UIBlurEffect.Style?
+	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: Bool?
+	@Environment(\.popupBarBackgroundEffect) var popupBarBackgroundEffect: UIBlurEffect?
 	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupBarCustomView?
 	@Environment(\.popupBarContextMenu) var popupBarContextMenu: AnyView?
 	@Environment(\.popupBarCustomizer) var popupBarCustomizer: ((LNPopupBar) -> Void)?
@@ -54,16 +55,17 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 		
 		let state = LNPopupState(isBarPresented: _isBarPresented,
 								 isPopupOpen: _isPopupOpen,
+								 inheritsAppearanceFromDockingView: popupBarInheritsAppearanceFromDockingView,
 								 interactionStyle: popupInteractionStyle,
 								 closeButtonStyle: popupCloseButtonStyle,
 								 barStyle: popupBarStyle,
-								 barBackgroundStyle: popupBarBackgroundStyle ?? LNBackgroundStyleInherit,
+								 barBackgroundEffect: popupBarBackgroundEffect,
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
 								 marqueeRate: popupBarMarqueeRate,
 								 marqueeDelay: popupBarMarqueeDelay,
 								 coordinateMarqueeAnimations: popupBarCoordinateMarqueeAnimations,
-								 popupBarShouldExtendPopupBarUnderSafeArea: popupBarShouldExtendPopupBarUnderSafeArea,
+								 shouldExtendPopupBarUnderSafeArea: popupBarShouldExtendPopupBarUnderSafeArea,
 								 customBarView: popupBarCustomBarView,
 								 contextMenu: popupBarContextMenu,
 								 content: popupContent,

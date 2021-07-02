@@ -17,38 +17,28 @@ struct NavDemoView : View {
 	@Environment(\.colorScheme) private var environmentColorScheme
 	@State private var forcedColorScheme: ColorScheme?
 	
+	func presentBarHandler() {
+		isBarPresented = true
+	}
+	
+	func appearanceHandler() {
+		if let forcedColorScheme = forcedColorScheme {
+			self.forcedColorScheme = forcedColorScheme == .dark ? .light : .dark
+		} else {
+			self.forcedColorScheme = environmentColorScheme == .dark ? .light : .dark
+		}
+	}
+	
+	func hideBarHandler() {
+		isBarPresented = false
+	}
+	
 	var body: some View {
 		NavigationView {
-			SafeAreaDemoView(includeLink: true, onDismiss: onDismiss)
+			SafeAreaDemoView(includeLink: true, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
 				.navigationBarTitle("Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
-				.toolbar {
-					ToolbarItem(placement: .bottomBar) {
-						Button("Present Bar") {
-							isBarPresented = true
-						}
-					}
-					ToolbarItem(placement: .bottomBar) {
-						Spacer()
-					}
-					ToolbarItem(placement: .bottomBar) {
-						Button("Appearance") {
-							if let forcedColorScheme = forcedColorScheme {
-								self.forcedColorScheme = forcedColorScheme == .dark ? .light : .dark
-							} else {
-								forcedColorScheme = environmentColorScheme == .dark ? .light : .dark
-							}
-						}
-					}
-					ToolbarItem(placement: .bottomBar) {
-						Spacer()
-					}
-					ToolbarItem(placement: .bottomBar) {
-						Button("Dismiss Bar") {
-							isBarPresented = false
-						}
-					}
-				}
+				.demoToolbar(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
 				.navigationBarItems(trailing: Button("Gallery") {
 					onDismiss()
 				})

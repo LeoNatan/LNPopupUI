@@ -36,21 +36,69 @@ extension View {
 	}
 }
 
+extension View {
+	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
+		return toolbar {
+			ToolbarItem(placement: .bottomBar) {
+				Button("Present Bar") {
+					presentBarHandler?()
+				}
+			}
+			ToolbarItem(placement: .bottomBar) {
+				Spacer()
+			}
+			ToolbarItem(placement: .bottomBar) {
+				Button("Appearance") {
+					appearanceHandler?()
+				}
+			}
+			ToolbarItem(placement: .bottomBar) {
+				Spacer()
+			}
+			ToolbarItem(placement: .bottomBar) {
+				Button("Dismiss Bar") {
+					hideBarHandler?()
+				}
+			}
+		}
+	}
+}
+
 struct SafeAreaDemoView : View {
 	let includeLink: Bool
 	let offset: Bool
 	let isPopupOpen: Binding<Bool>?
+	
+	let showDismissButton: Bool
 	let onDismiss: (() -> Void)?
+	
 	let colorSeed: String
 	let colorIndex: Int
 	
-	init(colorSeed: String = "nil", colorIndex: Int = 0, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, onDismiss: (() -> Void)? = nil) {
+	let includeToolbar: Bool
+	let presentBarHandler: (() -> Void)?
+	let appearanceHandler: (() -> Void)?
+	let hideBarHandler: (() -> Void)?
+	
+	init(colorSeed: String = "nil", colorIndex: Int = 0, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil) {
 		self.includeLink = includeLink
 		self.offset = offset
 		self.isPopupOpen = isPopupOpen
+		
 		self.onDismiss = onDismiss
+		if let showDismissButton = showDismissButton, showDismissButton == true {
+			self.showDismissButton = showDismissButton && onDismiss != nil
+		} else {
+			self.showDismissButton = false
+		}
+		
 		self.colorSeed = colorSeed
 		self.colorIndex = colorIndex
+		
+		includeToolbar = presentBarHandler != nil || appearanceHandler != nil || hideBarHandler != nil
+		self.presentBarHandler = presentBarHandler
+		self.appearanceHandler = appearanceHandler
+		self.hideBarHandler = hideBarHandler
 	}
 	
 	var body: some View {
@@ -73,17 +121,19 @@ struct SafeAreaDemoView : View {
 					maxHeight: .infinity,
 					alignment: .top)
 			if includeLink {
-				NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeLink: includeLink, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
+				NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
 					.padding()
 			}
 		}
 		.padding(4)
 		.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
 		.font(.system(.headline))
-		.ifLet(onDismiss) { view, onDismiss in
+		.if(showDismissButton) { view in
 			view.navigationBarItems(trailing: Button("Gallery") {
-				onDismiss()
+				onDismiss?()
 			})
+		}.if(includeToolbar) { view in
+			view.demoToolbar(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
 		}
 	}
 }
@@ -122,7 +172,8 @@ extension View {
 			view.popupBarMarqueeScrollEnabled(UserDefaults.standard.bool(forKey: PopupSettingsMarqueeStyle))
 		}
 		.if(UserDefaults.standard.object(forKey: PopupSettingsVisualEffectViewBlurEffect) != nil) { view in
-			view.popupBarBackgroundStyle(UIBlurEffect.Style(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsVisualEffectViewBlurEffect)))
+			view.popupBarInheritsAppearanceFromDockingView(false)
+				.popupBarBackgroundEffect(UIBlurEffect(style: UIBlurEffect.Style(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsVisualEffectViewBlurEffect))!))
 		}
 		.if(UserDefaults.standard.bool(forKey: PopupSettingsEnableCustomizations)) { view in
 			view.popupBarCustomizer { popupBar in
@@ -130,10 +181,12 @@ extension View {
 				paragraphStyle.alignment = .right
 				paragraphStyle.lineBreakMode = .byTruncatingTail
 				
-				popupBar.inheritsVisualStyleFromDockingView = false
-				popupBar.backgroundStyle = .dark
-				popupBar.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
-				popupBar.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+				popupBar.inheritsAppearanceFromDockingView = false
+				
+				popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
+				popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
+				popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+
 				popupBar.tintColor = .yellow
 			}
 		}

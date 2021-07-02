@@ -19,16 +19,17 @@ internal struct LNPopupBarCustomView {
 internal struct LNPopupState<PopupContent: View> {
 	@Binding var isBarPresented: Bool
 	@Binding var isPopupOpen: Bool
-	let interactionStyle: LNPopupInteractionStyle
-	let closeButtonStyle: LNPopupCloseButtonStyle
-	let barStyle: LNPopupBarStyle
-	let barBackgroundStyle: UIBlurEffect.Style
-	let barProgressViewStyle: LNPopupBarProgressViewStyle
+	let inheritsAppearanceFromDockingView: Bool?
+	let interactionStyle: LNPopupInteractionStyle?
+	let closeButtonStyle: LNPopupCloseButtonStyle?
+	let barStyle: LNPopupBarStyle?
+	let barBackgroundEffect: UIBlurEffect?
+	let barProgressViewStyle: LNPopupBarProgressViewStyle?
 	let barMarqueeScrollEnabled: Bool?
 	let marqueeRate: CGFloat?
 	let marqueeDelay: TimeInterval?
 	let coordinateMarqueeAnimations: Bool?
-	let popupBarShouldExtendPopupBarUnderSafeArea: Bool
+	let shouldExtendPopupBarUnderSafeArea: Bool?
 	let customBarView: LNPopupBarCustomView?
 	let contextMenu: AnyView?
 	let content: (() -> PopupContent)?

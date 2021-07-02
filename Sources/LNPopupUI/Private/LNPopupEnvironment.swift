@@ -9,19 +9,19 @@ import SwiftUI
 import LNPopupController
 
 internal struct LNPopupInteractionStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupInteractionStyle = .default
+	static let defaultValue: LNPopupInteractionStyle? = nil
 }
 
 internal struct LNPopupBarStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupBarStyle = .default
+	static let defaultValue: LNPopupBarStyle? = nil
 }
 
 internal struct LNPopupCloseButtonStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupCloseButtonStyle = .default
+	static let defaultValue: LNPopupCloseButtonStyle? = nil
 }
 
 internal struct LNPopupBarProgressViewStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupBarProgressViewStyle = .default
+	static let defaultValue: LNPopupBarProgressViewStyle? = nil
 }
 
 internal struct LNPopupBarMarqueeScrollEnabledKey: EnvironmentKey {
@@ -41,11 +41,15 @@ internal struct LNPopupBarCoordinateMarqueeAnimationsKey: EnvironmentKey {
 }
 
 internal struct LNPopupBarShouldExtendPopupBarUnderSafeAreaKey: EnvironmentKey {
-	static let defaultValue: Bool = true
+	static let defaultValue: Bool? = nil
 }
 
-internal struct LNPopupBarBackgroundStyleKey: EnvironmentKey {
-	static let defaultValue: UIBlurEffect.Style? = nil
+internal struct LNPopupBarInheritsAppearanceFromDockingView: EnvironmentKey {
+	static let defaultValue: Bool? = nil
+}
+
+internal struct LNPopupBarBackgroundEffectKey: EnvironmentKey {
+	static let defaultValue: UIBlurEffect? = nil
 }
 
 internal struct LNPopupBarCustomViewKey: EnvironmentKey {
@@ -65,22 +69,22 @@ internal struct LNPopupContentViewCustomizer: EnvironmentKey {
 }
 
 internal extension EnvironmentValues {
-	var popupInteractionStyle: LNPopupInteractionStyle {
+	var popupInteractionStyle: LNPopupInteractionStyle? {
 		get { self[LNPopupInteractionStyleKey.self] }
 		set { self[LNPopupInteractionStyleKey.self] = newValue }
 	}
 	
-	var popupCloseButtonStyle: LNPopupCloseButtonStyle {
+	var popupCloseButtonStyle: LNPopupCloseButtonStyle? {
 		get { self[LNPopupCloseButtonStyleKey.self] }
 		set { self[LNPopupCloseButtonStyleKey.self] = newValue }
 	}
 	
-	var popupBarStyle: LNPopupBarStyle {
+	var popupBarStyle: LNPopupBarStyle? {
 		get { self[LNPopupBarStyleKey.self] }
 		set { self[LNPopupBarStyleKey.self] = newValue }
 	}
 	
-	var popupBarProgressViewStyle: LNPopupBarProgressViewStyle {
+	var popupBarProgressViewStyle: LNPopupBarProgressViewStyle? {
 		get { self[LNPopupBarProgressViewStyleKey.self] }
 		set { self[LNPopupBarProgressViewStyleKey.self] = newValue }
 	}
@@ -105,14 +109,19 @@ internal extension EnvironmentValues {
 		set { self[LNPopupBarCoordinateMarqueeAnimationsKey.self] = newValue }
 	}
 	
-	var popupBarShouldExtendPopupBarUnderSafeArea: Bool {
+	var popupBarShouldExtendPopupBarUnderSafeArea: Bool? {
 		get { self[LNPopupBarShouldExtendPopupBarUnderSafeAreaKey.self] }
 		set { self[LNPopupBarShouldExtendPopupBarUnderSafeAreaKey.self] = newValue }
 	}
 	
-	var popupBarBackgroundStyle: UIBlurEffect.Style? {
-		get { self[LNPopupBarBackgroundStyleKey.self] }
-		set { self[LNPopupBarBackgroundStyleKey.self] = newValue }
+	var popupBarInheritsAppearanceFromDockingView: Bool? {
+		get { self[LNPopupBarInheritsAppearanceFromDockingView.self] }
+		set { self[LNPopupBarInheritsAppearanceFromDockingView.self] = newValue }
+	}
+	
+	var popupBarBackgroundEffect: UIBlurEffect? {
+		get { self[LNPopupBarBackgroundEffectKey.self] }
+		set { self[LNPopupBarBackgroundEffectKey.self] = newValue }
 	}
 	
 	var popupBarCustomBarView: LNPopupBarCustomView? {

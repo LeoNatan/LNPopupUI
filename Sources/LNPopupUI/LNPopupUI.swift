@@ -91,11 +91,35 @@ public extension View {
 		return environment(\.popupBarShouldExtendPopupBarUnderSafeArea, enabled)
 	}
 	
+	/// Enables or disables the popup bar to automatically inherit its appearance from the bottom docking view, such as toolbar or tab bar.
+	///
+	/// - Parameter enabled: Extend the popup bar under safe area.
+	func popupBarInheritsAppearanceFromDockingView(_ enabled: Bool) -> some View {
+		return environment(\.popupBarInheritsAppearanceFromDockingView, enabled)
+	}
+	
 	/// Sets the popup bar's background style. Use `nil` or `LNBackgroundStyleInherit` to use the most appropriate background style for the environment.
 	///
 	/// - Parameter style: The popup bar's background style.
+	@available(*, deprecated, message: "Use popupBarBackgroundEffect() instead.")
 	func popupBarBackgroundStyle(_ style: UIBlurEffect.Style?) -> some View {
-		return environment(\.popupBarBackgroundStyle, style)
+		let effect: UIBlurEffect?
+		if style == nil {
+			effect = nil
+		//Use explicit value here to prevent a warning.
+		} else if style!.rawValue == -9876 {
+			effect = nil
+		} else {
+			effect = UIBlurEffect(style: style!)
+		}
+		return popupBarBackgroundEffect(effect)
+	}
+	
+	/// Sets the popup bar's background effect. Use `nil` to use the most appropriate background style for the environment.
+	///
+	/// - Parameter effect: The popup bar's background effect.
+	func popupBarBackgroundEffect(_ effect: UIBlurEffect?) -> some View {
+		return environment(\.popupBarBackgroundEffect, effect)
 	}
 	
 	/// Sets a custom popup bar view, instead of the default system-provided bars.

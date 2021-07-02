@@ -132,23 +132,36 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			if state.content != nil {
 				self.target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
 			}
-			self.target.popupContentView.popupCloseButtonStyle = self.currentPopupState.closeButtonStyle
+			
 			self.target.popupPresentationDelegate = self
-			self.target.popupInteractionStyle = self.currentPopupState.interactionStyle
-			self.target.popupBar.progressViewStyle = self.currentPopupState.barProgressViewStyle
+			
+			if let closeButtonStyle = self.currentPopupState.closeButtonStyle {
+				self.target.popupContentView.popupCloseButtonStyle = closeButtonStyle
+			}
+			if let interactionStyle = self.currentPopupState.interactionStyle {
+				self.target.popupInteractionStyle = interactionStyle
+			}
+			if let barProgressViewStyle = self.currentPopupState.barProgressViewStyle {
+				self.target.popupBar.progressViewStyle = barProgressViewStyle
+			}
 			if let barMarqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled {
-				self.target.popupBar.marqueeScrollEnabled = barMarqueeScrollEnabled
+				self.target.popupBar.standardAppearance.marqueeScrollEnabled = barMarqueeScrollEnabled
 			}
 			if let marqueeRate = self.currentPopupState.marqueeRate {
-				self.target.popupBar.marqueeScrollRate = marqueeRate
+				self.target.popupBar.standardAppearance.marqueeScrollRate = marqueeRate
 			}
 			if let marqueeDelay = self.currentPopupState.marqueeDelay {
-				self.target.popupBar.marqueeScrollDelay = marqueeDelay
+				self.target.popupBar.standardAppearance.marqueeScrollDelay = marqueeDelay
 			}
 			if let coordinateMarqueeAnimations = self.currentPopupState.coordinateMarqueeAnimations {
-				self.target.popupBar.coordinateMarqueeScroll = coordinateMarqueeAnimations
+				self.target.popupBar.standardAppearance.coordinateMarqueeScroll = coordinateMarqueeAnimations
 			}
-			self.target.shouldExtendPopupBarUnderSafeArea = self.currentPopupState.popupBarShouldExtendPopupBarUnderSafeArea
+			if let shouldExtendPopupBarUnderSafeArea = self.currentPopupState.shouldExtendPopupBarUnderSafeArea {
+				self.target.shouldExtendPopupBarUnderSafeArea = shouldExtendPopupBarUnderSafeArea
+			}
+			if let inheritsAppearanceFromDockingView = self.currentPopupState.inheritsAppearanceFromDockingView {
+				self.target.popupBar.inheritsAppearanceFromDockingView = inheritsAppearanceFromDockingView
+			}
 			if let customBarView = self.currentPopupState.customBarView {
 				let rv: LNPopupUICustomPopupBarController
 				if let customController = self.target.popupBar.customBarViewController as? LNPopupUICustomPopupBarController {
@@ -163,8 +176,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				rv._wantsDefaultHighlightGestureRecognizer = customBarView.wantsDefaultHighlightGesture
 			} else {
 				self.target.popupBar.customBarViewController = nil
-				self.target.popupBar.barStyle = self.currentPopupState.barStyle
-				self.target.popupBar.backgroundStyle = self.currentPopupState.barBackgroundStyle
+				if let barStyle = self.currentPopupState.barStyle {
+					self.target.popupBar.barStyle = barStyle
+				}
+				
+				if let barBackgroundEffect = self.currentPopupState.barBackgroundEffect {
+					self.target.popupBar.standardAppearance.backgroundEffect = barBackgroundEffect
+				}
 			}
 			
 			if let contextMenu = self.currentPopupState.contextMenu {
