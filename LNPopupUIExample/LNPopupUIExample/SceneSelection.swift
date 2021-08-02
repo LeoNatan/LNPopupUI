@@ -24,7 +24,7 @@ struct SceneSelection: View {
 	var body: some View {
 		NavigationView {
 			List {
-				Section(header: Text("Standard Scenes (Chevron + Snap)").frame(height: 48, alignment: .bottom)) {
+				Section(header: Text("Standard Scenes (Chevron + Snap)")) {
 					Button("Tab View + Navigation View") {
 						tabnavPresented.toggle()
 					}
