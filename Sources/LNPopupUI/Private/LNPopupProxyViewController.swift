@@ -186,14 +186,14 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			}
 			
 			if let contextMenu = self.currentPopupState.contextMenu {
-				let contextHost = AnyView(Color.green.contextMenu {
+				let contextHost = AnyView(Color.green.frame(width: 2, height: 2).contextMenu {
 					contextMenu
 				})
 				
 				if self.popupContextMenuViewController == nil {
 					self.popupContextMenuViewController = UIHostingController(rootView: contextHost)
 					self.popupContextMenuViewController!.view!.translatesAutoresizingMaskIntoConstraints = true
-					self.popupContextMenuViewController!.view!.frame = CGRect(x: -1000000, y: -1000000, width: 3, height: 3)
+					self.popupContextMenuViewController!.view!.frame = CGRect(x: -2, y: -2, width: 2, height: 2)
 					self.target.popupBar.addSubview(self.popupContextMenuViewController!.view!)
 				} else {
 					self.popupContextMenuViewController!.rootView = contextHost
@@ -248,24 +248,24 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	
 	//MARK: UIContextMenuInteractionDelegate
 	
-	fileprivate func actualInteraction() -> UIContextMenuInteraction? {
+	fileprivate var actualInteraction: UIContextMenuInteraction? {
 		return self.popupContextMenuViewController?.view?.interactions.first(where: { $0 is UIContextMenuInteraction }) as? UIContextMenuInteraction
 	}
 	
 	func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-		return actualInteraction()?.delegate?.contextMenuInteraction(interaction, configurationForMenuAtLocation: CGPoint(x: 1.0, y: 1.0))
+		return actualInteraction?.delegate?.contextMenuInteraction(interaction, configurationForMenuAtLocation: CGPoint(x: 1.0, y: 1.0))
 	}
 	
 	func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
-		actualInteraction()?.delegate?.contextMenuInteraction?(interaction, willPerformPreviewActionForMenuWith: configuration, animator: animator)
+		actualInteraction?.delegate?.contextMenuInteraction?(interaction, willPerformPreviewActionForMenuWith: configuration, animator: animator)
 	}
 
 	func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-		actualInteraction()?.delegate?.contextMenuInteraction?(interaction, willEndFor: configuration, animator: animator)
+		actualInteraction?.delegate?.contextMenuInteraction?(interaction, willEndFor: configuration, animator: animator)
 	}
 
 	func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willDisplayMenuFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-		actualInteraction()?.delegate?.contextMenuInteraction?(interaction, willDisplayMenuFor: configuration, animator: animator)
+		actualInteraction?.delegate?.contextMenuInteraction?(interaction, willDisplayMenuFor: configuration, animator: animator)
 	}
 	
 	//MARK: LNPopupPresentationDelegate
