@@ -176,19 +176,20 @@ extension View {
 				.popupBarBackgroundEffect(UIBlurEffect(style: UIBlurEffect.Style(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsVisualEffectViewBlurEffect))!))
 		}
 		.if(UserDefaults.standard.bool(forKey: PopupSettingsEnableCustomizations)) { view in
-			view.popupBarCustomizer { popupBar in
-				let paragraphStyle = NSMutableParagraphStyle()
-				paragraphStyle.alignment = .right
-				paragraphStyle.lineBreakMode = .byTruncatingTail
-				
-				popupBar.inheritsAppearanceFromDockingView = false
-				
-				popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
-				popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
-				popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
-
-				popupBar.tintColor = .yellow
-			}
+			view.popupBarInheritsAppearanceFromDockingView(false)
+				.popupBarCustomizer { popupBar in
+					let paragraphStyle = NSMutableParagraphStyle()
+					paragraphStyle.alignment = .right
+					paragraphStyle.lineBreakMode = .byTruncatingTail
+					
+					popupBar.inheritsAppearanceFromDockingView = false
+					
+					popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
+					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
+					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+					
+					popupBar.tintColor = .yellow
+				}
 		}
 		.popupBarShouldExtendPopupBarUnderSafeArea(UserDefaults.standard.bool(forKey: PopupSettingsExtendBar))
 		.if(includeContextMenu) { view in

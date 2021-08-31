@@ -455,7 +455,7 @@
 				CODE_SIGN_ENTITLEMENTS = LNPopupUIExample/LNPopupUIExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"LNPopupUIExample/Preview Content\"";
-				DEVELOPMENT_TEAM = S9QFG2VH2E;
+				DEVELOPMENT_TEAM = 6Z9ASVU98Y;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = LNPopupUIExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -463,7 +463,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupUIExample-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupUIExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupUIExample/LNPopupUIExample-Bridging-Header.h";
@@ -482,7 +482,7 @@
 				CODE_SIGN_ENTITLEMENTS = LNPopupUIExample/LNPopupUIExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"LNPopupUIExample/Preview Content\"";
-				DEVELOPMENT_TEAM = S9QFG2VH2E;
+				DEVELOPMENT_TEAM = 6Z9ASVU98Y;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = LNPopupUIExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -490,7 +490,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupUIExample-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupUIExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupUIExample/LNPopupUIExample-Bridging-Header.h";

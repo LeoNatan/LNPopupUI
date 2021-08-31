@@ -9,20 +9,6 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-	override init() {
-		#if compiler(>=5.5)
-		if #available(iOS 15.0, *) {
-			let ap = UIToolbarAppearance()
-			ap.configureWithDefaultBackground()
-			UIToolbar.appearance().scrollEdgeAppearance = ap
-			
-			let ap2 = UITabBarAppearance()
-			ap2.configureWithDefaultBackground()
-			UITabBar.appearance().scrollEdgeAppearance = ap2
-		}
-		#endif
-	}
-	
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 		return true

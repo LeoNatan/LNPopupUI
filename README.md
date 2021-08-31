@@ -12,11 +12,11 @@ This is a SwiftUI wrapper of my [LNPopupController framework](https://github.com
 
 See a video of the modern popup look & feel [here](https://vimeo.com/194064291) and a video of the classic popup look & feel [here](https://vimeo.com/137020302).
 
-Once a popup bar is presented with a content view, the user can swipe or tap the popup at any point to present the content view. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
+Once a popup bar is presented with a content view, the user can swipe or tap the popup bar at any point to present the content view. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
 
-The library extends SwiftUI’s `View` with new functionality for presenting and opening popups with content views, as well as setting information such as the popup bar’s title, image and bar button items. When a popup is presented, the popup bar automatically adapts to the view it was presented on for best appearance.
+The library extends SwiftUI’s `View` with new functionality for presenting and customizing popups with content views, as well as setting information such as the popup bar’s title, image and bar button items. When a popup bar is presented, the popup bar automatically adapts to the view it was presented on for best appearance.
 
-Generally, it is recommended to present the popup bar on the outermost view, such as `TabView` or `NavigationView`. So if you have a view contained in a navigation view, which is in turn contained in a tab view, it is recommended to present the popup on the tab view.
+Generally, it is recommended to present the popup bar on the outermost view, such as `TabView` or `NavigationView`. For example, if you have a view contained in a navigation view, which is in turn contained in a tab view, it is recommended to present the popup on the tab view.
 
 Check the demo project for a quick recreation of Apple’s music app.
 
@@ -29,7 +29,7 @@ Check the demo project for a quick recreation of Apple’s music app.
 
 ### Swift Package Manager
 
-LNPopupUI supports SPM versions 5.1.0 (Xcode 11) and above. In Xcode, click `File` -> `Swift Packages` -> `Add Package Dependency`, enter `https://github.com/LeoNatan/LNPopupUI`. Select the version you’d like to use.
+`LNPopupUI` supports SPM versions 5.1.0 (Xcode 11) and above. In Xcode, click `File` -> `Swift Packages` -> `Add Package Dependency`, enter `https://github.com/LeoNatan/LNPopupUI`. Select the version you’d like to use.
 
 You can also manually add the package to your Package.swift file:
 
@@ -104,13 +104,22 @@ VStack {
 
 ### Appearance and Behavior
 
-`LNPopupUI` provides two distinct style of popup look and feel, one based on modern Music app look and feel, and one based on the previous, iOS 9-style look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9-style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current operating system version.
+`LNPopupUI` provides two distinct styles of popup look and feel, one based on modern Music app look and feel, and one based on the previous, iOS 9-style look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9-style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current platform and operating system version.
 
 The defaults are:
+
 * Prominent bar style
 * Snap interaction style
 * Chevron close button style
 * No progress view style
+
+You can also present completely custom popup bars. For more information, see [Custom Popup Bar View](#custom-popup-bar-view).
+
+By default, for navigation and tab views, the appearance of the popup bar is determined according to the container’s bottom bar's appearance. For other container views, a default appearance is used, most suitable for the current environment.
+
+<p align="center"><img src="./Supplements/modern_bar_style.gif" width="360"/></p>
+
+To disable inheriting the bottom bar’s appearance, call the `popupBarInheritsAppearanceFromDockingView()` modifier with `false`.
 
 #### Bar Style
 
@@ -164,9 +173,15 @@ Customizing the popup close button style is achieved by calling the `.popupClose
 .popupCloseButtonStyle(.round)
 ```
 
-To hide the popup close button, set the `popupCloseButtonStyle` to `LNPopupCloseButtonStyleNone` / `.none`.
+To hide the popup close button, set the `popupCloseButtonStyle` to `.none`.
 
 <p align="center"><img src="./Supplements/close_button_none.png" width="360"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="360"/><br/><br/><img src="./Supplements/close_button_round.png" width="360"/></p>
+
+#### Text Marquee Scroll
+
+Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee scroll is enabled. Otherwise, the text will be truncated. To enable text marquee scrolling, use the `popupBarMarqueeScrollEnabled()` modifier.
+
+<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
 
 #### Custom Popup Bar View
 
@@ -214,21 +229,22 @@ You can add a context menu to your popup bar by calling the `.popupBarContextMen
 
 #### Lower-level Bar Customization
 
-LNPopup exposes the `.popupBarCustomizer()` modifier, which allows lower-level customization through the UIKit `LNPopupBar` object.
+`LNPopupUI` exposes the `.popupBarCustomizer()` modifier, which allows lower-level customization through the UIKit `LNPopupBar` object.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
 	//Popup content view
 }
+.popupBarInheritsAppearanceFromDockingView(false)
 .popupBarCustomizer { popupBar in
 	let paragraphStyle = NSMutableParagraphStyle()
 	paragraphStyle.alignment = .right
 	paragraphStyle.lineBreakMode = .byTruncatingTail
 
-	popupBar.inheritsVisualStyleFromDockingView = false
-	popupBar.backgroundStyle = .dark
-	popupBar.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
-	popupBar.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+	popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
+	popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
+	popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+
 	popupBar.tintColor = .yellow
 }
 ```
