@@ -182,8 +182,6 @@ extension View {
 					paragraphStyle.alignment = .right
 					paragraphStyle.lineBreakMode = .byTruncatingTail
 					
-					popupBar.inheritsAppearanceFromDockingView = false
-					
 					popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
 					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
 					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
