@@ -85,10 +85,11 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					self?.popupViewController?.popupItem.subtitle = titleData?.subtitle
 				}
 				.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
-					if let imageController = self?.popupViewController?.popupItem.value(forKey: "swiftuiImageController") as? UIHostingController<Image?> {
-						imageController.rootView = image
+					let anyView = AnyView(erasing: image?.edgesIgnoringSafeArea(.all))
+					if let imageController = self?.popupViewController?.popupItem.value(forKey: "swiftuiImageController") as? UIHostingController<AnyView> {
+						imageController.rootView = anyView
 					} else {
-						self?.popupViewController?.popupItem.setValue(UIHostingController(rootView: image), forKey: "swiftuiImageController")
+						self?.popupViewController?.popupItem.setValue(UIHostingController(rootView: anyView), forKey: "swiftuiImageController")
 					}
 				}
 				.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in

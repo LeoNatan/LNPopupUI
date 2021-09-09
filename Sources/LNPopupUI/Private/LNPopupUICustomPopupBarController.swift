@@ -15,6 +15,16 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 	var _wantsDefaultPanGestureRecognizer: Bool = true
 	var _wantsDefaultHighlightGestureRecognizer: Bool = true
 	
+	var ignoringSizeChangesDueToKeyboardNonsense = false {
+		didSet {
+			UIView.animate(withDuration: 0.2) {
+				self.updatePreferredContentSize()
+			}
+		}
+	}
+	var keyboardObserver1: Any!
+	var keyboardObserver2: Any!
+	
 	override var wantsDefaultTapGestureRecognizer: Bool {
 		return _wantsDefaultTapGestureRecognizer
 	}
@@ -27,15 +37,39 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 		return _wantsDefaultHighlightGestureRecognizer
 	}
 	
-	func setAnyView(_ anyView: AnyView) {
-		hostingChild.rootView = anyView
+	fileprivate class func anyViewIgnoring(_ anyView: AnyView) -> AnyView {
+		let anyViewIgnoring: AnyView
+		if #available(iOS 14, *) {
+			anyViewIgnoring = AnyView(erasing: anyView.ignoresSafeArea(.keyboard))
+		} else {
+			anyViewIgnoring = AnyView(erasing: anyView.edgesIgnoringSafeArea(.all))
+		}
+		return anyViewIgnoring
+	}
+	
+	fileprivate func updatePreferredContentSize() {
+		guard ignoringSizeChangesDueToKeyboardNonsense == false else {
+			return
+		}
 		
-		hostingChild.view.layoutIfNeeded()
 		self.preferredContentSize = hostingChild.sizeThatFits(in: CGSize.zero)
 	}
 	
+	func setAnyView(_ anyView: AnyView) {
+		hostingChild.rootView = LNPopupUICustomPopupBarController.anyViewIgnoring(anyView)
+		
+		hostingChild.view.layoutIfNeeded()
+		updatePreferredContentSize()
+	}
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		updatePreferredContentSize()
+	}
+	
 	required init(anyView: AnyView) {
-		hostingChild = UIHostingController(rootView: anyView)
+		hostingChild = UIHostingController(rootView: LNPopupUICustomPopupBarController.anyViewIgnoring(anyView))
 		
 		super.init(nibName: nil, bundle: nil)
 		
@@ -48,7 +82,15 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 		hostingChild.didMove(toParent: self)
 		
 		hostingChild.view.layoutIfNeeded()
-		self.preferredContentSize = hostingChild.sizeThatFits(in: CGSize.zero)
+		updatePreferredContentSize()
+		
+		//These hacks are necessary to avoid bugs where the SwiftUI layout system reports an incorrect size when the keyboard is open. See https://github.com/LeoNatan/LNPopupUI/issues/11
+		keyboardObserver1 = NotificationCenter.default.addObserver(forName: UIApplication.keyboardWillShowNotification, object: nil, queue: nil) { [unowned self] notification in
+			self.ignoringSizeChangesDueToKeyboardNonsense = true
+		}
+		keyboardObserver2 = NotificationCenter.default.addObserver(forName: UIApplication.keyboardDidHideNotification, object: nil, queue: nil) { [unowned self] notification in
+			self.ignoringSizeChangesDueToKeyboardNonsense = false
+		}
 	}
 	
 	required init?(coder: NSCoder) {
