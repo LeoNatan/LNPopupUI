@@ -49,7 +49,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	
 	fileprivate func createOrUpdateHostingControllerForAnyView(_ vc: inout UIHostingController<AnyView>?, view: AnyView, barButtonItem: inout UIBarButtonItem?, targetBarButtons: ([UIBarButtonItem]) -> Void, leadSpacing: Bool, trailingSpacing: Bool) {
 		UIView.performWithoutAnimation {
-			if let vc = vc, target is UITabBarController || target is UINavigationController || target is UISplitViewController {
+			if let vc = vc {
 				vc.rootView = view
 				vc.view.removeConstraints(vc.view.constraints)
 				vc.view.setNeedsLayout()

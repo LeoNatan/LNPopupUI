@@ -199,15 +199,36 @@ public extension View {
 	/// - Parameters:
 	///   - localizedTitleKey: The localized title key to display.
 	///   - localizedSubtitleKey: The localized subtitle key to display. Defaults to `nil`.
-	func popupTitle<S>(_ localizedTitleKey: S, subtitle localizedSubtitleKey: S? = nil) -> some View where S : StringProtocol {
+	///   - tableName: The name of the string table to search. If `nil`, use the table in the `Localizable.strings` file.
+	///   - bundle: The bundle containing the strings file. If `nil`, use the main bundle.
+	///   - titleComment: Contextual information about the title key-value pair.
+	///   - subtitleComment: Contextual information about the subtitle key-value pair.
+	func popupTitle(_ localizedTitleKey: LocalizedStringKey, subtitle localizedSubtitleKey: LocalizedStringKey? = nil, tableName: String? = nil, bundle: Bundle? = nil, titleComment: String? = nil, subtitleComment: String? = nil) -> some View {
 		let subtitle: String?
 		if let localizedSubtitleKey = localizedSubtitleKey {
-			subtitle = NSLocalizedString(String(localizedSubtitleKey), comment: "")
+			subtitle = NSLocalizedString(localizedSubtitleKey.stringKey, tableName: tableName, bundle: bundle ?? .main, value: localizedSubtitleKey.stringKey, comment: subtitleComment ?? "")
 		} else {
 			subtitle = nil
 		}
 		
-		return popupTitle(verbatim: NSLocalizedString(String(localizedTitleKey), comment: ""), subtitle: subtitle)
+		return popupTitle(verbatim: NSLocalizedString(localizedTitleKey.stringKey, tableName: tableName, bundle: bundle ?? .main, value: localizedTitleKey.stringKey, comment: titleComment ?? ""), subtitle: subtitle)
+	}
+	
+	@_disfavoredOverload
+	/// Configures the view's popup bar title and subtitle.
+	///
+	/// - Parameters:
+	///   - titleContent: The localized title key to display.
+	///   - subtitleContent: The localized subtitle key to display. Defaults to `nil`.
+	func popupTitle<S>(_ titleContent: S, subtitle subtitleContent: S? = nil) -> some View where S : StringProtocol {
+		let subtitle: String?
+		if let subtitleContent = subtitleContent {
+			subtitle = String(subtitleContent)
+		} else {
+			subtitle = nil
+		}
+		
+		return popupTitle(verbatim: String(titleContent), subtitle: subtitle)
 	}
 	
 	/// Configures the view's popup bar title and subtitle.
