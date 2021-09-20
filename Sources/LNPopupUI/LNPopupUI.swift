@@ -231,6 +231,27 @@ public extension View {
 		return popupTitle(verbatim: String(titleContent), subtitle: subtitle)
 	}
 	
+	/// Configures the view's popup bar title with a custom label.
+	///
+	/// - Note: When using custom labels, popup marquee scroll has no effect.
+	/// 
+	/// - Parameters:
+	///   - titleContent: A view that describes the popup's title.
+	func popupTitle<TitleContent>(@ViewBuilder _ titleContent: () -> TitleContent) -> some View where TitleContent : View {
+		return preference(key: LNPopupTextTitlePreferenceKey.self, value: LNPopupTitleContentData(titleView: AnyView(erasing: titleContent()), subtitleView: nil))
+	}
+	
+	/// Configures the view's popup bar title and subtitle with custom labels.
+	///
+	/// - Note: When using custom labels, popup marquee scroll has no effect.
+	///
+	/// - Parameters:
+	///   - titleContent: A view that describes the popup's title.
+	///   - subtitleContent: A view that describes the popup's subtitle.
+	func popupTitle<TitleContent, SubtitleContent>(@ViewBuilder _ titleContent: () -> TitleContent, @ViewBuilder subtitle subtitleContent: () -> SubtitleContent) -> some View where TitleContent : View, SubtitleContent : View {
+		return preference(key: LNPopupTextTitlePreferenceKey.self, value: LNPopupTitleContentData(titleView: AnyView(erasing: titleContent()), subtitleView: AnyView(erasing: subtitleContent())))
+	}
+	
 	/// Configures the view's popup bar title and subtitle.
 	///
 	/// - Parameters:

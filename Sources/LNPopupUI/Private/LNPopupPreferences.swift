@@ -14,6 +14,15 @@ internal struct LNPopupTitleData : Equatable {
 	let subtitle: String?
 }
 
+internal struct LNPopupTitleContentData : Equatable {
+	let titleView: AnyView
+	let subtitleView: AnyView?
+	
+	static func == (lhs: LNPopupTitleContentData, rhs: LNPopupTitleContentData) -> Bool {
+		return false
+	}
+}
+
 internal struct LNPopupAnyViewWrapper : Equatable {
 	let anyView: AnyView
 	
@@ -24,6 +33,10 @@ internal struct LNPopupAnyViewWrapper : Equatable {
 
 internal struct LNPopupTitlePreferenceKey: LNPopupNullablePreferenceKey {
 	typealias Value = LNPopupTitleData?
+}
+
+internal struct LNPopupTextTitlePreferenceKey: LNPopupNullablePreferenceKey {
+	typealias Value = LNPopupTitleContentData?
 }
 
 internal struct LNPopupProgressPreferenceKey: LNPopupNullablePreferenceKey {

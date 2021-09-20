@@ -12,6 +12,7 @@ fileprivate let introWebController = WebController()
 
 struct SceneSelection: View {
 	@State var tabnavPresented: Bool = false
+	@State var tabnavCustomPresented: Bool = false
 	@State var tabPresented: Bool = false
 	@State var navPresented: Bool = false
 	@State var viewPresented: Bool = false
@@ -32,6 +33,15 @@ struct SceneSelection: View {
 					.fullScreenCover(isPresented: $tabnavPresented, content: {
 						TabNavView(demoContent: DemoContent()) {
 							tabnavPresented.toggle()
+						}
+					})
+					Button("Tab View + Navigation View (Custom Labels)") {
+						tabnavCustomPresented.toggle()
+					}
+					.foregroundColor(Color(.label))
+					.fullScreenCover(isPresented: $tabnavCustomPresented, content: {
+						TabNavViewCustomLabels(demoContent: DemoContent()) {
+							tabnavCustomPresented.toggle()
 						}
 					})
 					Button("Tab View") {

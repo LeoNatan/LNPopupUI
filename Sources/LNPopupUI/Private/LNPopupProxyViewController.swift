@@ -56,7 +56,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				let size = vc.sizeThatFits(in: CGSize(width: .max, height: .max))
 				NSLayoutConstraint.activate([
 					vc.view.widthAnchor.constraint(equalToConstant: size.width),
-					vc.view.heightAnchor.constraint(equalToConstant: size.height),
+					vc.view.heightAnchor.constraint(equalToConstant: min(size.height, 44)),
 				])
 
 				barButtonItem!.customView = vc.view
@@ -67,7 +67,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				let size = vc!.sizeThatFits(in: CGSize(width: .max, height: .max))
 				NSLayoutConstraint.activate([
 					vc!.view.widthAnchor.constraint(equalToConstant: size.width),
-					vc!.view.heightAnchor.constraint(equalToConstant: size.height),
+					vc!.view.heightAnchor.constraint(equalToConstant: min(size.height, 44)),
 				])
 				
 				barButtonItem = UIBarButtonItem(customView: vc!.view)
@@ -77,12 +77,45 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		}
 	}
 	
+	func anyView(fromView view: AnyView, isTitle: Bool) -> AnyView {
+		let font = self.target.popupBar.value(forKey: isTitle ? "_titleFont" : "_subtitleFont") as! CTFont
+		let color = self.target.popupBar.value(forKey: isTitle ? "_titleColor" : "_subtitleColor") as! UIColor
+		return AnyView(erasing: view.lineLimit(1).font(Font(font)).foregroundColor(Color(color)))
+	}
+	
 	func viewHandler(_ state: LNPopupState<PopupContent>) -> (() -> Void) {
 		let view = {
 			return self.currentPopupState.content!()
 				.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
 					self?.popupViewController?.popupItem.title = titleData?.title
 					self?.popupViewController?.popupItem.subtitle = titleData?.subtitle
+				}
+				.onPreferenceChange(LNPopupTextTitlePreferenceKey.self) { [weak self] titleData in
+					guard let self = self else {
+						return
+					}
+					
+					if let titleView = titleData?.titleView {
+						let anyView = self.anyView(fromView: titleView, isTitle: true)
+						if let titleController = self.popupViewController?.popupItem.value(forKey: "swiftuiTitleController") as? UIHostingController<AnyView> {
+							titleController.rootView = anyView
+						} else {
+							self.popupViewController?.popupItem.setValue(UIHostingController(rootView: anyView), forKey: "swiftuiTitleController")
+						}
+					} else {
+						self.popupViewController?.popupItem.setValue(nil, forKey: "swiftuiTitleController")
+					}
+					
+					if let subtitleView = titleData?.subtitleView {
+						let anyView = self.anyView(fromView: subtitleView, isTitle: false)
+						if let subtitleController = self.popupViewController?.popupItem.value(forKey: "swiftuiSubtitleController") as? UIHostingController<AnyView> {
+							subtitleController.rootView = anyView
+						} else {
+							self.popupViewController?.popupItem.setValue(UIHostingController(rootView: anyView), forKey: "swiftuiSubtitleController")
+						}
+					} else {
+						self.popupViewController?.popupItem.setValue(nil, forKey: "swiftuiSubtitleController")
+					}
 				}
 				.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
 					let anyView = AnyView(erasing: image?.edgesIgnoringSafeArea(.all))

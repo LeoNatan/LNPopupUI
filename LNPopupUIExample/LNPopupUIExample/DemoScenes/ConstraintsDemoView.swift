@@ -34,6 +34,23 @@ extension View {
 			self
 		}
 	}
+	
+	@ViewBuilder
+	func `if`<Transform: View, ElseTransform: View>(
+		_ value: Bool,
+		transform: (Self) -> Transform,
+		`else` elseTransform: ((Self) -> ElseTransform)? = nil
+	) -> some View {
+		if value {
+			transform(self)
+		} else {
+			if let elseTransform = elseTransform {
+				elseTransform(self)
+			} else {
+				self
+			}
+		}
+	}
 }
 
 extension View {
@@ -141,10 +158,18 @@ struct SafeAreaDemoView : View {
 //return view
 
 extension View {
-	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>, includeContextMenu: Bool = false) -> some View {
+	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>, includeContextMenu: Bool = false, includeCustomTextLabels: Bool = false) -> some View {
 		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
-				.popupTitle(demoContent.title, subtitle: demoContent.subtitle)
+				.if(includeCustomTextLabels) { view in
+					view.popupTitle {
+						Text(demoContent.title).foregroundColor(.red).bold()
+					} subtitle: {
+						Text(demoContent.subtitle)
+					}
+				} else: { view in
+					view.popupTitle(demoContent.title, subtitle: demoContent.subtitle)
+				}
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
 				.popupBarItems({
