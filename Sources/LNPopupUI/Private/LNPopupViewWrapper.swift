@@ -12,7 +12,7 @@ import LNPopupController
 
 internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepresentable where Content: View, PopupContent: View {
 	@Binding private var isBarPresented: Bool
-	@Binding private var isPopupOpen: Bool
+	private var isPopupOpen: Binding<Bool>?
 	private let passthroughContent: () -> Content
 	private let popupContent: (() -> PopupContent)?
 	private let popupContentController: UIViewController?
@@ -35,9 +35,9 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Environment(\.popupBarCustomizer) var popupBarCustomizer: ((LNPopupBar) -> Void)?
 	@Environment(\.popupContentViewCustomizer) var popupContentViewCustomizer: ((LNPopupContentView) -> Void)?
 	
-	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContent: (() -> PopupContent)? = nil, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
+	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContent: (() -> PopupContent)? = nil, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
 		self._isBarPresented = isBarPresented
-		self._isPopupOpen = isOpen
+		self.isPopupOpen = isOpen
 		passthroughContent = content
 		self.popupContent = popupContent
 		self.popupContentController = popupContentController
@@ -54,7 +54,7 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 		uiViewController.rootView = passthroughContent()
 		
 		let state = LNPopupState(isBarPresented: _isBarPresented,
-								 isPopupOpen: _isPopupOpen,
+								 isPopupOpen: isPopupOpen,
 								 inheritsAppearanceFromDockingView: popupBarInheritsAppearanceFromDockingView,
 								 interactionStyle: popupInteractionStyle,
 								 closeButtonStyle: popupCloseButtonStyle,

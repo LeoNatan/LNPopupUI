@@ -21,9 +21,7 @@ public extension View {
 	///   - popupContent: A closure returning the content of the popup.
 	func popup<PopupContent>(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, onOpen: (() -> Void)? = nil, onClose: (() -> Void)? = nil, @ViewBuilder popupContent: @escaping () -> PopupContent) -> some View where PopupContent : View {
 		return ZStack {
-			Text(isBarPresented.wrappedValue ? "1" : "2").hidden()
-			Text(isPopupOpen?.wrappedValue ?? false ? "3" : "4").hidden()
-			LNPopupViewWrapper<Self, PopupContent>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
+			LNPopupViewWrapper<Self, PopupContent>(isBarPresented: isBarPresented, isOpen: isPopupOpen, onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
 				self
 			}.edgesIgnoringSafeArea(.all)
 		}

@@ -48,9 +48,12 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	fileprivate func createOrUpdateHostingControllerForAnyView(_ vc: inout UIHostingController<AnyView>?, view: AnyView, barButtonItem: inout UIBarButtonItem?, targetBarButtons: ([UIBarButtonItem]) -> Void, leadSpacing: Bool, trailingSpacing: Bool) {
+		
+		let anyView = AnyView(erasing: view.font(.system(size: 20)))
+		
 		UIView.performWithoutAnimation {
 			if let vc = vc {
-				vc.rootView = view
+				vc.rootView = anyView
 				vc.view.removeConstraints(vc.view.constraints)
 				vc.view.setNeedsLayout()
 				let size = vc.sizeThatFits(in: CGSize(width: .max, height: .max))
@@ -61,7 +64,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 
 				barButtonItem!.customView = vc.view
 			} else {
-				vc = UIHostingController<AnyView>(rootView: view)
+				vc = UIHostingController<AnyView>(rootView: anyView)
 				vc!.view.backgroundColor = .clear
 				vc!.view.translatesAutoresizingMaskIntoConstraints = false
 				let size = vc!.sizeThatFits(in: CGSize(width: .max, height: .max))
@@ -253,13 +256,15 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				popupContentHandler()
 				
 				if self.target.popupPresentationState.rawValue >= LNPopupPresentationState.barPresented.rawValue {
-					if self.currentPopupState.isPopupOpen == true {
-						self.target.openPopup(animated: true, completion: nil)
-					} else {
-						self.target.closePopup(animated: true, completion: nil)
+					if let isPopupOpen = self.currentPopupState.isPopupOpen {
+						if isPopupOpen.wrappedValue == true {
+							self.target.openPopup(animated: true, completion: nil)
+						} else {
+							self.target.closePopup(animated: true, completion: nil)
+						}
 					}
 				} else {
-					self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen, animated: animated, completion: nil)
+					self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen?.wrappedValue ?? false, animated: animated, completion: nil)
 				}
 			} else {
 				self.target.dismissPopupBar(animated: true, completion: nil)
@@ -313,13 +318,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	func popupPresentationControllerDidOpenPopup(_ popupPresentationController: UIViewController, animated: Bool) {
-		currentPopupState?.isPopupOpen = true
+		currentPopupState?.isPopupOpen?.wrappedValue = true
 		
 		currentPopupState?.onOpen?()
 	}
 	
 	func popupPresentationControllerDidClosePopup(_ popupPresentationController: UIViewController, animated: Bool) {
-		currentPopupState?.isPopupOpen = false
+		currentPopupState?.isPopupOpen?.wrappedValue = false
 		
 		currentPopupState?.onClose?()
 	}
