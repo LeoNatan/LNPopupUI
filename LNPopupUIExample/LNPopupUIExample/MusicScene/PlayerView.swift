@@ -140,7 +140,6 @@ struct PlayerView: View {
 					Image(systemName: "forward.fill")
 				}
 			}
-			.font(.system(size: 20))
 		})
 	}
 }

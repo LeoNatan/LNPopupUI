@@ -186,7 +186,6 @@ extension View {
 							Image(systemName: "forward.fill")
 						}
 					}
-					.font(.system(size: 20))
 				})
 		}
 		.popupBarStyle(LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))!)

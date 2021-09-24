@@ -25,7 +25,12 @@ let url = URL(string: "https://github.com/LeoNatan/LNPopupUI")!
 
 struct PopupDemoWebView: View {
 	var body: some View {
-		WebView(url: url)
+		GeometryReader { geometry in
+			ZStack(alignment: .top) {
+				WebView(url: url)
+				BlurView()
+					.frame(maxWidth: .infinity, minHeight: geometry.safeAreaInsets.top, maxHeight: geometry.safeAreaInsets.top)
+			}
 			.ignoresSafeArea(.all)
 			.popupTitle {
 				HStack {
@@ -39,7 +44,7 @@ struct PopupDemoWebView: View {
 						Image(systemName: "suit.heart.fill")
 					}
 				}
-				.font(.system(size: 20))
 			})
+		}
 	}
 }
