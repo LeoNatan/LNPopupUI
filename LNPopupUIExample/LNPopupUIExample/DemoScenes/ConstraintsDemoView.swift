@@ -163,7 +163,7 @@ extension View {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
 				.if(includeCustomTextLabels) { view in
 					view.popupTitle {
-						Text(demoContent.title).foregroundColor(.red).bold()
+						Text(demoContent.title).foregroundColor(.pink).fontWeight(.heavy)
 					} subtitle: {
 						Text(demoContent.subtitle)
 					}

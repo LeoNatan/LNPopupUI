@@ -8,8 +8,6 @@
 import SwiftUI
 import LNPopupUI
 
-fileprivate let introWebController = WebController()
-
 struct SceneSelection: View {
 	@State var tabnavPresented: Bool = false
 	@State var tabnavCustomPresented: Bool = false
@@ -128,7 +126,9 @@ struct SceneSelection: View {
 		}
 		.navigationViewStyle(StackNavigationViewStyle())
 		.ignoresSafeArea()
-		.popup(isBarPresented: Binding.constant(true), popupContentController: introWebController)
+		.popup(isBarPresented: Binding.constant(true), popupContent: {
+			PopupDemoWebView()
+		})
 		.popupBarMarqueeScrollEnabled(true)
 		.sheet(isPresented: $settingsPresented) {
 			SettingsView()
