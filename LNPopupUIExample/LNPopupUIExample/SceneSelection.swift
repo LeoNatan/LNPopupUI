@@ -10,8 +10,8 @@ import LNPopupUI
 
 struct SceneSelection: View {
 	@State var tabnavPresented: Bool = false
-	@State var tabnavCustomPresented: Bool = false
 	@State var tabPresented: Bool = false
+	@State var tabCustomPresented: Bool = false
 	@State var navPresented: Bool = false
 	@State var viewPresented: Bool = false
 	@State var viewSheetPresented: Bool = false
@@ -33,15 +33,6 @@ struct SceneSelection: View {
 							tabnavPresented.toggle()
 						}
 					})
-					Button("Tab View + Navigation View (Custom Labels)") {
-						tabnavCustomPresented.toggle()
-					}
-					.foregroundColor(Color(.label))
-					.fullScreenCover(isPresented: $tabnavCustomPresented, content: {
-						TabNavViewCustomLabels(demoContent: DemoContent()) {
-							tabnavCustomPresented.toggle()
-						}
-					})
 					Button("Tab View") {
 						tabPresented.toggle()
 					}
@@ -49,6 +40,15 @@ struct SceneSelection: View {
 					.fullScreenCover(isPresented: $tabPresented, content: {
 						TabDemoView(demoContent: DemoContent()) {
 							tabPresented.toggle()
+						}
+					})
+					Button("Tab View (Custom Labels)") {
+						tabCustomPresented.toggle()
+					}
+					.foregroundColor(Color(.label))
+					.fullScreenCover(isPresented: $tabCustomPresented, content: {
+						TabViewCustomLabels(demoContent: DemoContent()) {
+							tabCustomPresented.toggle()
 						}
 					})
 					Button("Navigation View") {

@@ -158,7 +158,7 @@ struct SafeAreaDemoView : View {
 //return view
 
 extension View {
-	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>, includeContextMenu: Bool = false, includeCustomTextLabels: Bool = false) -> some View {
+	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool = false, includeCustomTextLabels: Bool = false) -> some View {
 		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
 				.if(includeCustomTextLabels) { view in
@@ -216,19 +216,10 @@ extension View {
 		.popupBarShouldExtendPopupBarUnderSafeArea(UserDefaults.standard.bool(forKey: PopupSettingsExtendBar))
 		.if(includeContextMenu) { view in
 			view.popupBarContextMenu {
-				Button(action: {
-					print("Context Menu Item 1")
-				}) {
-					Text("Context Menu Item 1")
-					Image(systemName: "globe")
-				}
-				
-				Button(action: {
-					print("Context Menu Item 2")
-				}) {
-					Text("Context Menu Item 2")
-					Image(systemName: "location.circle")
-				}
+				Button("♥️ - Hearts", action: { print ("♥️ - Hearts") })
+				Button("♣️ - Clubs", action: { print ("♣️ - Clubs") })
+				Button("♠️ - Spades", action: { print ("♠️ - Spades") })
+				Button("♦️ - Diamonds", action: { print ("♦️ - Diamonds") })
 			}
 		}
 	}

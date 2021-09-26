@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		390E2B6826F80B510076539D /* TabNavViewCustomLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E2B6726F80B510076539D /* TabNavViewCustomLabels.swift */; };
+		390E2B6826F80B510076539D /* TabViewCustomLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E2B6726F80B510076539D /* TabViewCustomLabels.swift */; };
 		394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 394DC7242604D1740010BED4 /* SettingsTableViewController.m */; };
 		394DC7282604D1F30010BED4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394DC7272604D1F30010BED4 /* Settings.storyboard */; };
 		395781D524DC5D2700A604D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D424DC5D2700A604D1 /* AppDelegate.swift */; };
@@ -49,7 +49,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		390E2B6726F80B510076539D /* TabNavViewCustomLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavViewCustomLabels.swift; sourceTree = "<group>"; };
+		390E2B6726F80B510076539D /* TabViewCustomLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewCustomLabels.swift; sourceTree = "<group>"; };
 		394DC7232604D1740010BED4 /* SettingsTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		394DC7242604D1740010BED4 /* SettingsTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		394DC7262604D19B0010BED4 /* LNPopupUIExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupUIExample-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -178,8 +178,8 @@
 				39ED3ADC256C706400744717 /* DemoContent.swift */,
 				39AAAA6D25040FF400E5FD41 /* ConstraintsDemoView.swift */,
 				39AAAA6B25040FA900E5FD41 /* TabNavView.swift */,
-				390E2B6726F80B510076539D /* TabNavViewCustomLabels.swift */,
 				39AAAA6F2504144300E5FD41 /* TabDemoView.swift */,
+				390E2B6726F80B510076539D /* TabViewCustomLabels.swift */,
 				398DB7AC250400BE00CD89DB /* NavDemoView.swift */,
 				39AAAA71250415E800E5FD41 /* ViewDemoView.swift */,
 			);
@@ -300,7 +300,7 @@
 				39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */,
 				39ED3ADD256C706400744717 /* DemoContent.swift in Sources */,
 				394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */,
-				390E2B6826F80B510076539D /* TabNavViewCustomLabels.swift in Sources */,
+				390E2B6826F80B510076539D /* TabViewCustomLabels.swift in Sources */,
 				39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */,
 				395781F324DC692300A604D1 /* PlayerView.swift in Sources */,
 				398DB7AD250400BE00CD89DB /* NavDemoView.swift in Sources */,

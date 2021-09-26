@@ -21,6 +21,9 @@ public extension View {
 	///   - popupContent: A closure returning the content of the popup.
 	func popup<PopupContent>(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, onOpen: (() -> Void)? = nil, onClose: (() -> Void)? = nil, @ViewBuilder popupContent: @escaping () -> PopupContent) -> some View where PopupContent : View {
 		return ZStack {
+			//These two lines are to make sure the system rerenders if the isBarPresented and isPopupOpen bindings change.
+			isBarPresented.wrappedValue ? EmptyView() : EmptyView()
+			isPopupOpen?.wrappedValue ?? false  ? EmptyView() : EmptyView()
 			LNPopupViewWrapper<Self, PopupContent>(isBarPresented: isBarPresented, isOpen: isPopupOpen, onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
 				self
 			}.edgesIgnoringSafeArea(.all)
@@ -36,9 +39,14 @@ public extension View {
 	///   - onClose: A closure executed when the popup closes. (optional)
 	///   - popupContentController: A UIKit view controller to use as the popup content controller.
 	func popup(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, onOpen: (() -> Void)? = nil, onClose: (() -> Void)? = nil, popupContentController: UIViewController) -> some View {
-		return LNPopupViewWrapper<Self, EmptyView>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContentController: popupContentController) {
-			self
-		}.edgesIgnoringSafeArea(.all)
+		return ZStack {
+			//These two lines are to make sure the system rerenders if the isBarPresented and isPopupOpen bindings change.
+			isBarPresented.wrappedValue ? EmptyView() : EmptyView()
+			isPopupOpen?.wrappedValue ?? false  ? EmptyView() : EmptyView()
+			LNPopupViewWrapper<Self, EmptyView>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContentController: popupContentController) {
+				self
+			}.edgesIgnoringSafeArea(.all)
+		}
 	}
 	
 	/// Sets the popup interaction style.

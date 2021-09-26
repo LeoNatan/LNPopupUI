@@ -11,7 +11,6 @@ import LNPopupUI
 
 struct NavDemoView : View {
 	@State private var isBarPresented: Bool = true
-	@State private var isPopupOpen: Bool = false
 	let demoContent: DemoContent
 	let onDismiss: () -> Void
 	@Environment(\.colorScheme) private var environmentColorScheme
@@ -45,7 +44,7 @@ struct NavDemoView : View {
 		}
 		.colorScheme(forcedColorScheme ?? environmentColorScheme)
 		.navigationViewStyle(StackNavigationViewStyle())
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen)
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented)
 	}
 }
 

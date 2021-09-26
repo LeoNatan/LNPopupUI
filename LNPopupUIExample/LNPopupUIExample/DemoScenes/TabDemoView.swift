@@ -30,7 +30,6 @@ struct InnerView : View {
 
 struct TabDemoView : View {
 	@State private var isBarPresented: Bool = true
-	@State private var isPopupOpen: Bool = false
 	private let onDismiss: () -> Void
 	let demoContent: DemoContent
 	
@@ -67,7 +66,7 @@ struct TabDemoView : View {
 					Text("Tab")
 				}
 		}
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen)
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented)
 	}
 }
 
