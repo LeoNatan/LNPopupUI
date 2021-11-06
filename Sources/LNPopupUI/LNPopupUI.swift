@@ -24,7 +24,7 @@ public extension View {
 			//These two lines are to make sure the system rerenders if the isBarPresented and isPopupOpen bindings change.
 			isBarPresented.wrappedValue ? EmptyView() : EmptyView()
 			isPopupOpen?.wrappedValue ?? false  ? EmptyView() : EmptyView()
-			LNPopupViewWrapper<Self, PopupContent>(isBarPresented: isBarPresented, isOpen: isPopupOpen, onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
+			LNPopupViewWrapper(isBarPresented: isBarPresented, isOpen: isPopupOpen, onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
 				self
 			}.edgesIgnoringSafeArea(.all)
 		}

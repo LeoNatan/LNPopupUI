@@ -129,7 +129,6 @@ struct SceneSelection: View {
 		.popup(isBarPresented: Binding.constant(true), popupContent: {
 			PopupDemoWebView()
 		})
-		.popupBarMarqueeScrollEnabled(true)
 		.sheet(isPresented: $settingsPresented) {
 			SettingsView()
 		}
