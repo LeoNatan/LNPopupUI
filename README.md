@@ -227,6 +227,14 @@ You can add a context menu to your popup bar by calling the `.popupBarContextMen
 
 <p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="360"/></p>
 
+
+
+#### ProMotion Support
+
+`LNPopupUI` fully supports ProMotion on iPhone and iPad.
+
+For iPhone 13 Pro and above, you need to add the `CADisableMinimumFrameDurationOnPhone` key to your Info.plist and set it to `true`. See [Optimizing ProMotion Refresh Rates for iPhone 13 Pro and iPad Pro](https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro?language=objc) for more information. `LNPopupUI` will log a single warning message in the console if this key is missing, or is set to `false`.
+
 #### Lower-level Bar Customization
 
 `LNPopupUI` exposes the `.popupBarCustomizer()` modifier, which allows lower-level customization through the UIKit `LNPopupBar` object.

@@ -12,3 +12,5 @@ internal extension LocalizedStringKey {
 		return Mirror(reflecting: self).children.first(where: { $0.label == "key" })!.value as! String
 	}
 }
+
+@objc(__LNPopupUI) fileprivate class __LNPopupUI: NSObject {}

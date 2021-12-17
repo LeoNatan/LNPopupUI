@@ -7,7 +7,6 @@
 
 import SwiftUI
 @_exported import LNPopupController
-import Combine
 
 public extension View {
 	
