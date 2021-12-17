@@ -7,6 +7,7 @@
 
 import SwiftUI
 import LNPopupUI
+import ActivityView
 
 struct SceneSelection: View {
 	@State var tabnavPresented: Bool = false
@@ -19,6 +20,7 @@ struct SceneSelection: View {
 	@State var mapSheetPresented: Bool = false
 	
 	@State var settingsPresented: Bool = false
+	@State private var item: ActivityItem? = nil
 	
 	var body: some View {
 		NavigationView {
@@ -129,9 +131,30 @@ struct SceneSelection: View {
 		.popup(isBarPresented: Binding.constant(true), popupContent: {
 			PopupDemoWebView()
 		})
+		.popupBarContextMenu {
+			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI")!) {
+				Text("Visit GitHub Page")
+				Image(systemName: "safari")
+			}
+			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI/issues/new/choose")!) {
+				Text("Report an Issue…")
+				Image(systemName: "ant.fill")
+			}
+			Divider()
+			Button {
+				item = ActivityItem(
+					items: URL(string: "https://github.com/LeoNatan/LNPopupUI")!
+				)
+			} label: {
+				Text("Share…")
+				Image(systemName: "square.and.arrow.up")
+			}
+
+		}
 		.sheet(isPresented: $settingsPresented) {
 			SettingsView()
 		}
+		.activitySheet($item)
 	}
 }
 

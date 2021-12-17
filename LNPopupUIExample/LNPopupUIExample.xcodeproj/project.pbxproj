@@ -10,6 +10,7 @@
 		390E2B6826F80B510076539D /* TabViewCustomLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E2B6726F80B510076539D /* TabViewCustomLabels.swift */; };
 		394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 394DC7242604D1740010BED4 /* SettingsTableViewController.m */; };
 		394DC7282604D1F30010BED4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394DC7272604D1F30010BED4 /* Settings.storyboard */; };
+		394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */ = {isa = PBXBuildFile; productRef = 394E1AAB276C137400C5BE31 /* ActivityView */; };
 		395781D524DC5D2700A604D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D424DC5D2700A604D1 /* AppDelegate.swift */; };
 		395781D724DC5D2700A604D1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D624DC5D2700A604D1 /* SceneDelegate.swift */; };
 		395781D924DC5D2700A604D1 /* MusicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D824DC5D2700A604D1 /* MusicView.swift */; };
@@ -84,6 +85,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39E18E3B24F059F50096391B /* LNPopupUI in Frameworks */,
+				394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */,
 				3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -226,6 +228,7 @@
 			packageProductDependencies = (
 				39E18E3A24F059F50096391B /* LNPopupUI */,
 				3998CA54268BC3C300A60468 /* LoremIpsum */,
+				394E1AAB276C137400C5BE31 /* ActivityView */,
 			);
 			productName = LNPopupUIExample;
 			productReference = 395781D124DC5D2700A604D1 /* LNPopupUIExample.app */;
@@ -257,6 +260,7 @@
 			mainGroup = 395781C824DC5D2700A604D1;
 			packageReferences = (
 				3998CA53268BC3B700A60468 /* XCRemoteSwiftPackageReference "LoremIpsum" */,
+				394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */,
 			);
 			productRefGroup = 395781D224DC5D2700A604D1 /* Products */;
 			projectDirPath = "";
@@ -527,6 +531,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftUI-Plus/ActivityView";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		3998CA53268BC3B700A60468 /* XCRemoteSwiftPackageReference "LoremIpsum" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/LeoNatan/LoremIpsum";
@@ -538,6 +550,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		394E1AAB276C137400C5BE31 /* ActivityView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */;
+			productName = ActivityView;
+		};
 		3998CA54268BC3C300A60468 /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3998CA53268BC3B700A60468 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
