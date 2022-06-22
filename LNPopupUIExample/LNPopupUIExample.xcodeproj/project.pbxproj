@@ -11,7 +11,6 @@
 		394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 394DC7242604D1740010BED4 /* SettingsTableViewController.m */; };
 		394DC7282604D1F30010BED4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394DC7272604D1F30010BED4 /* Settings.storyboard */; };
 		394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */ = {isa = PBXBuildFile; productRef = 394E1AAB276C137400C5BE31 /* ActivityView */; };
-		394E1AAE276C170D00C5BE31 /* LNPopupUI-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 394E1AAD276C170D00C5BE31 /* LNPopupUI-Static */; };
 		395781D524DC5D2700A604D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D424DC5D2700A604D1 /* AppDelegate.swift */; };
 		395781D724DC5D2700A604D1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D624DC5D2700A604D1 /* SceneDelegate.swift */; };
 		395781D924DC5D2700A604D1 /* MusicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D824DC5D2700A604D1 /* MusicView.swift */; };
@@ -33,6 +32,7 @@
 		39E18E3C24F059F50096391B /* LNPopupUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */; };
 		39ED3ADD256C706400744717 /* DemoContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39ED3ADC256C706400744717 /* DemoContent.swift */; };
+		39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -85,8 +85,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */,
+				39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */,
 				3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */,
-				394E1AAE276C170D00C5BE31 /* LNPopupUI-Static in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,7 +229,6 @@
 				39E18E3A24F059F50096391B /* LNPopupUI */,
 				3998CA54268BC3C300A60468 /* LoremIpsum */,
 				394E1AAB276C137400C5BE31 /* ActivityView */,
-				394E1AAD276C170D00C5BE31 /* LNPopupUI-Static */,
 			);
 			productName = LNPopupUIExample;
 			productReference = 395781D124DC5D2700A604D1 /* LNPopupUIExample.app */;
@@ -555,10 +554,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */;
 			productName = ActivityView;
-		};
-		394E1AAD276C170D00C5BE31 /* LNPopupUI-Static */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = "LNPopupUI-Static";
 		};
 		3998CA54268BC3C300A60468 /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -19,21 +19,21 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	private let onOpen: (() -> Void)?
 	private let onClose: (() -> Void)?
 	
-	@Environment(\.popupBarInheritsAppearanceFromDockingView) var popupBarInheritsAppearanceFromDockingView: Bool?
-	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupInteractionStyle?
-	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupCloseButtonStyle?
-	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupBarStyle?
-	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupBarProgressViewStyle?
-	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: Bool?
-	@Environment(\.popupBarMarqueeRate) var popupBarMarqueeRate: CGFloat?
-	@Environment(\.popupBarMarqueeDelay) var popupBarMarqueeDelay: TimeInterval?
-	@Environment(\.popupBarCoordinateMarqueeAnimations) var popupBarCoordinateMarqueeAnimations: Bool?
-	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: Bool?
-	@Environment(\.popupBarBackgroundEffect) var popupBarBackgroundEffect: UIBlurEffect?
-	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupBarCustomView?
-	@Environment(\.popupBarContextMenu) var popupBarContextMenu: AnyView?
-	@Environment(\.popupBarCustomizer) var popupBarCustomizer: ((LNPopupBar) -> Void)?
-	@Environment(\.popupContentViewCustomizer) var popupContentViewCustomizer: ((LNPopupContentView) -> Void)?
+	@Environment(\.popupBarInheritsAppearanceFromDockingView) var popupBarInheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
+	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupEnvironmentConsumer<LNPopupInteractionStyle>?
+	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>?
+	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupEnvironmentConsumer<LNPopupBarStyle>?
+	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>?
+	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
+	@Environment(\.popupBarMarqueeRate) var popupBarMarqueeRate: LNPopupEnvironmentConsumer<CGFloat>?
+	@Environment(\.popupBarMarqueeDelay) var popupBarMarqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>?
+	@Environment(\.popupBarCoordinateMarqueeAnimations) var popupBarCoordinateMarqueeAnimations: LNPopupEnvironmentConsumer<Bool>?
+	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: LNPopupEnvironmentConsumer<Bool>?
+	@Environment(\.popupBarBackgroundEffect) var popupBarBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
+	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>?
+	@Environment(\.popupBarContextMenu) var popupBarContextMenu: LNPopupEnvironmentConsumer<AnyView>?
+	@Environment(\.popupBarCustomizer) var popupBarCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
+	@Environment(\.popupContentViewCustomizer) var popupContentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
 	
 	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContent: (() -> PopupContent)? = nil, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
 		self._isBarPresented = isBarPresented

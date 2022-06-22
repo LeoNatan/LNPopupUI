@@ -172,34 +172,34 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			
 			self.target.popupPresentationDelegate = self
 			
-			if let closeButtonStyle = self.currentPopupState.closeButtonStyle {
+			if let closeButtonStyle = self.currentPopupState.closeButtonStyle?.consume(self) {
 				self.target.popupContentView.popupCloseButtonStyle = closeButtonStyle
 			}
-			if let interactionStyle = self.currentPopupState.interactionStyle {
+			if let interactionStyle = self.currentPopupState.interactionStyle?.consume(self) {
 				self.target.popupInteractionStyle = interactionStyle
 			}
-			if let barProgressViewStyle = self.currentPopupState.barProgressViewStyle {
+			if let barProgressViewStyle = self.currentPopupState.barProgressViewStyle?.consume(self) {
 				self.target.popupBar.progressViewStyle = barProgressViewStyle
 			}
-			if let barMarqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled {
+			if let barMarqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled?.consume(self) {
 				self.target.popupBar.standardAppearance.marqueeScrollEnabled = barMarqueeScrollEnabled
 			}
-			if let marqueeRate = self.currentPopupState.marqueeRate {
+			if let marqueeRate = self.currentPopupState.marqueeRate?.consume(self) {
 				self.target.popupBar.standardAppearance.marqueeScrollRate = marqueeRate
 			}
-			if let marqueeDelay = self.currentPopupState.marqueeDelay {
+			if let marqueeDelay = self.currentPopupState.marqueeDelay?.consume(self) {
 				self.target.popupBar.standardAppearance.marqueeScrollDelay = marqueeDelay
 			}
-			if let coordinateMarqueeAnimations = self.currentPopupState.coordinateMarqueeAnimations {
+			if let coordinateMarqueeAnimations = self.currentPopupState.coordinateMarqueeAnimations?.consume(self) {
 				self.target.popupBar.standardAppearance.coordinateMarqueeScroll = coordinateMarqueeAnimations
 			}
-			if let shouldExtendPopupBarUnderSafeArea = self.currentPopupState.shouldExtendPopupBarUnderSafeArea {
+			if let shouldExtendPopupBarUnderSafeArea = self.currentPopupState.shouldExtendPopupBarUnderSafeArea?.consume(self) {
 				self.target.shouldExtendPopupBarUnderSafeArea = shouldExtendPopupBarUnderSafeArea
 			}
-			if let inheritsAppearanceFromDockingView = self.currentPopupState.inheritsAppearanceFromDockingView {
+			if let inheritsAppearanceFromDockingView = self.currentPopupState.inheritsAppearanceFromDockingView?.consume(self) {
 				self.target.popupBar.inheritsAppearanceFromDockingView = inheritsAppearanceFromDockingView
 			}
-			if let customBarView = self.currentPopupState.customBarView {
+			if let customBarView = self.currentPopupState.customBarView?.consume(self) {
 				let rv: LNPopupUICustomPopupBarController
 				if let customController = self.target.popupBar.customBarViewController as? LNPopupUICustomPopupBarController {
 					rv = customController
@@ -213,16 +213,16 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				rv._wantsDefaultHighlightGestureRecognizer = customBarView.wantsDefaultHighlightGesture
 			} else {
 				self.target.popupBar.customBarViewController = nil
-				if let barStyle = self.currentPopupState.barStyle {
+				if let barStyle = self.currentPopupState.barStyle?.consume(self) {
 					self.target.popupBar.barStyle = barStyle
 				}
 				
-				if let barBackgroundEffect = self.currentPopupState.barBackgroundEffect {
+				if let barBackgroundEffect = self.currentPopupState.barBackgroundEffect?.consume(self) {
 					self.target.popupBar.standardAppearance.backgroundEffect = barBackgroundEffect
 				}
 			}
 			
-			if let contextMenu = self.currentPopupState.contextMenu {
+			if let contextMenu = self.currentPopupState.contextMenu?.consume(self) {
 				let contextHost = AnyView(Color.green.frame(width: 2, height: 2).contextMenu {
 					contextMenu
 				})
@@ -249,8 +249,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				self.popupContextMenuInteraction = nil
 			}
 			
-			self.currentPopupState.barCustomizer?(self.target.popupBar)
-			self.currentPopupState.contentViewCustomizer?(self.target.popupContentView)
+			self.currentPopupState.barCustomizer?.consume(self)?(self.target.popupBar)
+			self.currentPopupState.contentViewCustomizer?.consume(self)?(self.target.popupContentView)
 			
 			if self.currentPopupState.isBarPresented == true {
 				popupContentHandler()

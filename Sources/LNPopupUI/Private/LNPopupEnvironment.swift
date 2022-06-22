@@ -8,138 +8,160 @@
 import SwiftUI
 import LNPopupController
 
+internal final class LNPopupEnvironmentConsumer<T> {
+	private let wrapped: T
+	private unowned var consumer: AnyObject? = nil
+	
+	init?(_ wrapped: T?) {
+		guard let wrapped = wrapped else {
+			return nil
+		}
+		
+		self.wrapped = wrapped
+	}
+	
+	func consume(_ consumer: AnyObject) -> T? {
+		guard self.consumer == nil || self.consumer === consumer else {
+			return nil
+		}
+		
+		self.consumer = consumer
+		return wrapped
+	}
+}
+
 internal struct LNPopupInteractionStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupInteractionStyle? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupInteractionStyle>? = nil
 }
 
 internal struct LNPopupBarStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupBarStyle? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupBarStyle>? = nil
 }
 
 internal struct LNPopupCloseButtonStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupCloseButtonStyle? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>? = nil
 }
 
 internal struct LNPopupBarProgressViewStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupBarProgressViewStyle? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>? = nil
 }
 
 internal struct LNPopupBarMarqueeScrollEnabledKey: EnvironmentKey {
-	static let defaultValue: Bool? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<Bool>? = nil
 }
 
 internal struct LNPopupBarMarqueeRateKey: EnvironmentKey {
-	static let defaultValue: CGFloat? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<CGFloat>? = nil
 }
 
 internal struct LNPopupBarMarqueeDelayKey: EnvironmentKey {
-	static let defaultValue: TimeInterval? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<TimeInterval>? = nil
 }
 
 internal struct LNPopupBarCoordinateMarqueeAnimationsKey: EnvironmentKey {
-	static let defaultValue: Bool? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<Bool>? = nil
 }
 
 internal struct LNPopupBarShouldExtendPopupBarUnderSafeAreaKey: EnvironmentKey {
-	static let defaultValue: Bool? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<Bool>? = nil
 }
 
 internal struct LNPopupBarInheritsAppearanceFromDockingView: EnvironmentKey {
-	static let defaultValue: Bool? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<Bool>? = nil
 }
 
 internal struct LNPopupBarBackgroundEffectKey: EnvironmentKey {
-	static let defaultValue: UIBlurEffect? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<UIBlurEffect>? = nil
 }
 
 internal struct LNPopupBarCustomViewKey: EnvironmentKey {
-	static let defaultValue: LNPopupBarCustomView? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupBarCustomView>? = nil
 }
 
 internal struct LNPopupBarContextMenuKey: EnvironmentKey {
-	static let defaultValue: AnyView? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<AnyView>? = nil
 }
 
 internal struct LNPopupBarCustomizer: EnvironmentKey {
-	static let defaultValue: ((LNPopupBar) -> Void)? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>? = nil
 }
 
 internal struct LNPopupContentViewCustomizer: EnvironmentKey {
-	static let defaultValue: ((LNPopupContentView) -> Void)? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>? = nil
 }
 
 internal extension EnvironmentValues {
-	var popupInteractionStyle: LNPopupInteractionStyle? {
+	var popupInteractionStyle: LNPopupEnvironmentConsumer<LNPopupInteractionStyle>? {
 		get { self[LNPopupInteractionStyleKey.self] }
 		set { self[LNPopupInteractionStyleKey.self] = newValue }
 	}
 	
-	var popupCloseButtonStyle: LNPopupCloseButtonStyle? {
+	var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>? {
 		get { self[LNPopupCloseButtonStyleKey.self] }
 		set { self[LNPopupCloseButtonStyleKey.self] = newValue }
 	}
 	
-	var popupBarStyle: LNPopupBarStyle? {
+	var popupBarStyle: LNPopupEnvironmentConsumer<LNPopupBarStyle>? {
 		get { self[LNPopupBarStyleKey.self] }
 		set { self[LNPopupBarStyleKey.self] = newValue }
 	}
 	
-	var popupBarProgressViewStyle: LNPopupBarProgressViewStyle? {
+	var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>? {
 		get { self[LNPopupBarProgressViewStyleKey.self] }
 		set { self[LNPopupBarProgressViewStyleKey.self] = newValue }
 	}
 	
-	var popupBarMarqueeScrollEnabled: Bool? {
+	var popupBarMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>? {
 		get { self[LNPopupBarMarqueeScrollEnabledKey.self] }
 		set { self[LNPopupBarMarqueeScrollEnabledKey.self] = newValue }
 	}
 	
-	var popupBarMarqueeRate: CGFloat? {
+	var popupBarMarqueeRate: LNPopupEnvironmentConsumer<CGFloat>? {
 		get { self[LNPopupBarMarqueeRateKey.self] }
 		set { self[LNPopupBarMarqueeRateKey.self] = newValue }
 	}
 	
-	var popupBarMarqueeDelay: TimeInterval? {
+	var popupBarMarqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>? {
 		get { self[LNPopupBarMarqueeDelayKey.self] }
 		set { self[LNPopupBarMarqueeDelayKey.self] = newValue }
 	}
 	
-	var popupBarCoordinateMarqueeAnimations: Bool? {
+	var popupBarCoordinateMarqueeAnimations: LNPopupEnvironmentConsumer<Bool>? {
 		get { self[LNPopupBarCoordinateMarqueeAnimationsKey.self] }
 		set { self[LNPopupBarCoordinateMarqueeAnimationsKey.self] = newValue }
 	}
 	
-	var popupBarShouldExtendPopupBarUnderSafeArea: Bool? {
+	var popupBarShouldExtendPopupBarUnderSafeArea: LNPopupEnvironmentConsumer<Bool>? {
 		get { self[LNPopupBarShouldExtendPopupBarUnderSafeAreaKey.self] }
 		set { self[LNPopupBarShouldExtendPopupBarUnderSafeAreaKey.self] = newValue }
 	}
 	
-	var popupBarInheritsAppearanceFromDockingView: Bool? {
+	var popupBarInheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>? {
 		get { self[LNPopupBarInheritsAppearanceFromDockingView.self] }
 		set { self[LNPopupBarInheritsAppearanceFromDockingView.self] = newValue }
 	}
 	
-	var popupBarBackgroundEffect: UIBlurEffect? {
+	var popupBarBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>? {
 		get { self[LNPopupBarBackgroundEffectKey.self] }
 		set { self[LNPopupBarBackgroundEffectKey.self] = newValue }
 	}
 	
-	var popupBarCustomBarView: LNPopupBarCustomView? {
+	var popupBarCustomBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>? {
 		get { self[LNPopupBarCustomViewKey.self] }
 		set { self[LNPopupBarCustomViewKey.self] = newValue }
 	}
 	
-	var popupBarContextMenu: AnyView? {
+	var popupBarContextMenu: LNPopupEnvironmentConsumer<AnyView>? {
 		get { self[LNPopupBarContextMenuKey.self] }
 		set { self[LNPopupBarContextMenuKey.self] = newValue }
 	}
 	
-	var popupBarCustomizer: ((LNPopupBar) -> Void)? {
+	var popupBarCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>? {
 		get { self[LNPopupBarCustomizer.self] }
 		set { self[LNPopupBarCustomizer.self] = newValue }
 	}
 	
-	var popupContentViewCustomizer: ((LNPopupContentView) -> Void)? {
+	var popupContentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>? {
 		get { self[LNPopupContentViewCustomizer.self] }
 		set { self[LNPopupContentViewCustomizer.self] = newValue }
 	}

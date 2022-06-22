@@ -19,23 +19,23 @@ internal struct LNPopupBarCustomView {
 internal struct LNPopupState<PopupContent: View> {
 	@Binding var isBarPresented: Bool
 	var isPopupOpen: Binding<Bool>?
-	let inheritsAppearanceFromDockingView: Bool?
-	let interactionStyle: LNPopupInteractionStyle?
-	let closeButtonStyle: LNPopupCloseButtonStyle?
-	let barStyle: LNPopupBarStyle?
-	let barBackgroundEffect: UIBlurEffect?
-	let barProgressViewStyle: LNPopupBarProgressViewStyle?
-	let barMarqueeScrollEnabled: Bool?
-	let marqueeRate: CGFloat?
-	let marqueeDelay: TimeInterval?
-	let coordinateMarqueeAnimations: Bool?
-	let shouldExtendPopupBarUnderSafeArea: Bool?
-	let customBarView: LNPopupBarCustomView?
-	let contextMenu: AnyView?
+	let inheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
+	let interactionStyle: LNPopupEnvironmentConsumer<LNPopupInteractionStyle>?
+	let closeButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>?
+	let barStyle: LNPopupEnvironmentConsumer<LNPopupBarStyle>?
+	let barBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
+	let barProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>?
+	let barMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
+	let marqueeRate: LNPopupEnvironmentConsumer<CGFloat>?
+	let marqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>?
+	let coordinateMarqueeAnimations: LNPopupEnvironmentConsumer<Bool>?
+	let shouldExtendPopupBarUnderSafeArea: LNPopupEnvironmentConsumer<Bool>?
+	let customBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>?
+	let contextMenu: LNPopupEnvironmentConsumer<AnyView>?
 	let content: (() -> PopupContent)?
 	let contentController: UIViewController?
 	let onOpen: (() -> Void)?
 	let onClose: (() -> Void)?
-	let barCustomizer: ((LNPopupBar) -> Void)?
-	let contentViewCustomizer: ((LNPopupContentView) -> Void)?
+	let barCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
+	let contentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
 }

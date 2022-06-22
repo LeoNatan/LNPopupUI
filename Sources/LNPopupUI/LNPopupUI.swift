@@ -52,14 +52,14 @@ public extension View {
 	///
 	/// - Parameter style: The popup interaction style.
 	func popupInteractionStyle(_ style: LNPopupInteractionStyle) -> some View {
-		return environment(\.popupInteractionStyle, style)
+		return environment(\.popupInteractionStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Sets the popup close button style.
 	///
 	/// - Parameter style: The popup close button style.
 	func popupCloseButtonStyle(_ style: LNPopupCloseButtonStyle) -> some View {
-		return environment(\.popupCloseButtonStyle, style)
+		return environment(\.popupCloseButtonStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Sets the popup bar style.
@@ -68,14 +68,14 @@ public extension View {
 	///
 	/// - Parameter style: The popup bar style.
 	func popupBarStyle(_ style: LNPopupBarStyle) -> some View {
-		return environment(\.popupBarStyle, style)
+		return environment(\.popupBarStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Sets the popup bar's progress style.
 	///
 	/// - Parameter style: The popup bar's progress style.
 	func popupBarProgressViewStyle(_ style: LNPopupBarProgressViewStyle) -> some View {
-		return environment(\.popupBarProgressViewStyle, style)
+		return environment(\.popupBarProgressViewStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Enables or disables the popup bar marquee scrolling. When enabled, titles and subtitles that are longer than the space available will scroll text over time.
@@ -86,21 +86,21 @@ public extension View {
 	///   - delay: The delay, in seconds, before starting the title and subtitle marquee animation.
 	///   - coordinateAnimations: Coordinate the title and subtitle marquee scroll animations.
 	func popupBarMarqueeScrollEnabled(_ enabled: Bool, scrollRate: CGFloat? = nil, delay: TimeInterval? = nil, coordinateAnimations: Bool? = nil) -> some View {
-		return environment(\.popupBarMarqueeScrollEnabled, enabled).environment(\.popupBarMarqueeRate, scrollRate).environment(\.popupBarMarqueeDelay, delay).environment(\.popupBarCoordinateMarqueeAnimations, coordinateAnimations)
+		return environment(\.popupBarMarqueeScrollEnabled, LNPopupEnvironmentConsumer(enabled)).environment(\.popupBarMarqueeRate, LNPopupEnvironmentConsumer(scrollRate)).environment(\.popupBarMarqueeDelay, LNPopupEnvironmentConsumer(delay)).environment(\.popupBarCoordinateMarqueeAnimations, LNPopupEnvironmentConsumer(coordinateAnimations))
 	}
 	
 	/// Enables or disables the popup bar extension under the safe area.
 	///
 	/// - Parameter enabled: Extend the popup bar under safe area.
 	func popupBarShouldExtendPopupBarUnderSafeArea(_ enabled: Bool) -> some View {
-		return environment(\.popupBarShouldExtendPopupBarUnderSafeArea, enabled)
+		return environment(\.popupBarShouldExtendPopupBarUnderSafeArea, LNPopupEnvironmentConsumer(enabled))
 	}
 	
 	/// Enables or disables the popup bar to automatically inherit its appearance from the bottom docking view, such as toolbar or tab bar.
 	///
 	/// - Parameter enabled: Extend the popup bar under safe area.
 	func popupBarInheritsAppearanceFromDockingView(_ enabled: Bool) -> some View {
-		return environment(\.popupBarInheritsAppearanceFromDockingView, enabled)
+		return environment(\.popupBarInheritsAppearanceFromDockingView, LNPopupEnvironmentConsumer(enabled))
 	}
 	
 	/// Sets the popup bar's background style. Use `nil` or `LNBackgroundStyleInherit` to use the most appropriate background style for the environment.
@@ -124,7 +124,7 @@ public extension View {
 	///
 	/// - Parameter effect: The popup bar's background effect.
 	func popupBarBackgroundEffect(_ effect: UIBlurEffect?) -> some View {
-		return environment(\.popupBarBackgroundEffect, effect)
+		return environment(\.popupBarBackgroundEffect, LNPopupEnvironmentConsumer(effect))
 	}
 	
 	/// Sets a custom popup bar view, instead of the default system-provided bars.
@@ -140,7 +140,7 @@ public extension View {
 											 wantsDefaultPanGesture: Bool = true,
 											 wantsDefaultHighlightGesture: Bool = true,
 											 @ViewBuilder popupBarContent: @escaping () -> PopupBarContent) -> some View where PopupBarContent : View {
-		return environment(\.popupBarCustomBarView, LNPopupBarCustomView(wantsDefaultTapGesture: wantsDefaultTapGesture, wantsDefaultPanGesture: wantsDefaultPanGesture, wantsDefaultHighlightGesture: wantsDefaultHighlightGesture, popupBarCustomBarView: AnyView(popupBarContent())))
+		return environment(\.popupBarCustomBarView, LNPopupEnvironmentConsumer(LNPopupBarCustomView(wantsDefaultTapGesture: wantsDefaultTapGesture, wantsDefaultPanGesture: wantsDefaultPanGesture, wantsDefaultHighlightGesture: wantsDefaultHighlightGesture, popupBarCustomBarView: AnyView(popupBarContent()))))
 	}
 	
 	/// Adds a context menu to the popup bar.
@@ -172,7 +172,7 @@ public extension View {
 	///
 	/// - Parameter menuItems: A `contextMenu` that contains one or more menu items.
 	func popupBarContextMenu<MenuItems>(@ViewBuilder menuItems: () -> MenuItems) -> some View where MenuItems : View {
-		return environment(\.popupBarContextMenu, AnyView(menuItems()))
+		return environment(\.popupBarContextMenu, LNPopupEnvironmentConsumer(AnyView(menuItems())))
 	}
 	
 	/// Gives a low-level access to the `LNPopupBar` object for customization, beyond what is exposed by LNPopupUI.
@@ -183,7 +183,7 @@ public extension View {
 	///   - customizer: A customizing closure that is called to customize the popup bar object.
 	///   - popupBar: The popup bar to customize.
 	func popupBarCustomizer(_ customizer: @escaping (_ popupBar: LNPopupBar) -> Void) -> some View {
-		return environment(\.popupBarCustomizer, customizer)
+		return environment(\.popupBarCustomizer, LNPopupEnvironmentConsumer(customizer))
 	}
 	
 	/// Gives a low-level access to the `LNPopupContentView` object for customization, beyond what is exposed by LNPopupUI.
@@ -194,7 +194,7 @@ public extension View {
 	///   - customizer: A customizing closure that is called to customize the popup content view object.
 	///   - popupContentView: The popup content view to customize.
 	func popupContentViewCustomizer(_ customizer: @escaping (_ popupContentView: LNPopupContentView) -> Void) -> some View {
-		return environment(\.popupContentViewCustomizer, customizer)
+		return environment(\.popupContentViewCustomizer, LNPopupEnvironmentConsumer(customizer))
 	}
 }
 
