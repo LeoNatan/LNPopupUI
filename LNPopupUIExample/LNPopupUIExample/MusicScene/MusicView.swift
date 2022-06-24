@@ -9,7 +9,7 @@ import SwiftUI
 import LoremIpsum
 import LNPopupUI
 
-struct RandomTitleSong : Identifiable {
+struct RandomTitleSong : Equatable, Identifiable {
 	var id: Int
 	var imageName: String {
 		"genre\(id)"
@@ -87,13 +87,7 @@ struct MusicView: View {
 	@State var isPopupBarPresented: Bool = false
 	@State var isPopupOpen: Bool = false
 	
-	@State var currentSong: RandomTitleSong? {
-		didSet {
-			DispatchQueue.main.async {
-				isPopupBarPresented = true
-			}
-		}
-	}
+	@State var currentSong: RandomTitleSong?
 	
 	private let onDismiss: () -> Void
 	
@@ -133,6 +127,9 @@ struct MusicView: View {
 			}
 		}
 		.accentColor(.pink)
+		.onChange(of: currentSong, perform: { newValue in
+			isPopupBarPresented = newValue != nil
+		})
 		.popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
 			if let currentSong = currentSong {
 				PlayerView(song: currentSong)

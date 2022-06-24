@@ -52,12 +52,22 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 			return
 		}
 		
-		self.preferredContentSize = hostingChild.sizeThatFits(in: CGSize.zero)
+		var size = CGSize.zero
+		if let containingPopupBar = containingPopupBar {
+			size.width = containingPopupBar.frame.size.width
+		}
+		
+		let fittingSize = hostingChild.sizeThatFits(in: size)
+		
+		if preferredContentSize != fittingSize {
+			preferredContentSize = fittingSize
+		}
 	}
 	
 	func setAnyView(_ anyView: AnyView) {
 		hostingChild.rootView = LNPopupUICustomPopupBarController.anyViewIgnoring(anyView)
 		
+		hostingChild.view.setNeedsLayout()
 		hostingChild.view.layoutIfNeeded()
 		updatePreferredContentSize()
 	}
