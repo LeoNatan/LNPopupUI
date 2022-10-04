@@ -39,8 +39,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		readyForHandling = true
 	}
 	
-	fileprivate func cast<T>(value: Any, to type: T) -> LNPopupUIContentController<T> where T: View {
-		return value as! LNPopupUIContentController<T>
+	fileprivate func cast<T>(value: Any?, to type: T) -> LNPopupUIContentController<T>? where T: View {
+		return value as? LNPopupUIContentController<T>
 	}
 	
 	fileprivate var target: UIViewController {
@@ -144,10 +144,10 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		}()
 		
 		return {
-			if self.popupViewController == nil {
-				self.popupViewController = LNPopupUIContentController(rootView: view)
+			if let popupViewController = self.cast(value: self.popupViewController, to: view.self) {
+				popupViewController.rootView = view
 			} else {
-				self.cast(value: self.popupViewController!, to: view.self).rootView = view
+				self.popupViewController = LNPopupUIContentController(rootView: view)
 			}
 		}
 	}
