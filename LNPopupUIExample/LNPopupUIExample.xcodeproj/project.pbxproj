@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		390E2B6826F80B510076539D /* TabViewCustomLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E2B6726F80B510076539D /* TabViewCustomLabels.swift */; };
+		394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394215F528F305D500D806A4 /* PopupDemoView.swift */; };
 		394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 394DC7242604D1740010BED4 /* SettingsTableViewController.m */; };
 		394DC7282604D1F30010BED4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394DC7272604D1F30010BED4 /* Settings.storyboard */; };
 		394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */ = {isa = PBXBuildFile; productRef = 394E1AAB276C137400C5BE31 /* ActivityView */; };
@@ -26,12 +27,10 @@
 		3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 3998CA54268BC3C300A60468 /* LoremIpsum */; };
 		39A7D3382604D5DE0073FF3D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A7D3372604D5DE0073FF3D /* SettingsView.swift */; };
 		39AAAA6C25040FA900E5FD41 /* TabNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA6B25040FA900E5FD41 /* TabNavView.swift */; };
-		39AAAA6E25040FF400E5FD41 /* ConstraintsDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA6D25040FF400E5FD41 /* ConstraintsDemoView.swift */; };
 		39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA6F2504144300E5FD41 /* TabDemoView.swift */; };
 		39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA71250415E800E5FD41 /* ViewDemoView.swift */; };
 		39E18E3C24F059F50096391B /* LNPopupUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */; };
-		39ED3ADD256C706400744717 /* DemoContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39ED3ADC256C706400744717 /* DemoContent.swift */; };
 		39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		390E2B6726F80B510076539D /* TabViewCustomLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewCustomLabels.swift; sourceTree = "<group>"; };
+		394215F528F305D500D806A4 /* PopupDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDemoView.swift; sourceTree = "<group>"; };
 		394DC7232604D1740010BED4 /* SettingsTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		394DC7242604D1740010BED4 /* SettingsTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		394DC7262604D19B0010BED4 /* LNPopupUIExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupUIExample-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -72,11 +72,9 @@
 		398DB7AC250400BE00CD89DB /* NavDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavDemoView.swift; sourceTree = "<group>"; };
 		39A7D3372604D5DE0073FF3D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		39AAAA6B25040FA900E5FD41 /* TabNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavView.swift; sourceTree = "<group>"; };
-		39AAAA6D25040FF400E5FD41 /* ConstraintsDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintsDemoView.swift; sourceTree = "<group>"; };
 		39AAAA6F2504144300E5FD41 /* TabDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDemoView.swift; sourceTree = "<group>"; };
 		39AAAA71250415E800E5FD41 /* ViewDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDemoView.swift; sourceTree = "<group>"; };
 		39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNUIKitPopupContentController.swift; sourceTree = "<group>"; };
-		39ED3ADC256C706400744717 /* DemoContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoContent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,8 +175,7 @@
 		398DB7AF250401DB00CD89DB /* DemoScenes */ = {
 			isa = PBXGroup;
 			children = (
-				39ED3ADC256C706400744717 /* DemoContent.swift */,
-				39AAAA6D25040FF400E5FD41 /* ConstraintsDemoView.swift */,
+				394215F528F305D500D806A4 /* PopupDemoView.swift */,
 				39AAAA6B25040FA900E5FD41 /* TabNavView.swift */,
 				39AAAA6F2504144300E5FD41 /* TabDemoView.swift */,
 				390E2B6726F80B510076539D /* TabViewCustomLabels.swift */,
@@ -295,14 +292,13 @@
 				3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */,
 				39A7D3382604D5DE0073FF3D /* SettingsView.swift in Sources */,
 				398404EE2500451E006C9011 /* MapView.swift in Sources */,
+				394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */,
 				39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */,
 				39AAAA6C25040FA900E5FD41 /* TabNavView.swift in Sources */,
 				395781D724DC5D2700A604D1 /* SceneDelegate.swift in Sources */,
-				39AAAA6E25040FF400E5FD41 /* ConstraintsDemoView.swift in Sources */,
 				395781D924DC5D2700A604D1 /* MusicView.swift in Sources */,
 				398404EA25003925006C9011 /* SceneSelection.swift in Sources */,
 				39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */,
-				39ED3ADD256C706400744717 /* DemoContent.swift in Sources */,
 				394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */,
 				390E2B6826F80B510076539D /* TabViewCustomLabels.swift in Sources */,
 				39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */,

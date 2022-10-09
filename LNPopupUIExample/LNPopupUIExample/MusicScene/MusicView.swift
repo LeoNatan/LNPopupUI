@@ -79,7 +79,7 @@ struct RandomTitlesListView : View {
 				}
 			}
 		}
-		.navigationViewStyle(StackNavigationViewStyle())
+		.navigationViewStyle(.stack)
 	}
 }
 

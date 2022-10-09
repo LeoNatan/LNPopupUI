@@ -22,7 +22,7 @@ struct InnerNavView : View {
 					onDismiss()
 				})
 		}
-		.navigationViewStyle(StackNavigationViewStyle())
+		.navigationViewStyle(.stack)
 	}
 }
 

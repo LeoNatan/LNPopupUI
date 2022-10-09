@@ -1,5 +1,5 @@
 //
-//  SafeAreaDemoView.swift
+//  PopupDemoView.swift
 //  LNPopupUIExample
 //
 //  Created by Leo Natan (Wix) on 9/5/20.
@@ -9,6 +9,12 @@ import SwiftUI
 import LNPopupUI
 import LNPopupController
 import LoremIpsum
+
+struct DemoContent {
+	let title = LoremIpsum.title
+	let subtitle = LoremIpsum.sentence
+	let imageNumber = Int.random(in: 1..<31)
+}
 
 extension View {
 	@ViewBuilder
@@ -155,8 +161,6 @@ struct SafeAreaDemoView : View {
 	}
 }
 
-//return view
-
 extension View {
 	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool = false, includeCustomTextLabels: Bool = false) -> some View {
 		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
@@ -179,7 +183,6 @@ extension View {
 						}) {
 							Image(systemName: "play.fill")
 						}
-						
 						Button(action: {
 							print("Next")
 						}) {

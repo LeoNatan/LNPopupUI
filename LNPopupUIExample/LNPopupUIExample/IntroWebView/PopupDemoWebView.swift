@@ -37,12 +37,10 @@ struct PopupDemoWebView: View {
 					Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
 				}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 			}
-			.popupImage(Image("genre10"))
+			.popupImage(Image(uiImage: UIImage(named: "AppIcon60x60")!))
 			.popupBarItems({
-				HStack {
-					Link(destination: url) {
-						Image(systemName: "suit.heart.fill")
-					}
+				Link(destination: url) {
+					Image(systemName: "suit.heart.fill")
 				}
 			})
 		}

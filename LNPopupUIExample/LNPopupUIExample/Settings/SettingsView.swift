@@ -45,6 +45,6 @@ struct SettingsView: View {
 					}
 				}
 		}
-		.navigationViewStyle(StackNavigationViewStyle())
+		.navigationViewStyle(.stack)
 	}
 }

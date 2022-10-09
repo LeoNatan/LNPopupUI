@@ -43,7 +43,7 @@ struct NavDemoView : View {
 				})
 		}
 		.colorScheme(forcedColorScheme ?? environmentColorScheme)
-		.navigationViewStyle(StackNavigationViewStyle())
+		.navigationViewStyle(.stack)
 		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented)
 	}
 }

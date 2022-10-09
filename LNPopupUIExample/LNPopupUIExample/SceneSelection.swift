@@ -126,7 +126,7 @@ struct SceneSelection: View {
 			}
 			.navigationBarTitleDisplayMode(.inline)
 		}
-		.navigationViewStyle(StackNavigationViewStyle())
+		.navigationViewStyle(.stack)
 		.ignoresSafeArea()
 		.popup(isBarPresented: Binding.constant(true), popupContent: {
 			PopupDemoWebView()
