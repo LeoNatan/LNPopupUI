@@ -177,17 +177,16 @@ extension View {
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
 				.popupBarItems({
-					HStack(spacing: 20) {
-						Button(action: {
-							print("Play")
-						}) {
-							Image(systemName: "play.fill")
-						}
-						Button(action: {
-							print("Next")
-						}) {
-							Image(systemName: "forward.fill")
-						}
+					Button(action: {
+						print("Play")
+					}) {
+						Image(systemName: "play.fill")
+					}
+					
+					Button(action: {
+						print("Next")
+					}) {
+						Image(systemName: "forward.fill")
 					}
 				})
 		}

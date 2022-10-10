@@ -86,18 +86,16 @@ VStack {
 .popupImage(Image(song.imageName))
 .popupProgress(playbackProgress)
 .popupBarItems({
-	HStack(spacing: 20) {
-		Button(action: {
-			isPlaying.toggle()
-		}) {
-			Image(systemName: "play.fill")
-		}
+	Button(action: {
+		isPlaying.toggle()
+	}) {
+		Image(systemName: "play.fill")
+	}
 
-		Button(action: {
-			next()
-		}) {
-			Image(systemName: "forward.fill")
-		}
+	Button(action: {
+		next()
+	}) {
+		Image(systemName: "forward.fill")
 	}
 })
 ```

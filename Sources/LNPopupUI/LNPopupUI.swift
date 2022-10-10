@@ -8,6 +8,11 @@
 import SwiftUI
 @_exported import LNPopupController
 
+@available(iOS 14.0, *)
+public extension ToolbarItemPlacement {
+	static let popupBar: ToolbarItemPlacement = .bottomBar
+}
+
 public extension View {
 	
 	/// Presents a popup bar with popup content.
@@ -279,8 +284,9 @@ public extension View {
 	///
 	/// - Parameters:
 	///   - image: The image to use.
-	func popupImage(_ image: Image) -> some View {
-		return preference(key: LNPopupImagePreferenceKey.self, value: image)
+	///   - resizable: Mark the image as resizable. Defaults to `true`. If you'd like to control this on your own, set this parameter to `false`.
+	func popupImage(_ image: Image, resizable: Bool = true) -> some View {
+		return preference(key: LNPopupImagePreferenceKey.self, value: resizable ? image.resizable() : image)
 	}
 	
 	/// Configures the view's popup bar progress.
@@ -291,40 +297,127 @@ public extension View {
 		return preference(key: LNPopupProgressPreferenceKey.self, value: progress)
 	}
 	
+	fileprivate func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView where Content : View {
+		if #available(iOS 14.0, *) {
+			let view = NavigationView {
+				Color.clear.toolbar {
+					ToolbarItemGroup(placement: .popupBar) {
+						content()
+					}
+				}
+			}.navigationViewStyle(.stack)
+			
+			return AnyView(view)
+		} else {
+			return AnyView(content().edgesIgnoringSafeArea(.all))
+		}
+	}
+	
+	@available(iOS 14.0, *)
+	fileprivate func barItemContainer<Content>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView where Content : ToolbarContent {
+		let view = NavigationView {
+			Color.clear.toolbar {
+				content()
+			}
+		}.navigationViewStyle(.stack)
+		
+		return AnyView(view)
+	}
+	
 	/// Sets the bar button items to display on the popup bar.
 	///
 	/// @note For compact popup bars, this is equivalent to trailing button items.
 	///
-	/// - Parameter content: A view that appears on the trailing edge of the popup bar.
+	/// - Parameter content: A view representing the bar button items that appear on the popup bar.
 	func popupBarItems<Content>(@ViewBuilder _ content: () -> Content) -> some View where Content : View {
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(content().edgesIgnoringSafeArea(.all))))
+		let anyView = barItemContainer(content)
+		
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
+	}
+	
+	/// Sets the bar button items to display on the popup bar.
+	///
+	/// @note Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported. For compact popup bars, this is equivalent to trailing button items.
+	///
+	/// - Parameter content: Toolbar content representing the bar button items that appear on the popup bar.
+	@available(iOS 14.0, *)
+	func popupBarItems<Content>(@ToolbarContentBuilder _ content: () -> Content) -> some View where Content : ToolbarContent {
+		let anyView = barItemContainer(content)
+		
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(anyView)))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
 	///
 	/// @note For prominent popup bars, leading bar items are positioned in the trailing edge of the popup bar.
 	///
-	/// - Parameter leading: A view that appears on the leading edge of the popup bar.
+	/// - Parameter leading: A view representing the bar button items that appear on the leading edge of the popup bar.
 	func popupBarItems<LeadingContent>(@ViewBuilder leading: () -> LeadingContent) -> some View where LeadingContent: View {
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(leading().edgesIgnoringSafeArea(.all))))
+		let anyView = barItemContainer(leading)
+		
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
 	///
-	/// - Parameter trailing: A view that appears on the trailing edge of the popup bar.
+	/// @note Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported. For prominent popup bars, leading bar items are positioned in the trailing edge of the popup bar.
+	///
+	/// - Parameter leading: Toolbar content representing the bar button items that appear on the leading edge of the popup bar.
+	@available(iOS 14.0, *)
+	func popupBarItems<LeadingContent>(@ToolbarContentBuilder leading: () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
+		let anyView = barItemContainer(leading)
+		
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
+	}
+	
+	/// Sets the bar button items to display on the popup bar.
+	///
+	/// - Parameter trailing: A view representing the bar button items that appear on the trailing edge of the popup bar.
 	func popupBarItems<TrailingContent>(@ViewBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: View {
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(trailing().edgesIgnoringSafeArea(.all))))
+		let anyView = barItemContainer(trailing)
+		
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
+	}
+	
+	/// Sets the bar button items to display on the popup bar.
+	///
+	/// @note Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// - Parameter trailing: Toolbar content representing the bar button items that appear on the trailing edge of the popup bar.
+	@available(iOS 14.0, *)
+	func popupBarItems<TrailingContent>(@ToolbarContentBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
+		let anyView = barItemContainer(trailing)
+		
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
 	///
 	/// @note For prominent popup bars, leading and trailing bar items are positioned in the trailing edge of the popup bar.
 	///
-	/// - Parameter leading: A view that appears on the leading edge of the popup bar.
-	/// - Parameter trailing: A view that appears on the trailing edge of the popup bar.
+	/// - Parameter leading: A view representing the bar button items that appear on the leading edge of the popup bar.
+	/// - Parameter trailing: A view representing the bar button items that appear on the trailing edge of the popup bar.
 	func popupBarItems<LeadingContent, TrailingContent>(@ViewBuilder leading: () -> LeadingContent, @ViewBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView((leading()))))
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView((trailing()))))
+		let leadingAnyView = barItemContainer(leading)
+		let trailingAnyView = barItemContainer(trailing)
+		
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: leadingAnyView))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: trailingAnyView))
+	}
+	
+	/// Sets the bar button items to display on the popup bar.
+	///
+	/// @note Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported. For prominent popup bars, leading and trailing bar items are positioned in the trailing edge of the popup bar.
+	///
+	/// - Parameter leading: Toolbar content representing the bar button items that appear on the leading edge of the popup bar.
+	/// - Parameter trailing: Toolbar content representing the bar button items that appear on the trailing edge of the popup bar.
+	@available(iOS 14.0, *)
+	func popupBarItems<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: () -> LeadingContent, @ToolbarContentBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
+		let leadingAnyView = barItemContainer(leading)
+		let trailingAnyView = barItemContainer(trailing)
+		
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: leadingAnyView))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: trailingAnyView))
 	}
 	
 	/// Designates this view as the popup interaction container. Only gestures within this view will be considered for popup interaction, such as dismissal.

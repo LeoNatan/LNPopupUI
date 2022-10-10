@@ -9,6 +9,46 @@ import SwiftUI
 import UIKit
 import LNPopupController
 
+internal class LNPopupBarItemAdapter: UIHostingController<AnyView> {
+	let updater: ([UIBarButtonItem]?) -> Void
+	var doneUpdating = false
+	
+	@objc var overrideSizeClass: UIUserInterfaceSizeClass = .regular {
+		didSet {
+			self.setValue(UITraitCollection(verticalSizeClass: overrideSizeClass), forKey: "overrideTraitCollection")
+		}
+	}
+	
+	required init(rootView: AnyView, updater: @escaping ([UIBarButtonItem]?) -> Void) {
+		self.updater = updater
+		
+		super.init(rootView: rootView)
+		
+		self.setValue(UITraitCollection(verticalSizeClass: overrideSizeClass), forKey: "overrideTraitCollection")
+	}
+	
+	required dynamic init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		guard doneUpdating == false else {
+			return
+		}
+		
+		let nav = self.children.first as! UINavigationController
+		let toolbarItems = nav.toolbar.items ?? []
+		let allItems = toolbarItems
+		
+		if allItems.count > 0 {
+			self.updater(allItems)
+			doneUpdating = true
+		}
+	}
+}
+
 internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingController<Content>, LNPopupPresentationDelegate, UIContextMenuInteractionDelegate where Content: View, PopupContent: View {
 	var currentPopupState: LNPopupState<PopupContent>! = nil
 	var popupViewController: UIViewController?
@@ -16,10 +56,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	var popupContextMenuViewController: UIHostingController<AnyView>?
 	var popupContextMenuInteraction: UIContextMenuInteraction?
 	
-	var leadingBarItemsController: UIHostingController<AnyView>? = nil
-	var trailingBarItemsController: UIHostingController<AnyView>? = nil
-	var leadingBarButtonItem: UIBarButtonItem? = nil
-	var trailingBarButtonItem: UIBarButtonItem? = nil
+	var leadingBarItemsController: LNPopupBarItemAdapter? = nil
+	var trailingBarItemsController: LNPopupBarItemAdapter? = nil
+	
+	var legacy_leadingBarItemsController: UIHostingController<AnyView>? = nil
+	var legacy_trailingBarItemsController: UIHostingController<AnyView>? = nil
+	var legacy_leadingBarButtonItem: UIBarButtonItem? = nil
+	var legacy_trailingBarButtonItem: UIBarButtonItem? = nil
 	
 	weak var interactionContainerView: UIView?
 	
@@ -47,7 +90,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		return children.first ?? self
 	}
 	
-	fileprivate func createOrUpdateHostingControllerForAnyView(_ vc: inout UIHostingController<AnyView>?, view: AnyView, barButtonItem: inout UIBarButtonItem?, targetBarButtons: ([UIBarButtonItem]) -> Void, leadSpacing: Bool, trailingSpacing: Bool) {
+	fileprivate func legacy_createOrUpdateHostingControllerForAnyView(_ vc: inout UIHostingController<AnyView>?, view: AnyView, barButtonItem: inout UIBarButtonItem?, targetBarButtons: ([UIBarButtonItem]) -> Void, leadSpacing: Bool, trailingSpacing: Bool) {
 		
 		let anyView = AnyView(erasing: view.font(.system(size: 20)))
 		
@@ -61,7 +104,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					vc.view.widthAnchor.constraint(equalToConstant: size.width),
 					vc.view.heightAnchor.constraint(equalToConstant: min(size.height, 44)),
 				])
-
+				
 				barButtonItem!.customView = vc.view
 			} else {
 				vc = UIHostingController<AnyView>(rootView: anyView)
@@ -73,9 +116,21 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					vc!.view.heightAnchor.constraint(equalToConstant: min(size.height, 44)),
 				])
 				
+				vc!.view.clipsToBounds = false
 				barButtonItem = UIBarButtonItem(customView: vc!.view)
 				
 				targetBarButtons([barButtonItem!])
+			}
+		}
+	}
+	
+	@available(iOS 14.0, *)
+	fileprivate func createOrUpdateBarItemAdapter(_ vc: inout LNPopupBarItemAdapter?, userNavigationViewWrapper anyView: AnyView, barButtonUpdater: @escaping ([UIBarButtonItem]?) -> Void) {
+		UIView.performWithoutAnimation {
+			if let vc = vc {
+				vc.rootView = anyView
+			} else {
+				vc = LNPopupBarItemAdapter(rootView: anyView, updater: barButtonUpdater)
 			}
 		}
 	}
@@ -133,12 +188,22 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				}
 				.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
 					if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
-						self.createOrUpdateHostingControllerForAnyView(&self.leadingBarItemsController, view: anyView, barButtonItem: &self.leadingBarButtonItem, targetBarButtons: { popupItem.leadingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+						if #available(iOS 14.0, *) {
+							self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView, barButtonUpdater: { popupItem.leadingBarButtonItems = $0 })
+							popupItem.setValue(self.leadingBarItemsController!, forKey: "swiftuiHiddenLeadingController")
+						} else {
+							self.legacy_createOrUpdateHostingControllerForAnyView(&self.legacy_leadingBarItemsController, view: anyView, barButtonItem: &self.legacy_leadingBarButtonItem, targetBarButtons: { popupItem.leadingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+						}
 					}
 				}
 				.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
 					if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
-						self.createOrUpdateHostingControllerForAnyView(&self.trailingBarItemsController, view: anyView, barButtonItem: &self.trailingBarButtonItem, targetBarButtons: { popupItem.trailingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+						if #available(iOS 14.0, *) {
+							self.createOrUpdateBarItemAdapter(&self.trailingBarItemsController, userNavigationViewWrapper: anyView, barButtonUpdater: { popupItem.trailingBarButtonItems = $0 })
+							popupItem.setValue(self.trailingBarItemsController!, forKey: "swiftuiHiddenTrailingController")
+						} else {
+							self.legacy_createOrUpdateHostingControllerForAnyView(&self.legacy_trailingBarItemsController, view: anyView, barButtonItem: &self.legacy_trailingBarButtonItem, targetBarButtons: { popupItem.trailingBarButtonItems = $0 }, leadSpacing: false, trailingSpacing: false)
+						}
 					}
 				}
 		}()

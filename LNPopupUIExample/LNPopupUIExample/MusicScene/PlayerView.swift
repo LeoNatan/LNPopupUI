@@ -127,18 +127,16 @@ struct PlayerView: View {
 		.popupImage(Image(song.imageName).resizable())
 		.popupProgress(playbackProgress)
 		.popupBarItems({
-			HStack(spacing: 20) {
-				Button(action: {
-					isPlaying.toggle()
-				}) {
-					Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-				}
-				
-				Button(action: {
-					print("Next")
-				}) {
-					Image(systemName: "forward.fill")
-				}
+			Button(action: {
+				isPlaying.toggle()
+			}) {
+				Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+			}
+			
+			Button(action: {
+				print("Next")
+			}) {
+				Image(systemName: "forward.fill")
 			}
 		})
 	}
