@@ -62,23 +62,15 @@ extension View {
 extension View {
 	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
 		return toolbar {
-			ToolbarItem(placement: .bottomBar) {
+			ToolbarItemGroup(placement: .bottomBar) {
 				Button("Present Bar") {
 					presentBarHandler?()
 				}
-			}
-			ToolbarItem(placement: .bottomBar) {
 				Spacer()
-			}
-			ToolbarItem(placement: .bottomBar) {
 				Button("Appearance") {
 					appearanceHandler?()
 				}
-			}
-			ToolbarItem(placement: .bottomBar) {
 				Spacer()
-			}
-			ToolbarItem(placement: .bottomBar) {
 				Button("Dismiss Bar") {
 					hideBarHandler?()
 				}
@@ -98,7 +90,6 @@ struct SafeAreaDemoView : View {
 	let colorSeed: String
 	let colorIndex: Int
 	
-	let includeToolbar: Bool
 	let presentBarHandler: (() -> Void)?
 	let appearanceHandler: (() -> Void)?
 	let hideBarHandler: (() -> Void)?
@@ -118,7 +109,6 @@ struct SafeAreaDemoView : View {
 		self.colorSeed = colorSeed
 		self.colorIndex = colorIndex
 		
-		includeToolbar = presentBarHandler != nil || appearanceHandler != nil || hideBarHandler != nil
 		self.presentBarHandler = presentBarHandler
 		self.appearanceHandler = appearanceHandler
 		self.hideBarHandler = hideBarHandler
@@ -155,8 +145,6 @@ struct SafeAreaDemoView : View {
 			view.navigationBarItems(trailing: Button("Gallery") {
 				onDismiss?()
 			})
-		}.if(includeToolbar) { view in
-			view.demoToolbar(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
 		}
 	}
 }
