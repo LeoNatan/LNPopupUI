@@ -8,12 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		390E2B6826F80B510076539D /* TabViewCustomLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E2B6726F80B510076539D /* TabViewCustomLabels.swift */; };
+		390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */; };
 		394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394215F528F305D500D806A4 /* PopupDemoView.swift */; };
 		394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 394DC7242604D1740010BED4 /* SettingsTableViewController.m */; };
 		394DC7282604D1F30010BED4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394DC7272604D1F30010BED4 /* Settings.storyboard */; };
 		394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */ = {isa = PBXBuildFile; productRef = 394E1AAB276C137400C5BE31 /* ActivityView */; };
-		395781D524DC5D2700A604D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D424DC5D2700A604D1 /* AppDelegate.swift */; };
-		395781D724DC5D2700A604D1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D624DC5D2700A604D1 /* SceneDelegate.swift */; };
 		395781D924DC5D2700A604D1 /* MusicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D824DC5D2700A604D1 /* MusicView.swift */; };
 		395781DB24DC5D2800A604D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 395781DA24DC5D2800A604D1 /* Assets.xcassets */; };
 		395781DE24DC5D2800A604D1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 395781DD24DC5D2800A604D1 /* Preview Assets.xcassets */; };
@@ -50,14 +49,13 @@
 
 /* Begin PBXFileReference section */
 		390E2B6726F80B510076539D /* TabViewCustomLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewCustomLabels.swift; sourceTree = "<group>"; };
+		390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNPopupUIExampleApp.swift; sourceTree = "<group>"; };
 		394215F528F305D500D806A4 /* PopupDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDemoView.swift; sourceTree = "<group>"; };
 		394DC7232604D1740010BED4 /* SettingsTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		394DC7242604D1740010BED4 /* SettingsTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		394DC7262604D19B0010BED4 /* LNPopupUIExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupUIExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		394DC7272604D1F30010BED4 /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		395781D124DC5D2700A604D1 /* LNPopupUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		395781D424DC5D2700A604D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		395781D624DC5D2700A604D1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		395781D824DC5D2700A604D1 /* MusicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicView.swift; sourceTree = "<group>"; };
 		395781DA24DC5D2800A604D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		395781DD24DC5D2800A604D1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -129,8 +127,7 @@
 				398DB7B1250401F800CD89DB /* MapScene */,
 				3985A1E325378E57004AA4D7 /* IntroWebView */,
 				394DC7222604D1500010BED4 /* Settings */,
-				395781D424DC5D2700A604D1 /* AppDelegate.swift */,
-				395781D624DC5D2700A604D1 /* SceneDelegate.swift */,
+				390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */,
 				398404E925003925006C9011 /* SceneSelection.swift */,
 				395781DA24DC5D2800A604D1 /* Assets.xcassets */,
 				395781DF24DC5D2800A604D1 /* LaunchScreen.storyboard */,
@@ -288,14 +285,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				3985A1E525378E73004AA4D7 /* PopupDemoWebView.swift in Sources */,
-				395781D524DC5D2700A604D1 /* AppDelegate.swift in Sources */,
+				390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */,
 				3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */,
 				39A7D3382604D5DE0073FF3D /* SettingsView.swift in Sources */,
 				398404EE2500451E006C9011 /* MapView.swift in Sources */,
 				394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */,
 				39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */,
 				39AAAA6C25040FA900E5FD41 /* TabNavView.swift in Sources */,
-				395781D724DC5D2700A604D1 /* SceneDelegate.swift in Sources */,
 				395781D924DC5D2700A604D1 /* MusicView.swift in Sources */,
 				398404EA25003925006C9011 /* SceneSelection.swift in Sources */,
 				39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */,

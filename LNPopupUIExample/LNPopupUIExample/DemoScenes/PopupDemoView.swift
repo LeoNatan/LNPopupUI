@@ -133,6 +133,7 @@ struct SafeAreaDemoView : View {
 					minHeight: 0,
 					maxHeight: .infinity,
 					alignment: .top)
+			
 			if includeLink {
 				NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
 					.padding()
@@ -142,9 +143,13 @@ struct SafeAreaDemoView : View {
 		.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
 		.font(.system(.headline))
 		.if(showDismissButton) { view in
-			view.navigationBarItems(trailing: Button("Gallery") {
-				onDismiss?()
-			})
+			view.toolbar {
+				ToolbarItem(placement: .navigationBarTrailing) {
+					Button("Gallery") {
+						onDismiss?()
+					}
+				}
+			}
 		}
 	}
 }
