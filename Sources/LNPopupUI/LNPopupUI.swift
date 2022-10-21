@@ -434,7 +434,7 @@ public extension View {
 	/// - Parameters:
 	///   - name: The name of the image resource to lookup.
 	///   - bundle: The bundle to search for the image resource and localization content. If `nil`, uses the main `Bundle`. Defaults to `nil`.
-	@available(*, deprecated)
+	@available(*, deprecated, message: "Use popupImage(_:) instead.")
 	func popupImage(_ name: String, bundle: Bundle? = nil) -> some View {
 		return popupImage(Image(name, bundle: bundle))
 	}
@@ -443,7 +443,7 @@ public extension View {
 	///
 	/// - Parameters:
 	///   - systemName: The name of the system symbol image. Use the SF Symbols app to look up the names of system symbol images.
-	@available(*, deprecated)
+	@available(*, deprecated, message: "Use popupImage(_:) instead.")
 	func popupImage(systemName: String) -> some View {
 		return popupImage(Image(systemName: systemName))
 	}
@@ -452,7 +452,7 @@ public extension View {
 	///
 	/// - Parameters:
 	///   - uiImage: The image to use
-	@available(*, deprecated)
+	@available(*, deprecated, message: "Use popupImage(_:) instead.")
 	func popupImage(_ uiImage: UIImage) -> some View {
 		return popupImage(Image(uiImage: uiImage))
 	}
@@ -463,7 +463,7 @@ public extension View {
 	///   - cgImage: the base graphical image
 	///   - scale: the scale factor the image is intended for (e.g. 1.0, 2.0, 3.0)
 	///   - orientation: the orientation of the image
-	@available(*, deprecated)
+	@available(*, deprecated, message: "Use popupImage(_:) instead.")
 	func popupImage(_ cgImage: CGImage, scale: CGFloat, orientation: UIImage.Orientation = .up) -> some View {
 		return popupImage(Image(decorative: cgImage, scale: scale, orientation: UIImageOrientationToImageOrientation(orientation)))
 	}

@@ -155,6 +155,21 @@ struct SafeAreaDemoView : View {
 }
 
 extension View {
+	func popupInteractionStyleFromUserDefaults() -> LNPopupInteractionStyle {
+		switch UserDefaults.standard.integer(forKey: PopupSettingsInteractionStyle) {
+		case 1:
+			return .drag
+		case 2:
+			return .snap
+		case 3:
+			return .scroll
+		case 0xFFFF:
+			return .none
+		default:
+			return .default
+		}
+	}
+	
 	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool = false, includeCustomTextLabels: Bool = false) -> some View {
 		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
@@ -184,7 +199,7 @@ extension View {
 				})
 		}
 		.popupBarStyle(LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))!)
-		.popupInteractionStyle(LNPopupInteractionStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsInteractionStyle))!)
+		.popupInteractionStyle(popupInteractionStyleFromUserDefaults())
 		.popupBarProgressViewStyle(LNPopupBarProgressViewStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsProgressViewStyle))!)
 		.popupCloseButtonStyle(LNPopupCloseButtonStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsCloseButtonStyle))!)
 		.if(UserDefaults.standard.object(forKey: PopupSettingsMarqueeStyle) != nil) { view in
