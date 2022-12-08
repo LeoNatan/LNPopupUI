@@ -106,4 +106,9 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+
+  deinit {
+    NotificationCenter.default.removeObserver(keyboardObserver1!)
+    NotificationCenter.default.removeObserver(keyboardObserver2!)
+  }
 }
