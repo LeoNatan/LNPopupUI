@@ -27,12 +27,12 @@ Check the demo project for a quick recreation of Apple’s music app.
 
 ### Swift Package Manager
 
-`LNPopupUI` supports SPM versions 5.1.0 (Xcode 11) and above. In Xcode, click `File` -> `Swift Packages` -> `Add Package Dependency`, enter `https://github.com/LeoNatan/LNPopupUI`. Select the version you’d like to use.
+`LNPopupUI` supports SPM versions 5.5 (Xcode 13) and above. In Xcode, click `File` -> `Swift Packages` -> `Add Package Dependency`, enter `https://github.com/LeoNatan/LNPopupUI`. Select the version you’d like to use.
 
 You can also manually add the package to your Package.swift file:
 
 ```swift
-.package(url: "https://github.com/LeoNatan/LNPopupUI.git", from: "1.0.0")
+.package(url: "https://github.com/LeoNatan/LNPopupUI.git", from: "1.5.0")
 ```
 
 And the dependency in your target:
