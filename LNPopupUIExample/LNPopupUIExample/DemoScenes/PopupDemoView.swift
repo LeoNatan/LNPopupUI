@@ -81,6 +81,7 @@ extension View {
 
 struct SafeAreaDemoView : View {
 	let includeLink: Bool
+	let includeToolbar: Bool
 	let offset: Bool
 	let isPopupOpen: Binding<Bool>?
 	
@@ -94,8 +95,9 @@ struct SafeAreaDemoView : View {
 	let appearanceHandler: (() -> Void)?
 	let hideBarHandler: (() -> Void)?
 	
-	init(colorSeed: String = "nil", colorIndex: Int = 0, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil) {
+	init(colorSeed: String = "nil", colorIndex: Int = 0, includeToolbar: Bool = false, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil) {
 		self.includeLink = includeLink
+		self.includeToolbar = includeToolbar
 		self.offset = offset
 		self.isPopupOpen = isPopupOpen
 		
@@ -135,13 +137,16 @@ struct SafeAreaDemoView : View {
 					alignment: .top)
 			
 			if includeLink {
-				NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
+				NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
 					.padding()
 			}
 		}
 		.padding(4)
 		.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
 		.font(.system(.headline))
+		.if(includeToolbar) { view in
+			view.demoToolbar(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
+		}
 		.if(showDismissButton) { view in
 			view.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
@@ -216,9 +221,13 @@ extension View {
 					paragraphStyle.alignment = .right
 					paragraphStyle.lineBreakMode = .byTruncatingTail
 					
-					popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
+					if popupBar.effectiveBarStyle == .floating {
+						popupBar.standardAppearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
+					} else {
+						popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
+					}
 					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
-					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+					popupBar.standardAppearance.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
 					
 					popupBar.tintColor = .yellow
 				}

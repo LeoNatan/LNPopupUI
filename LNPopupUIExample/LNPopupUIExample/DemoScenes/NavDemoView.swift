@@ -34,10 +34,9 @@ struct NavDemoView : View {
 	
 	var body: some View {
 		NavigationView {
-			SafeAreaDemoView(includeLink: true, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
+			SafeAreaDemoView(includeToolbar: true, includeLink: true, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
 				.navigationBarTitle("Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
-				.demoToolbar(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
 				.navigationBarItems(trailing: Button("Gallery") {
 					onDismiss()
 				})

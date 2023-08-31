@@ -113,7 +113,7 @@ struct SceneSelection: View {
 					})
 				}
 			}
-			.listStyle(GroupedListStyle())
+			.listStyle(InsetGroupedListStyle())
 			.navigationBarTitle("LNPopupUI")
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
