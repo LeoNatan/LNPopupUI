@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		390E2B6826F80B510076539D /* TabViewCustomLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E2B6726F80B510076539D /* TabViewCustomLabels.swift */; };
 		390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */; };
+		393841D82AA13A2700460600 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 393841D72AA13A2700460600 /* CompactSlider */; };
+		393841DB2AA13BA800460600 /* CompactSliderDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */; };
 		394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394215F528F305D500D806A4 /* PopupDemoView.swift */; };
 		394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 394DC7242604D1740010BED4 /* SettingsTableViewController.m */; };
 		394DC7282604D1F30010BED4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394DC7272604D1F30010BED4 /* Settings.storyboard */; };
@@ -50,6 +52,7 @@
 /* Begin PBXFileReference section */
 		390E2B6726F80B510076539D /* TabViewCustomLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewCustomLabels.swift; sourceTree = "<group>"; };
 		390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNPopupUIExampleApp.swift; sourceTree = "<group>"; };
+		393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactSliderDemoView.swift; sourceTree = "<group>"; };
 		394215F528F305D500D806A4 /* PopupDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDemoView.swift; sourceTree = "<group>"; };
 		394DC7232604D1740010BED4 /* SettingsTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		394DC7242604D1740010BED4 /* SettingsTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
@@ -83,12 +86,21 @@
 				394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */,
 				39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */,
 				3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */,
+				393841D82AA13A2700460600 /* CompactSlider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		393841D92AA13A4400460600 /* GestureTesting */ = {
+			isa = PBXGroup;
+			children = (
+				393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */,
+			);
+			path = GestureTesting;
+			sourceTree = "<group>";
+		};
 		394DC7222604D1500010BED4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +136,7 @@
 				3971B335254D769B004AEBC9 /* ColorUtils */,
 				398DB7AF250401DB00CD89DB /* DemoScenes */,
 				398DB7B0250401E300CD89DB /* MusicScene */,
+				393841D92AA13A4400460600 /* GestureTesting */,
 				398DB7B1250401F800CD89DB /* MapScene */,
 				3985A1E325378E57004AA4D7 /* IntroWebView */,
 				394DC7222604D1500010BED4 /* Settings */,
@@ -223,6 +236,7 @@
 				39E18E3A24F059F50096391B /* LNPopupUI */,
 				3998CA54268BC3C300A60468 /* LoremIpsum */,
 				394E1AAB276C137400C5BE31 /* ActivityView */,
+				393841D72AA13A2700460600 /* CompactSlider */,
 			);
 			productName = LNPopupUIExample;
 			productReference = 395781D124DC5D2700A604D1 /* LNPopupUIExample.app */;
@@ -255,6 +269,7 @@
 			packageReferences = (
 				3998CA53268BC3B700A60468 /* XCRemoteSwiftPackageReference "LoremIpsum" */,
 				394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */,
+				393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */,
 			);
 			productRefGroup = 395781D224DC5D2700A604D1 /* Products */;
 			projectDirPath = "";
@@ -286,6 +301,7 @@
 			files = (
 				3985A1E525378E73004AA4D7 /* PopupDemoWebView.swift in Sources */,
 				390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */,
+				393841DB2AA13BA800460600 /* CompactSliderDemoView.swift in Sources */,
 				3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */,
 				39A7D3382604D5DE0073FF3D /* SettingsView.swift in Sources */,
 				398404EE2500451E006C9011 /* MapView.swift in Sources */,
@@ -523,6 +539,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/buh/CompactSlider";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.5;
+			};
+		};
 		394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftUI-Plus/ActivityView";
@@ -542,6 +566,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		393841D72AA13A2700460600 /* CompactSlider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */;
+			productName = CompactSlider;
+		};
 		394E1AAB276C137400C5BE31 /* ActivityView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */;

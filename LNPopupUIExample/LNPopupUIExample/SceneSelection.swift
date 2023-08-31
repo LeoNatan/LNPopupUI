@@ -16,6 +16,7 @@ struct SceneSelection: View {
 	@State var navPresented: Bool = false
 	@State var viewPresented: Bool = false
 	@State var viewSheetPresented: Bool = false
+	@State var compactSliderSheetPresented: Bool = false
 	@State var musicSheetPresented: Bool = false
 	@State var mapSheetPresented: Bool = false
 	
@@ -98,6 +99,17 @@ struct SceneSelection: View {
 					.fullScreenCover(isPresented: $musicSheetPresented, content: {
 						MusicView {
 							musicSheetPresented.toggle()
+						}
+					})
+				}
+				Section(header: Text("Gestures")) {
+					Button("_CompactSlider_") {
+						compactSliderSheetPresented.toggle()
+					}
+					.foregroundColor(Color(.label))
+					.fullScreenCover(isPresented: $compactSliderSheetPresented, content: {
+						CompactSliderDemoView {
+							compactSliderSheetPresented.toggle()
 						}
 					})
 				}
