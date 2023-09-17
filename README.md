@@ -2,7 +2,7 @@
 
 `LNPopupUI` is a SwiftUI library for presenting views as popups, much like the Apple Music and Podcasts apps.
 
-This is a SwiftUI wrapper of my [LNPopupController framework](https://github.com/LeoNatan/LNPopupController), adapted to work with SwiftUI.
+This is a SwiftUI wrapper of the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController), adapted to work with SwiftUI.
 
 [![GitHub release](https://img.shields.io/github/release/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/releases) [![GitHub stars](https://img.shields.io/github/stars/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/stargazers) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/LeoNatan/LNPopupUI/master/LICENSE) <span class="badge-paypal"><a href="https://paypal.me/LeoNatan25" title="Donate to this project using PayPal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg?style=flat" alt="PayPal Donation Button" /></a></span>
 
@@ -10,18 +10,18 @@ This is a SwiftUI wrapper of my [LNPopupController framework](https://github.com
 
 <p align="center"><img src="./Supplements/open_floating_popup.gif" width="360"/></p>
 
-Once a popup bar is presented with a content view, the user can swipe or tap the popup bar at any point to present the content view. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
+Once a popup bar is presented with a content view, the user can swipe or tap the popup bar at any point to present the content view. After finishing, the user dismisses the popup by either swiping the content view or tapping the popup close button.
 
 The library extends SwiftUI’s `View` with new functionality for presenting and customizing popups with content views, as well as setting information such as the popup bar’s title, image and bar button items. When a popup bar is presented, the popup bar automatically adapts to the view it was presented on for best appearance.
 
-Generally, it is recommended to present the popup bar on the outermost view, such as `TabView` or `NavigationView`. For example, if you have a view contained in a navigation view, which is in turn contained in a tab view, it is recommended to present the popup on the tab view.
+Generally, it is recommended to present the popup bar on the outermost view, such as `TabView` or `NavigationView`. For example, if you have a view contained in a navigation view, which is in turn contained in a tab view, it is recommended to present the popup bar on the tab view.
 
 Check the demo project for a quick recreation of Apple’s music app.
 
 ### Features
 
 * Available for iOS 13 and above, as a SPM package for SwiftUI
-* A SwiftUI library, wrapping my [LNPopupController framework](https://github.com/LeoNatan/LNPopupController); the library works internally with SwiftUI’s generated UIKit content to present the framework in a native manner
+* A SwiftUI library, wrapping the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController); the library works internally with SwiftUI’s generated UIKit content to present the framework in a native manner
 
 ## Adding to Your Project
 
@@ -53,9 +53,9 @@ import LNPopupUI
 
 ### Popups
 
-Popup consist of a popup bar and a popup content view. Information for the popup bar, such as the title, image and bar button items, is received by using the provided modifier API.
+Popups consist of a popup bar and a popup content view. Information for the popup bar, such as the title, image and bar button items, is configured using the provided modifier APIs.
 
-To present the popup, call the `popup(isBarPresented:isPopupOpen:content)` method:
+To present the popup, call the `popup(isBarPresented:isPopupOpen:content:)` method:
 
 ```swift
 TabView {
@@ -74,7 +74,7 @@ For more information, see the documentation in [LNPopupUI.swift](https://github.
 
 ### Popup Bar Content
 
-Popup bar content is provided as modifiers of the popup content view.
+Popup bar content is configured using modifiers of the popup content view.
 
 ```swift
 VStack {
