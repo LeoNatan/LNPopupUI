@@ -11,6 +11,8 @@
 		390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */; };
 		393841D82AA13A2700460600 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 393841D72AA13A2700460600 /* CompactSlider */; };
 		393841DB2AA13BA800460600 /* CompactSliderDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */; };
+		394005F52AC2455E00291421 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 394005F42AC2455E00291421 /* LNTouchVisualizer */; };
+		394005F62AC24BAF00291421 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 394005F42AC2455E00291421 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394215F528F305D500D806A4 /* PopupDemoView.swift */; };
 		394DC7252604D1740010BED4 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 394DC7242604D1740010BED4 /* SettingsTableViewController.m */; };
 		394DC7282604D1F30010BED4 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394DC7272604D1F30010BED4 /* Settings.storyboard */; };
@@ -42,6 +44,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				394005F62AC24BAF00291421 /* LNTouchVisualizer in Embed Frameworks */,
 				39E18E3C24F059F50096391B /* LNPopupUI in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -87,6 +90,7 @@
 				39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */,
 				3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */,
 				393841D82AA13A2700460600 /* CompactSlider in Frameworks */,
+				394005F52AC2455E00291421 /* LNTouchVisualizer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +241,7 @@
 				3998CA54268BC3C300A60468 /* LoremIpsum */,
 				394E1AAB276C137400C5BE31 /* ActivityView */,
 				393841D72AA13A2700460600 /* CompactSlider */,
+				394005F42AC2455E00291421 /* LNTouchVisualizer */,
 			);
 			productName = LNPopupUIExample;
 			productReference = 395781D124DC5D2700A604D1 /* LNPopupUIExample.app */;
@@ -270,6 +275,7 @@
 				3998CA53268BC3B700A60468 /* XCRemoteSwiftPackageReference "LoremIpsum" */,
 				394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */,
 				393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */,
+				394005F32AC2455E00291421 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */,
 			);
 			productRefGroup = 395781D224DC5D2700A604D1 /* Products */;
 			projectDirPath = "";
@@ -547,6 +553,14 @@
 				minimumVersion = 1.1.5;
 			};
 		};
+		394005F32AC2455E00291421 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeoNatan/LNTouchVisualizer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
 		394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftUI-Plus/ActivityView";
@@ -570,6 +584,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */;
 			productName = CompactSlider;
+		};
+		394005F42AC2455E00291421 /* LNTouchVisualizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 394005F32AC2455E00291421 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
+			productName = LNTouchVisualizer;
 		};
 		394E1AAB276C137400C5BE31 /* ActivityView */ = {
 			isa = XCSwiftPackageProductDependency;

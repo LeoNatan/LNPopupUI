@@ -44,7 +44,9 @@ struct SettingsView: View {
 						}
 					}
 				}
+				.navigationBarTitleDisplayMode(.inline)
 		}
 		.navigationViewStyle(.stack)
+		
 	}
 }

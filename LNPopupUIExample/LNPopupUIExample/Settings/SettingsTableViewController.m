@@ -1,11 +1,14 @@
 //
 //  SettingsTableViewController.m
-//  LNPopupUIExample
+//  LNPopupControllerExample
 //
-//  Created by Leo Natan on 3/19/21.
+//  Created by Leo Natan on 18/03/2017.
+//  Copyright © 2017 Leo Natan. All rights reserved.
 //
 
 #import "SettingsTableViewController.h"
+
+@import LNTouchVisualizer;
 
 NSString* const PopupSettingsBarStyle = @"PopupSettingsBarStyle";
 NSString* const PopupSettingsInteractionStyle = @"PopupSettingsInteractionStyle";
@@ -16,6 +19,9 @@ NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomi
 NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 NSString* const PopupSettingsHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
 NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
+NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
+NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
+NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimationsEnabled";
 
 @interface SettingsTableViewController ()
 {
@@ -25,6 +31,9 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 	IBOutlet UISwitch* _customizations;
 	IBOutlet UISwitch* _extendBars;
 	IBOutlet UISwitch* _hidesBottomBarWhenPushed;
+	IBOutlet UISwitch* _touchVisualizer;
+	IBOutlet UISwitch* _customBar;
+	IBOutlet UISwitch* _slowAnimations;
 }
 
 @end
@@ -38,7 +47,7 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 
 + (instancetype)newSettingsTableViewController
 {
-	return [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateInitialViewController];
+	return [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
 }
 
 - (void)viewDidLoad
@@ -67,12 +76,21 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 	[_customizations setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsEnableCustomizations] animated:animated];
 	[_extendBars setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar] animated:animated];
 	[_hidesBottomBarWhenPushed setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed] animated:animated];
-}
-
-- (void)didReceiveMemoryWarning
-{
-	[super didReceiveMemoryWarning];
-	// Dispose of any resources that can be recreated.
+	[_touchVisualizer setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled] animated:animated];
+	[_customBar setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsCustomBarEverywhereEnabled] animated:animated];
+	[_slowAnimations setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsSlowAnimationsEnabled] animated:animated];
+	
+	if([NSProcessInfo.processInfo.processName isEqualToString:@"LNPopupUIExample"])
+	{
+		_hidesBottomBarWhenPushed.on = NO;
+		_hidesBottomBarWhenPushed.enabled = NO;
+		
+		_touchVisualizer.on = NO;
+		_touchVisualizer.enabled = NO;
+		
+		_slowAnimations.on = NO;
+		_slowAnimations.enabled = NO;
+	}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -96,10 +114,11 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 		}
 		else
 		{
+			NSUInteger lastIdxInSection = [tableView numberOfRowsInSection:indexPath.section] - 1;
 			NSUInteger value = [[NSUserDefaults.standardUserDefaults objectForKey:key] unsignedIntegerValue];
 			if(value == 0xFFFF)
 			{
-				value = 3;
+				value = lastIdxInSection;
 			}
 			
 			if(indexPath.row == value)
@@ -114,9 +133,12 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 
 - (void)reset
 {
-	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsEnableCustomizations];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsEnableCustomizations];
 	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsExtendBar];
 	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsHidesBottomBarWhenPushed];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsTouchVisualizerEnabled];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsCustomBarEverywhereEnabled];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsSlowAnimationsEnabled];
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsVisualEffectViewBlurEffect];
 	
 	[_sectionToKeyMapping enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
@@ -133,6 +155,11 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 	[self.tableView reloadData];
 }
 
+- (IBAction)_resetButtonTapped:(UIBarButtonItem *)sender
+{
+	[self reset];
+}
+
 - (IBAction)_demoSwitchValueDidChange:(UISwitch*)sender
 {
 	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsEnableCustomizations];
@@ -146,6 +173,22 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 - (IBAction)_hidesBottomBarWhenPushedValueDidChange:(UISwitch*)sender
 {
 	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsHidesBottomBarWhenPushed];
+}
+
+- (IBAction)_touchVisualizerEnabledDidChange:(UISwitch*)sender
+{
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsTouchVisualizerEnabled];
+	self.view.window.windowScene.touchVisualizerEnabled = sender.isOn;
+}
+
+- (IBAction)_customBarEnabledDidChange:(UISwitch*)sender
+{
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsCustomBarEverywhereEnabled];
+}
+
+- (IBAction)_slowAnimationsEnabledDidChange:(UISwitch*)sender
+{
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsSlowAnimationsEnabled];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

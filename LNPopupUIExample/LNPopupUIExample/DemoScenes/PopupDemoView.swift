@@ -189,19 +189,20 @@ extension View {
 				}
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
-				.popupBarItems({
+				.popupBarItems {
 					Button(action: {
 						print("Play")
 					}) {
 						Image(systemName: "play.fill")
 					}
-					
+				} trailing: {
 					Button(action: {
 						print("Next")
 					}) {
 						Image(systemName: "forward.fill")
 					}
-				})
+				}
+
 		}
 		.popupBarStyle(LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))!)
 		.popupInteractionStyle(popupInteractionStyleFromUserDefaults())
@@ -213,6 +214,20 @@ extension View {
 		.if(UserDefaults.standard.object(forKey: PopupSettingsVisualEffectViewBlurEffect) != nil) { view in
 			view.popupBarInheritsAppearanceFromDockingView(false)
 				.popupBarBackgroundEffect(UIBlurEffect(style: UIBlurEffect.Style(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsVisualEffectViewBlurEffect))!))
+		}
+		.if(UserDefaults.standard.bool(forKey: PopupSettingsCustomBarEverywhereEnabled)) { view in
+			view.popupBarCustomView(wantsDefaultTapGesture: true, wantsDefaultPanGesture: true, wantsDefaultHighlightGesture: true) {
+				ZStack(alignment: .trailing) {
+					HStack {
+						Spacer()
+						Button("Test") {
+							print("Yay")
+						}.padding()
+						Spacer()
+						
+					}
+				}
+			}
 		}
 		.if(UserDefaults.standard.bool(forKey: PopupSettingsEnableCustomizations)) { view in
 			view.popupBarInheritsAppearanceFromDockingView(false)

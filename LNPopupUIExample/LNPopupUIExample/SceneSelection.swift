@@ -26,7 +26,7 @@ struct SceneSelection: View {
 	var body: some View {
 		NavigationView {
 			List {
-				Section(header: Text("Standard Scenes (Chevron + Snap)")) {
+				Section(header: Text("Standard Scenes"), footer: Text("Presents a standard test scene with a popup bar.")) {
 					Button("Tab View + Navigation View") {
 						tabnavPresented.toggle()
 					}
@@ -72,18 +72,18 @@ struct SceneSelection: View {
 							viewSheetPresented.toggle()
 						}
 					})
-					Button("View") {
-						viewPresented.toggle()
-					}
-					.foregroundColor(Color(.label))
-					.fullScreenCover(isPresented: $viewPresented, content: {
-						ViewDemoView(demoContent: DemoContent()) {
-							viewPresented.toggle()
-						}
-					})
+//					Button("View") {
+//						viewPresented.toggle()
+//					}
+//					.foregroundColor(Color(.label))
+//					.fullScreenCover(isPresented: $viewPresented, content: {
+//						ViewDemoView(demoContent: DemoContent()) {
+//							viewPresented.toggle()
+//						}
+//					})
 				}
-				Section(header: Text("Demo App")) {
-					Button("Apple Music") {
+				Section(header: Text("Demo Apps"), footer: Text("Presents a rudimentary recreation of a music app.")) {
+					Button("Music") {
 						musicSheetPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -93,25 +93,25 @@ struct SceneSelection: View {
 						}
 					})
 				}
-				Section(header: Text("Gestures")) {
-					Button("_CompactSlider_") {
-						compactSliderSheetPresented.toggle()
-					}
-					.foregroundColor(Color(.label))
-					.fullScreenCover(isPresented: $compactSliderSheetPresented, content: {
-						CompactSliderDemoView {
-							compactSliderSheetPresented.toggle()
-						}
-					})
-				}
-				Section(header: Text("Custom Popup Bar")) {
-					Button("Custom Popup Bar + UIKit Popup Content Controller") {
+				Section(header: Text("Custom Popup Bar"), footer: Text("Presents a scene with a custom popup bar view and a UIKit popup content controller")) {
+					Button("Custom Popup Bar") {
 						mapSheetPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $mapSheetPresented, content: {
 						CustomBarMapView {
 							mapSheetPresented.toggle()
+						}
+					})
+				}
+				Section(header: Text("Gestures"), footer: Text("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")) {
+					Button("CompactSlider") {
+						compactSliderSheetPresented.toggle()
+					}
+					.foregroundColor(Color(.label))
+					.fullScreenCover(isPresented: $compactSliderSheetPresented, content: {
+						CompactSliderDemoView {
+							compactSliderSheetPresented.toggle()
 						}
 					})
 				}
