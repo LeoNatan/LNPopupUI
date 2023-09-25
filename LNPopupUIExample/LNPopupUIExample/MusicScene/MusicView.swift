@@ -135,10 +135,7 @@ struct MusicView: View {
 				PlayerView(song: currentSong)
 			}
 		}
-		//		.popupInteractionStyle(.drag)
-		.popupBarStyle(.prominent)
 		.popupBarProgressViewStyle(.top)
-		.popupBarMarqueeScrollEnabled(true)
 	}
 }
 
