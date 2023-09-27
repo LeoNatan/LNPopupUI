@@ -24,6 +24,7 @@ internal struct LNPopupState<PopupContent: View> {
 	let closeButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>?
 	let barStyle: LNPopupEnvironmentConsumer<LNPopupBarStyle>?
 	let barBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
+	let barFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
 	let barProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>?
 	let barMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
 	let marqueeRate: LNPopupEnvironmentConsumer<CGFloat>?

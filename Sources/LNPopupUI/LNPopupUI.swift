@@ -132,6 +132,13 @@ public extension View {
 		return environment(\.popupBarBackgroundEffect, LNPopupEnvironmentConsumer(effect))
 	}
 	
+	/// Sets the popup bar's floating background effect. Use `nil` to use the most appropriate background style for the environment.
+	///
+	/// - Parameter effect: The popup bar's floating background effect.
+	func popupBarFloatingBackgroundEffect(_ effect: UIBlurEffect?) -> some View {
+		return environment(\.popupBarFloatingBackgroundEffect, LNPopupEnvironmentConsumer(effect))
+	}
+	
 	/// Sets a custom popup bar view, instead of the default system-provided bars.
 	///
 	/// If a custom bar view is provided, setting the popup bar style has no effect.

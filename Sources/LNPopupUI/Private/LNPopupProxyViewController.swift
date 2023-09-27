@@ -285,6 +285,10 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				if let barBackgroundEffect = self.currentPopupState.barBackgroundEffect?.consume(self) {
 					self.target.popupBar.standardAppearance.backgroundEffect = barBackgroundEffect
 				}
+				
+				if let barFloatingBackgroundEffect = self.currentPopupState.barFloatingBackgroundEffect?.consume(self) {
+					self.target.popupBar.standardAppearance.floatingBackgroundEffect = barFloatingBackgroundEffect
+				}
 			}
 			
 			if let contextMenu = self.currentPopupState.contextMenu?.consume(self) {
