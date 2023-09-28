@@ -66,7 +66,7 @@ TabView {
 }
 ```
 
-<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/></p>
 
 To present and dismiss the popup bar programmatically, toggle the `isPopupBarPresented` bound var. To open or close the popup programmatically, toggle the `isPopupOpen` bound var.
 
