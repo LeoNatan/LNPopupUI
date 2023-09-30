@@ -13,14 +13,12 @@ struct InnerView : View {
 	let tabIdx: Int?
 	let onDismiss: () -> Void
 	
-	init(tabIdx: Int? = nil, onDismiss: @escaping ()-> Void) {
-		self.tabIdx = tabIdx
-		self.onDismiss = onDismiss
-	}
+	let presentBarHandler: (() -> Void)?
+	let hideBarHandler: (() -> Void)?
 	
 	var body: some View {
 		ZStack(alignment: .topTrailing) {
-			SafeAreaDemoView(colorSeed: tabIdx != nil ? "tab_\(tabIdx!)" : "nil")
+			SafeAreaDemoView(colorSeed: tabIdx != nil ? "tab_\(tabIdx!)" : "nil", presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 			Button("Gallery") {
 				onDismiss()
 			}.padding()
@@ -38,35 +36,44 @@ struct TabDemoView : View {
 		self.demoContent = demoContent
 	}
 	
+	func presentBarHandler() {
+		isBarPresented = true
+	}
+	
+	func hideBarHandler() {
+		isBarPresented = false
+	}
+	
 	var body: some View {
 		TabView{
-			InnerView(tabIdx:0, onDismiss: onDismiss)
+			InnerView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:1, onDismiss: onDismiss)
+			InnerView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:2, onDismiss: onDismiss)
+			InnerView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:3, onDismiss: onDismiss)
+			InnerView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:4, onDismiss: onDismiss)
+			InnerView(tabIdx:4, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
-					Text("Tab")
+					Text("Hide Bar")
 				}
+				.toolbar(.hidden, for: .tabBar)
 		}
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented)
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))
 	}
 }
 

@@ -72,15 +72,15 @@ struct SceneSelection: View {
 							viewSheetPresented.toggle()
 						}
 					})
-//					Button("View") {
-//						viewPresented.toggle()
-//					}
-//					.foregroundColor(Color(.label))
-//					.fullScreenCover(isPresented: $viewPresented, content: {
-//						ViewDemoView(demoContent: DemoContent()) {
-//							viewPresented.toggle()
-//						}
-//					})
+					Button("View") {
+						viewPresented.toggle()
+					}
+					.foregroundColor(Color(.label))
+					.fullScreenCover(isPresented: $viewPresented, content: {
+						ViewDemoView(demoContent: DemoContent()) {
+							viewPresented.toggle()
+						}
+					})
 				}
 				Section(header: Text("Demo Apps"), footer: Text("Presents a rudimentary recreation of a music app.")) {
 					Button("Music") {

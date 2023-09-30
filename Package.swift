@@ -19,8 +19,8 @@ let package = Package(
 			targets: ["LNPopupUI"]),
     ],
     dependencies: [
-        // .package(path: "../LNPopupController")
-        .package(url: "https://github.com/LeoNatan/LNPopupController.git", from: Version(stringLiteral: "2.15.7"))
+//         .package(path: "../LNPopupController")
+        .package(url: "https://github.com/LeoNatan/LNPopupController.git", from: Version(stringLiteral: "2.15.12"))
     ],
     targets: [
         .target(

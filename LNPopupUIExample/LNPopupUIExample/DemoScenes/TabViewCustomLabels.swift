@@ -11,43 +11,47 @@ import LNPopupUI
 
 struct TabViewCustomLabels : View {
 	@State private var isBarPresented: Bool = true
-	private let onDismiss: () -> Void
 	let demoContent: DemoContent
+	let onDismiss: () -> Void
 	
-	init(demoContent: DemoContent, onDismiss: @escaping () -> Void) {
-		self.onDismiss = onDismiss
-		self.demoContent = demoContent
+	func presentBarHandler() {
+		isBarPresented = true
+	}
+	
+	func hideBarHandler() {
+		isBarPresented = false
 	}
 	
 	var body: some View {
 		TabView{
-			InnerView(tabIdx:0, onDismiss: onDismiss)
+			InnerView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:1, onDismiss: onDismiss)
+			InnerView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:2, onDismiss: onDismiss)
+			InnerView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:3, onDismiss: onDismiss)
+			InnerView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:4, onDismiss: onDismiss)
+			InnerView(tabIdx:4, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
 					Image(systemName: "star.fill")
-					Text("Tab")
+					Text("Hide Bar")
 				}
+				.toolbar(.hidden, for: .tabBar)
 		}
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeCustomTextLabels: true)
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled), includeCustomTextLabels: true)
 	}
 }
 

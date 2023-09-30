@@ -15,20 +15,16 @@ struct CompactSliderDemoView: View {
 	@AppStorage("playbackRateTo") var playbackRateTo: Double = 10.0
 	@AppStorage("playbackRate5") var playbackRate5: Double = 1.0
 	
-	private let onDismiss: () -> Void
-	
-	init(onDismiss: @escaping () -> Void) {
-		self.onDismiss = onDismiss
-	}
+	let onDismiss: () -> Void
 	
     var body: some View {
 		TabView{
-			InnerView(tabIdx:0, onDismiss: onDismiss)
+			InnerView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: nil, hideBarHandler: nil)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")
 				}
-			InnerView(tabIdx:1, onDismiss: onDismiss)
+			InnerView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: nil, hideBarHandler: nil)
 				.tabItem {
 					Image(systemName: "star.fill")
 					Text("Tab")

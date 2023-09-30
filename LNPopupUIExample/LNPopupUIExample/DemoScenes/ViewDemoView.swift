@@ -19,9 +19,17 @@ struct ViewDemoView : View {
 		self.demoContent = demoContent
 	}
 	
+	func presentBarHandler() {
+		isBarPresented = true
+	}
+	
+	func hideBarHandler() {
+		isBarPresented = false
+	}
+	
 	var body: some View {
-		InnerView(onDismiss: onDismiss)
-			.popupDemo(demoContent:demoContent, isBarPresented: $isBarPresented, includeContextMenu: true)
+		InnerView(tabIdx:nil, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+			.popupDemo(demoContent:demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))
 	}
 }
 

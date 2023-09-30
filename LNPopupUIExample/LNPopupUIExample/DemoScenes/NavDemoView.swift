@@ -20,6 +20,10 @@ struct NavDemoView : View {
 		isBarPresented = true
 	}
 	
+	func hideBarHandler() {
+		isBarPresented = false
+	}
+	
 	func appearanceHandler() {
 		if let forcedColorScheme = forcedColorScheme {
 			self.forcedColorScheme = forcedColorScheme == .dark ? .light : .dark
@@ -28,12 +32,8 @@ struct NavDemoView : View {
 		}
 	}
 	
-	func hideBarHandler() {
-		isBarPresented = false
-	}
-	
 	var body: some View {
-		NavigationView {
+		NavigationStack {
 			SafeAreaDemoView(includeToolbar: true, includeLink: true, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
 				.navigationBarTitle("Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
@@ -42,8 +42,7 @@ struct NavDemoView : View {
 				})
 		}
 		.colorScheme(forcedColorScheme ?? environmentColorScheme)
-		.navigationViewStyle(.stack)
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented)
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))
 	}
 }
 

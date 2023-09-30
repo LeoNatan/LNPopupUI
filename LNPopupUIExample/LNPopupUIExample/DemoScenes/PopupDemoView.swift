@@ -117,30 +117,14 @@ struct SafeAreaDemoView : View {
 	}
 	
 	var body: some View {
-		ZStack(alignment: .trailing) {
-			VStack {
-				Text("Top").offset(x: offset ? 40.0 : 0.0)
-				Spacer()
-				if let isPopupOpen = isPopupOpen {
-					Button("Custom Close Button") {
-						isPopupOpen.wrappedValue = false
-					}.foregroundColor(Color(.label))
-				} else {
-					Text("Center")
-				}
-				Spacer()
-				Text("Bottom")
-			}.frame(minWidth: 0,
-					maxWidth: .infinity,
-					minHeight: 0,
-					maxHeight: .infinity,
-					alignment: .top)
-			
-			if includeLink {
-				NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss).navigationTitle("LNPopupUI"))
-					.padding()
-			}
+		VStack(alignment: .center) {
+			Text("Top").offset(x: offset ? 40.0 : 0.0)
+			Spacer()
+			Text("Bottom")
 		}
+		.frame(maxWidth: .infinity,
+			   maxHeight: .infinity,
+			   alignment: .center)
 		.padding(4)
 		.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
 		.font(.system(.headline))
@@ -155,6 +139,46 @@ struct SafeAreaDemoView : View {
 					}
 				}
 			}
+		}
+		.overlay {
+			ZStack {
+				if let isPopupOpen = isPopupOpen {
+					Button("Custom Close Button") {
+						isPopupOpen.wrappedValue = false
+					}.foregroundColor(Color(.label))
+				} else {
+					if let presentBarHandler = presentBarHandler, let hideBarHandler = hideBarHandler {
+						HStack {
+							Button {
+								presentBarHandler()
+							} label: {
+								Image(systemName: "dock.arrow.up.rectangle")
+							}
+							Button {
+								hideBarHandler()
+							} label: {
+								Image(systemName: "dock.arrow.down.rectangle")
+							}
+						}.font(.title2)
+					} else {
+						Text("Center")
+					}
+				}
+				if includeLink {
+					HStack {
+						Spacer()
+						NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss)
+							.navigationTitle("LNPopupUI"))
+						.padding()
+					}
+				}
+			}
+			.frame(maxWidth: .infinity,
+				   maxHeight: .infinity,
+				   alignment: .center)
+			.edgesIgnoringSafeArea([.top, .bottom])
+			.font(.system(.headline))
+			.tint(Color(uiColor: .label))
 		}
 	}
 }
@@ -175,7 +199,7 @@ extension View {
 		}
 	}
 	
-	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool = true, includeCustomTextLabels: Bool = false) -> some View {
+	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool, includeCustomTextLabels: Bool = false) -> some View {
 		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
 				.if(includeCustomTextLabels) { view in
