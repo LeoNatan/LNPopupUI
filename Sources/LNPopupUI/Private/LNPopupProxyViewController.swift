@@ -9,6 +9,20 @@ import SwiftUI
 import UIKit
 import LNPopupController
 
+var willNotificationName: NSNotification.Name = {
+	//UIWindowWillRotateNotification
+	let b64d = "VUlXaW5kb3dXaWxsUm90YXRlTm90aWZpY2F0aW9u".data(using: .utf8)!
+	let str = String(data: Data(base64Encoded: b64d)!, encoding: .utf8)!
+	return NSNotification.Name(rawValue: str)
+}()
+
+var didNotificationDid: NSNotification.Name = {
+	//UIWindowDidRotateNotification
+	let b64d = "VUlXaW5kb3dEaWRSb3RhdGVOb3RpZmljYXRpb24=".data(using: .utf8)!
+	let str = String(data: Data(base64Encoded: b64d)!, encoding: .utf8)!
+	return NSNotification.Name(rawValue: str)
+}()
+
 internal class LNPopupBarItemAdapter: UIHostingController<AnyView> {
 	let updater: ([UIBarButtonItem]?) -> Void
 	var doneUpdating = false
@@ -321,22 +335,37 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			self.currentPopupState.barCustomizer?.consume(self)?(self.target.popupBar)
 			self.currentPopupState.contentViewCustomizer?.consume(self)?(self.target.popupContentView)
 			
+			
+			
+			NotificationCenter.default.post(name: willNotificationName, object: self.view.window)
+			let endImplicitAnims = {
+				NotificationCenter.default.post(name: didNotificationDid, object: self.view.window)
+			}
+			
 			if self.currentPopupState.isBarPresented == true {
 				popupContentHandler()
 				
 				if self.target.popupPresentationState.rawValue >= LNPopupPresentationState.barPresented.rawValue {
 					if let isPopupOpen = self.currentPopupState.isPopupOpen {
 						if isPopupOpen.wrappedValue == true {
-							self.target.openPopup(animated: true, completion: nil)
+							self.target.openPopup(animated: true) {
+								endImplicitAnims()
+							}
 						} else {
-							self.target.closePopup(animated: true, completion: nil)
+							self.target.closePopup(animated: true) {
+								endImplicitAnims()
+							}
 						}
 					}
 				} else {
-					self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen?.wrappedValue ?? false, animated: animated, completion: nil)
+					self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen?.wrappedValue ?? false, animated: animated) {
+						endImplicitAnims()
+					}
 				}
 			} else {
-				self.target.dismissPopupBar(animated: true, completion: nil)
+				self.target.dismissPopupBar(animated: true) {
+					endImplicitAnims()
+				}
 			}
 		}
 		
