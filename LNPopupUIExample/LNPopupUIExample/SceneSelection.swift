@@ -24,7 +24,7 @@ struct SceneSelection: View {
 	@State private var item: ActivityItem? = nil
 	
 	var body: some View {
-		NavigationView {
+		NavigationStack {
 			List {
 				Section(header: Text("Standard Scenes"), footer: Text("Presents a standard test scene with a popup bar.")) {
 					Button("Tab View + Navigation View") {
@@ -125,15 +125,17 @@ struct SceneSelection: View {
 					} label: {
 						Image("gears")
 					}
+					.popover(isPresented: $settingsPresented, content: {
+						SettingsNavView()
+					})
 				}
 			}
 			.navigationBarTitleDisplayMode(.inline)
 		}
-		.navigationViewStyle(.stack)
-		.ignoresSafeArea()
 		.popup(isBarPresented: Binding.constant(true), popupContent: {
 			PopupDemoWebView()
 		})
+		.popupBarStyle(.floating)
 		.popupBarContextMenu {
 			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI")!) {
 				Text("Visit GitHub Page")
@@ -153,9 +155,6 @@ struct SceneSelection: View {
 				Image(systemName: "square.and.arrow.up")
 			}
 
-		}
-		.sheet(isPresented: $settingsPresented) {
-			SettingsView()
 		}
 		.activitySheet($item)
 	}

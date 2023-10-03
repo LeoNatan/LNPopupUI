@@ -148,7 +148,7 @@ struct SafeAreaDemoView : View {
 					}.foregroundColor(Color(.label))
 				} else {
 					if let presentBarHandler = presentBarHandler, let hideBarHandler = hideBarHandler {
-						HStack {
+						HStack(spacing: 16) {
 							Button {
 								presentBarHandler()
 							} label: {
@@ -184,8 +184,8 @@ struct SafeAreaDemoView : View {
 }
 
 extension View {
-	func popupInteractionStyleFromUserDefaults() -> LNPopupInteractionStyle {
-		switch UserDefaults.standard.integer(forKey: PopupSettingsInteractionStyle) {
+	func popupInteractionStyleFromAppStorage(_ style: __LNPopupInteractionStyle) -> LNPopupInteractionStyle {
+		switch style.rawValue {
 		case 1:
 			return .drag
 		case 2:
@@ -200,13 +200,29 @@ extension View {
 	}
 	
 	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool, includeCustomTextLabels: Bool = false) -> some View {
-		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: { print("Opened") }, onClose: { print("Closed") }) {
+		@AppStorage(PopupSettingsBarStyle) var barStyle: LNPopupBarStyle = .default
+		@AppStorage(PopupSettingsInteractionStyle) var interactionStyle: __LNPopupInteractionStyle = .default
+		@AppStorage(PopupSettingsCloseButtonStyle) var closeButtonStyle: LNPopupCloseButtonStyle = .default
+		@AppStorage(PopupSettingsProgressViewStyle) var progressViewStyle: LNPopupBarProgressViewStyle = .default
+		@AppStorage(PopupSettingsMarqueeStyle) var marqueeStyle: Int = 0
+		@AppStorage(PopupSettingsVisualEffectViewBlurEffect) var blurEffectStyle: UIBlurEffect.Style = .default
+		
+		@AppStorage(PopupSettingsExtendBar) var extendBar: Bool = true
+		@AppStorage(PopupSettingsCustomBarEverywhereEnabled) var customPopupBar: Bool = false
+		@AppStorage(PopupSettingsEnableCustomizations) var enableCustomizations: Bool = false
+		@AppStorage(PopupSettingsContextMenuEnabled) var contextMenu: Bool = false
+		
+		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: {
+			print("Opened")
+		}, onClose: {
+			print("Closed")
+		}) {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
 				.if(includeCustomTextLabels) { view in
 					view.popupTitle {
-						Text(demoContent.title).foregroundColor(.pink).fontWeight(.heavy)
+						Text(demoContent.title).foregroundColor(.orange).fontWeight(.black)
 					} subtitle: {
-						Text(demoContent.subtitle)
+						Text(demoContent.subtitle).foregroundColor(.blue).fontWeight(.medium)
 					}
 				} else: { view in
 					view.popupTitle(demoContent.title, subtitle: demoContent.subtitle)
@@ -228,21 +244,21 @@ extension View {
 				}
 
 		}
-		.popupBarStyle(LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))!)
-		.popupInteractionStyle(popupInteractionStyleFromUserDefaults())
-		.popupBarProgressViewStyle(LNPopupBarProgressViewStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsProgressViewStyle))!)
-		.popupCloseButtonStyle(LNPopupCloseButtonStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsCloseButtonStyle))!)
-		.if(UserDefaults.standard.object(forKey: PopupSettingsMarqueeStyle) != nil) { view in
-			view.popupBarMarqueeScrollEnabled(UserDefaults.standard.bool(forKey: PopupSettingsMarqueeStyle))
+		.popupBarStyle(barStyle)
+		.popupInteractionStyle(popupInteractionStyleFromAppStorage(interactionStyle))
+		.popupBarProgressViewStyle(progressViewStyle)
+		.popupCloseButtonStyle(closeButtonStyle)
+		.if(marqueeStyle != 0) { view in
+			view.popupBarMarqueeScrollEnabled(marqueeStyle == 2)
 		}
-		.if(UserDefaults.standard.object(forKey: PopupSettingsVisualEffectViewBlurEffect) != nil && (LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))! == .floating || (LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))! == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))) { view in
-			view.popupBarFloatingBackgroundEffect(UIBlurEffect(style: UIBlurEffect.Style(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsVisualEffectViewBlurEffect))!))
+		.if(blurEffectStyle != .default && (barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17)) { view in
+			view.popupBarFloatingBackgroundEffect(UIBlurEffect(style: blurEffectStyle))
 		}
-		.if(UserDefaults.standard.object(forKey: PopupSettingsVisualEffectViewBlurEffect) != nil && (LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))! != .floating) && (LNPopupBarStyle(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsBarStyle))! != .default || ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 17)) { view in
+		.if(blurEffectStyle != .default && (barStyle != .floating) && (barStyle != .default || ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 17)) { view in
 			view.popupBarInheritsAppearanceFromDockingView(false)
-				.popupBarBackgroundEffect(UIBlurEffect(style: UIBlurEffect.Style(rawValue: UserDefaults.standard.integer(forKey: PopupSettingsVisualEffectViewBlurEffect))!))
+				.popupBarBackgroundEffect(UIBlurEffect(style: blurEffectStyle))
 		}
-		.if(UserDefaults.standard.bool(forKey: PopupSettingsCustomBarEverywhereEnabled)) { view in
+		.if(customPopupBar) { view in
 			view.popupBarCustomView(wantsDefaultTapGesture: true, wantsDefaultPanGesture: true, wantsDefaultHighlightGesture: true) {
 				ZStack(alignment: .trailing) {
 					HStack {
@@ -256,7 +272,7 @@ extension View {
 				}
 			}
 		}
-		.if(UserDefaults.standard.bool(forKey: PopupSettingsEnableCustomizations)) { view in
+		.if(enableCustomizations) { view in
 			view.popupBarInheritsAppearanceFromDockingView(false)
 				.popupBarCustomizer { popupBar in
 					let paragraphStyle = NSMutableParagraphStyle()
@@ -274,7 +290,7 @@ extension View {
 					popupBar.tintColor = .yellow
 				}
 		}
-		.popupBarShouldExtendPopupBarUnderSafeArea(UserDefaults.standard.bool(forKey: PopupSettingsExtendBar))
+		.popupBarShouldExtendPopupBarUnderSafeArea(extendBar)
 		.if(includeContextMenu) { view in
 			view.popupBarContextMenu {
 				Button("♥️ - Hearts", action: { print ("♥️ - Hearts") })
