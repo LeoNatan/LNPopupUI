@@ -334,9 +334,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			
 			
 			
-			NotificationCenter.default.post(name: willNotificationName, object: self.view.window)
+			NotificationCenter.default.post(name: willNotificationName, object: self.view.window, userInfo: ["LNPopupIgnore": true])
 			let endImplicitAnims = {
-				NotificationCenter.default.post(name: didNotificationDid, object: self.view.window)
+				NotificationCenter.default.post(name: didNotificationDid, object: self.view.window, userInfo: ["LNPopupIgnore": true])
 			}
 			
 			if self.currentPopupState.isBarPresented == true {
