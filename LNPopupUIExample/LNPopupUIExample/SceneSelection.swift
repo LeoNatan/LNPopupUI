@@ -9,6 +9,20 @@ import SwiftUI
 import LNPopupUI
 import ActivityView
 
+fileprivate struct CellPaddedButton<S: StringProtocol>: View {
+	let text: S
+	let action: () -> Void
+	
+	public init(_ content: S, action: @escaping () -> Void) {
+		text = content
+		self.action = action
+	}
+	
+	var body: some View {
+		Button(text, action: action).padding([.top, .bottom], 4.167)
+	}
+}
+
 struct SceneSelection: View {
 	@State var tabnavPresented: Bool = false
 	@State var tabPresented: Bool = false
@@ -27,7 +41,7 @@ struct SceneSelection: View {
 		NavigationStack {
 			List {
 				Section(header: Text("Standard Scenes"), footer: Text("Presents a standard test scene with a popup bar.")) {
-					Button("Tab View + Navigation View") {
+					CellPaddedButton("Tab View + Navigation View") {
 						tabnavPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -36,7 +50,7 @@ struct SceneSelection: View {
 							tabnavPresented.toggle()
 						}
 					})
-					Button("Tab View") {
+					CellPaddedButton("Tab View") {
 						tabPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -45,7 +59,7 @@ struct SceneSelection: View {
 							tabPresented.toggle()
 						}
 					})
-					Button("Tab View (Custom Labels)") {
+					CellPaddedButton("Tab View (Custom Labels)") {
 						tabCustomPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -54,7 +68,7 @@ struct SceneSelection: View {
 							tabCustomPresented.toggle()
 						}
 					})
-					Button("Navigation View") {
+					CellPaddedButton("Navigation View") {
 						navPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -63,7 +77,7 @@ struct SceneSelection: View {
 							navPresented.toggle()
 						}
 					})
-					Button("Navigation View (Sheet)") {
+					CellPaddedButton("Navigation View (Sheet)") {
 						viewSheetPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -72,7 +86,7 @@ struct SceneSelection: View {
 							viewSheetPresented.toggle()
 						}
 					})
-					Button("View") {
+					CellPaddedButton("View") {
 						viewPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -83,7 +97,7 @@ struct SceneSelection: View {
 					})
 				}
 				Section(header: Text("Demo Apps"), footer: Text("Presents a rudimentary recreation of a music app.")) {
-					Button("Music") {
+					CellPaddedButton("Music") {
 						musicSheetPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -94,7 +108,7 @@ struct SceneSelection: View {
 					})
 				}
 				Section(header: Text("Custom Popup Bar"), footer: Text("Presents a scene with a custom popup bar view and a UIKit popup content controller")) {
-					Button("Custom Popup Bar") {
+					CellPaddedButton("Custom Popup Bar") {
 						mapSheetPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
@@ -105,7 +119,7 @@ struct SceneSelection: View {
 					})
 				}
 				Section(header: Text("Gestures"), footer: Text("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")) {
-					Button("CompactSlider") {
+					CellPaddedButton("CompactSlider") {
 						compactSliderSheetPresented.toggle()
 					}
 					.foregroundColor(Color(.label))
