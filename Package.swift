@@ -5,8 +5,8 @@ import PackageDescription
 let package = Package(
     name: "LNPopupUI",
 	platforms: [
-		.iOS(.v13),
-		.macCatalyst(.v13)
+		.iOS(.v14),
+		.macCatalyst(.v14)
 	],
     products: [
         .library(
@@ -20,7 +20,7 @@ let package = Package(
     ],
     dependencies: [
 //         .package(path: "../LNPopupController")
-        .package(url: "https://github.com/LeoNatan/LNPopupController.git", from: Version(stringLiteral: "2.15.16"))
+        .package(url: "https://github.com/LeoNatan/LNPopupController.git", from: Version(stringLiteral: "2.15.18"))
     ],
     targets: [
         .target(
