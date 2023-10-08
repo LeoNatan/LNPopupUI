@@ -20,7 +20,7 @@ Check the demo project for a quick recreation of Apple’s music app.
 
 ### Features
 
-* Available for iOS 13 and above, as a SPM package for SwiftUI
+* Available for iOS 14 and above, as a SPM package for SwiftUI
 * A SwiftUI library, wrapping the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController); the library works internally with SwiftUI’s generated UIKit content to present the framework in a native manner
 
 ## Adding to Your Project
