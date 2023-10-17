@@ -29,6 +29,10 @@ extension UIColor {
 	}
 	
 	class func adaptiveColor(withSeed seed: String) -> UIColor {
+		if UserDefaults.standard.bool(forKey: __LNPopupBarDisableDemoSceneColors) {
+			return .systemBackground
+		}
+		
 		let light = lightColor(withSeed: seed)
 		let dark = darkColor(withSeed: seed)
 		

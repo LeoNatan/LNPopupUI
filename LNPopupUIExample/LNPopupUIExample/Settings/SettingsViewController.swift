@@ -70,6 +70,7 @@ struct SettingsView : View {
 	@AppStorage(__LNPopupBarHideContentView) var hidePopupBarContentView: Bool = false
 	@AppStorage(__LNPopupBarHideShadow) var hidePopupBarShadow: Bool = false
 	@AppStorage(__LNPopupBarEnableLayoutDebug) var layoutDebug: Bool = false
+	@AppStorage(__LNPopupBarDisableDemoSceneColors) var disableDemoSceneColors: Bool = false
 	
 	@Environment(\.sizeCategory) var sizeCategory
 	
@@ -100,7 +101,7 @@ struct SettingsView : View {
 				CellPaddedText("Default").tag(LNPopupCloseButtonStyle.default)
 				CellPaddedText("Round").tag(LNPopupCloseButtonStyle.round)
 				CellPaddedText("Chevron").tag(LNPopupCloseButtonStyle.chevron)
-				CellPaddedText("Flat").tag(LNPopupCloseButtonStyle.flat)
+				CellPaddedText("Grabber").tag(LNPopupCloseButtonStyle.grabber)
 				CellPaddedText("None").tag(LNPopupCloseButtonStyle.none)
 			} label: {
 				Text("Close Button Style")
@@ -205,9 +206,9 @@ struct SettingsView : View {
 			}
 			
 			Section {
-				CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer)
+				CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors)
 			} footer: {
-				Text("Enables visualization of touches within the app, for demo purposes.")
+				Text("Disables random background colors in the demo scenes.")
 			}
 			
 			Section {
@@ -217,13 +218,31 @@ struct SettingsView : View {
 			} header: {
 				Text("Popup Bar Debug")
 			}
-		}.accentColor(.pink).pickerStyle(.inline)
+			
+			Section {
+				CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer)
+			} header: {
+				Text("Demonstration")
+			} footer: {
+				Text("Enables visualization of touches within the app, for demo purposes.")
+			}
+		}.pickerStyle(.inline)
 	}
 }
 
 class SettingsViewController: UIHostingController<SettingsView> {
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder, rootView: SettingsView())
+	}
+	
+	override func viewIsAppearing(_ animated: Bool) {
+		super.viewIsAppearing(animated)
+		
+		guard let parent = parent as? UINavigationController else {
+			return
+		}
+		
+		self.view.tintColor = parent.navigationBar.tintColor
 	}
 	
 	class func reset() {
@@ -237,6 +256,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideContentView)
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideShadow)
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarEnableLayoutDebug)
+		UserDefaults.standard.removeObject(forKey: __LNPopupBarDisableDemoSceneColors)
 		
 		for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
 			UserDefaults.standard.removeObject(forKey: key)
