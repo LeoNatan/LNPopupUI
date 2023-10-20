@@ -14,7 +14,7 @@ Once a popup bar is presented with a content view, the user can swipe or tap the
 
 The library extends SwiftUI’s `View` with new functionality for presenting and customizing popups with content views, as well as setting information such as the popup bar’s title, image and bar button items. When a popup bar is presented, the popup bar automatically adapts to the view it was presented on for best appearance.
 
-Generally, it is recommended to present the popup bar on the outermost view, such as `TabView` or `NavigationView`. For example, if you have a view contained in a navigation view, which is in turn contained in a tab view, it is recommended to present the popup bar on the tab view.
+Generally, it is recommended to present the popup bar on the outermost view, such as `TabView` or `NavigationStack`. For example, if you have a view contained in a navigation stack, which is in turn contained in a tab view, it is recommended to present the popup bar on the tab view.
 
 Check the demo project for a quick recreation of Apple’s music app.
 

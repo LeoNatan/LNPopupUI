@@ -230,16 +230,24 @@ extension View {
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
 				.popupBarItems {
-					Button(action: {
-						print("Play")
-					}) {
-						Image(systemName: "play.fill")
+					ToolbarItemGroup(placement: .popupBar) {
+						Button(action: {
+							print("Play")
+						}) {
+							Image(systemName: "play.fill")
+						}.if(enableCustomizations) { view in
+							view.accentColor(.yellow)
+						}
 					}
 				} trailing: {
-					Button(action: {
-						print("Next")
-					}) {
-						Image(systemName: "forward.fill")
+					ToolbarItemGroup(placement: .popupBar) {
+						Button(action: {
+							print("Next")
+						}) {
+							Image(systemName: "forward.fill")
+						}.if(enableCustomizations) { view in
+							view.accentColor(.yellow)
+						}
 					}
 				}
 
@@ -274,6 +282,8 @@ extension View {
 		}
 		.if(enableCustomizations) { view in
 			view.popupBarInheritsAppearanceFromDockingView(false)
+				.popupBarFloatingBackgroundShadow(color: .red, radius: 8)
+				.popupBarImageShadow(color: .yellow, radius: 5)
 				.popupBarCustomizer { popupBar in
 					let paragraphStyle = NSMutableParagraphStyle()
 					paragraphStyle.alignment = .right
@@ -285,11 +295,8 @@ extension View {
 						popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
 					}
 					
-					
-					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!), .foregroundColor: UIColor.yellow ]
-					popupBar.standardAppearance.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!), .foregroundColor: UIColor.green ]
-					
-					popupBar.tintColor = .yellow
+					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!), .foregroundColor: UIColor.systemYellow ]
+					popupBar.standardAppearance.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!), .foregroundColor: UIColor.systemGreen ]
 				}
 		}
 		.popupBarShouldExtendPopupBarUnderSafeArea(extendBar)

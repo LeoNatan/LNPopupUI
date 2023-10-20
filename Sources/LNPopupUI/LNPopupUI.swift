@@ -139,6 +139,64 @@ public extension View {
 		return environment(\.popupBarFloatingBackgroundEffect, LNPopupEnvironmentConsumer(effect))
 	}
 	
+	/// Sets the floating popup bar background shadow.
+	///
+	/// This has effect only for floating style popup bars.
+	///
+	/// - Parameters:
+	///   - color: The shadow's color.
+	///   - radius: A measure of how much to blur the shadow. Larger values
+	///     result in more blur.
+	///   - x: An amount to offset the shadow horizontally from the view.
+	///   - y: An amount to offset the shadow vertically from the view.
+	func popupBarFloatingBackgroundShadow(color: Color? = nil, radius: CGFloat, x: CGFloat? = nil, y: CGFloat? = nil) -> some View {
+		let standardAppearance = LNPopupBarAppearance()
+		standardAppearance.configureWithDefaultFloatingBackground()
+		
+		let shadow = standardAppearance.floatingBarBackgroundShadow!
+		
+		if let color = color {
+			shadow.shadowColor = UIColor(color)
+		}
+		
+		shadow.shadowBlurRadius = radius
+		
+		let xx = x ?? shadow.shadowOffset.width
+		let yy = y ?? shadow.shadowOffset.height
+		shadow.shadowOffset = CGSize(width: xx, height: yy)
+		
+		return environment(\.popupBarFloatingBackgroundShadow, LNPopupEnvironmentConsumer(shadow))
+	}
+	
+	/// Sets the popup bar image shadow.
+	///
+	/// This has effect only for prominent and floating style popup bars.
+	///
+	/// - Parameters:
+	///   - color: The shadow's color.
+	///   - radius: A measure of how much to blur the shadow. Larger values
+	///     result in more blur.
+	///   - x: An amount to offset the shadow horizontally from the view.
+	///   - y: An amount to offset the shadow vertically from the view.
+	func popupBarImageShadow(color: Color? = nil, radius: CGFloat, x: CGFloat? = nil, y: CGFloat? = nil) -> some View {
+		let standardAppearance = LNPopupBarAppearance()
+		standardAppearance.configureWithDefaultFloatingBackground()
+		
+		let shadow = standardAppearance.imageShadow!
+		
+		if let color = color {
+			shadow.shadowColor = UIColor(color)
+		}
+		
+		shadow.shadowBlurRadius = radius
+		
+		let xx = x ?? shadow.shadowOffset.width
+		let yy = y ?? shadow.shadowOffset.height
+		shadow.shadowOffset = CGSize(width: xx, height: yy)
+		
+		return environment(\.popupBarImageShadow, LNPopupEnvironmentConsumer(shadow))
+	}
+	
 	/// Sets a custom popup bar view, instead of the default system-provided bars.
 	///
 	/// If a custom bar view is provided, setting the popup bar style has no effect.
@@ -305,28 +363,37 @@ public extension View {
 	}
 	
 	fileprivate func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView where Content : View {
-		if #available(iOS 14.0, *) {
-			let view = NavigationView {
-				Color.clear.toolbar {
-					ToolbarItemGroup(placement: .popupBar) {
-						content()
-					}
+		let content = {
+			Color.clear.toolbar {
+				ToolbarItemGroup(placement: .popupBar) {
+					content()
 				}
-			}.navigationViewStyle(.stack)
-			
-			return AnyView(view)
-		} else {
-			return AnyView(content().edgesIgnoringSafeArea(.all))
+			}
 		}
+		
+		let view: any View
+		if #available(iOS 16.0, *) {
+			view = NavigationStack(root: content)
+		} else {
+			view = NavigationView(content: content).navigationViewStyle(.stack)
+		}
+		
+		return AnyView(view)
 	}
 	
-	@available(iOS 14.0, *)
 	fileprivate func barItemContainer<Content>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView where Content : ToolbarContent {
-		let view = NavigationView {
+		let content = {
 			Color.clear.toolbar {
 				content()
 			}
-		}.navigationViewStyle(.stack)
+		}
+		
+		let view: any View
+		if #available(iOS 16.0, *) {
+			view = NavigationStack(root: content)
+		} else {
+			view = NavigationView(content: content).navigationViewStyle(.stack)
+		}
 		
 		return AnyView(view)
 	}

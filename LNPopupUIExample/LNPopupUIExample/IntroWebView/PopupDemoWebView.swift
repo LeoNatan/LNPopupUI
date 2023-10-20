@@ -40,8 +40,10 @@ struct PopupDemoWebView: View {
 			}
 			.popupImage(Image(uiImage: UIImage(named: "AppIcon60x60")!))
 			.popupBarItems({
-				Link(destination: url) {
-					Image(systemName: "suit.heart.fill")
+				ToolbarItemGroup(placement: .popupBar) {
+					Link(destination: url) {
+						Image(systemName: "suit.heart.fill")
+					}
 				}
 			})
 		}

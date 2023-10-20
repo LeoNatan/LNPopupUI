@@ -50,27 +50,27 @@ struct TabNavView : View {
 		TabView{
 			InnerNavView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
+					Image(systemName: "1.square")
 					Text("Tab")
 				}
 			InnerNavView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
+					Image(systemName: "2.square")
 					Text("Tab")
 				}
 			InnerNavView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
+					Image(systemName: "3.square")
 					Text("Tab")
 				}
 			InnerNavView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
+					Image(systemName: "4.square")
 					Text("Tab")
 				}
 			InnerNavView(tabIdx:4, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
+					Image(systemName: "xmark.square")
 					Text("Hide Bar")
 				}
 				.toolbar(.hidden, for: .tabBar)

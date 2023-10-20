@@ -31,6 +31,8 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: LNPopupEnvironmentConsumer<Bool>?
 	@Environment(\.popupBarBackgroundEffect) var popupBarBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
 	@Environment(\.popupBarFloatingBackgroundEffect) var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
+	@Environment(\.popupBarFloatingBackgroundShadow) var popupBarFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
+	@Environment(\.popupBarImageShadow) var popupBarImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
 	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>?
 	@Environment(\.popupBarContextMenu) var popupBarContextMenu: LNPopupEnvironmentConsumer<AnyView>?
 	@Environment(\.popupBarCustomizer) var popupBarCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
@@ -62,6 +64,8 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 								 barStyle: popupBarStyle,
 								 barBackgroundEffect: popupBarBackgroundEffect,
 								 barFloatingBackgroundEffect: popupBarFloatingBackgroundEffect,
+								 barFloatingBackgroundShadow: popupBarFloatingBackgroundShadow,
+								 barImageShadow: popupBarImageShadow,
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
 								 marqueeRate: popupBarMarqueeRate,

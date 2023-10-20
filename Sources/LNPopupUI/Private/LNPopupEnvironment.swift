@@ -82,6 +82,14 @@ internal struct LNPopupBarCustomViewKey: EnvironmentKey {
 	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupBarCustomView>? = nil
 }
 
+internal struct LNPopupBarFloatingBackgroundShadowKey: EnvironmentKey {
+	static let defaultValue: LNPopupEnvironmentConsumer<NSShadow>? = nil
+}
+
+internal struct LNPopupBarImageShadowKey: EnvironmentKey {
+	static let defaultValue: LNPopupEnvironmentConsumer<NSShadow>? = nil
+}
+
 internal struct LNPopupBarContextMenuKey: EnvironmentKey {
 	static let defaultValue: LNPopupEnvironmentConsumer<AnyView>? = nil
 }
@@ -153,6 +161,16 @@ internal extension EnvironmentValues {
 	var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>? {
 		get { self[LNPopupBarFloatingBackgroundEffectKey.self] }
 		set { self[LNPopupBarFloatingBackgroundEffectKey.self] = newValue }
+	}
+	
+	var popupBarFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>? {
+		get { self[LNPopupBarFloatingBackgroundShadowKey.self] }
+		set { self[LNPopupBarFloatingBackgroundShadowKey.self] = newValue }
+	}
+	
+	var popupBarImageShadow: LNPopupEnvironmentConsumer<NSShadow>? {
+		get { self[LNPopupBarImageShadowKey.self] }
+		set { self[LNPopupBarImageShadowKey.self] = newValue }
 	}
 	
 	var popupBarCustomBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>? {

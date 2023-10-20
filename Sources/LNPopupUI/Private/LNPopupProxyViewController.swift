@@ -45,21 +45,15 @@ internal class LNPopupBarItemAdapter: UIHostingController<AnyView> {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	override func addChild(_ childController: UIViewController) {
+		super.addChild(childController)
+	}
+	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
-		guard doneUpdating == false else {
-			return
-		}
-		
 		let nav = self.children.first as! UINavigationController
-		let toolbarItems = nav.toolbar.items ?? []
-		let allItems = toolbarItems
-		
-		if allItems.count > 0 {
-			self.updater(allItems)
-			doneUpdating = true
-		}
+		self.updater(nav.toolbar.items)
 	}
 }
 
@@ -270,6 +264,14 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				if let barFloatingBackgroundEffect = self.currentPopupState.barFloatingBackgroundEffect?.consume(self) {
 					self.target.popupBar.standardAppearance.floatingBackgroundEffect = barFloatingBackgroundEffect
 				}
+				
+				if let barFloatingBackgroundShadow = self.currentPopupState.barFloatingBackgroundShadow?.consume(self) {
+					self.target.popupBar.standardAppearance.floatingBarBackgroundShadow = barFloatingBackgroundShadow
+				}
+				
+				if let barImageShadow = self.currentPopupState.barImageShadow?.consume(self) {
+					self.target.popupBar.standardAppearance.imageShadow = barImageShadow
+				}
 			}
 			
 			if let contextMenu = self.currentPopupState.contextMenu?.consume(self) {
@@ -344,8 +346,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	override func addChild(_ childController: UIViewController) {
-//		print("Child: \(target!)")
 		super.addChild(childController)
+		
+//		print("Child: \(target)")
 		
 		readyForHandling = true
 	}

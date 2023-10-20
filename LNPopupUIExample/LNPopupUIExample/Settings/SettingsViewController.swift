@@ -278,6 +278,7 @@ struct SettingsNavView: View {
 		NavigationStack {
 			SettingsView()
 				.navigationTitle("Settings")
+				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {
 					ToolbarItem(placement: .navigationBarLeading) {
 						Button("Reset") {
@@ -290,7 +291,6 @@ struct SettingsNavView: View {
 						}
 					}
 				}
-				.navigationBarTitleDisplayMode(.inline)
 		}.frame(minWidth: 320, minHeight: 480)
 	}
 }

@@ -42,7 +42,7 @@ struct RandomTitlesListView : View {
 	}
 	
 	var body: some View {
-		NavigationView {
+		NavigationStack {
 			List(songs) { song in
 				Button(action: {
 					onSongSelect(song)
@@ -79,7 +79,6 @@ struct RandomTitlesListView : View {
 				}
 			}
 		}
-		.navigationViewStyle(.stack)
 	}
 }
 
