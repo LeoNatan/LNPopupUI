@@ -233,6 +233,12 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			if let coordinateMarqueeAnimations = self.currentPopupState.coordinateMarqueeAnimations?.consume(self) {
 				self.target.popupBar.standardAppearance.coordinateMarqueeScroll = coordinateMarqueeAnimations
 			}
+			if #available(iOS 15.0, *), let popupBarTitleTextAttributes = self.currentPopupState.barTitleTextAttributes?.consume(self) as? AttributeContainer {
+				self.target.popupBar.standardAppearance.titleTextAttributes = popupBarTitleTextAttributes._swiftUIToUIKit
+			}
+			if #available(iOS 15.0, *), let popupBarSubtitleTextAttributes = self.currentPopupState.barSubtitleTextAttributes?.consume(self) as? AttributeContainer {
+				self.target.popupBar.standardAppearance.subtitleTextAttributes = popupBarSubtitleTextAttributes._swiftUIToUIKit
+			}
 			if let shouldExtendPopupBarUnderSafeArea = self.currentPopupState.shouldExtendPopupBarUnderSafeArea?.consume(self) {
 				self.target.shouldExtendPopupBarUnderSafeArea = shouldExtendPopupBarUnderSafeArea
 			}
@@ -303,8 +309,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			
 			self.currentPopupState.barCustomizer?.consume(self)?(self.target.popupBar)
 			self.currentPopupState.contentViewCustomizer?.consume(self)?(self.target.popupContentView)
-			
-			
 			
 			NotificationCenter.default.post(name: willNotificationName, object: self.view.window, userInfo: ["LNPopupIgnore": true])
 			let endImplicitAnims = {

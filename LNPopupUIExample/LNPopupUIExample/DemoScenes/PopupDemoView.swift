@@ -10,6 +10,8 @@ import LNPopupUI
 import LNPopupController
 import LoremIpsum
 
+extension NSParagraphStyle: @unchecked Sendable {}
+
 struct DemoContent {
 	let title = LoremIpsum.title
 	let subtitle = LoremIpsum.sentence
@@ -183,6 +185,13 @@ struct SafeAreaDemoView : View {
 	}
 }
 
+var customizationParagraphStyle: NSParagraphStyle = {
+	let paragraphStyle = NSMutableParagraphStyle()
+	paragraphStyle.alignment = .right
+	paragraphStyle.lineBreakMode = .byTruncatingTail
+	return paragraphStyle
+}()
+
 extension View {
 	func popupInteractionStyleFromAppStorage(_ style: __LNPopupInteractionStyle) -> LNPopupInteractionStyle {
 		switch style.rawValue {
@@ -281,22 +290,24 @@ extension View {
 			}
 		}
 		.if(enableCustomizations) { view in
-			view.popupBarInheritsAppearanceFromDockingView(false)
+			view
+				.popupBarInheritsAppearanceFromDockingView(false)
 				.popupBarFloatingBackgroundShadow(color: .red, radius: 8)
 				.popupBarImageShadow(color: .yellow, radius: 5)
+				.popupBarTitleTextAttributes(AttributeContainer()
+					.font(Font.custom("Chalkduster", size: 14, relativeTo: .headline))
+					.foregroundColor(.yellow)
+					.paragraphStyle(customizationParagraphStyle))
+				.popupBarSubtitleTextAttributes(AttributeContainer()
+					.font(Font.custom("Chalkduster", size: 14, relativeTo: .subheadline))
+					.foregroundColor(.green)
+					.paragraphStyle(customizationParagraphStyle))
 				.popupBarCustomizer { popupBar in
-					let paragraphStyle = NSMutableParagraphStyle()
-					paragraphStyle.alignment = .right
-					paragraphStyle.lineBreakMode = .byTruncatingTail
-					
 					if popupBar.effectiveBarStyle == .floating {
 						popupBar.standardAppearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
 					} else {
 						popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
 					}
-					
-					popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!), .foregroundColor: UIColor.systemYellow ]
-					popupBar.standardAppearance.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!), .foregroundColor: UIColor.systemGreen ]
 				}
 		}
 		.popupBarShouldExtendPopupBarUnderSafeArea(extendBar)

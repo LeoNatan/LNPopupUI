@@ -197,6 +197,22 @@ public extension View {
 		return environment(\.popupBarImageShadow, LNPopupEnvironmentConsumer(shadow))
 	}
 	
+	/// Sets the display attributes for the popup bar’s title text.
+	///
+	/// SwiftUI-scoped attributes are partially supported. Open an issue on GitHub if you need something that is not supported.
+	@available(iOS 15, *)
+	func popupBarTitleTextAttributes(_ attribs: AttributeContainer) -> some View {
+		return environment(\.popupBarTitleTextAttributes, LNPopupEnvironmentConsumer(attribs))
+	}
+	
+	/// Sets the display attributes for the popup bar’s subtitle text.
+	///
+	/// SwiftUI-scoped attributes are partially supported. Open an issue on GitHub if you need something that is not supported.
+	@available(iOS 15, *)
+	func popupBarSubtitleTextAttributes(_ attribs: AttributeContainer) -> some View {
+		return environment(\.popupBarSubtitleTextAttributes, LNPopupEnvironmentConsumer(attribs))
+	}
+	
 	/// Sets a custom popup bar view, instead of the default system-provided bars.
 	///
 	/// If a custom bar view is provided, setting the popup bar style has no effect.

@@ -126,9 +126,9 @@ struct MusicView: View {
 			}
 		}
 		.accentColor(.pink)
-		.onChange(of: currentSong, perform: { newValue in
+		.onChange(of: currentSong) { newValue in
 			isPopupBarPresented = newValue != nil
-		})
+		}
 		.popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
 			if let currentSong = currentSong {
 				PlayerView(song: currentSong)

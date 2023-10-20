@@ -33,6 +33,8 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	@Environment(\.popupBarFloatingBackgroundEffect) var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
 	@Environment(\.popupBarFloatingBackgroundShadow) var popupBarFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
 	@Environment(\.popupBarImageShadow) var popupBarImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
+	@Environment(\.popupBarTitleTextAttributes) var popupBarTitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
+	@Environment(\.popupBarSubtitleTextAttributes) var popupBarSubtitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
 	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>?
 	@Environment(\.popupBarContextMenu) var popupBarContextMenu: LNPopupEnvironmentConsumer<AnyView>?
 	@Environment(\.popupBarCustomizer) var popupBarCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
@@ -66,6 +68,8 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 								 barFloatingBackgroundEffect: popupBarFloatingBackgroundEffect,
 								 barFloatingBackgroundShadow: popupBarFloatingBackgroundShadow,
 								 barImageShadow: popupBarImageShadow,
+								 barTitleTextAttributes: popupBarTitleTextAttributes,
+								 barSubtitleTextAttributes: popupBarSubtitleTextAttributes,
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
 								 marqueeRate: popupBarMarqueeRate,
