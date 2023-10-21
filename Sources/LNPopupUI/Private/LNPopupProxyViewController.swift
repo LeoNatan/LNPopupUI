@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 import LNPopupController
+import LNSwiftUIUtils
 
 var willNotificationName: NSNotification.Name = {
 	//UIWindowWillRotateNotification
@@ -212,6 +213,11 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			self.target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
 			self.target.popupPresentationDelegate = self
 			
+			let inheritsEnvironmentFont = self.currentPopupState.inheritsEnvironmentFont?.consume(self)
+			if(inheritsEnvironmentFont == nil || inheritsEnvironmentFont! == true) {
+				self.target.popupBar.setValue(self.currentPopupState.inheritedFont, forKey: "swiftuiInheritedFont")
+			}
+			
 			if let closeButtonStyle = self.currentPopupState.closeButtonStyle?.consume(self) {
 				self.target.popupContentView.popupCloseButtonStyle = closeButtonStyle
 			}
@@ -234,10 +240,10 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				self.target.popupBar.standardAppearance.coordinateMarqueeScroll = coordinateMarqueeAnimations
 			}
 			if #available(iOS 15.0, *), let popupBarTitleTextAttributes = self.currentPopupState.barTitleTextAttributes?.consume(self) as? AttributeContainer {
-				self.target.popupBar.standardAppearance.titleTextAttributes = popupBarTitleTextAttributes._swiftUIToUIKit
+				self.target.popupBar.standardAppearance.titleTextAttributes = popupBarTitleTextAttributes.swiftUIToUIKit
 			}
 			if #available(iOS 15.0, *), let popupBarSubtitleTextAttributes = self.currentPopupState.barSubtitleTextAttributes?.consume(self) as? AttributeContainer {
-				self.target.popupBar.standardAppearance.subtitleTextAttributes = popupBarSubtitleTextAttributes._swiftUIToUIKit
+				self.target.popupBar.standardAppearance.subtitleTextAttributes = popupBarSubtitleTextAttributes.swiftUIToUIKit
 			}
 			if let shouldExtendPopupBarUnderSafeArea = self.currentPopupState.shouldExtendPopupBarUnderSafeArea?.consume(self) {
 				self.target.shouldExtendPopupBarUnderSafeArea = shouldExtendPopupBarUnderSafeArea
@@ -318,7 +324,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			if self.currentPopupState.isBarPresented == true {
 				popupContentHandler()
 				
-				if self.target.popupPresentationState.rawValue >= LNPopupPresentationState.barPresented.rawValue {
+				if self.target.popupPresentationState.rawValue >= UIViewController.PopupPresentationState.barPresented.rawValue {
 					if let isPopupOpen = self.currentPopupState.isPopupOpen {
 						if isPopupOpen.wrappedValue == true {
 							self.target.openPopup(animated: true) {

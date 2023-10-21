@@ -20,16 +20,18 @@ internal struct LNPopupState<PopupContent: View> {
 	@Binding var isBarPresented: Bool
 	var isPopupOpen: Binding<Bool>?
 	let inheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
-	let interactionStyle: LNPopupEnvironmentConsumer<LNPopupInteractionStyle>?
-	let closeButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>?
-	let barStyle: LNPopupEnvironmentConsumer<LNPopupBarStyle>?
+	let inheritsEnvironmentFont: LNPopupEnvironmentConsumer<Bool>?
+	let inheritedFont: UIFont?
+	let interactionStyle: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>?
+	let closeButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>?
+	let barStyle: LNPopupEnvironmentConsumer<LNPopupBar.Style>?
 	let barBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
 	let barFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
 	let barFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
 	let barImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
 	let barTitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
 	let barSubtitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
-	let barProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>?
+	let barProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>?
 	let barMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
 	let marqueeRate: LNPopupEnvironmentConsumer<CGFloat>?
 	let marqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>?

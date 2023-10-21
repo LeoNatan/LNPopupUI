@@ -31,19 +31,19 @@ internal final class LNPopupEnvironmentConsumer<T> {
 }
 
 internal struct LNPopupInteractionStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupInteractionStyle>? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>? = nil
 }
 
 internal struct LNPopupBarStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupBarStyle>? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupBar.Style>? = nil
 }
 
 internal struct LNPopupCloseButtonStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>? = nil
 }
 
 internal struct LNPopupBarProgressViewStyleKey: EnvironmentKey {
-	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>? = nil
+	static let defaultValue: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>? = nil
 }
 
 internal struct LNPopupBarMarqueeScrollEnabledKey: EnvironmentKey {
@@ -67,6 +67,10 @@ internal struct LNPopupBarShouldExtendPopupBarUnderSafeAreaKey: EnvironmentKey {
 }
 
 internal struct LNPopupBarInheritsAppearanceFromDockingView: EnvironmentKey {
+	static let defaultValue: LNPopupEnvironmentConsumer<Bool>? = nil
+}
+
+internal struct LNPopupBarInheritsEnvironmentFont: EnvironmentKey {
 	static let defaultValue: LNPopupEnvironmentConsumer<Bool>? = nil
 }
 
@@ -111,22 +115,22 @@ internal struct LNPopupContentViewCustomizer: EnvironmentKey {
 }
 
 internal extension EnvironmentValues {
-	var popupInteractionStyle: LNPopupEnvironmentConsumer<LNPopupInteractionStyle>? {
+	var popupInteractionStyle: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>? {
 		get { self[LNPopupInteractionStyleKey.self] }
 		set { self[LNPopupInteractionStyleKey.self] = newValue }
 	}
 	
-	var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>? {
+	var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>? {
 		get { self[LNPopupCloseButtonStyleKey.self] }
 		set { self[LNPopupCloseButtonStyleKey.self] = newValue }
 	}
 	
-	var popupBarStyle: LNPopupEnvironmentConsumer<LNPopupBarStyle>? {
+	var popupBarStyle: LNPopupEnvironmentConsumer<LNPopupBar.Style>? {
 		get { self[LNPopupBarStyleKey.self] }
 		set { self[LNPopupBarStyleKey.self] = newValue }
 	}
 	
-	var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>? {
+	var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>? {
 		get { self[LNPopupBarProgressViewStyleKey.self] }
 		set { self[LNPopupBarProgressViewStyleKey.self] = newValue }
 	}
@@ -159,6 +163,11 @@ internal extension EnvironmentValues {
 	var popupBarInheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>? {
 		get { self[LNPopupBarInheritsAppearanceFromDockingView.self] }
 		set { self[LNPopupBarInheritsAppearanceFromDockingView.self] = newValue }
+	}
+	
+	var popupBarInheritsEnvironmentFont: LNPopupEnvironmentConsumer<Bool>? {
+		get { self[LNPopupBarInheritsEnvironmentFont.self] }
+		set { self[LNPopupBarInheritsEnvironmentFont.self] = newValue }
 	}
 	
 	var popupBarBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>? {

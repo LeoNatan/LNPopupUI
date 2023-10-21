@@ -1,5 +1,5 @@
 //
-//  LNPopupViewWrapper.swift
+//  LNPopupContainerViewWrapper.swift
 //  LNPopupUI
 //
 //  Created by Leo Natan on 8/6/20.
@@ -10,7 +10,7 @@ import SwiftUI
 import UIKit
 import LNPopupController
 
-internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepresentable where Content: View, PopupContent: View {
+internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewControllerRepresentable where Content: View, PopupContent: View {
 	@Binding private var isBarPresented: Bool
 	private var isPopupOpen: Binding<Bool>?
 	private let passthroughContent: () -> Content
@@ -19,11 +19,13 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 	private let onOpen: (() -> Void)?
 	private let onClose: (() -> Void)?
 	
+	@Environment(\.font) var inheritedFont
 	@Environment(\.popupBarInheritsAppearanceFromDockingView) var popupBarInheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
-	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupEnvironmentConsumer<LNPopupInteractionStyle>?
-	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButtonStyle>?
-	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupEnvironmentConsumer<LNPopupBarStyle>?
-	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBarProgressViewStyle>?
+	@Environment(\.popupBarInheritsEnvironmentFont) var popupBarInheritsEnvironmentFont: LNPopupEnvironmentConsumer<Bool>?
+	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>?
+	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>?
+	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupEnvironmentConsumer<LNPopupBar.Style>?
+	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>?
 	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
 	@Environment(\.popupBarMarqueeRate) var popupBarMarqueeRate: LNPopupEnvironmentConsumer<CGFloat>?
 	@Environment(\.popupBarMarqueeDelay) var popupBarMarqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>?
@@ -50,17 +52,19 @@ internal struct LNPopupViewWrapper<Content, PopupContent>: UIViewControllerRepre
 		self.onClose = onClose
 	}
 	
-	func makeUIViewController(context: UIViewControllerRepresentableContext<LNPopupViewWrapper>) -> LNPopupProxyViewController<Content, PopupContent> {
+	func makeUIViewController(context: UIViewControllerRepresentableContext<LNPopupContainerViewWrapper>) -> LNPopupProxyViewController<Content, PopupContent> {
 		return LNPopupProxyViewController(rootView: passthroughContent())
 	}
 	
-	func updateUIViewController(_ uiViewController: LNPopupProxyViewController<Content, PopupContent>, context: UIViewControllerRepresentableContext<LNPopupViewWrapper>) {
+	func updateUIViewController(_ uiViewController: LNPopupProxyViewController<Content, PopupContent>, context: UIViewControllerRepresentableContext<LNPopupContainerViewWrapper>) {
 		
 		uiViewController.rootView = passthroughContent()
 		
 		let state = LNPopupState(isBarPresented: _isBarPresented,
 								 isPopupOpen: isPopupOpen,
 								 inheritsAppearanceFromDockingView: popupBarInheritsAppearanceFromDockingView,
+								 inheritsEnvironmentFont: popupBarInheritsEnvironmentFont,
+								 inheritedFont: inheritedFont?.uiFont,
 								 interactionStyle: popupInteractionStyle,
 								 closeButtonStyle: popupCloseButtonStyle,
 								 barStyle: popupBarStyle,

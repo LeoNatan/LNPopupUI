@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import LNSwiftUIUtils
 @_exported import LNPopupController
 
 @available(iOS 14.0, *)
@@ -28,7 +29,7 @@ public extension View {
 			//These two lines are to make sure the system rerenders if the isBarPresented and isPopupOpen bindings change.
 			isBarPresented.wrappedValue ? EmptyView() : EmptyView()
 			isPopupOpen?.wrappedValue ?? false  ? EmptyView() : EmptyView()
-			LNPopupViewWrapper(isBarPresented: isBarPresented, isOpen: isPopupOpen, onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
+			LNPopupContainerViewWrapper(isBarPresented: isBarPresented, isOpen: isPopupOpen, onOpen: onOpen, onClose: onClose, popupContent: popupContent) {
 				self
 			}.edgesIgnoringSafeArea(.all)
 		}
@@ -47,7 +48,7 @@ public extension View {
 			//These two lines are to make sure the system rerenders if the isBarPresented and isPopupOpen bindings change.
 			isBarPresented.wrappedValue ? EmptyView() : EmptyView()
 			isPopupOpen?.wrappedValue ?? false  ? EmptyView() : EmptyView()
-			LNPopupViewWrapper<Self, EmptyView>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContentController: popupContentController) {
+			LNPopupContainerViewWrapper<Self, EmptyView>(isBarPresented: isBarPresented, isOpen: isPopupOpen ?? Binding.constant(false), onOpen: onOpen, onClose: onClose, popupContentController: popupContentController) {
 				self
 			}.edgesIgnoringSafeArea(.all)
 		}
@@ -56,14 +57,14 @@ public extension View {
 	/// Sets the popup interaction style.
 	///
 	/// - Parameter style: The popup interaction style.
-	func popupInteractionStyle(_ style: LNPopupInteractionStyle) -> some View {
+	func popupInteractionStyle(_ style: UIViewController.PopupInteractionStyle) -> some View {
 		return environment(\.popupInteractionStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Sets the popup close button style.
 	///
 	/// - Parameter style: The popup close button style.
-	func popupCloseButtonStyle(_ style: LNPopupCloseButtonStyle) -> some View {
+	func popupCloseButtonStyle(_ style: LNPopupCloseButton.Style) -> some View {
 		return environment(\.popupCloseButtonStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
@@ -72,14 +73,14 @@ public extension View {
 	/// Setting a custom popup bar view will methis this modifier have no effect.
 	///
 	/// - Parameter style: The popup bar style.
-	func popupBarStyle(_ style: LNPopupBarStyle) -> some View {
+	func popupBarStyle(_ style: LNPopupBar.Style) -> some View {
 		return environment(\.popupBarStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Sets the popup bar's progress style.
 	///
 	/// - Parameter style: The popup bar's progress style.
-	func popupBarProgressViewStyle(_ style: LNPopupBarProgressViewStyle) -> some View {
+	func popupBarProgressViewStyle(_ style: LNPopupBar.ProgressViewStyle) -> some View {
 		return environment(\.popupBarProgressViewStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
@@ -103,9 +104,18 @@ public extension View {
 	
 	/// Enables or disables the popup bar to automatically inherit its appearance from the bottom docking view, such as toolbar or tab bar.
 	///
-	/// - Parameter enabled: Extend the popup bar under safe area.
+	/// - Parameter enabled: Inherit the appearance from the popup bar's docking view.
 	func popupBarInheritsAppearanceFromDockingView(_ enabled: Bool) -> some View {
 		return environment(\.popupBarInheritsAppearanceFromDockingView, LNPopupEnvironmentConsumer(enabled))
+	}
+	
+	/// Enables or disables the popup bar to automatically inherit the environment font.
+	///
+	/// The inherited font will be used as the title font. The subtitle font will be a derivative of the inherited font.
+	///
+	/// - Parameter enabled: Inherit the environment font.
+	func popupBarInheritsEnvironmentFont(_ enabled: Bool) -> some View {
+		return environment(\.popupBarInheritsEnvironmentFont, LNPopupEnvironmentConsumer(enabled))
 	}
 	
 	/// Sets the popup bar's background style. Use `nil` or `LNBackgroundStyleInherit` to use the most appropriate background style for the environment.
@@ -382,7 +392,7 @@ public extension View {
 		let content = {
 			Color.clear.toolbar {
 				ToolbarItemGroup(placement: .popupBar) {
-					content()
+					content().font(.body)
 				}
 			}
 		}
@@ -401,7 +411,7 @@ public extension View {
 		let content = {
 			Color.clear.toolbar {
 				content()
-			}
+			}.font(.body)
 		}
 		
 		let view: any View
