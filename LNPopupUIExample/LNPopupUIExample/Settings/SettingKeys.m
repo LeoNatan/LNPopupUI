@@ -25,7 +25,9 @@ NSString* const PopupSettingsContextMenuEnabled = @"PopupSettingsContextMenuEnab
 NSString* const __LNPopupBarHideContentView = @"__LNPopupBarHideContentView";
 NSString* const __LNPopupBarHideShadow = @"__LNPopupBarHideShadow";
 NSString* const __LNPopupBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
-NSString* const __LNPopupBarDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
+
+NSString* const DemoAppDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
+NSString* const DemoAppEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
 
 @import ObjectiveC;
 

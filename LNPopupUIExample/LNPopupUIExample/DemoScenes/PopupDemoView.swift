@@ -193,7 +193,7 @@ var customizationParagraphStyle: NSParagraphStyle = {
 }()
 
 extension View {
-	func popupInteractionStyleFromAppStorage(_ style: __LNPopupInteractionStyle) -> LNPopupInteractionStyle {
+	func popupInteractionStyleFromAppStorage(_ style: UIViewController.__PopupInteractionStyle) -> UIViewController.PopupInteractionStyle {
 		switch style.rawValue {
 		case 1:
 			return .drag
@@ -209,10 +209,10 @@ extension View {
 	}
 	
 	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool, includeCustomTextLabels: Bool = false) -> some View {
-		@AppStorage(PopupSettingsBarStyle) var barStyle: LNPopupBarStyle = .default
-		@AppStorage(PopupSettingsInteractionStyle) var interactionStyle: __LNPopupInteractionStyle = .default
-		@AppStorage(PopupSettingsCloseButtonStyle) var closeButtonStyle: LNPopupCloseButtonStyle = .default
-		@AppStorage(PopupSettingsProgressViewStyle) var progressViewStyle: LNPopupBarProgressViewStyle = .default
+		@AppStorage(PopupSettingsBarStyle) var barStyle: LNPopupBar.Style = .default
+		@AppStorage(PopupSettingsInteractionStyle) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
+		@AppStorage(PopupSettingsCloseButtonStyle) var closeButtonStyle: LNPopupCloseButton.Style = .default
+		@AppStorage(PopupSettingsProgressViewStyle) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
 		@AppStorage(PopupSettingsMarqueeStyle) var marqueeStyle: Int = 0
 		@AppStorage(PopupSettingsVisualEffectViewBlurEffect) var blurEffectStyle: UIBlurEffect.Style = .default
 		
@@ -299,7 +299,7 @@ extension View {
 					.foregroundColor(.yellow)
 					.paragraphStyle(customizationParagraphStyle))
 				.popupBarSubtitleTextAttributes(AttributeContainer()
-					.font(Font.custom("Chalkduster", size: 14, relativeTo: .subheadline))
+					.font(.custom("Chalkduster", size: 12, relativeTo: .subheadline))
 					.foregroundColor(.green)
 					.paragraphStyle(customizationParagraphStyle))
 				.popupBarCustomizer { popupBar in
