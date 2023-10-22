@@ -334,8 +334,8 @@ public extension View {
 	
 	/// Configures the view's popup bar title with a custom label.
 	///
-	/// - Note: When using custom labels, popup marquee scroll has no effect.
-	/// 
+	/// - Note: When using custom labels, marquee scroll and text attributes settings have no effect.
+	///
 	/// - Parameters:
 	///   - titleContent: A view that describes the popup's title.
 	func popupTitle<TitleContent>(@ViewBuilder _ titleContent: () -> TitleContent) -> some View where TitleContent : View {
@@ -344,7 +344,7 @@ public extension View {
 	
 	/// Configures the view's popup bar title and subtitle with custom labels.
 	///
-	/// - Note: When using custom labels, popup marquee scroll has no effect.
+	/// - Note: When using custom labels, marquee scroll and text attributes settings have no effect.
 	///
 	/// - Parameters:
 	///   - titleContent: A view that describes the popup's title.
