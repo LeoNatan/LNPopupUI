@@ -185,7 +185,7 @@ struct SafeAreaDemoView : View {
 	}
 }
 
-var customizationParagraphStyle: NSParagraphStyle = {
+fileprivate var customizationParagraphStyle: NSParagraphStyle = {
 	let paragraphStyle = NSMutableParagraphStyle()
 	paragraphStyle.alignment = .right
 	paragraphStyle.lineBreakMode = .byTruncatingTail

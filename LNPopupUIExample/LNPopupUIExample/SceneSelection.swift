@@ -42,8 +42,9 @@ struct SceneSelection: View {
 	let font = Font.custom("Chalkduster", size: 15)
 //	let font = Font.custom("Avenir Next", fixedSize: 15).weight(.heavy).italic()
 //	let font = Font.custom("Zapfino", size: 15).italic().weight(.heavy).width(.condensed)
-//	let font = Font.system(size: 15, weight: .regular).weight(.thin).italic().width(.condensed)
-//	let font = Font.body.weight(.black).italic()
+//	let font = Font.system(size: 15, weight: .regular)
+//	let font = Font.system(size: 15, weight: .regular).monospacedDigit()
+//	let font = Font.system(size: 15, weight: .black).monospaced().lowercaseSmallCaps()
 //	let font: Font? = nil
 	
 	var body: some View {
