@@ -118,6 +118,10 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	fileprivate var target: UIViewController {
+		//Support NavigationSplitView
+		if children.first == nil && self.splitViewController != nil && self.navigationController != nil {
+			return self.navigationController!
+		}
 		return children.first ?? self
 	}
 	
