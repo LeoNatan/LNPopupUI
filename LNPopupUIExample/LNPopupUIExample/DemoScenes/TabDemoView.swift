@@ -11,17 +11,31 @@ import LNPopupUI
 
 struct InnerView : View {
 	let tabIdx: Int?
+	let showDismissButton: Bool?
 	let onDismiss: () -> Void
 	
 	let presentBarHandler: (() -> Void)?
 	let hideBarHandler: (() -> Void)?
+
+	init(tabIdx: Int?, showDismissButton: Bool? = true, onDismiss: @escaping () -> Void, presentBarHandler: (() -> Void)?, hideBarHandler: (() -> Void)?) {
+		self.tabIdx = tabIdx
+		self.showDismissButton = showDismissButton
+		self.onDismiss = onDismiss
+		self.presentBarHandler = presentBarHandler
+		self.hideBarHandler = hideBarHandler
+	}
 	
 	var body: some View {
 		ZStack(alignment: .topTrailing) {
-			SafeAreaDemoView(colorSeed: tabIdx != nil ? "tab_\(tabIdx!)" : "nil", presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-			Button("Gallery") {
-				onDismiss()
-			}.padding()
+			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "nil", presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, showDismissButton: showDismissButton)
+			if let showDismissButton, showDismissButton == true {
+				VStack {
+					Button("Gallery") {
+						onDismiss()
+					}.fontWeight(.semibold)
+					.padding([.leading, .trailing])
+				}.padding(.top, 4)
+			}
 		}
 	}
 }

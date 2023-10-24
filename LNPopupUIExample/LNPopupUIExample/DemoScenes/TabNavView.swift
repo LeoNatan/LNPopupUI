@@ -18,12 +18,9 @@ struct InnerNavView : View {
 	
 	var body: some View {
 		NavigationStack {
-			SafeAreaDemoView(colorSeed:"tab_\(tabIdx)", includeLink: true, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
+			SafeAreaDemoView(colorSeed:"tab_\(tabIdx)", includeLink: true, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss)
 				.navigationBarTitle("Tab View + Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
-				.navigationBarItems(trailing: Button("Gallery") {
-					onDismiss()
-				})
 		}
 	}
 }

@@ -34,12 +34,16 @@ struct NavDemoView : View {
 	
 	var body: some View {
 		NavigationStack {
-			SafeAreaDemoView(includeToolbar: true, includeLink: true, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
+			SafeAreaDemoView(colorSeed:"tab_109", includeToolbar: true, includeLink: true, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
 				.navigationBarTitle("Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
-				.navigationBarItems(trailing: Button("Gallery") {
-					onDismiss()
-				})
+				.toolbar {
+					ToolbarItem(placement: .confirmationAction) {
+						Button("Gallery") {
+							onDismiss()
+						}
+					}
+				}
 		}
 		.colorScheme(forcedColorScheme ?? environmentColorScheme)
 		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))

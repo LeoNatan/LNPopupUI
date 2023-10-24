@@ -20,10 +20,13 @@ fileprivate struct CellPaddedButton<S: StringProtocol>: View {
 	
 	var body: some View {
 		Button(text, action: action).padding([.top, .bottom], 4.167)
+			.tint(Color(.label))
 	}
 }
 
 struct SceneSelection: View {
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	
 	@State var tabnavPresented: Bool = false
 	@State var tabPresented: Bool = false
 	@State var tabCustomPresented: Bool = false
@@ -33,6 +36,8 @@ struct SceneSelection: View {
 	@State var compactSliderSheetPresented: Bool = false
 	@State var musicSheetPresented: Bool = false
 	@State var mapSheetPresented: Bool = false
+	@State var splitViewPresented: Bool = false
+	@State var splitViewGlobalPresented: Bool = false
 	
 	@State var settingsPresented: Bool = false
 	@State private var item: ActivityItem? = nil
@@ -45,7 +50,6 @@ struct SceneSelection: View {
 //	let font = Font.system(size: 15, weight: .regular)
 //	let font = Font.system(size: 15, weight: .regular).monospacedDigit()
 //	let font = Font.system(size: 15, weight: .black).monospaced().lowercaseSmallCaps()
-//	let font: Font? = nil
 	
 	var body: some View {
 		NavigationStack {
@@ -54,7 +58,6 @@ struct SceneSelection: View {
 					CellPaddedButton("Tab View + Navigation View") {
 						tabnavPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $tabnavPresented, content: {
 						TabNavView(demoContent: DemoContent()) {
 							tabnavPresented.toggle()
@@ -63,7 +66,6 @@ struct SceneSelection: View {
 					CellPaddedButton("Tab View") {
 						tabPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $tabPresented, content: {
 						TabDemoView(demoContent: DemoContent()) {
 							tabPresented.toggle()
@@ -72,7 +74,6 @@ struct SceneSelection: View {
 					CellPaddedButton("Tab View (Custom Labels)") {
 						tabCustomPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $tabCustomPresented, content: {
 						TabViewCustomLabels(demoContent: DemoContent()) {
 							tabCustomPresented.toggle()
@@ -81,7 +82,6 @@ struct SceneSelection: View {
 					CellPaddedButton("Navigation View") {
 						navPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $navPresented, content: {
 						NavDemoView(demoContent: DemoContent()) {
 							navPresented.toggle()
@@ -90,7 +90,6 @@ struct SceneSelection: View {
 					CellPaddedButton("Navigation View (Sheet)") {
 						viewSheetPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.sheet(isPresented: $viewSheetPresented, content: {
 						NavDemoView(demoContent: DemoContent()) {
 							viewSheetPresented.toggle()
@@ -99,18 +98,40 @@ struct SceneSelection: View {
 					CellPaddedButton("View") {
 						viewPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $viewPresented, content: {
 						ViewDemoView(demoContent: DemoContent()) {
 							viewPresented.toggle()
 						}
 					})
+					Group {
+						CellPaddedButton("Split View (All)") {
+							splitViewPresented.toggle()
+						}.fullScreenCover(isPresented: $splitViewPresented) {
+							SplitDemoView(isGlobal: false) {
+								splitViewPresented.toggle()
+							}
+						}
+						CellPaddedButton("Split View (Global)") {
+							splitViewGlobalPresented.toggle()
+						}
+						.fullScreenCover(isPresented: $splitViewGlobalPresented) {
+							SplitDemoView(isGlobal: true) {
+								splitViewGlobalPresented.toggle()
+							}
+						}
+					}
+					.disabled(horizontalSizeClass == .compact)
+					.onChange(of: horizontalSizeClass) { newValue in
+						if newValue == .compact {
+							splitViewPresented = false
+							splitViewGlobalPresented = false
+						}
+					}
 				}
 				Section(header: Text("Demo Apps"), footer: Text("Presents a rudimentary recreation of a music app.")) {
 					CellPaddedButton("Music") {
 						musicSheetPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $musicSheetPresented, content: {
 						MusicView {
 							musicSheetPresented.toggle()
@@ -121,7 +142,6 @@ struct SceneSelection: View {
 					CellPaddedButton("Custom Popup Bar") {
 						mapSheetPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $mapSheetPresented, content: {
 						CustomBarMapView {
 							mapSheetPresented.toggle()
@@ -132,7 +152,6 @@ struct SceneSelection: View {
 					CellPaddedButton("CompactSlider") {
 						compactSliderSheetPresented.toggle()
 					}
-					.foregroundColor(Color(.label))
 					.fullScreenCover(isPresented: $compactSliderSheetPresented, content: {
 						CompactSliderDemoView {
 							compactSliderSheetPresented.toggle()

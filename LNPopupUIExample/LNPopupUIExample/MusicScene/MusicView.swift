@@ -72,7 +72,7 @@ struct RandomTitlesListView : View {
 				ToolbarItem(placement: .navigationBarLeading) {
 					Image(systemName: isPopupPresented ? "rectangle.bottomthird.inset.fill" : "rectangle")
 				}
-				ToolbarItem(placement: .navigationBarTrailing) {
+				ToolbarItem(placement: .confirmationAction) {
 					Button("Gallery") {
 						onDismiss()
 					}
@@ -135,6 +135,7 @@ struct MusicView: View {
 			}
 		}
 		.popupBarProgressViewStyle(.top)
+		.font(nil)
 	}
 }
 

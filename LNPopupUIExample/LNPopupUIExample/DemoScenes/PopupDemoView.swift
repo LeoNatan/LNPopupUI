@@ -127,15 +127,14 @@ struct SafeAreaDemoView : View {
 		.frame(maxWidth: .infinity,
 			   maxHeight: .infinity,
 			   alignment: .center)
-		.padding(4)
 		.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
-		.font(.system(.headline))
+		.fontWeight(.semibold)
 		.if(includeToolbar) { view in
 			view.demoToolbar(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
 		}
 		.if(showDismissButton) { view in
 			view.toolbar {
-				ToolbarItem(placement: .navigationBarTrailing) {
+				ToolbarItem(placement: .confirmationAction) {
 					Button("Gallery") {
 						onDismiss?()
 					}
@@ -179,7 +178,7 @@ struct SafeAreaDemoView : View {
 				   maxHeight: .infinity,
 				   alignment: .center)
 			.edgesIgnoringSafeArea([.top, .bottom])
-			.font(.system(.headline))
+			.fontWeight(.semibold)
 			.tint(Color(uiColor: .label))
 		}
 	}

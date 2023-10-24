@@ -7,6 +7,9 @@
 //
 
 import SwiftUI
+
+#if LNPOPUP
+
 import LNPopupController
 
 extension UIBlurEffect.Style {
@@ -304,6 +307,30 @@ struct SettingsNavView: View {
 						}
 					}
 				}
+				.toolbar(.visible, for: .navigationBar)
 		}.frame(minWidth: 320, minHeight: 480)
 	}
 }
+
+#else
+
+struct NoSettingsView : View {
+	var body: some View {
+		Text("No Settings")
+			.foregroundStyle(.secondary)
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
+			.background(Color(UIColor.systemGroupedBackground))
+	}
+}
+
+class SettingsViewController: UIHostingController<NoSettingsView> {
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder, rootView: NoSettingsView())
+	}
+	
+	@IBAction func reset() {
+		
+	}
+}
+
+#endif

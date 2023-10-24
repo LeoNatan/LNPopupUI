@@ -111,6 +111,7 @@ struct CustomBarMapView: View {
 				.padding()
 			}
 		}
+		.font(nil)
 	}
 }
 

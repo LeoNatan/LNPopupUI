@@ -20,6 +20,7 @@
 		395781DE24DC5D2800A604D1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 395781DD24DC5D2800A604D1 /* Preview Assets.xcassets */; };
 		395781E124DC5D2800A604D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 395781DF24DC5D2800A604D1 /* LaunchScreen.storyboard */; };
 		395781F324DC692300A604D1 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781F224DC692300A604D1 /* PlayerView.swift */; };
+		396FBEBC2AE6838100310DEB /* SplitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396FBEBB2AE6838100310DEB /* SplitDemoView.swift */; };
 		3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B338254D7772004AEBC9 /* UIColor+SeedColors.swift */; };
 		398404EA25003925006C9011 /* SceneSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398404E925003925006C9011 /* SceneSelection.swift */; };
 		398404EE2500451E006C9011 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398404ED2500451E006C9011 /* MapView.swift */; };
@@ -65,6 +66,7 @@
 		395781E224DC5D2800A604D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		395781EA24DC5DE800A604D1 /* LNPopupUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LNPopupUI; path = ..; sourceTree = "<group>"; };
 		395781F224DC692300A604D1 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		396FBEBB2AE6838100310DEB /* SplitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitDemoView.swift; sourceTree = "<group>"; };
 		3971B338254D7772004AEBC9 /* UIColor+SeedColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SeedColors.swift"; sourceTree = "<group>"; };
 		398404E925003925006C9011 /* SceneSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneSelection.swift; sourceTree = "<group>"; };
 		398404ED2500451E006C9011 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				390E2B6726F80B510076539D /* TabViewCustomLabels.swift */,
 				398DB7AC250400BE00CD89DB /* NavDemoView.swift */,
 				39AAAA71250415E800E5FD41 /* ViewDemoView.swift */,
+				396FBEBB2AE6838100310DEB /* SplitDemoView.swift */,
 			);
 			path = DemoScenes;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */,
 				393841DB2AA13BA800460600 /* CompactSliderDemoView.swift in Sources */,
 				3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */,
+				396FBEBC2AE6838100310DEB /* SplitDemoView.swift in Sources */,
 				398404EE2500451E006C9011 /* MapView.swift in Sources */,
 				394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */,
 				39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */,
@@ -477,8 +481,13 @@
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"LNPOPUP=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = LNPopupUIExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -486,6 +495,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupUIExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "LNPOPUP DEBUG";
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupUIExample/LNPopupUIExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -505,8 +515,9 @@
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "LNPOPUP=1";
 				INFOPLIST_FILE = LNPopupUIExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -514,6 +525,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupUIExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = LNPOPUP;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupUIExample/LNPopupUIExample-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
