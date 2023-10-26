@@ -15,18 +15,32 @@ struct InnerNavView : View {
 	
 	let presentBarHandler: () -> Void
 	let hideBarHandler: () -> Void
+	let restoreTabBar: (() -> Void)?
 	
 	var body: some View {
-		NavigationStack {
+		MaterialNavigationStack {
 			SafeAreaDemoView(colorSeed:"tab_\(tabIdx)", includeLink: true, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss)
 				.navigationBarTitle("Tab View + Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
+				.if(restoreTabBar != nil) { view in
+						view.toolbar {
+							ToolbarItem(placement: .navigationBarLeading) {
+								Button {
+									restoreTabBar?()
+								} label: {
+									Image(systemName: "rectangle.bottomthird.inset.fill")
+								}
+							}
+						}
+				}
 		}
 	}
 }
 
 struct TabNavView : View {
 	@State private var isBarPresented: Bool = true
+	@State private var isTabBarPresented: Bool = true
+	
 	private let onDismiss: () -> Void
 	let demoContent: DemoContent
 	
@@ -44,33 +58,32 @@ struct TabNavView : View {
 	}
 	
 	var body: some View {
-		TabView{
-			InnerNavView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+		MaterialTabView {
+			InnerNavView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, restoreTabBar: nil)
 				.tabItem {
-					Image(systemName: "1.square")
-					Text("Tab")
+					Label("Tab", systemImage: "1.square")
 				}
-			InnerNavView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+			InnerNavView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, restoreTabBar: nil)
 				.tabItem {
-					Image(systemName: "2.square")
-					Text("Tab")
+					Label("Tab", systemImage: "2.square").foregroundStyle(.red)
 				}
-			InnerNavView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+			InnerNavView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, restoreTabBar: nil)
 				.tabItem {
-					Image(systemName: "3.square")
-					Text("Tab")
+					Label("Tab", systemImage: "3.square")
 				}
-			InnerNavView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+			InnerNavView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, restoreTabBar: nil)
 				.tabItem {
-					Image(systemName: "4.square")
-					Text("Tab")
+					Label("Tab", systemImage: "4.square")
 				}
-			InnerNavView(tabIdx:4, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Image(systemName: "xmark.square")
-					Text("Hide Bar")
-				}
-				.toolbar(.hidden, for: .tabBar)
+			InnerNavView(tabIdx:4, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, restoreTabBar: isTabBarPresented ? nil : {
+				isTabBarPresented = true
+			}).onAppear() {
+				isTabBarPresented = false
+			}
+			.tabItem {
+				Label("Hide Bar", systemImage: "xmark.square")
+			}
+			.toolbar(isTabBarPresented ? .visible : .hidden, for: .tabBar)
 		}
 		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))
 	}

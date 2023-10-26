@@ -202,8 +202,8 @@
 		398DB7B0250401E300CD89DB /* MusicScene */ = {
 			isa = PBXGroup;
 			children = (
-				395781F224DC692300A604D1 /* PlayerView.swift */,
 				395781D824DC5D2700A604D1 /* MusicView.swift */,
+				395781F224DC692300A604D1 /* PlayerView.swift */,
 			);
 			path = MusicScene;
 			sourceTree = "<group>";

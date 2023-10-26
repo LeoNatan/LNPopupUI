@@ -18,7 +18,7 @@ struct CompactSliderDemoView: View {
 	let onDismiss: () -> Void
 	
     var body: some View {
-		TabView{
+		MaterialTabView {
 			InnerView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: nil, hideBarHandler: nil)
 				.tabItem {
 					Image(systemName: "star.fill")

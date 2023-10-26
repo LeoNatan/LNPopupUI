@@ -160,7 +160,7 @@ struct SafeAreaDemoView : View {
 							} label: {
 								Image(systemName: "dock.arrow.down.rectangle")
 							}
-						}.font(.title2)
+						}.font(.title2).fontWeight(nil)
 					} else {
 						Text("Center")
 					}
@@ -327,5 +327,74 @@ struct SafeAreaDemoView_Previews: PreviewProvider {
 		SafeAreaDemoView(colorSeed: "offset", offset: true)
 		SafeAreaDemoView(colorSeed: "includeLink", includeLink: true)
 		SafeAreaDemoView(colorSeed: "colorIndex", colorIndex: 4)
+	}
+}
+
+fileprivate struct FixBottomBarAppearanceModifier: ViewModifier {
+	@AppStorage(PopupSettingsBarStyle) var barStyle: LNPopupBar.Style = .default
+	
+	func body(content: Content) -> some View {
+		content.toolbarBackground(barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17 ? Material.thin : Material.bar, for: .tabBar, .bottomBar, .navigationBar)
+//		content.toolbarBackground(.red, for: .tabBar, .bottomBar, .navigationBar)
+	}
+}
+
+fileprivate extension View {
+	func fixBottomBarAppearance() -> some View {
+		return modifier(FixBottomBarAppearanceModifier())
+	}
+}
+
+struct MaterialTabView<Content: View>: View {
+	let content: Content
+	
+	init(@ViewBuilder content: () -> Content) {
+		self.content = content()
+	}
+	
+	var body: some View {
+		TabView {
+			content.fixBottomBarAppearance()
+		}
+	}
+}
+
+struct MaterialNavigationStack<Content: View>: View {
+	let content: Content
+	
+	init(@ViewBuilder content: () -> Content) {
+		self.content = content()
+	}
+	
+	var body: some View {
+		NavigationStack {
+			content.fixBottomBarAppearance()
+		}
+	}
+}
+
+struct MaterialNavigationSplitView<Sidebar: View, Content: View, Detail: View>: View {
+	let sidebar: Sidebar
+	let content: Content
+	let detail: Detail
+	let columnVisibility: Binding<NavigationSplitViewVisibility>
+	let preferredCompactColumn: Binding<NavigationSplitViewColumn>
+	
+	public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+		self.sidebar = sidebar()
+		self.content = content()
+		self.detail = detail()
+		self.columnVisibility = columnVisibility
+		self.preferredCompactColumn = preferredCompactColumn
+	}
+	
+	var body: some View {
+		NavigationSplitView(columnVisibility: columnVisibility, preferredCompactColumn: preferredCompactColumn) {
+			sidebar.fixBottomBarAppearance()
+		} content: {
+			content.fixBottomBarAppearance()
+		} detail: {
+			detail.fixBottomBarAppearance()
+		}
 	}
 }

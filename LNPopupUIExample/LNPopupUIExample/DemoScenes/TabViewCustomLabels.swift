@@ -23,31 +23,26 @@ struct TabViewCustomLabels : View {
 	}
 	
 	var body: some View {
-		TabView{
+		MaterialTabView {
 			InnerView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
-					Text("Tab")
+					Label("Tab", systemImage: "1.square")
 				}
 			InnerView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
-					Text("Tab")
+					Label("Tab", systemImage: "2.square")
 				}
 			InnerView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
-					Text("Tab")
+					Label("Tab", systemImage: "3.square")
 				}
 			InnerView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
-					Text("Tab")
+					Label("Tab", systemImage: "4.square")
 				}
 			InnerView(tabIdx:4, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "star.fill")
-					Text("Hide Bar")
+					Label("Hide Bar", systemImage: "xmark.square")
 				}
 				.toolbar(.hidden, for: .tabBar)
 		}

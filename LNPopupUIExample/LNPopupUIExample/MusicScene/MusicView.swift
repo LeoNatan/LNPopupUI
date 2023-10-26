@@ -42,7 +42,7 @@ struct RandomTitlesListView : View {
 	}
 	
 	var body: some View {
-		NavigationStack {
+		MaterialNavigationStack {
 			List(songs) { song in
 				Button(action: {
 					onSongSelect(song)
@@ -57,11 +57,12 @@ struct RandomTitlesListView : View {
 							Text(song.title)
 								.font(.headline)
 								.lineLimit(1)
+								.truncationMode(.tail)
 							Text(song.subtitle)
 								.font(.subheadline)
 								.lineLimit(1)
+								.truncationMode(.tail)
 						}
-						.multilineTextAlignment(.leading)
 					}
 				}
 			}
@@ -70,7 +71,11 @@ struct RandomTitlesListView : View {
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarLeading) {
-					Image(systemName: isPopupPresented ? "rectangle.bottomthird.inset.fill" : "rectangle")
+					Button {
+						isPopupPresented = false
+					} label: {
+						Image(systemName: isPopupPresented ? "rectangle.bottomthird.inset.fill" : "rectangle")
+					}
 				}
 				ToolbarItem(placement: .confirmationAction) {
 					Button("Gallery") {
@@ -95,7 +100,7 @@ struct MusicView: View {
 	}
 	
 	var body: some View {
-		TabView {
+		MaterialTabView {
 			RandomTitlesListView("Music", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 				currentSong = song
 			})

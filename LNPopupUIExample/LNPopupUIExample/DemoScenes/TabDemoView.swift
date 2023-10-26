@@ -8,6 +8,7 @@
 import SwiftUI
 import LoremIpsum
 import LNPopupUI
+import LNSwiftUIUtils
 
 struct InnerView : View {
 	let tabIdx: Int?
@@ -59,31 +60,26 @@ struct TabDemoView : View {
 	}
 	
 	var body: some View {
-		TabView{
+		MaterialTabView {
 			InnerView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "1.square")
-					Text("Tab")
+					Label("Tab", systemImage: "1.square")
 				}
 			InnerView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "2.square")
-					Text("Tab")
+					Label("Tab", systemImage: "2.square")
 				}
 			InnerView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "3.square")
-					Text("Tab")
+					Label("Tab", systemImage: "3.square")
 				}
 			InnerView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "4.square")
-					Text("Tab")
+					Label("Tab", systemImage: "4.square")
 				}
 			InnerView(tabIdx:4, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 				.tabItem {
-					Image(systemName: "xmark.square")
-					Text("Hide Bar")
+					Label("Hide Bar", systemImage: "xmark.square")
 				}
 				.toolbar(.hidden, for: .tabBar)
 		}

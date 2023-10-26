@@ -43,6 +43,7 @@ struct SceneSelection: View {
 	@State private var item: ActivityItem? = nil
 	
 	@AppStorage(DemoAppEnableFunkyInheritedFont) var enableFunkyInheritedFont: Bool = false
+	@AppStorage(DemoAppEnableExternalScenes) var enableExternalScenes: Bool = false
 	
 	let font = Font.custom("Chalkduster", size: 15)
 //	let font = Font.custom("Avenir Next", fixedSize: 15).weight(.heavy).italic()
@@ -52,9 +53,9 @@ struct SceneSelection: View {
 //	let font = Font.system(size: 15, weight: .black).monospaced().lowercaseSmallCaps()
 	
 	var body: some View {
-		NavigationStack {
+		MaterialNavigationStack {
 			List {
-				Section(header: Text("Standard Scenes"), footer: Text("Presents a standard test scene with a popup bar.")) {
+				Section {
 					CellPaddedButton("Tab View + Navigation View") {
 						tabnavPresented.toggle()
 					}
@@ -127,8 +128,12 @@ struct SceneSelection: View {
 							splitViewGlobalPresented = false
 						}
 					}
+				} header: {
+					Text("Standard Scenes")
+				} footer: {
+					Text("Presents a standard test scene with a popup bar.")
 				}
-				Section(header: Text("Demo Apps"), footer: Text("Presents a rudimentary recreation of a music app.")) {
+				Section {
 					CellPaddedButton("Music") {
 						musicSheetPresented.toggle()
 					}
@@ -137,8 +142,12 @@ struct SceneSelection: View {
 							musicSheetPresented.toggle()
 						}
 					})
+				} header: {
+					Text("Demo Apps")
+				} footer: {
+					Text("Presents a rudimentary recreation of a music app.")
 				}
-				Section(header: Text("Custom Popup Bar"), footer: Text("Presents a scene with a custom popup bar view and a UIKit popup content controller")) {
+				Section {
 					CellPaddedButton("Custom Popup Bar") {
 						mapSheetPresented.toggle()
 					}
@@ -147,16 +156,27 @@ struct SceneSelection: View {
 							mapSheetPresented.toggle()
 						}
 					})
+				} header: {
+					Text("Custom Popup Bar")
+				} footer: {
+					Text("Presents a scene with a custom popup bar view and a UIKit popup content controller")
 				}
-				Section(header: Text("Gestures"), footer: Text("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")) {
-					CellPaddedButton("CompactSlider") {
-						compactSliderSheetPresented.toggle()
-					}
-					.fullScreenCover(isPresented: $compactSliderSheetPresented, content: {
-						CompactSliderDemoView {
+				
+				if enableExternalScenes {
+					Section {
+						CellPaddedButton("CompactSlider") {
 							compactSliderSheetPresented.toggle()
 						}
-					})
+						.fullScreenCover(isPresented: $compactSliderSheetPresented, content: {
+							CompactSliderDemoView {
+								compactSliderSheetPresented.toggle()
+							}
+						})
+					} header: {
+						Text("External Libraries—Gestures")
+					} footer: {
+						Text("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")
+					}
 				}
 			}
 			.listStyle(InsetGroupedListStyle())

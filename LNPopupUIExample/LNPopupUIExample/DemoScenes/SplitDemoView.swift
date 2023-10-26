@@ -22,7 +22,7 @@ struct SplitInnerView: View {
 	
 	@ViewBuilder func tabViewOrInner<Content: View>(inner: Content) -> some View {
 		if showsTabBarItems {
-			TabView {
+			MaterialTabView {
 				inner
 			}
 		} else {
@@ -78,7 +78,7 @@ struct SplitDemoView: View {
 	}
 	
 	var body: some View {
-		let splitView = NavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.content)) {
+		let splitView = MaterialNavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.content)) {
 			SplitInnerView(isGlobal:isGlobal, onDismiss: onDismiss)
 				.navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 400)
 				.navigationTitle("Sidebar")
