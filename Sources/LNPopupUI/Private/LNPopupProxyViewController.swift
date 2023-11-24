@@ -397,6 +397,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	
 	func popupPresentationControllerDidDismissPopupBar(_ popupPresentationController: UIViewController, animated: Bool) {
 		currentPopupState?.isBarPresented = false
+		popupViewController = nil
 	}
 	
 	func popupPresentationController(_ popupPresentationController: UIViewController, didOpenPopupWithContentController popupContentController: UIViewController, animated: Bool) {
