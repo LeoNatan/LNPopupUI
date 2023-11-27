@@ -24,9 +24,21 @@ var didNotificationDid: NSNotification.Name = {
 	return NSNotification.Name(rawValue: str)
 }()
 
+internal class LNPopupBarImageAdapter: UIHostingController<Image?> {
+	@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
+	
+	override func viewSafeAreaInsetsDidChange() {
+		super.viewSafeAreaInsetsDidChange()
+		
+		print(view.safeAreaInsets)
+	}
+}
+
 internal class LNPopupBarItemAdapter: UIHostingController<AnyView> {
 	let updater: ([UIBarButtonItem]?) -> Void
 	var doneUpdating = false
+	
+	@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
 	
 	@objc var overrideSizeClass: UIUserInterfaceSizeClass = .regular {
 		didSet {
@@ -167,11 +179,10 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					}
 				}
 				.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
-					let anyView = AnyView(erasing: image?.edgesIgnoringSafeArea(.all))
-					if let imageController = self?.popupViewController?.popupItem.value(forKey: "swiftuiImageController") as? UIHostingController<AnyView> {
-						imageController.rootView = anyView
+					if let imageController = self?.popupViewController?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
+						imageController.rootView = image
 					} else {
-						self?.popupViewController?.popupItem.setValue(UIHostingController(rootView: anyView), forKey: "swiftuiImageController")
+						self?.popupViewController?.popupItem.setValue(LNPopupBarImageAdapter(rootView: image), forKey: "swiftuiImageController")
 					}
 				}
 				.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
@@ -398,6 +409,11 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	func popupPresentationControllerDidDismissPopupBar(_ popupPresentationController: UIViewController, animated: Bool) {
 		currentPopupState?.isBarPresented = false
 		popupViewController = nil
+		popupContextMenuViewController = nil
+		popupContextMenuInteraction = nil
+		leadingBarItemsController = nil
+		trailingBarItemsController = nil
+		interactionContainerView = nil
 	}
 	
 	func popupPresentationController(_ popupPresentationController: UIViewController, didOpenPopupWithContentController popupContentController: UIViewController, animated: Bool) {

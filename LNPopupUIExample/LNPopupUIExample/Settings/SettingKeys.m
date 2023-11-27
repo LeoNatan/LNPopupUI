@@ -53,20 +53,23 @@ void fixUIKitSwiftUIShit(void)
 		}));
 	}
 	{
-		Class cls = NSClassFromString(@"UITabBarItem");
-		SEL sel = NSSelectorFromString(@"setScrollEdgeAppearance:");
-		void (*orig)(id, SEL, UITabBarAppearance*);
-		Method m = class_getInstanceMethod(cls, sel);
-		orig = (void*)method_getImplementation(m);
-		method_setImplementation(m, imp_implementationWithBlock(^(id _self, UITabBarAppearance* appearance) {
-			if([[appearance.class valueForKey:@"isFromSwiftUI"] boolValue] && appearance.backgroundEffect == nil && appearance.backgroundColor == nil && appearance.backgroundImage == nil)
-			{
-				appearance = nil;
-			}
-			
-			
-			orig(_self, sel, appearance);
-		}));
+		if(@available(iOS 17, *))
+		{
+			Class cls = NSClassFromString(@"UITabBarItem");
+			SEL sel = NSSelectorFromString(@"setScrollEdgeAppearance:");
+			void (*orig)(id, SEL, UITabBarAppearance*);
+			Method m = class_getInstanceMethod(cls, sel);
+			orig = (void*)method_getImplementation(m);
+			method_setImplementation(m, imp_implementationWithBlock(^(id _self, UITabBarAppearance* appearance) {
+				if([[appearance.class valueForKey:@"isFromSwiftUI"] boolValue] && appearance.backgroundEffect == nil && appearance.backgroundColor == nil && appearance.backgroundImage == nil)
+				{
+					appearance = nil;
+				}
+				
+				
+				orig(_self, sel, appearance);
+			}));
+		}
 	}
 }
 

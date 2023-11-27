@@ -104,28 +104,30 @@ struct SceneSelection: View {
 							viewPresented.toggle()
 						}
 					})
-					Group {
-						CellPaddedButton("Split View (All)") {
-							splitViewPresented.toggle()
-						}.fullScreenCover(isPresented: $splitViewPresented) {
-							SplitDemoView(isGlobal: false) {
+					if #available(iOS 17, *) {
+						Group {
+							CellPaddedButton("Split View (All)") {
 								splitViewPresented.toggle()
+							}.fullScreenCover(isPresented: $splitViewPresented) {
+								SplitDemoView(isGlobal: false) {
+									splitViewPresented.toggle()
+								}
 							}
-						}
-						CellPaddedButton("Split View (Global)") {
-							splitViewGlobalPresented.toggle()
-						}
-						.fullScreenCover(isPresented: $splitViewGlobalPresented) {
-							SplitDemoView(isGlobal: true) {
+							CellPaddedButton("Split View (Global)") {
 								splitViewGlobalPresented.toggle()
 							}
+							.fullScreenCover(isPresented: $splitViewGlobalPresented) {
+								SplitDemoView(isGlobal: true) {
+									splitViewGlobalPresented.toggle()
+								}
+							}
 						}
-					}
-					.disabled(horizontalSizeClass == .compact)
-					.onChange(of: horizontalSizeClass) { newValue in
-						if newValue == .compact {
-							splitViewPresented = false
-							splitViewGlobalPresented = false
+						.disabled(horizontalSizeClass == .compact)
+						.onChange(of: horizontalSizeClass) { newValue in
+							if newValue == .compact {
+								splitViewPresented = false
+								splitViewGlobalPresented = false
+							}
 						}
 					}
 				} header: {

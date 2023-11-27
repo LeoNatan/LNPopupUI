@@ -68,6 +68,7 @@ struct SplitInnerView: View {
 	}
 }
 
+@available(iOS 17.0, *)
 struct SplitDemoView: View {
 	let isGlobal: Bool
 	let onDismiss: () -> Void

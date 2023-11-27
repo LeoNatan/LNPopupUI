@@ -373,6 +373,7 @@ struct MaterialNavigationStack<Content: View>: View {
 	}
 }
 
+@available(iOS 17.0, *)
 struct MaterialNavigationSplitView<Sidebar: View, Content: View, Detail: View>: View {
 	let sidebar: Sidebar
 	let content: Content
