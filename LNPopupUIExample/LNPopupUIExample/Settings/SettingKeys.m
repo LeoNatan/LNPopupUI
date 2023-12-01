@@ -17,6 +17,7 @@ NSString* const PopupSettingsMarqueeStyle = @"PopupSettingsMarqueeStyle";
 NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomizations";
 NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 NSString* const PopupSettingsHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
+NSString* const PopupSettingsDisableScrollEdgeAppearance = @"PopupSettingsDisableScrollEdgeAppearance";
 NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
 NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
 NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
@@ -25,6 +26,7 @@ NSString* const PopupSettingsContextMenuEnabled = @"PopupSettingsContextMenuEnab
 NSString* const __LNPopupBarHideContentView = @"__LNPopupBarHideContentView";
 NSString* const __LNPopupBarHideShadow = @"__LNPopupBarHideShadow";
 NSString* const __LNPopupBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
+NSString* const __LNForceRTL = @"__LNForceRTL";
 
 NSString* const DemoAppDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
 NSString* const DemoAppEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
@@ -35,6 +37,8 @@ NSString* const DemoAppEnableExternalScenes = @"DemoAppEnableExternalScenes";
 __attribute__((constructor))
 void fixUIKitSwiftUIShit(void)
 {
+	[NSUserDefaults.standardUserDefaults setBool:YES forKey:@"com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists"];
+	
 	{
 		Class cls = UICollectionViewCell.class;
 		void (*orig)(id, SEL, BOOL, BOOL);

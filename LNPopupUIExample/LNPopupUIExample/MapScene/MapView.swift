@@ -9,11 +9,11 @@ import SwiftUI
 import MapKit
 
 struct EnlargingButton: View {
-	let label: String
+	let label: LocalizedStringKey
 	let action: (Bool) -> Void
 	@State var pressed: Bool = false
 	
-	init(label: String, perform action: @escaping (Bool) -> Void) {
+	init(label: LocalizedStringKey, perform action: @escaping (Bool) -> Void) {
 		self.label = label
 		self.action = action
 	}
@@ -83,7 +83,7 @@ struct CustomBarMapView: View {
 			Button(action: {
 				onDismiss()
 			}, label: {
-				Image(systemName: "chevron.left")
+				Image(systemName: "chevron.backward")
 					.renderingMode(.template)
 					.font(.title2)
 			})

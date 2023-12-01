@@ -9,17 +9,18 @@ import SwiftUI
 import LNPopupUI
 import ActivityView
 
-fileprivate struct CellPaddedButton<S: StringProtocol>: View {
-	let text: S
+fileprivate struct CellPaddedButton: View {
+	let text: LocalizedStringKey
 	let action: () -> Void
 	
-	public init(_ content: S, action: @escaping () -> Void) {
+	public init(_ content: LocalizedStringKey, action: @escaping () -> Void) {
 		text = content
 		self.action = action
 	}
 	
 	var body: some View {
-		Button(text, action: action).padding([.top, .bottom], 4.167)
+		Button(text, action: action)
+//			.padding([.top, .bottom], 4.167)
 			.tint(Color(.label))
 	}
 }

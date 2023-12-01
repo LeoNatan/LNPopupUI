@@ -13,8 +13,8 @@ import LoremIpsum
 extension NSParagraphStyle: @unchecked Sendable {}
 
 struct DemoContent {
-	let title = LoremIpsum.title
-	let subtitle = LoremIpsum.sentence
+	let title = LocalizedStringKey(LoremIpsum.title)
+	let subtitle = LocalizedStringKey(LoremIpsum.sentence)
 	let imageNumber = Int.random(in: 1..<31)
 }
 
