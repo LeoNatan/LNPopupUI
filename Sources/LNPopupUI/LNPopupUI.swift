@@ -95,6 +95,14 @@ public extension View {
 		return environment(\.popupBarMarqueeScrollEnabled, LNPopupEnvironmentConsumer(enabled)).environment(\.popupBarMarqueeRate, LNPopupEnvironmentConsumer(scrollRate)).environment(\.popupBarMarqueeDelay, LNPopupEnvironmentConsumer(delay)).environment(\.popupBarCoordinateMarqueeAnimations, LNPopupEnvironmentConsumer(coordinateAnimations))
 	}
 	
+	/// Enables or disables popup interaction haptic feedback.
+	///
+	/// - Parameters:
+	///   - enabled: Haptic feedback enabled.
+	func popupHapticFeedbackEnabled(_ enabled: Bool) -> some View {
+		return environment(\.popupHapticFeedbackEnabled, LNPopupEnvironmentConsumer(enabled))
+	}
+	
 	/// Enables or disables the popup bar extension under the safe area.
 	///
 	/// - Parameter enabled: Extend the popup bar under safe area.

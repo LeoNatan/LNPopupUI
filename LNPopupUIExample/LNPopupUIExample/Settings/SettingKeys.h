@@ -15,6 +15,7 @@ extern NSString* const PopupSettingsInteractionStyle;
 extern NSString* const PopupSettingsProgressViewStyle;
 extern NSString* const PopupSettingsCloseButtonStyle;
 extern NSString* const PopupSettingsMarqueeStyle;
+extern NSString* const PopupSettingsHapticFeedbackStyle;
 extern NSString* const PopupSettingsEnableCustomizations;
 extern NSString* const PopupSettingsExtendBar;
 extern NSString* const PopupSettingsHidesBottomBarWhenPushed;
@@ -28,6 +29,7 @@ extern NSString* const __LNPopupBarHideContentView;
 extern NSString* const __LNPopupBarHideShadow;
 extern NSString* const __LNPopupBarEnableLayoutDebug;
 extern NSString* const __LNForceRTL;
+extern NSString* const __LNDebugScaling;
 
 extern NSString* const DemoAppDisableDemoSceneColors;
 extern NSString* const DemoAppEnableFunkyInheritedFont;

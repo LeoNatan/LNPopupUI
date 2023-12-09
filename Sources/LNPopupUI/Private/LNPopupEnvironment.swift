@@ -50,6 +50,10 @@ internal struct LNPopupBarMarqueeScrollEnabledKey: EnvironmentKey {
 	static let defaultValue: LNPopupEnvironmentConsumer<Bool>? = nil
 }
 
+internal struct LNPopupHapticFeedbackEnabledKey: EnvironmentKey {
+	static let defaultValue: LNPopupEnvironmentConsumer<Bool>? = nil
+}
+
 internal struct LNPopupBarMarqueeRateKey: EnvironmentKey {
 	static let defaultValue: LNPopupEnvironmentConsumer<CGFloat>? = nil
 }
@@ -138,6 +142,11 @@ internal extension EnvironmentValues {
 	var popupBarMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>? {
 		get { self[LNPopupBarMarqueeScrollEnabledKey.self] }
 		set { self[LNPopupBarMarqueeScrollEnabledKey.self] = newValue }
+	}
+	
+	var popupHapticFeedbackEnabled: LNPopupEnvironmentConsumer<Bool>? {
+		get { self[LNPopupHapticFeedbackEnabledKey.self] }
+		set { self[LNPopupHapticFeedbackEnabledKey.self] = newValue }
 	}
 	
 	var popupBarMarqueeRate: LNPopupEnvironmentConsumer<CGFloat>? {

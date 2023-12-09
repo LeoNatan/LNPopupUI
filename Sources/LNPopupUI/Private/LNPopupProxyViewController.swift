@@ -245,6 +245,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			if let barMarqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled?.consume(self) {
 				self.target.popupBar.standardAppearance.marqueeScrollEnabled = barMarqueeScrollEnabled
 			}
+			if let hapticFeedbackEnabled = self.currentPopupState.hapticFeedbackEnabled?.consume(self) {
+				self.target.allowPopupHapticFeedbackGeneration = hapticFeedbackEnabled
+			}
 			if let marqueeRate = self.currentPopupState.marqueeRate?.consume(self) {
 				self.target.popupBar.standardAppearance.marqueeScrollRate = marqueeRate
 			}

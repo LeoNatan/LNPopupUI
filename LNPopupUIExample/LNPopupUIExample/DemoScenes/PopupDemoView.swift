@@ -19,49 +19,6 @@ struct DemoContent {
 }
 
 extension View {
-	@ViewBuilder
-	func ifLet<V, Transform: View>(
-		_ value: V?,
-		transform: (Self, V) -> Transform
-	) -> some View {
-		if let value = value {
-			transform(self, value)
-		} else {
-			self
-		}
-	}
-	
-	@ViewBuilder
-	func `if`<Transform: View>(
-		_ value: Bool,
-		transform: (Self) -> Transform
-	) -> some View {
-		if value {
-			transform(self)
-		} else {
-			self
-		}
-	}
-	
-	@ViewBuilder
-	func `if`<Transform: View, ElseTransform: View>(
-		_ value: Bool,
-		transform: (Self) -> Transform,
-		`else` elseTransform: ((Self) -> ElseTransform)? = nil
-	) -> some View {
-		if value {
-			transform(self)
-		} else {
-			if let elseTransform = elseTransform {
-				elseTransform(self)
-			} else {
-				self
-			}
-		}
-	}
-}
-
-extension View {
 	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
 		return toolbar {
 			ToolbarItemGroup(placement: .bottomBar) {
@@ -77,6 +34,40 @@ extension View {
 					hideBarHandler?()
 				}
 			}
+		}
+	}
+}
+
+struct ToolbarModifier: ViewModifier {
+	let includeToolbar: Bool
+	let presentBarHandler: (() -> Void)?
+	let appearanceHandler: (() -> Void)?
+	let hideBarHandler: (() -> Void)?
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if includeToolbar {
+			content.demoToolbar(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
+		} else {
+			content
+		}
+	}
+}
+
+struct ShowDismissModifier: ViewModifier {
+	let showDismissButton: Bool
+	let onDismiss: (() -> Void)?
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if showDismissButton {
+			content.toolbar {
+				ToolbarItem(placement: .confirmationAction) {
+					Button("Gallery") {
+						onDismiss?()
+					}
+				}
+			}
+		} else {
+			content
 		}
 	}
 }
@@ -129,18 +120,8 @@ struct SafeAreaDemoView : View {
 			   alignment: .center)
 		.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
 		.fontWeight(.semibold)
-		.if(includeToolbar) { view in
-			view.demoToolbar(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
-		}
-		.if(showDismissButton) { view in
-			view.toolbar {
-				ToolbarItem(placement: .confirmationAction) {
-					Button("Gallery") {
-						onDismiss?()
-					}
-				}
-			}
-		}
+		.modifier(ToolbarModifier(includeToolbar: includeToolbar, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler))
+		.modifier(ShowDismissModifier(showDismissButton: showDismissButton, onDismiss: onDismiss))
 		.overlay {
 			ZStack {
 				if let isPopupOpen = isPopupOpen {
@@ -191,6 +172,157 @@ fileprivate var customizationParagraphStyle: NSParagraphStyle = {
 	return paragraphStyle
 }()
 
+struct HapticFeedbackModifier: ViewModifier {
+	let hapticFeedbackStyle: Int
+
+	@ViewBuilder func body(content: Content) -> some View {
+		if hapticFeedbackStyle == 0 {
+			content
+		} else {
+			content.popupHapticFeedbackEnabled(hapticFeedbackStyle == 2)
+		}
+	}
+}
+
+struct MarqueeModifier: ViewModifier {
+	let marqueeStyle: Int
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if marqueeStyle == 0 {
+			content
+		} else {
+			content.popupBarMarqueeScrollEnabled(marqueeStyle == 2)
+		}
+	}
+}
+
+struct FloatingBackgroundEffectModifier: ViewModifier {
+	let blurEffectStyle: UIBlurEffect.Style
+	let barStyle: LNPopupBar.Style
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if blurEffectStyle != .default && (barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17) {
+			content.popupBarFloatingBackgroundEffect(UIBlurEffect(style: blurEffectStyle))
+		} else {
+			content
+		}
+	}
+}
+
+struct BackgroundEffectModifier: ViewModifier {
+	let blurEffectStyle: UIBlurEffect.Style
+	let barStyle: LNPopupBar.Style
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if blurEffectStyle != .default && (barStyle != .floating) && (barStyle != .default || ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 17) {
+			content
+				.popupBarInheritsAppearanceFromDockingView(false)
+				.popupBarBackgroundEffect(UIBlurEffect(style: blurEffectStyle))
+		} else {
+			content
+		}
+	}
+}
+
+struct CustomBarModifier: ViewModifier {
+	let customPopupBar: Bool
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if customPopupBar == false {
+			content
+		} else {
+			content.popupBarCustomView(wantsDefaultTapGesture: true, wantsDefaultPanGesture: true, wantsDefaultHighlightGesture: true) {
+				ZStack(alignment: .trailing) {
+					HStack {
+						Spacer()
+						Button("Test") {
+							print("Yay")
+						}.padding()
+						Spacer()
+						
+					}
+				}
+			}
+		}
+	}
+}
+
+struct CustomizationsModifier: ViewModifier {
+	let enableCustomizations: Bool
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if enableCustomizations {
+			content
+				.popupBarInheritsAppearanceFromDockingView(false)
+				.popupBarFloatingBackgroundShadow(color: .red, radius: 8)
+				.popupBarImageShadow(color: .yellow, radius: 5)
+				.popupBarTitleTextAttributes(AttributeContainer()
+					.font(Font.custom("Chalkduster", size: 14, relativeTo: .headline))
+					.foregroundColor(.yellow)
+					.paragraphStyle(customizationParagraphStyle))
+				.popupBarSubtitleTextAttributes(AttributeContainer()
+					.font(.custom("Chalkduster", size: 12, relativeTo: .subheadline))
+					.foregroundColor(.green)
+					.paragraphStyle(customizationParagraphStyle))
+				.popupBarCustomizer { popupBar in
+					if popupBar.effectiveBarStyle == .floating {
+						popupBar.standardAppearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
+					} else {
+						popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
+					}
+				}
+		} else {
+			content
+		}
+	}
+}
+
+struct CustomizationsTintModifier: ViewModifier {
+	let enableCustomizations: Bool
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if enableCustomizations {
+			content.accentColor(.yellow)
+		} else {
+			content
+		}
+	}
+}
+
+struct ContextMenuModifier: ViewModifier {
+	let includeContextMenu: Bool
+	
+	func body(content: Content) -> some View {
+		if includeContextMenu {
+			content.popupBarContextMenu {
+				Button("♥️ - Hearts", action: { print ("♥️ - Hearts") })
+				Button("♣️ - Clubs", action: { print ("♣️ - Clubs") })
+				Button("♠️ - Spades", action: { print ("♠️ - Spades") })
+				Button("♦️ - Diamonds", action: { print ("♦️ - Diamonds") })
+			}
+		} else {
+			content
+		}
+	}
+}
+
+struct CustomTextLabelsModifier: ViewModifier {
+	let includeCustomTextLabels: Bool
+	let demoContent: DemoContent
+	
+	func body(content: Content) -> some View {
+		if includeCustomTextLabels {
+			content.popupTitle {
+				Text(demoContent.title).foregroundColor(.orange).fontWeight(.black)
+			} subtitle: {
+				Text(demoContent.subtitle).foregroundColor(.blue).fontWeight(.medium)
+			}
+		} else {
+			content.popupTitle(demoContent.title, subtitle: demoContent.subtitle)
+		}
+	}
+}
+
 extension View {
 	func popupInteractionStyleFromAppStorage(_ style: UIViewController.__PopupInteractionStyle) -> UIViewController.PopupInteractionStyle {
 		switch style.rawValue {
@@ -213,6 +345,7 @@ extension View {
 		@AppStorage(PopupSettingsCloseButtonStyle) var closeButtonStyle: LNPopupCloseButton.Style = .default
 		@AppStorage(PopupSettingsProgressViewStyle) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
 		@AppStorage(PopupSettingsMarqueeStyle) var marqueeStyle: Int = 0
+		@AppStorage(PopupSettingsHapticFeedbackStyle) var hapticFeedbackStyle: Int = 0
 		@AppStorage(PopupSettingsVisualEffectViewBlurEffect) var blurEffectStyle: UIBlurEffect.Style = .default
 		
 		@AppStorage(PopupSettingsExtendBar) var extendBar: Bool = true
@@ -226,15 +359,7 @@ extension View {
 			print("Closed")
 		}) {
 			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
-				.if(includeCustomTextLabels) { view in
-					view.popupTitle {
-						Text(demoContent.title).foregroundColor(.orange).fontWeight(.black)
-					} subtitle: {
-						Text(demoContent.subtitle).foregroundColor(.blue).fontWeight(.medium)
-					}
-				} else: { view in
-					view.popupTitle(demoContent.title, subtitle: demoContent.subtitle)
-				}
+				.modifier(CustomTextLabelsModifier(includeCustomTextLabels: includeCustomTextLabels, demoContent: demoContent))
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
 				.popupBarItems {
@@ -243,9 +368,7 @@ extension View {
 							print("Play")
 						}) {
 							Image(systemName: "play.fill")
-						}.if(enableCustomizations) { view in
-							view.accentColor(.yellow)
-						}
+						}.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				} trailing: {
 					ToolbarItemGroup(placement: .popupBar) {
@@ -253,9 +376,7 @@ extension View {
 							print("Next")
 						}) {
 							Image(systemName: "forward.fill")
-						}.if(enableCustomizations) { view in
-							view.accentColor(.yellow)
-						}
+						}.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				}
 
@@ -264,60 +385,14 @@ extension View {
 		.popupInteractionStyle(popupInteractionStyleFromAppStorage(interactionStyle))
 		.popupBarProgressViewStyle(progressViewStyle)
 		.popupCloseButtonStyle(closeButtonStyle)
-		.if(marqueeStyle != 0) { view in
-			view.popupBarMarqueeScrollEnabled(marqueeStyle == 2)
-		}
-		.if(blurEffectStyle != .default && (barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17)) { view in
-			view.popupBarFloatingBackgroundEffect(UIBlurEffect(style: blurEffectStyle))
-		}
-		.if(blurEffectStyle != .default && (barStyle != .floating) && (barStyle != .default || ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 17)) { view in
-			view.popupBarInheritsAppearanceFromDockingView(false)
-				.popupBarBackgroundEffect(UIBlurEffect(style: blurEffectStyle))
-		}
-		.if(customPopupBar) { view in
-			view.popupBarCustomView(wantsDefaultTapGesture: true, wantsDefaultPanGesture: true, wantsDefaultHighlightGesture: true) {
-				ZStack(alignment: .trailing) {
-					HStack {
-						Spacer()
-						Button("Test") {
-							print("Yay")
-						}.padding()
-						Spacer()
-						
-					}
-				}
-			}
-		}
-		.if(enableCustomizations) { view in
-			view
-				.popupBarInheritsAppearanceFromDockingView(false)
-				.popupBarFloatingBackgroundShadow(color: .red, radius: 8)
-				.popupBarImageShadow(color: .yellow, radius: 5)
-				.popupBarTitleTextAttributes(AttributeContainer()
-					.font(Font.custom("Chalkduster", size: 14, relativeTo: .headline))
-					.foregroundColor(.yellow)
-					.paragraphStyle(customizationParagraphStyle))
-				.popupBarSubtitleTextAttributes(AttributeContainer()
-					.font(.custom("Chalkduster", size: 12, relativeTo: .subheadline))
-					.foregroundColor(.green)
-					.paragraphStyle(customizationParagraphStyle))
-				.popupBarCustomizer { popupBar in
-					if popupBar.effectiveBarStyle == .floating {
-						popupBar.standardAppearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
-					} else {
-						popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
-					}
-				}
-		}
+		.modifier(MarqueeModifier(marqueeStyle: marqueeStyle))
+		.modifier(HapticFeedbackModifier(hapticFeedbackStyle: hapticFeedbackStyle))
+		.modifier(FloatingBackgroundEffectModifier(blurEffectStyle: blurEffectStyle, barStyle: barStyle))
+		.modifier(BackgroundEffectModifier(blurEffectStyle: blurEffectStyle, barStyle: barStyle))
+		.modifier(CustomBarModifier(customPopupBar: customPopupBar))
+		.modifier(CustomizationsModifier(enableCustomizations: enableCustomizations))
 		.popupBarShouldExtendPopupBarUnderSafeArea(extendBar)
-		.if(includeContextMenu) { view in
-			view.popupBarContextMenu {
-				Button("♥️ - Hearts", action: { print ("♥️ - Hearts") })
-				Button("♣️ - Clubs", action: { print ("♣️ - Clubs") })
-				Button("♠️ - Spades", action: { print ("♠️ - Spades") })
-				Button("♦️ - Diamonds", action: { print ("♦️ - Diamonds") })
-			}
-		}
+		.modifier(ContextMenuModifier(includeContextMenu: includeContextMenu))
 	}
 }
 

@@ -92,6 +92,7 @@ struct SettingsView : View {
 	@AppStorage(PopupSettingsCloseButtonStyle) var closeButtonStyle: LNPopupCloseButton.Style = .default
 	@AppStorage(PopupSettingsProgressViewStyle) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
 	@AppStorage(PopupSettingsMarqueeStyle) var marqueeStyle: Int = 0
+	@AppStorage(PopupSettingsHapticFeedbackStyle) var hapticFeedback: Int = 0
 	@AppStorage(PopupSettingsVisualEffectViewBlurEffect) var blurEffectStyle: UIBlurEffect.Style = .default
 	
 	@AppStorage(PopupSettingsExtendBar) var extendBar: Bool = true
@@ -107,6 +108,7 @@ struct SettingsView : View {
 	@AppStorage(__LNPopupBarEnableLayoutDebug) var layoutDebug: Bool = false
 	@AppStorage(__LNForceRTL) var forceRTL: Bool = false
 	@AppStorage("___WTFBBQ") var forceRTLAtOpen: Bool = false
+	@AppStorage(__LNDebugScaling) var debugScaling: Double = 0
 	
 	@AppStorage(DemoAppDisableDemoSceneColors) var disableDemoSceneColors: Bool = false
 	@AppStorage(DemoAppEnableFunkyInheritedFont) var enableFunkyInheritedFont: Bool = false
@@ -175,6 +177,16 @@ struct SettingsView : View {
 			}
 			
 			Section {
+				Picker(selection: $hapticFeedback) {
+					CellPaddedText("Default").tag(0)
+					CellPaddedText("Disabled").tag(1)
+					CellPaddedText("Enabled").tag(2)
+				}
+			} header: {
+				LNHeaderFooterView("Haptic Feedback")
+			}
+			
+			Section {
 				Picker(selection: $blurEffectStyle) {
 					CellPaddedText("Default").tag(UIBlurEffect.Style.default)
 				}
@@ -202,7 +214,7 @@ struct SettingsView : View {
 					CellPaddedText("Prominent").tag(UIBlurEffect.Style.prominent)
 				}
 			} footer: {
-				Text("Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
+				LNHeaderFooterView("Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
 			}
 			
 			Section {
@@ -290,6 +302,52 @@ struct SettingsView : View {
 						forceRTL = forceRTLAtOpen
 					}
 				}
+				
+				NavigationLink {
+					Form {
+						Section {
+							Picker(selection: $debugScaling) {
+								CellPaddedText("Default").tag(0.0)
+							}
+						} footer: {
+							LNHeaderFooterView("Uses the default scaling according to screen size and “Display Zoom” setting.")
+						}
+						
+						Section {
+							Picker(selection: $debugScaling) {
+								CellPaddedText("320").tag(320.0)
+							}
+						} footer: {
+							LNHeaderFooterView("Classic phones as well as “Larger Text” non-Max & non-Plus phones.")
+						}
+						
+						Section {
+							Picker(selection: $debugScaling) {
+								CellPaddedText("375").tag(375.0)
+								CellPaddedText("390").tag(390.0)
+								CellPaddedText("393").tag(393.0)
+							}
+						} footer: {
+							LNHeaderFooterView("Non-Max & non-Plus phones as well as “Larger Text” Max & Plus phones.")
+						}
+						
+						Section {
+							Picker(selection: $debugScaling) {
+								CellPaddedText("414").tag(414.0)
+								CellPaddedText("428").tag(428.0)
+								CellPaddedText("430").tag(430.0)
+							}
+						} footer: {
+							LNHeaderFooterView("Max & Plus phones.")
+						}
+					}.pickerStyle(.inline).navigationTitle("Scaling")
+				} label: {
+					HStack {
+						LNText("Scaling")
+						Spacer()
+						LNText(debugScaling == 0 ? "Default" : "\(String(format: "%.0f", debugScaling))").foregroundColor(.secondary)
+					}
+				}
 			} header: {
 				LNHeaderFooterView("Popup Bar Debug")
 			}
@@ -320,16 +378,6 @@ struct SettingsView : View {
 class SettingsViewController: UIHostingController<SettingsView> {
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder, rootView: SettingsView())
-	}
-	
-	override func viewIsAppearing(_ animated: Bool) {
-		super.viewIsAppearing(animated)
-		
-		guard let parent = parent as? UINavigationController else {
-			return
-		}
-		
-		self.view.tintColor = parent.navigationBar.tintColor
 	}
 	
 	class func alertRestartNeeded(completion: @escaping (Bool) -> ()) {
@@ -403,8 +451,9 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			
 			UserDefaults.standard.removeObject(forKey: __LNForceRTL)
 			resetRTL()
+			UserDefaults.standard.removeObject(forKey: __LNDebugScaling)
 			
-			for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
+			for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle, PopupSettingsHapticFeedbackStyle] {
 				UserDefaults.standard.removeObject(forKey: key)
 			}
 			
@@ -459,7 +508,7 @@ struct SettingsNavView: View {
 struct NoSettingsView : View {
 	var body: some View {
 		Text("No Settings")
-			.fontWeight(.bold)
+			.fontWeight(.semibold)
 			.foregroundStyle(.secondary)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.background(Color(UIColor.systemGroupedBackground))

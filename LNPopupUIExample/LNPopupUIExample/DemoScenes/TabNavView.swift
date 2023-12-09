@@ -9,6 +9,26 @@ import SwiftUI
 import LoremIpsum
 import LNPopupUI
 
+struct RestoreTabBarModifier: ViewModifier {
+	let restoreTabBar: (() -> Void)?
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		if restoreTabBar != nil {
+			content.toolbar {
+				ToolbarItem(placement: .navigationBarLeading) {
+					Button {
+						restoreTabBar?()
+					} label: {
+						Image(systemName: "rectangle.bottomthird.inset.fill")
+					}
+				}
+			}
+		} else {
+			content
+		}
+	}
+}
+
 struct InnerNavView : View {
 	let tabIdx: Int
 	let onDismiss: () -> Void
@@ -22,17 +42,7 @@ struct InnerNavView : View {
 			SafeAreaDemoView(colorSeed:"tab_\(tabIdx)", includeLink: true, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss)
 				.navigationBarTitle("Tab View + Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
-				.if(restoreTabBar != nil) { view in
-						view.toolbar {
-							ToolbarItem(placement: .navigationBarLeading) {
-								Button {
-									restoreTabBar?()
-								} label: {
-									Image(systemName: "rectangle.bottomthird.inset.fill")
-								}
-							}
-						}
-				}
+				.modifier(RestoreTabBarModifier(restoreTabBar: restoreTabBar))
 		}
 	}
 }
