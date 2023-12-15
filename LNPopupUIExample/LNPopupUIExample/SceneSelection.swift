@@ -43,8 +43,8 @@ struct SceneSelection: View {
 	@State var settingsPresented: Bool = false
 	@State private var item: ActivityItem? = nil
 	
-	@AppStorage(DemoAppEnableFunkyInheritedFont) var enableFunkyInheritedFont: Bool = false
-	@AppStorage(DemoAppEnableExternalScenes) var enableExternalScenes: Bool = false
+	@AppStorage(DemoAppEnableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
+	@AppStorage(DemoAppEnableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
 	
 	let font = Font.custom("Chalkduster", size: 15)
 //	let font = Font.custom("Avenir Next", fixedSize: 15).weight(.heavy).italic()

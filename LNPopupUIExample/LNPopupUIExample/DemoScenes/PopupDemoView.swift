@@ -72,6 +72,21 @@ struct ShowDismissModifier: ViewModifier {
 	}
 }
 
+struct BackgroundViewColorModifier: ViewModifier {
+	let colorSeed: String
+	let colorIndex: Int
+	
+	@AppStorage(DemoAppDisableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
+	
+	func body(content: Content) -> some View {
+		if disableDemoSceneColors {
+			content.background(Color(.systemBackground).edgesIgnoringSafeArea(.all))
+		} else {
+			content.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
+		}
+	}
+}
+
 struct SafeAreaDemoView : View {
 	let includeLink: Bool
 	let includeToolbar: Bool
@@ -118,7 +133,7 @@ struct SafeAreaDemoView : View {
 		.frame(maxWidth: .infinity,
 			   maxHeight: .infinity,
 			   alignment: .center)
-		.background(Color(UIColor.adaptiveColor(withSeed: "\(colorSeed)\(colorIndex > 0 ? String(colorIndex) : "")")).edgesIgnoringSafeArea(.all))
+		.modifier(BackgroundViewColorModifier(colorSeed: colorSeed, colorIndex: colorIndex))
 		.fontWeight(.semibold)
 		.modifier(ToolbarModifier(includeToolbar: includeToolbar, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler))
 		.modifier(ShowDismissModifier(showDismissButton: showDismissButton, onDismiss: onDismiss))
@@ -253,7 +268,6 @@ struct CustomizationsModifier: ViewModifier {
 	@ViewBuilder func body(content: Content) -> some View {
 		if enableCustomizations {
 			content
-				.popupBarInheritsAppearanceFromDockingView(false)
 				.popupBarFloatingBackgroundShadow(color: .red, radius: 8)
 				.popupBarImageShadow(color: .yellow, radius: 5)
 				.popupBarTitleTextAttributes(AttributeContainer()
@@ -266,8 +280,10 @@ struct CustomizationsModifier: ViewModifier {
 					.paragraphStyle(customizationParagraphStyle))
 				.popupBarCustomizer { popupBar in
 					if popupBar.effectiveBarStyle == .floating {
+						popupBar.inheritsAppearanceFromDockingView = true
 						popupBar.standardAppearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
 					} else {
+						popupBar.inheritsAppearanceFromDockingView = false
 						popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
 					}
 				}
@@ -323,8 +339,27 @@ struct CustomTextLabelsModifier: ViewModifier {
 	}
 }
 
-extension View {
-	func popupInteractionStyleFromAppStorage(_ style: UIViewController.__PopupInteractionStyle) -> UIViewController.PopupInteractionStyle {
+struct PopupDemoViewModifier: ViewModifier {
+	let demoContent: DemoContent
+	let isBarPresented: Binding<Bool>
+	let isPopupOpen: Binding<Bool>?
+	let includeContextMenu: Bool
+	let includeCustomTextLabels: Bool
+	
+	@AppStorage(PopupSettingsBarStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
+	@AppStorage(PopupSettingsInteractionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
+	@AppStorage(PopupSettingsCloseButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
+	@AppStorage(PopupSettingsProgressViewStyle, store: .settings) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
+	@AppStorage(PopupSettingsMarqueeStyle, store: .settings) var marqueeStyle: Int = 0
+	@AppStorage(PopupSettingsHapticFeedbackStyle, store: .settings) var hapticFeedbackStyle: Int = 0
+	@AppStorage(PopupSettingsVisualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
+	
+	@AppStorage(PopupSettingsExtendBar, store: .settings) var extendBar: Bool = true
+	@AppStorage(PopupSettingsCustomBarEverywhereEnabled, store: .settings) var customPopupBar: Bool = false
+	@AppStorage(PopupSettingsEnableCustomizations, store: .settings) var enableCustomizations: Bool = false
+	@AppStorage(PopupSettingsContextMenuEnabled, store: .settings) var contextMenu: Bool = false
+	
+	fileprivate func popupInteractionStyleFromAppStorage(_ style: UIViewController.__PopupInteractionStyle) -> UIViewController.PopupInteractionStyle {
 		switch style.rawValue {
 		case 1:
 			return .drag
@@ -339,21 +374,8 @@ extension View {
 		}
 	}
 	
-	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool, includeCustomTextLabels: Bool = false) -> some View {
-		@AppStorage(PopupSettingsBarStyle) var barStyle: LNPopupBar.Style = .default
-		@AppStorage(PopupSettingsInteractionStyle) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
-		@AppStorage(PopupSettingsCloseButtonStyle) var closeButtonStyle: LNPopupCloseButton.Style = .default
-		@AppStorage(PopupSettingsProgressViewStyle) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
-		@AppStorage(PopupSettingsMarqueeStyle) var marqueeStyle: Int = 0
-		@AppStorage(PopupSettingsHapticFeedbackStyle) var hapticFeedbackStyle: Int = 0
-		@AppStorage(PopupSettingsVisualEffectViewBlurEffect) var blurEffectStyle: UIBlurEffect.Style = .default
-		
-		@AppStorage(PopupSettingsExtendBar) var extendBar: Bool = true
-		@AppStorage(PopupSettingsCustomBarEverywhereEnabled) var customPopupBar: Bool = false
-		@AppStorage(PopupSettingsEnableCustomizations) var enableCustomizations: Bool = false
-		@AppStorage(PopupSettingsContextMenuEnabled) var contextMenu: Bool = false
-		
-		return self.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: {
+	func body(content: Content) -> some View {
+		content.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: {
 			print("Opened")
 		}, onClose: {
 			print("Closed")
@@ -379,7 +401,7 @@ extension View {
 						}.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				}
-
+			
 		}
 		.popupBarStyle(barStyle)
 		.popupInteractionStyle(popupInteractionStyleFromAppStorage(interactionStyle))
@@ -396,6 +418,12 @@ extension View {
 	}
 }
 
+extension View {
+	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool, includeCustomTextLabels: Bool = false) -> some View {
+		return self.modifier(PopupDemoViewModifier(demoContent: demoContent, isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, includeContextMenu: includeContextMenu, includeCustomTextLabels: includeCustomTextLabels))
+	}
+}
+
 struct SafeAreaDemoView_Previews: PreviewProvider {
 	static var previews: some View {
 		SafeAreaDemoView()
@@ -406,7 +434,7 @@ struct SafeAreaDemoView_Previews: PreviewProvider {
 }
 
 fileprivate struct FixBottomBarAppearanceModifier: ViewModifier {
-	@AppStorage(PopupSettingsBarStyle) var barStyle: LNPopupBar.Style = .default
+	@AppStorage(PopupSettingsBarStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
 	
 	func body(content: Content) -> some View {
 		content.toolbarBackground(barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17 ? Material.thin : Material.bar, for: .tabBar, .bottomBar, .navigationBar)

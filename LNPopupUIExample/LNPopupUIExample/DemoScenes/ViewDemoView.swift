@@ -29,7 +29,7 @@ struct ViewDemoView : View {
 	
 	var body: some View {
 		InnerView(tabIdx:nil, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-			.popupDemo(demoContent:demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))
+			.popupDemo(demoContent:demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: PopupSettingsContextMenuEnabled))
 	}
 }
 

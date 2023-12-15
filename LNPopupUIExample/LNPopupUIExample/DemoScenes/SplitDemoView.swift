@@ -61,7 +61,7 @@ struct SplitInnerView: View {
 		
 		
 		if isGlobal == false {
-			inner.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))
+			inner.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.settings.bool(forKey: PopupSettingsContextMenuEnabled))
 		} else {
 			inner
 		}
@@ -94,7 +94,7 @@ struct SplitDemoView: View {
 		.navigationSplitViewStyle(.prominentDetail)
 		
 		if isGlobal {
-			splitView.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))
+			splitView.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.settings.bool(forKey: PopupSettingsContextMenuEnabled))
 		} else {
 			splitView
 		}

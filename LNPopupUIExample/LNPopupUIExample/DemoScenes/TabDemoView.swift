@@ -83,7 +83,7 @@ struct TabDemoView : View {
 				}
 				.toolbar(.hidden, for: .tabBar)
 		}
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.standard.bool(forKey: PopupSettingsContextMenuEnabled))
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: PopupSettingsContextMenuEnabled))
 	}
 }
 
