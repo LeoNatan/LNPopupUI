@@ -380,7 +380,7 @@ struct PopupDemoViewModifier: ViewModifier {
 		}, onClose: {
 			print("Closed")
 		}) {
-			SafeAreaDemoView(colorSeed: "Popup", offset: true, isPopupOpen: isPopupOpen)
+			SafeAreaDemoView(colorSeed: "Popup", offset: closeButtonStyle != .round, isPopupOpen: isPopupOpen)
 				.modifier(CustomTextLabelsModifier(includeCustomTextLabels: includeCustomTextLabels, demoContent: demoContent))
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
