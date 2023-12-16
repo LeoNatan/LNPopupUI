@@ -46,7 +46,7 @@ struct TabViewCustomLabels : View {
 				}
 				.toolbar(.hidden, for: .tabBar)
 		}
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: PopupSettingsContextMenuEnabled), includeCustomTextLabels: true)
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled), includeCustomTextLabels: true)
 	}
 }
 

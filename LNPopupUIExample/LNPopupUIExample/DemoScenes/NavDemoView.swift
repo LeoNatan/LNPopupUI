@@ -46,7 +46,7 @@ struct NavDemoView : View {
 				}
 		}
 		.colorScheme(forcedColorScheme ?? environmentColorScheme)
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: PopupSettingsContextMenuEnabled))
+		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
 	}
 }
 

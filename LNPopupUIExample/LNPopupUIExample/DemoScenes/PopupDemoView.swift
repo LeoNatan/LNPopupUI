@@ -76,7 +76,7 @@ struct BackgroundViewColorModifier: ViewModifier {
 	let colorSeed: String
 	let colorIndex: Int
 	
-	@AppStorage(DemoAppDisableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
+	@AppStorage(.disableDemoSceneColors, store: .settings) var disableDemoSceneColors: Bool = false
 	
 	func body(content: Content) -> some View {
 		if disableDemoSceneColors {
@@ -188,26 +188,19 @@ fileprivate var customizationParagraphStyle: NSParagraphStyle = {
 }()
 
 struct HapticFeedbackModifier: ViewModifier {
-	let hapticFeedbackStyle: Int
+	@AppStorage(.hapticFeedbackEnabled, store: .settings) var hapticFeedbackEnabled: Bool = true
 
 	@ViewBuilder func body(content: Content) -> some View {
-		if hapticFeedbackStyle == 0 {
-			content
-		} else {
-			content.popupHapticFeedbackEnabled(hapticFeedbackStyle == 2)
-		}
+		content.popupHapticFeedbackEnabled(hapticFeedbackEnabled)
 	}
 }
 
 struct MarqueeModifier: ViewModifier {
-	let marqueeStyle: Int
+	@AppStorage(.marqueeEnabled, store: .settings) var marqueeEnabled: Bool = false
+	@AppStorage(.marqueeCoordinationEnabled, store: .settings) var marqueeCoordinationEnabled: Bool = true
 	
 	@ViewBuilder func body(content: Content) -> some View {
-		if marqueeStyle == 0 {
-			content
-		} else {
-			content.popupBarMarqueeScrollEnabled(marqueeStyle == 2)
-		}
+		content.popupBarMarqueeScrollEnabled(marqueeEnabled, coordinateAnimations: marqueeCoordinationEnabled)
 	}
 }
 
@@ -346,18 +339,16 @@ struct PopupDemoViewModifier: ViewModifier {
 	let includeContextMenu: Bool
 	let includeCustomTextLabels: Bool
 	
-	@AppStorage(PopupSettingsBarStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
-	@AppStorage(PopupSettingsInteractionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
-	@AppStorage(PopupSettingsCloseButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
-	@AppStorage(PopupSettingsProgressViewStyle, store: .settings) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
-	@AppStorage(PopupSettingsMarqueeStyle, store: .settings) var marqueeStyle: Int = 0
-	@AppStorage(PopupSettingsHapticFeedbackStyle, store: .settings) var hapticFeedbackStyle: Int = 0
-	@AppStorage(PopupSettingsVisualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
+	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
+	@AppStorage(.interactionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
+	@AppStorage(.closeButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
+	@AppStorage(.progressViewStyle, store: .settings) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
+	@AppStorage(.visualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
 	
-	@AppStorage(PopupSettingsExtendBar, store: .settings) var extendBar: Bool = true
-	@AppStorage(PopupSettingsCustomBarEverywhereEnabled, store: .settings) var customPopupBar: Bool = false
-	@AppStorage(PopupSettingsEnableCustomizations, store: .settings) var enableCustomizations: Bool = false
-	@AppStorage(PopupSettingsContextMenuEnabled, store: .settings) var contextMenu: Bool = false
+	@AppStorage(.extendBar, store: .settings) var extendBar: Bool = true
+	@AppStorage(.customBarEverywhereEnabled, store: .settings) var customPopupBar: Bool = false
+	@AppStorage(.enableCustomizations, store: .settings) var enableCustomizations: Bool = false
+	@AppStorage(.contextMenuEnabled, store: .settings) var contextMenu: Bool = false
 	
 	fileprivate func popupInteractionStyleFromAppStorage(_ style: UIViewController.__PopupInteractionStyle) -> UIViewController.PopupInteractionStyle {
 		switch style.rawValue {
@@ -407,8 +398,8 @@ struct PopupDemoViewModifier: ViewModifier {
 		.popupInteractionStyle(popupInteractionStyleFromAppStorage(interactionStyle))
 		.popupBarProgressViewStyle(progressViewStyle)
 		.popupCloseButtonStyle(closeButtonStyle)
-		.modifier(MarqueeModifier(marqueeStyle: marqueeStyle))
-		.modifier(HapticFeedbackModifier(hapticFeedbackStyle: hapticFeedbackStyle))
+		.modifier(MarqueeModifier())
+		.modifier(HapticFeedbackModifier())
 		.modifier(FloatingBackgroundEffectModifier(blurEffectStyle: blurEffectStyle, barStyle: barStyle))
 		.modifier(BackgroundEffectModifier(blurEffectStyle: blurEffectStyle, barStyle: barStyle))
 		.modifier(CustomBarModifier(customPopupBar: customPopupBar))
@@ -434,7 +425,7 @@ struct SafeAreaDemoView_Previews: PreviewProvider {
 }
 
 fileprivate struct FixBottomBarAppearanceModifier: ViewModifier {
-	@AppStorage(PopupSettingsBarStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
+	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
 	
 	func body(content: Content) -> some View {
 		content.toolbarBackground(barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17 ? Material.thin : Material.bar, for: .tabBar, .bottomBar, .navigationBar)
