@@ -87,6 +87,15 @@ struct BackgroundViewColorModifier: ViewModifier {
 	}
 }
 
+struct TrailingImageLabelStyle: LabelStyle {
+	func makeBody(configuration: Configuration) -> some View {
+		HStack {
+			configuration.title
+			configuration.icon
+		}
+	}
+}
+
 struct SafeAreaDemoView : View {
 	let includeLink: Bool
 	let includeToolbar: Bool
@@ -164,9 +173,17 @@ struct SafeAreaDemoView : View {
 				if includeLink {
 					HStack {
 						Spacer()
-						NavigationLink("Next ▸", destination: SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss)
-							.navigationTitle("LNPopupUI"))
-						.padding()
+						
+						NavigationLink {
+							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss)
+								.navigationTitle("LNPopupUI")
+						} label: {
+							Label {
+								Text("Next")
+							} icon: {
+								Image(systemName: "arrowtriangle.forward.fill").font(.system(size: 8))
+							}.labelStyle(TrailingImageLabelStyle())
+						}.padding()
 					}
 				}
 			}

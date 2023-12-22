@@ -27,6 +27,7 @@ fileprivate struct CellPaddedButton: View {
 
 struct SceneSelection: View {
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	@Environment(\.verticalSizeClass) var verticalSizeClass
 	
 	@State var tabnavPresented: Bool = false
 	@State var tabPresented: Bool = false
@@ -151,7 +152,7 @@ struct SceneSelection: View {
 					Text("Presents a rudimentary recreation of a music app.")
 				}
 				Section {
-					CellPaddedButton("Custom Popup Bar") {
+					CellPaddedButton("Maps") {
 						mapSheetPresented.toggle()
 					}
 					.fullScreenCover(isPresented: $mapSheetPresented, content: {
@@ -193,6 +194,7 @@ struct SceneSelection: View {
 					}
 					.popover(isPresented: $settingsPresented, content: {
 						SettingsNavView()
+							.frame(minWidth: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 375 : nil, minHeight: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 600 : nil)
 					})
 				}
 			}
@@ -220,7 +222,7 @@ struct SceneSelection: View {
 				Text("Share…")
 				Image(systemName: "square.and.arrow.up")
 			}
-
+			
 		}
 		.activitySheet($item)
 		.font(enableFunkyInheritedFont ? font : nil)
