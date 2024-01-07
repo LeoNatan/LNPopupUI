@@ -381,11 +381,13 @@ public extension View {
 	
 	/// Configures the view's popup bar image.
 	///
+	/// Setting to `nil` will hide image from the popup bar.
+	///
 	/// - Parameters:
 	///   - image: The image to use.
 	///   - resizable: Mark the image as resizable. Defaults to `true`. If you'd like to control this on your own, set this parameter to `false`.
-	func popupImage(_ image: Image, resizable: Bool = true) -> some View {
-		return preference(key: LNPopupImagePreferenceKey.self, value: resizable ? image.resizable() : image)
+	func popupImage(_ image: Image?, resizable: Bool = true) -> some View {
+		return preference(key: LNPopupImagePreferenceKey.self, value: resizable ? image?.resizable() : image)
 	}
 	
 	/// Configures the view's popup bar progress.

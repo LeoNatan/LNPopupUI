@@ -29,8 +29,6 @@ internal class LNPopupBarImageAdapter: UIHostingController<Image?> {
 	
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
-		
-		print(view.safeAreaInsets)
 	}
 }
 
@@ -182,7 +180,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					if let imageController = self?.popupViewController?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
 						imageController.rootView = image
 					} else {
-						self?.popupViewController?.popupItem.setValue(LNPopupBarImageAdapter(rootView: image), forKey: "swiftuiImageController")
+						self?.popupViewController?.popupItem.setValue(image != nil ? LNPopupBarImageAdapter(rootView: image) : nil, forKey: "swiftuiImageController")
 					}
 				}
 				.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
