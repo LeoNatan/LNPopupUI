@@ -10,19 +10,44 @@ import UIKit
 import LNPopupController
 import LNSwiftUIUtils
 
-var willNotificationName: NSNotification.Name = {
-	//UIWindowWillRotateNotification
-	let b64d = "VUlXaW5kb3dXaWxsUm90YXRlTm90aWZpY2F0aW9u".data(using: .utf8)!
-	let str = String(data: Data(base64Encoded: b64d)!, encoding: .utf8)!
-	return NSNotification.Name(rawValue: str)
-}()
-
-var didNotificationDid: NSNotification.Name = {
-	//UIWindowDidRotateNotification
-	let b64d = "VUlXaW5kb3dEaWRSb3RhdGVOb3RpZmljYXRpb24=".data(using: .utf8)!
-	let str = String(data: Data(base64Encoded: b64d)!, encoding: .utf8)!
-	return NSNotification.Name(rawValue: str)
-}()
+internal class LNPopupImplicitAnimationController {
+	fileprivate var willNotificationName: NSNotification.Name = {
+		//UIWindowWillRotateNotification
+		let b64d = "VUlXaW5kb3dXaWxsUm90YXRlTm90aWZpY2F0aW9u".data(using: .utf8)!
+		let str = String(data: Data(base64Encoded: b64d)!, encoding: .utf8)!
+		return NSNotification.Name(rawValue: str)
+	}()
+	
+	fileprivate var didNotificationName: NSNotification.Name = {
+		//UIWindowDidRotateNotification
+		let b64d = "VUlXaW5kb3dEaWRSb3RhdGVOb3RpZmljYXRpb24=".data(using: .utf8)!
+		let str = String(data: Data(base64Encoded: b64d)!, encoding: .utf8)!
+		return NSNotification.Name(rawValue: str)
+	}()
+	
+	private weak var window: UIWindow?
+	private var count = 0
+	
+	init(withWindow window: UIWindow) {
+		self.window = window
+	}
+	
+	func push() {
+		if count == 0, let window {
+			NotificationCenter.default.post(name: willNotificationName, object: window, userInfo: ["LNPopupIgnore": true])
+		}
+		
+		count += 1
+	}
+	
+	func pop() {
+		count -= 1
+		
+		if count == 0, let window {
+			NotificationCenter.default.post(name: didNotificationName, object: window, userInfo: ["LNPopupIgnore": true])
+		}
+	}
+}
 
 internal class LNPopupBarImageAdapter: UIHostingController<Image?> {
 	@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
@@ -217,6 +242,10 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		}
 	}
 	
+	lazy var implicitAnimationController: LNPopupImplicitAnimationController = {
+		return LNPopupImplicitAnimationController(withWindow: view.window!)
+	}()
+	
 	func handlePopupState(_ state: LNPopupState<PopupContent>) {
 		currentPopupState = state
 			
@@ -332,9 +361,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			self.currentPopupState.barCustomizer?.consume(self)?(self.target.popupBar)
 			self.currentPopupState.contentViewCustomizer?.consume(self)?(self.target.popupContentView)
 			
-			NotificationCenter.default.post(name: willNotificationName, object: self.view.window, userInfo: ["LNPopupIgnore": true])
+			self.implicitAnimationController.push()
 			let endImplicitAnims = {
-				NotificationCenter.default.post(name: didNotificationDid, object: self.view.window, userInfo: ["LNPopupIgnore": true])
+				self.implicitAnimationController.pop()
 			}
 			
 			if self.currentPopupState.isBarPresented == true {
@@ -353,6 +382,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 								endImplicitAnims()
 							}
 						}
+					} else {
+						endImplicitAnims()
 					}
 				} else {
 					self.target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen?.wrappedValue ?? false, animated: animated) {
