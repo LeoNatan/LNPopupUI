@@ -148,7 +148,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		readyForHandling = true
 	}
 	
-	fileprivate func cast<T>(value: Any?, to type: T) -> LNPopupUIContentController<T>? where T: View {
+	static fileprivate func cast<T>(_ value: Any?, to type: T) -> LNPopupUIContentController<T>? where T: View {
 		return value as? LNPopupUIContentController<T>
 	}
 	
@@ -226,7 +226,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		}()
 		
 		return {
-			if let popupViewController = self.cast(value: self.popupViewController, to: view.self) {
+			if let popupViewController = LNPopupProxyViewController.cast(self.popupViewController, to: view.self) {
 				popupViewController.rootView = view
 			} else {
 				self.popupViewController = LNPopupUIContentController(rootView: view)
