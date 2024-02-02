@@ -211,6 +211,11 @@ The `wantsDefaultTapGesture`, `wantsDefaultPanGesture` and `wantsDefaultHighligh
 
 <p align="center"><img src="./Supplements/custom_bar.png" width="360"/></p>
 
+The included demo project includes an example custom popup bar scene.
+
+> [!TIP]
+> Only implement a custom popup bar view if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the SwiftUI system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar view of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the many customization APIs to tweak the standard bar styles to fit your app’s design.
+
 #### Context Menus
 
 You can add a context menu to your popup bar by calling the `.popupBarContextMenu()` modifier.
