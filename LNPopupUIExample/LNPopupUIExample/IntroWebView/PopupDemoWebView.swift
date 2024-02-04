@@ -28,7 +28,8 @@ struct PopupDemoWebView: View {
 		GeometryReader { geometry in
 			ZStack(alignment: .top) {
 				WebView(url: url)
-				BlurView()
+				Color(red: 0.12, green:0.14, blue:0.15)
+//				BlurView()
 					.frame(maxWidth: .infinity, minHeight: geometry.safeAreaInsets.top, maxHeight: geometry.safeAreaInsets.top)
 			}
 			.ignoresSafeArea(.all)
