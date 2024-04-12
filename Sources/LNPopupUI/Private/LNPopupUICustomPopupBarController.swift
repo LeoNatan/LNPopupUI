@@ -10,6 +10,8 @@ import UIKit
 import LNPopupController
 
 internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewController {
+	@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
+	
 	fileprivate let hostingChild: UIHostingController<AnyView>
 	var _wantsDefaultTapGestureRecognizer: Bool = true
 	var _wantsDefaultPanGestureRecognizer: Bool = true
@@ -59,8 +61,10 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 		
 		let fittingSize = hostingChild.sizeThatFits(in: size)
 		
-		if preferredContentSize != fittingSize {
-			preferredContentSize = fittingSize
+		size.height = fittingSize.height
+		
+		if preferredContentSize != size {
+			preferredContentSize = size
 		}
 	}
 	
