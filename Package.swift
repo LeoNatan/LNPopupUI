@@ -29,7 +29,7 @@ let package = Package(
             name: "LNPopupUI",
 			dependencies: [
 				.product(name: "LNSwiftUIUtils", package: "LNSwiftUIUtils"),
-				.product(name: "LNPopupController", package: "LNPopupController")
+				.product(name: "LNPopupController-Static", package: "LNPopupController")
 			])
     ]
 )
