@@ -252,6 +252,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		let popupContentHandler = state.content != nil ? viewHandler(state) : viewControllerHandler(state)
 
 		let handler : (Bool) -> Void = { animated in
+			let appearance = self.target.popupBar.standardAppearance.copy()
+			
 			self.target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
 			self.target.popupPresentationDelegate = self
 			
@@ -270,25 +272,25 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				self.target.popupBar.progressViewStyle = barProgressViewStyle
 			}
 			if let barMarqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled?.consume(self) {
-				self.target.popupBar.standardAppearance.marqueeScrollEnabled = barMarqueeScrollEnabled
+				appearance.marqueeScrollEnabled = barMarqueeScrollEnabled
 			}
 			if let hapticFeedbackEnabled = self.currentPopupState.hapticFeedbackEnabled?.consume(self) {
 				self.target.allowPopupHapticFeedbackGeneration = hapticFeedbackEnabled
 			}
 			if let marqueeRate = self.currentPopupState.marqueeRate?.consume(self) {
-				self.target.popupBar.standardAppearance.marqueeScrollRate = marqueeRate
+				appearance.marqueeScrollRate = marqueeRate
 			}
 			if let marqueeDelay = self.currentPopupState.marqueeDelay?.consume(self) {
-				self.target.popupBar.standardAppearance.marqueeScrollDelay = marqueeDelay
+				appearance.marqueeScrollDelay = marqueeDelay
 			}
 			if let coordinateMarqueeAnimations = self.currentPopupState.coordinateMarqueeAnimations?.consume(self) {
-				self.target.popupBar.standardAppearance.coordinateMarqueeScroll = coordinateMarqueeAnimations
+				appearance.coordinateMarqueeScroll = coordinateMarqueeAnimations
 			}
 			if #available(iOS 15.0, *), let popupBarTitleTextAttributes = self.currentPopupState.barTitleTextAttributes?.consume(self) as? AttributeContainer {
-				self.target.popupBar.standardAppearance.titleTextAttributes = popupBarTitleTextAttributes.swiftUIToUIKit
+				appearance.titleTextAttributes = popupBarTitleTextAttributes.swiftUIToUIKit
 			}
 			if #available(iOS 15.0, *), let popupBarSubtitleTextAttributes = self.currentPopupState.barSubtitleTextAttributes?.consume(self) as? AttributeContainer {
-				self.target.popupBar.standardAppearance.subtitleTextAttributes = popupBarSubtitleTextAttributes.swiftUIToUIKit
+				appearance.subtitleTextAttributes = popupBarSubtitleTextAttributes.swiftUIToUIKit
 			}
 			if let shouldExtendPopupBarUnderSafeArea = self.currentPopupState.shouldExtendPopupBarUnderSafeArea?.consume(self) {
 				self.target.shouldExtendPopupBarUnderSafeArea = shouldExtendPopupBarUnderSafeArea
@@ -315,20 +317,22 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				}
 				
 				if let barBackgroundEffect = self.currentPopupState.barBackgroundEffect?.consume(self) {
-					self.target.popupBar.standardAppearance.backgroundEffect = barBackgroundEffect
+					appearance.backgroundEffect = barBackgroundEffect
 				}
 				
 				if let barFloatingBackgroundEffect = self.currentPopupState.barFloatingBackgroundEffect?.consume(self) {
-					self.target.popupBar.standardAppearance.floatingBackgroundEffect = barFloatingBackgroundEffect
+					appearance.floatingBackgroundEffect = barFloatingBackgroundEffect
 				}
 				
 				if let barFloatingBackgroundShadow = self.currentPopupState.barFloatingBackgroundShadow?.consume(self) {
-					self.target.popupBar.standardAppearance.floatingBarBackgroundShadow = barFloatingBackgroundShadow
+					appearance.floatingBarBackgroundShadow = barFloatingBackgroundShadow
 				}
 				
 				if let barImageShadow = self.currentPopupState.barImageShadow?.consume(self) {
-					self.target.popupBar.standardAppearance.imageShadow = barImageShadow
+					appearance.imageShadow = barImageShadow
 				}
+				
+				self.target.popupBar.standardAppearance = appearance
 			}
 			
 			if let contextMenu = self.currentPopupState.contextMenu?.consume(self) {
