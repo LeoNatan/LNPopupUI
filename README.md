@@ -266,8 +266,16 @@ For iPhone 13 Pro and above, you need to add the `CADisableMinimumFrameDurationO
 	paragraphStyle.lineBreakMode = .byTruncatingTail
 
 	popupBar.standardAppearance.backgroundEffect = UIBlurEffect(style: .dark)
-	popupBar.standardAppearance.titleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow ]
-	popupBar.standardAppearance.subtitleTextAttributes = [ .paragraphStyle: paragraphStyle, .font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green ]
+	popupBar.standardAppearance.titleTextAttributes = AttributeContainer([
+    .paragraphStyle: paragraphStyle,
+    .font: UIFont(name: "Chalkduster", size: 14)!,
+    .foregroundColor: UIColor.yellow
+  ])
+  popupBar.standardAppearance.subtitleTextAttributes = AttributeContainer([
+    .paragraphStyle: paragraphStyle,
+    .font: UIFont(name: "Chalkduster", size: 14)!,
+    .foregroundColor: UIColor.yellow
+  ])
 
 	popupBar.tintColor = .yellow
 }
