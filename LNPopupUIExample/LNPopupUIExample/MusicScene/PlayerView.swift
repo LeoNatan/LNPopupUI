@@ -53,10 +53,10 @@ struct PlayerView: View {
 						.frame(minWidth: 0,
 							   maxWidth: .infinity,
 							   alignment: .topLeading)
-						Button(action: {}, label: {
+						Button {} label: {
 							Image(systemName: "ellipsis.circle")
 								.font(.title)
-						})
+						}
 					}
 					if #available(iOS 14.0, *) {
 						ProgressView(value: playbackProgress)
@@ -66,21 +66,21 @@ struct PlayerView: View {
 							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
 					}
 					HStack {
-						Button(action: {}, label: {
+						Button {} label: {
 							Image(systemName: "backward.fill")
-						})
-							.frame(minWidth: 0, maxWidth: .infinity)
-						Button(action: {
+						}.frame(minWidth: 0, maxWidth: .infinity)
+						
+						Button {
 							isPlaying.toggle()
-						}, label: {
+						} label: {
 							Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-						})
-							.font(.system(size: 50, weight: .bold))
-							.frame(minWidth: 0, maxWidth: .infinity, minHeight: 50, maxHeight: 50)
-						Button(action: {}, label: {
+						}
+						.font(.system(size: 50, weight: .bold))
+						.frame(minWidth: 0, maxWidth: .infinity, minHeight: 50, maxHeight: 50)
+						
+						Button {} label: {
 							Image(systemName: "forward.fill")
-						})
-							.frame(minWidth: 0, maxWidth: .infinity)
+						}.frame(minWidth: 0, maxWidth: .infinity)
 					}
 					.font(.system(size: 30, weight: .regular))
 					.padding([.bottom], geometry.size.height * 20.0 / 896.0)
@@ -92,18 +92,17 @@ struct PlayerView: View {
 					.font(.footnote)
 					.foregroundColor(.gray)
 					HStack {
-						Button(action: {}, label: {
+						Button {} label: {
 							Image(systemName: "shuffle")
-						})
-							.frame(minWidth: 0, maxWidth: .infinity)
-						Button(action: {}, label: {
+						}.frame(minWidth: 0, maxWidth: .infinity)
+						
+						Button {} label: {
 							Image(systemName: "airplayaudio")
-						})
-							.frame(minWidth: 0, maxWidth: .infinity)
-						Button(action: {}, label: {
+						}.frame(minWidth: 0, maxWidth: .infinity)
+						
+						Button {} label: {
 							Image(systemName: "repeat")
-						})
-							.frame(minWidth: 0, maxWidth: .infinity)
+						}.frame(minWidth: 0, maxWidth: .infinity)
 					}
 					.font(.body)
 				}
@@ -127,15 +126,15 @@ struct PlayerView: View {
 		.popupImage(Image(song.imageName).resizable())
 		.popupProgress(playbackProgress)
 		.popupBarItems({
-			Button(action: {
+			Button {
 				isPlaying.toggle()
-			}) {
+			} label: {
 				Image(systemName: isPlaying ? "pause.fill" : "play.fill")
 			}
 			
-			Button(action: {
+			Button {
 				print("Next")
-			}) {
+			} label: {
 				Image(systemName: "forward.fill")
 			}
 		})

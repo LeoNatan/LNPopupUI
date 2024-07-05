@@ -394,17 +394,17 @@ struct PopupDemoViewModifier: ViewModifier {
 				.popupProgress(0.5)
 				.popupBarItems {
 					ToolbarItemGroup(placement: .popupBar) {
-						Button(action: {
+						Button {
 							print("Play")
-						}) {
+						} label: {
 							Image(systemName: "play.fill")
 						}.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				} trailing: {
 					ToolbarItemGroup(placement: .popupBar) {
-						Button(action: {
+						Button {
 							print("Next")
-						}) {
+						} label: {
 							Image(systemName: "forward.fill")
 						}.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}

@@ -44,9 +44,9 @@ struct RandomTitlesListView : View {
 	var body: some View {
 		MaterialNavigationStack {
 			List(songs) { song in
-				Button(action: {
+				Button {
 					onSongSelect(song)
-				}) {
+				} label: {
 					HStack(spacing: 20) {
 						Image(song.imageName)
 							.resizable()

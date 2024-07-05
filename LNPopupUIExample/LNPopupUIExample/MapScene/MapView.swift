@@ -80,13 +80,13 @@ struct CustomBarMapView: View {
 			Map(coordinateRegion: $region)
 				.ignoresSafeArea()
 				.animation(.easeInOut, value: region)
-			Button(action: {
+			Button {
 				onDismiss()
-			}, label: {
+			} label: {
 				Image(systemName: "chevron.backward")
 					.renderingMode(.template)
 					.font(.title2)
-			})
+			}
 			.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
 			.padding()
 		}
@@ -101,12 +101,12 @@ struct CustomBarMapView: View {
 					Spacer()
 					
 				}
-				Button(action: {
+				Button {
 					isPopupOpen.toggle()
-				}, label: {
+				} label: {
 					Image(systemName: "chevron.up")
 						.renderingMode(.template)
-				})
+				}
 				.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
 				.padding()
 			}
