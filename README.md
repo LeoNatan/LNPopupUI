@@ -300,3 +300,4 @@ The library uses:
 Additionally, the demo project uses:
 
 * [LoremIpsum](https://github.com/lukaskubanek/LoremIpsum) Copyright (c) 2013-2020 Lukas Kubanek
+* [swiftui-introspect](https://github.com/siteline/swiftui-introspect) Copyright 2019 Timber Software

@@ -34,7 +34,7 @@ struct NavDemoView : View {
 	
 	var body: some View {
 		MaterialNavigationStack {
-			SafeAreaDemoView(colorSeed:"tab_109", includeToolbar: true, includeLink: true, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
+			SafeAreaDemoView(colorSeed:"nil", includeToolbar: true, includeLink: true, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: false, onDismiss: onDismiss)
 				.navigationBarTitle("Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {

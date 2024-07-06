@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3906A9F52C38C2560071EDAA /* SwiftUIIntrospect-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */; };
 		390E2B6826F80B510076539D /* TabViewCustomLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E2B6726F80B510076539D /* TabViewCustomLabels.swift */; };
 		390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */; };
 		393841D82AA13A2700460600 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 393841D72AA13A2700460600 /* CompactSlider */; };
@@ -92,6 +93,7 @@
 				3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */,
 				393841D82AA13A2700460600 /* CompactSlider in Frameworks */,
 				39D6C8C62B2D06DA00F53E70 /* LNTouchVisualizer in Frameworks */,
+				3906A9F52C38C2560071EDAA /* SwiftUIIntrospect-Static in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +246,7 @@
 				394E1AAB276C137400C5BE31 /* ActivityView */,
 				393841D72AA13A2700460600 /* CompactSlider */,
 				39D6C8C52B2D06DA00F53E70 /* LNTouchVisualizer */,
+				3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */,
 			);
 			productName = LNPopupUIExample;
 			productReference = 395781D124DC5D2700A604D1 /* LNPopupUIExample.app */;
@@ -279,6 +282,7 @@
 				394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */,
 				393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */,
 				39D6C8C42B2D06DA00F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */,
+				3906A9F32C38C2560071EDAA /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
 			productRefGroup = 395781D224DC5D2700A604D1 /* Products */;
 			projectDirPath = "";
@@ -560,6 +564,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3906A9F32C38C2560071EDAA /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 		393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/buh/CompactSlider";
@@ -595,6 +607,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3906A9F32C38C2560071EDAA /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = "SwiftUIIntrospect-Static";
+		};
 		393841D72AA13A2700460600 /* CompactSlider */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */;

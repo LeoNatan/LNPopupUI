@@ -9,6 +9,7 @@ import SwiftUI
 import LNPopupUI
 import LNPopupController
 import LoremIpsum
+import SwiftUIIntrospect
 
 extension NSParagraphStyle: @unchecked Sendable {}
 
@@ -445,8 +446,17 @@ fileprivate struct FixBottomBarAppearanceModifier: ViewModifier {
 	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
 	
 	func body(content: Content) -> some View {
-		content.toolbarBackground(barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17 ? Material.thin : Material.bar, for: .tabBar, .bottomBar, .navigationBar)
-//		content.toolbarBackground(.red, for: .tabBar, .bottomBar, .navigationBar)
+		content.introspect(.tabView, on: .iOS(.v16, .v17, .v18), scope: .ancestor) { tabBarController in
+			let isFloating = barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
+			tabBarController.tabBar.standardAppearance.backgroundEffect = UIBlurEffect(style: isFloating ? .systemThinMaterial : .systemChromeMaterial)
+		}.introspect(.navigationStack, on: .iOS(.v16, .v17, .v18), scope: .ancestor) { navBarController in
+			let isFloating = barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
+			let effect = UIBlurEffect(style: isFloating ? .systemThinMaterial : .systemChromeMaterial)
+			navBarController.navigationBar.standardAppearance.backgroundEffect = effect
+			navBarController.navigationBar.compactAppearance?.backgroundEffect = effect
+			navBarController.toolbar.standardAppearance.backgroundEffect = effect
+			navBarController.toolbar.compactAppearance?.backgroundEffect = effect
+		}
 	}
 }
 
