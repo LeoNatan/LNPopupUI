@@ -334,11 +334,11 @@ struct ContextMenuModifier: ViewModifier {
 }
 
 struct CustomTextLabelsModifier: ViewModifier {
-	let includeCustomTextLabels: Bool
+	@AppStorage(.enableCustomLabels, store: .settings) var enableCustomLabels: Bool = false
 	let demoContent: DemoContent
 	
 	func body(content: Content) -> some View {
-		if includeCustomTextLabels {
+		if enableCustomLabels {
 			content.popupTitle {
 				Text(demoContent.title).foregroundColor(.orange).fontWeight(.black)
 			} subtitle: {
@@ -355,7 +355,6 @@ struct PopupDemoViewModifier: ViewModifier {
 	let isBarPresented: Binding<Bool>
 	let isPopupOpen: Binding<Bool>?
 	let includeContextMenu: Bool
-	let includeCustomTextLabels: Bool
 	
 	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
 	@AppStorage(.interactionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
@@ -390,7 +389,7 @@ struct PopupDemoViewModifier: ViewModifier {
 			print("Closed")
 		}) {
 			SafeAreaDemoView(colorSeed: "Popup", offset: closeButtonStyle != .round, isPopupOpen: isPopupOpen)
-				.modifier(CustomTextLabelsModifier(includeCustomTextLabels: includeCustomTextLabels, demoContent: demoContent))
+				.modifier(CustomTextLabelsModifier(demoContent: demoContent))
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
 				.popupBarItems {
@@ -428,8 +427,8 @@ struct PopupDemoViewModifier: ViewModifier {
 }
 
 extension View {
-	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool, includeCustomTextLabels: Bool = false) -> some View {
-		return self.modifier(PopupDemoViewModifier(demoContent: demoContent, isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, includeContextMenu: includeContextMenu, includeCustomTextLabels: includeCustomTextLabels))
+	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool) -> some View {
+		return self.modifier(PopupDemoViewModifier(demoContent: demoContent, isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, includeContextMenu: includeContextMenu))
 	}
 }
 

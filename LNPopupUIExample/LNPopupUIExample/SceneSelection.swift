@@ -25,13 +25,23 @@ fileprivate struct CellPaddedButton: View {
 	}
 }
 
+fileprivate struct LNHeaderFooterView: View {
+	let content: Text
+	public init(_ content: String) {
+		self.content = Text(content)
+	}
+	
+	var body: some View {
+		content.font(.footnote)
+	}
+}
+
 struct SceneSelection: View {
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 	@Environment(\.verticalSizeClass) var verticalSizeClass
 	
 	@State var tabnavPresented: Bool = false
 	@State var tabPresented: Bool = false
-	@State var tabCustomPresented: Bool = false
 	@State var navPresented: Bool = false
 	@State var viewPresented: Bool = false
 	@State var viewSheetPresented: Bool = false
@@ -72,14 +82,6 @@ struct SceneSelection: View {
 					.fullScreenCover(isPresented: $tabPresented, content: {
 						TabDemoView(demoContent: DemoContent()) {
 							tabPresented.toggle()
-						}
-					})
-					CellPaddedButton("Tab View (Custom Labels)") {
-						tabCustomPresented.toggle()
-					}
-					.fullScreenCover(isPresented: $tabCustomPresented, content: {
-						TabViewCustomLabels(demoContent: DemoContent()) {
-							tabCustomPresented.toggle()
 						}
 					})
 					CellPaddedButton("Navigation View") {
@@ -133,9 +135,9 @@ struct SceneSelection: View {
 						}
 					}
 				} header: {
-					Text("Standard Scenes")
+					LNHeaderFooterView("Standard Scenes")
 				} footer: {
-					Text("Presents a standard test scene with a popup bar.")
+					LNHeaderFooterView("Presents a standard test scene with a popup bar.")
 				}
 				Section {
 					CellPaddedButton("Music") {
@@ -147,9 +149,9 @@ struct SceneSelection: View {
 						}
 					})
 				} header: {
-					Text("Demo Apps")
+					LNHeaderFooterView("Demo Apps")
 				} footer: {
-					Text("Presents a rudimentary recreation of a music app.")
+					LNHeaderFooterView("Presents a rudimentary recreation of a music app.")
 				}
 				Section {
 					CellPaddedButton("Maps") {
@@ -161,9 +163,9 @@ struct SceneSelection: View {
 						}
 					})
 				} header: {
-					Text("Custom Popup Bar")
+					LNHeaderFooterView("Custom Popup Bar")
 				} footer: {
-					Text("Presents a scene with a custom popup bar view and a UIKit popup content controller")
+					LNHeaderFooterView("Presents a scene with a custom popup bar view and a UIKit popup content controller")
 				}
 				
 				if enableExternalScenes {
@@ -177,9 +179,9 @@ struct SceneSelection: View {
 							}
 						})
 					} header: {
-						Text("External Libraries—Gestures")
+						LNHeaderFooterView("External Libraries—Gestures")
 					} footer: {
-						Text("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")
+						LNHeaderFooterView("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")
 					}
 				}
 			}
