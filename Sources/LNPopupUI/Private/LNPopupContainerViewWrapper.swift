@@ -94,6 +94,18 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 	}
 }
 
+internal extension LNPopupContainerViewWrapper where PopupContent == Never {
+	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
+		self._isBarPresented = isBarPresented
+		self.isPopupOpen = isOpen
+		passthroughContent = content
+		self.popupContent = nil
+		self.popupContentController = popupContentController
+		self.onOpen = onOpen
+		self.onClose = onClose
+	}
+}
+
 internal class LNPopupUIInteractionContainerView : UIView {
 }
 

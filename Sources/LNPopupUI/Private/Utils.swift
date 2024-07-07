@@ -9,4 +9,3 @@ import UIKit
 import SwiftUI
 
 @objc(__LNPopupUI) fileprivate class __LNPopupUI: NSObject {}
-
