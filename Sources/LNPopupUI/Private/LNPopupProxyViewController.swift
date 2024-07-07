@@ -57,84 +57,12 @@ internal class LNPopupBarImageAdapter: UIHostingController<Image?> {
 	}
 }
 
-internal class LNPopupBarTitleViewAdapter: UIHostingController<TitleContentView> {
-	@objc(_ln_popupUIRequiresZeroInsets) var popupUIRequiresZeroInsets: Bool {
-		true
-	}
-}
-
-internal class LNPopupBarItemAdapter: UIHostingController<AnyView> {
-	let updater: ([UIBarButtonItem]?) -> Void
-	var doneUpdating = false
-	
-	@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
-	
-	@objc var overrideSizeClass: UIUserInterfaceSizeClass = .regular {
-		didSet {
-			self.setValue(UITraitCollection(verticalSizeClass: overrideSizeClass), forKey: "overrideTraitCollection")
-		}
-	}
-	
-	required init(rootView: AnyView, updater: @escaping ([UIBarButtonItem]?) -> Void) {
-		self.updater = updater
-		
-		super.init(rootView: rootView)
-		
-		self.setValue(UITraitCollection(verticalSizeClass: overrideSizeClass), forKey: "overrideTraitCollection")
-	}
-	
-	required dynamic init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-	
-	override func addChild(_ childController: UIViewController) {
-		super.addChild(childController)
-	}
-	
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		
-		let nav = self.children.first as! UINavigationController
-		self.updater(nav.toolbar.items)
-	}
-}
-
-internal struct TitleContentView : View {
-	@Environment(\.sizeCategory) var sizeCategory
-	@Environment(\.colorScheme) var colorScheme
-	
-	let titleView: AnyView
-	let subtitleView: AnyView?
-	let popupBar: LNPopupBar
-	
-	init(titleView: AnyView, subtitleView: AnyView?, popupBar: LNPopupBar) {
-		self.titleView = titleView
-		self.subtitleView = subtitleView
-		self.popupBar = popupBar
-	}
-	
-	var body: some View {
-		let titleFont = popupBar.value(forKey: "_titleFont") as! CTFont
-		let subtitleFont = popupBar.value(forKey: "_subtitleFont") as! CTFont
-		let titleColor = popupBar.value(forKey: "_titleColor") as! UIColor
-		let subtitleColor = popupBar.value(forKey: "_subtitleColor") as! UIColor
-		
-		VStack(spacing: 2) {
-			titleView.font(Font(titleFont)).foregroundColor(Color(titleColor))
-			subtitleView.font(Font(subtitleFont)).foregroundColor(Color(subtitleColor))
-		}.lineLimit(1)
-	}
-}
-
 internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingController<Content>, LNPopupPresentationDelegate, UIContextMenuInteractionDelegate where Content: View, PopupContent: View {
 	var currentPopupState: LNPopupState<PopupContent>! = nil
 	var popupViewController: UIViewController?
 	
 	var popupContextMenuViewController: UIHostingController<AnyView>?
 	var popupContextMenuInteraction: UIContextMenuInteraction?
-	
-	var leadingBarItemsController: LNPopupBarItemAdapter? = nil
-	var trailingBarItemsController: LNPopupBarItemAdapter? = nil
 	
 	weak var interactionContainerView: UIView?
 	
@@ -176,69 +104,14 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		return children.first ?? self
 	}
 	
-	@available(iOS 14.0, *)
-	fileprivate func createOrUpdateBarItemAdapter(_ vc: inout LNPopupBarItemAdapter?, userNavigationViewWrapper anyView: AnyView, barButtonUpdater: @escaping ([UIBarButtonItem]?) -> Void) {
-		UIView.performWithoutAnimation {
-			if let vc = vc {
-				vc.rootView = anyView
-			} else {
-				vc = LNPopupBarItemAdapter(rootView: anyView, updater: barButtonUpdater)
-			}
-		}
-	}
-	
-	@ViewBuilder func titleContentView(fromTitleView titleView: AnyView, subtitleView: AnyView?, target: UIViewController) -> TitleContentView {
-		TitleContentView(titleView: titleView, subtitleView: subtitleView, popupBar: target.popupBar)
-	}
-	
 	func viewHandler(_ state: LNPopupState<PopupContent>) -> (() -> Void) {
-		let view = {
-			return self.currentPopupState.content!()
-				.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
-					self?.popupViewController?.popupItem.title = titleData?.title
-					self?.popupViewController?.popupItem.subtitle = titleData?.subtitle
-				}
-				.onPreferenceChange(LNPopupTextTitlePreferenceKey.self) { [weak self] titleData in
-					guard let self = self else {
-						return
-					}
-					
-					if let titleData = titleData {
-						let adapter = LNPopupBarTitleViewAdapter(rootView: titleContentView(fromTitleView: titleData.titleView, subtitleView: titleData.subtitleView, target: target))
-						self.popupViewController?.popupItem.setValue(adapter.view, forKey: "swiftuiTitleContentView")
-					} else {
-						self.popupViewController?.popupItem.setValue(nil, forKey: "swiftuiTitleContentView")
-					}
-				}
-				.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
-					if let imageController = self?.popupViewController?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
-						imageController.rootView = image
-					} else {
-						self?.popupViewController?.popupItem.setValue(image != nil ? LNPopupBarImageAdapter(rootView: image) : nil, forKey: "swiftuiImageController")
-					}
-				}
-				.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
-					self?.popupViewController?.popupItem.progress = progress ?? 0.0
-				}
-				.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
-					if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
-						self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView, barButtonUpdater: { popupItem.leadingBarButtonItems = $0 })
-						popupItem.setValue(self.leadingBarItemsController!, forKey: "swiftuiHiddenLeadingController")
-					}
-				}
-				.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
-					if let self = self, let anyView = view?.anyView, let popupItem = self.popupViewController?.popupItem {
-						self.createOrUpdateBarItemAdapter(&self.trailingBarItemsController, userNavigationViewWrapper: anyView, barButtonUpdater: { popupItem.trailingBarButtonItems = $0 })
-						popupItem.setValue(self.trailingBarItemsController!, forKey: "swiftuiHiddenTrailingController")
-					}
-				}
-		}()
+		let view = self.currentPopupState.content!()
 		
 		return {
 			if let popupViewController = LNPopupProxyViewController.cast(self.popupViewController, to: view.self) {
-				popupViewController.rootView = view
+				popupViewController.popupContentRootView = view
 			} else {
-				self.popupViewController = LNPopupUIContentController(rootView: view)
+				self.popupViewController = LNPopupUIContentController(popupContentRootView: view)
 			}
 		}
 	}
@@ -469,8 +342,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		popupViewController = nil
 		popupContextMenuViewController = nil
 		popupContextMenuInteraction = nil
-		leadingBarItemsController = nil
-		trailingBarItemsController = nil
 		interactionContainerView = nil
 	}
 	
