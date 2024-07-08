@@ -1,87 +1,19 @@
 //
-//  LNPopupUIContentController.swift
+//  LNPopupHostingContentController.swift
 //  LNPopupUI
 //
-//  Created by Leo Natan on 8/6/20.
+//  Created by Léo Natan on 8/6/20.
 //  
 //
 
 import SwiftUI
 import UIKit
 
-internal class LNPopupUIContentController<Content> : UIHostingController<AnyView> where Content: View {
+public class LNPopupHostingContentController<PopupContent> : UIHostingController<AnyView> where PopupContent: View {
 	@objc var _ln_interactionLimitRect: CGRect = .zero
 	
-	internal class LNPopupBarTitleViewAdapter: UIHostingController<TitleContentView> {
-		@objc(_ln_popupUIRequiresZeroInsets) var popupUIRequiresZeroInsets: Bool {
-			true
-		}
-	}
-	
-	internal class LNPopupBarItemAdapter: UIHostingController<AnyView> {
-		let updater: ([UIBarButtonItem]?) -> Void
-		var doneUpdating = false
-		
-		@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
-		
-		@objc var overrideSizeClass: UIUserInterfaceSizeClass = .regular {
-			didSet {
-				self.setValue(UITraitCollection(verticalSizeClass: overrideSizeClass), forKey: "overrideTraitCollection")
-			}
-		}
-		
-		required init(rootView: AnyView, updater: @escaping ([UIBarButtonItem]?) -> Void) {
-			self.updater = updater
-			
-			super.init(rootView: rootView)
-			
-			self.setValue(UITraitCollection(verticalSizeClass: overrideSizeClass), forKey: "overrideTraitCollection")
-		}
-		
-		required dynamic init?(coder aDecoder: NSCoder) {
-			fatalError("init(coder:) has not been implemented")
-		}
-		
-		override func addChild(_ childController: UIViewController) {
-			super.addChild(childController)
-		}
-		
-		override func viewDidLayoutSubviews() {
-			super.viewDidLayoutSubviews()
-			
-			let nav = self.children.first as! UINavigationController
-			self.updater(nav.toolbar.items)
-		}
-	}
-	
-	internal struct TitleContentView : View {
-		@Environment(\.sizeCategory) var sizeCategory
-		@Environment(\.colorScheme) var colorScheme
-		
-		let titleView: AnyView
-		let subtitleView: AnyView?
-		let popupBar: LNPopupBar
-		
-		init(titleView: AnyView, subtitleView: AnyView?, popupBar: LNPopupBar) {
-			self.titleView = titleView
-			self.subtitleView = subtitleView
-			self.popupBar = popupBar
-		}
-		
-		var body: some View {
-			let titleFont = popupBar.value(forKey: "_titleFont") as! CTFont
-			let subtitleFont = popupBar.value(forKey: "_subtitleFont") as! CTFont
-			let titleColor = popupBar.value(forKey: "_titleColor") as! UIColor
-			let subtitleColor = popupBar.value(forKey: "_subtitleColor") as! UIColor
-			
-			VStack(spacing: 2) {
-				titleView.font(Font(titleFont)).foregroundColor(Color(titleColor))
-				subtitleView.font(Font(subtitleFont)).foregroundColor(Color(subtitleColor))
-			}.lineLimit(1)
-		}
-	}
-	
-	@ViewBuilder func titleContentView(fromTitleView titleView: AnyView, subtitleView: AnyView?, target: UIViewController) -> TitleContentView {
+	@ViewBuilder
+	fileprivate func titleContentView(fromTitleView titleView: AnyView, subtitleView: AnyView?, target: UIViewController) -> TitleContentView {
 		TitleContentView(titleView: titleView, subtitleView: subtitleView, popupBar: target.popupBar)
 	}
 	
@@ -99,7 +31,7 @@ internal class LNPopupUIContentController<Content> : UIHostingController<AnyView
 	var leadingBarItemsController: LNPopupBarItemAdapter? = nil
 	var trailingBarItemsController: LNPopupBarItemAdapter? = nil
 	
-	fileprivate func transform(_ popupContentRootView: Content) -> AnyView {
+	fileprivate func transform(_ popupContentRootView: PopupContent) -> AnyView {
 		return AnyView(popupContentRootView.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
 			self?.popupItem.title = titleData?.title
 			self?.popupItem.subtitle = titleData?.subtitle
@@ -142,13 +74,13 @@ internal class LNPopupUIContentController<Content> : UIHostingController<AnyView
 			})
 	}
 	
-	required init(popupContentRootView: Content) {
-		self.popupContentRootView = popupContentRootView
+	public required init(@ViewBuilder content: () -> PopupContent) {
+		self.popupContentRootView = content()
 		super.init(rootView: AnyView(EmptyView()))
-		rootView = transform(popupContentRootView)
+		rootView = transform(self.popupContentRootView)
 	}
 	
-	var popupContentRootView: Content {
+	public var popupContentRootView: PopupContent {
 		didSet {
 			rootView = transform(popupContentRootView)
 		}
@@ -177,10 +109,10 @@ internal class LNPopupUIContentController<Content> : UIHostingController<AnyView
 	}
 	
 	private func interactionContainerSubview() -> UIView? {
-		return LNPopupUIContentController.firstSubview(of: view, ofType: LNPopupUIInteractionContainerView.self)
+		return LNPopupHostingContentController.firstSubview(of: view, ofType: LNPopupUIInteractionContainerView.self)
 	}
 	
-	override func viewDidLayoutSubviews() {
+	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
 		let viewToLimitInteractionTo = interactionContainerSubview() ?? super.viewForPopupInteractionGestureRecognizer

@@ -92,7 +92,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		readyForHandling = true
 	}
 	
-	static fileprivate func cast<T>(_ value: Any?, to type: T) -> LNPopupHostingContentController<T>? where T: View {
+	static fileprivate func cast<T: View>(_ value: Any?, to type: T) -> LNPopupHostingContentController<T>? {
 		return value as? LNPopupHostingContentController<T>
 	}
 	
@@ -111,7 +111,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			if let popupViewController = LNPopupProxyViewController.cast(self.popupViewController, to: view.self) {
 				popupViewController.popupContentRootView = view
 			} else {
-				self.popupViewController = LNPopupHostingContentController(popupContentRootView: view)
+				self.popupViewController = LNPopupHostingContentController(content: self.currentPopupState.content!)
 			}
 		}
 	}
@@ -184,12 +184,12 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					target.popupBar.inheritsAppearanceFromDockingView = inheritsAppearanceFromDockingView
 				}
 				if let customBarView = self.currentPopupState.customBarView?.consume(self) {
-					let rv: LNPopupUICustomPopupBarController
-					if let customController = target.popupBar.customBarViewController as? LNPopupUICustomPopupBarController {
+					let rv: LNPopupCustomBarHostingController<AnyView>
+					if let customController = target.popupBar.customBarViewController as? LNPopupCustomBarHostingController<AnyView> {
 						rv = customController
-						rv.setAnyView(customBarView.popupBarCustomBarView)
+						rv.content = customBarView.popupBarCustomBarView
 					} else {
-						rv = LNPopupUICustomPopupBarController(anyView: customBarView.popupBarCustomBarView)
+						rv = LNPopupCustomBarHostingController(content: { customBarView.popupBarCustomBarView })
 						target.popupBar.customBarViewController = rv
 					}
 					rv._wantsDefaultTapGestureRecognizer = customBarView.wantsDefaultTapGesture
@@ -278,7 +278,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 						endImplicitAnims()
 					}
 				} else {
-					target.presentPopupBar(withContentViewController: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen?.wrappedValue ?? false, animated: animated) {
+					target.presentPopupBar(with: self.popupViewController!, openPopup: self.currentPopupState.isPopupOpen?.wrappedValue ?? false, animated: animated) {
 						endImplicitAnims()
 					}
 				}

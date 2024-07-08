@@ -76,16 +76,16 @@ TabView {
         .popupBarItems {
             ToolbarItemGroup(placement: .popupBar) {
                 Button {
-					isPlaying.toggle()
-				} label: {
-					Image(systemName: "play.fill")
-				}
+                    isPlaying.toggle()
+                } label: {
+                    Image(systemName: "play.fill")
+                }
             
                 Button {
-					nextSong()
-				} label: {
-					Image(systemName: "forward.fill")
-				}
+                    nextSong()
+                } label: {
+                    Image(systemName: "forward.fill")
+                }
             }
         }
 }
@@ -247,23 +247,6 @@ You can add a context menu to your popup bar by calling the `.popupBarContextMen
 
 For iPhone 13 Pro and above, you need to add the `CADisableMinimumFrameDurationOnPhone` key to your Info.plist and set it to `true`. See [Optimizing ProMotion Refresh Rates for iPhone 13 Pro and iPad Pro](https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro?language=objc) for more information. `LNPopupUI` will log a single warning message in the console if this key is missing, or is set to `false`.
 
-#### Low-Level Bar Customization
-
-`LNPopupUI` exposes the `.popupBarCustomizer()` modifier, which allows lower-level customization through the UIKit `LNPopupBar` object.
-
-```swift
-.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view
-}
-.popupBarCustomizer { popupBar in
-    popupBar.popupOpenGestureRecognizer.delegate = self.gestureRecognizerDelegateHelper
-    popupBar.barHighlightGestureRecognizer.isEnabled = false
-}
-```
-
-> [!TIP]
-> The `.popupBarCustomizer()` modifier exposes the underlying `LNPopupBar` from the `LNPopupController` framework. This framework allows modifying properties that are not exposed natively in SwiftUI, such as direct gesture recognizer control. While it is possible to customize the appearance the bar using this modifier, this API only accepts UIKit data types, such as `UIColor` and `UIFont`. Instead, use the SwiftUI-native customization APIs, which support SwiftUI-native data types, such as `Color` and `Font`, and are better integrated with rest of the SwiftUI view model.
-
 #### Full Right-to-Left Support
 
 The library has full right-to-left support.
@@ -291,6 +274,57 @@ The `wantsDefaultTapGesture`, `wantsDefaultPanGesture` and `wantsDefaultHighligh
 > Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the SwiftUI view system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar view of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the [many customization APIs](#popup-bar-customization) to tweak the standard bar styles to fit your app’s design.
 
 The included demo project includes an example custom popup bar scene.
+
+#### Low-Level Bar Customization
+
+`LNPopupUI` exposes the `.popupBarCustomizer()` modifier, which allows lower-level customization through the UIKit `LNPopupBar` object.
+
+```swift
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+    //Popup content view
+}
+.popupBarCustomizer { popupBar in
+    popupBar.popupOpenGestureRecognizer.delegate = self.gestureRecognizerDelegateHelper
+    popupBar.barHighlightGestureRecognizer.isEnabled = false
+}
+```
+
+> [!TIP]
+> The `.popupBarCustomizer()` modifier exposes the underlying `LNPopupBar` from the `LNPopupController` framework. This framework allows modifying properties that are not exposed natively in SwiftUI, such as direct gesture recognizer control. While it is possible to customize the appearance the bar using this modifier, this API only accepts UIKit data types, such as `UIColor` and `UIFont`. Instead, use the SwiftUI-native customization APIs, which support SwiftUI-native data types, such as `Color` and `Font`, and are better integrated with rest of the SwiftUI view model.
+
+### `LNPopupController` additions
+
+In addition to the main SwiftUI functionality, the library offers extensions to `LNPopupController` for hosting SwiftUI views as popup content and custom popup bar content.
+
+Use `LNPopupHostingContentController` to create a popup content hosting controller:
+
+```swift
+let controller = LNPopupHostingContentController {
+    MusicPlayer()
+        .popupTitle(currentSong.name, subtitle: currentSong.album.name)
+        .popupImage(currentSong.artwork ?? currentSong.album.artwork)
+}
+
+tabBarController?.presentPopupBar(with: controller, animated: true)
+```
+
+Or use `UIViewController.presentPopupBar(with:animated:)` directly:
+
+```swift
+tabBarController?.presentPopupBar(with: {
+    MusicPlayer()
+        .popupTitle(currentSong.name, subtitle: currentSong.album.name)
+        .popupImage(currentSong.artwork ?? currentSong.album.artwork)
+}, animated: true)
+```
+
+Use `LNPopupCustomBarHostingController` to create a custom popup bar hosting controller:
+
+```swift
+tabBarController?.popupBar.customBarViewController = LNPopupCustomBarHostingController {
+    MyCustomPlaybackControlsView()
+}
+```
 
 ## Acknowledgements
 

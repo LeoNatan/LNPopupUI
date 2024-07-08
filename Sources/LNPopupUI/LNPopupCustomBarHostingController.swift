@@ -1,5 +1,5 @@
 //
-//  LNPopupUICustomPopupBarController.swift
+//  LNPopupCustomBarHostingController.swift
 //  LNPopupUI
 //
 //  Created by Léo Natan on 9/3/20.
@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 import LNPopupController
 
-internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewController {
+internal class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopupCustomBarViewController {
 	@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
 	
 	fileprivate let hostingChild: UIHostingController<AnyView>
@@ -39,7 +39,7 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 		return _wantsDefaultHighlightGestureRecognizer
 	}
 	
-	fileprivate class func anyViewIgnoring(_ anyView: AnyView) -> AnyView {
+	fileprivate class func anyViewIgnoring(_ anyView: CustomBarContent) -> AnyView {
 		let anyViewIgnoring: AnyView
 		if #available(iOS 14, *) {
 			anyViewIgnoring = AnyView(erasing: anyView.ignoresSafeArea(.keyboard))
@@ -68,12 +68,14 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 		}
 	}
 	
-	func setAnyView(_ anyView: AnyView) {
-		hostingChild.rootView = LNPopupUICustomPopupBarController.anyViewIgnoring(anyView)
-		
-		hostingChild.view.setNeedsLayout()
-		hostingChild.view.layoutIfNeeded()
-		updatePreferredContentSize()
+	var content: CustomBarContent {
+		didSet {
+			hostingChild.rootView = LNPopupCustomBarHostingController.anyViewIgnoring(content)
+			
+			hostingChild.view.setNeedsLayout()
+			hostingChild.view.layoutIfNeeded()
+			updatePreferredContentSize()
+		}
 	}
 	
 	override func viewDidLayoutSubviews() {
@@ -82,8 +84,10 @@ internal class LNPopupUICustomPopupBarController : LNPopupCustomBarViewControlle
 		updatePreferredContentSize()
 	}
 	
-	required init(anyView: AnyView) {
-		hostingChild = UIHostingController(rootView: LNPopupUICustomPopupBarController.anyViewIgnoring(anyView))
+	required init(@ViewBuilder content: @escaping () -> CustomBarContent) {
+		let content = content()
+		self.content = content
+		hostingChild = UIHostingController(rootView: LNPopupCustomBarHostingController.anyViewIgnoring(content))
 		
 		super.init(nibName: nil, bundle: nil)
 		
