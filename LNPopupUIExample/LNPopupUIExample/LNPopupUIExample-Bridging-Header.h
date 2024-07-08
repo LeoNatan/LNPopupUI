@@ -2,7 +2,7 @@
 //  LNPopupUIExample-Bridging-Header.h
 //  LNPopupUIExample
 //
-//  Created by Leo Natan on 3/19/21.
+//  Created by Léo Natan on 3/19/21.
 //
 
 #ifndef LNPopupUIExample_Bridging_Header_h

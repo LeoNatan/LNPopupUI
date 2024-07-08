@@ -2,7 +2,7 @@
 //  MusicView.swift
 //  LNPopupUIExample
 //
-//  Created by Leo Natan on 8/6/20.
+//  Created by Léo Natan on 8/6/20.
 //
 
 import SwiftUI

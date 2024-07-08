@@ -2,7 +2,7 @@
 //  NavDemoView.swift
 //  LNPopupUIExample
 //
-//  Created by Leo Natan on 9/5/20.
+//  Created by Léo Natan on 9/5/20.
 //
 
 import SwiftUI

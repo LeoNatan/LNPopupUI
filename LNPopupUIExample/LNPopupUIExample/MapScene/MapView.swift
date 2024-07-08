@@ -2,7 +2,7 @@
 //  MapView.swift
 //  LNPopupUIExample
 //
-//  Created by Leo Natan on 9/3/20.
+//  Created by Léo Natan on 9/3/20.
 //
 
 import SwiftUI

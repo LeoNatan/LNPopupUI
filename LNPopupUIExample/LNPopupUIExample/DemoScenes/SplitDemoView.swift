@@ -2,7 +2,7 @@
 //  SplitDemoView.swift
 //  LNPopupUIExample
 //
-//  Created by Leo Natan on 23/10/2023.
+//  Created by Léo Natan on 23/10/2023.
 //
 
 import SwiftUI

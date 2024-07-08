@@ -2,7 +2,7 @@
 //  LNPopupUIExampleApp.swift
 //  LNPopupUIExample
 //
-//  Created by Leo Natan on 10/11/22.
+//  Created by Léo Natan on 10/11/22.
 //
 
 import SwiftUI

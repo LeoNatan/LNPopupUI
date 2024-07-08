@@ -2,7 +2,7 @@
 //  Color+SeedColors.swift
 //  LNPopupUIExample
 //
-//  Created by Leo Natan on 10/31/20.
+//  Created by Léo Natan on 10/31/20.
 //
 
 import SwiftUI
