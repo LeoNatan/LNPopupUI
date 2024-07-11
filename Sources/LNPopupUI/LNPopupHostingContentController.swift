@@ -36,42 +36,38 @@ public class LNPopupHostingContentController<PopupContent> : UIHostingController
 			self?.popupItem.title = titleData?.title
 			self?.popupItem.subtitle = titleData?.subtitle
 		}.onPreferenceChange(LNPopupTextTitlePreferenceKey.self) { [weak self] titleData in
-				guard let self = self else {
-					return
-				}
-				
-				if let titleData = titleData {
-					let adapter = LNPopupBarTitleViewAdapter(rootView: titleContentView(fromTitleView: titleData.titleView, subtitleView: titleData.subtitleView, target: self))
-					self.popupItem.setValue(adapter.view, forKey: "swiftuiTitleContentView")
-				} else {
-					self.popupItem.setValue(nil, forKey: "swiftuiTitleContentView")
-				}
+			guard let self = self else {
+				return
 			}
-			.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
-				if let imageController = self?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
-					imageController.rootView = image
-				} else {
-					self?.popupItem.setValue(image != nil ? LNPopupBarImageAdapter(rootView: image) : nil, forKey: "swiftuiImageController")
-				}
+			
+			if let titleData = titleData {
+				let adapter = LNPopupBarTitleViewAdapter(rootView: titleContentView(fromTitleView: titleData.titleView, subtitleView: titleData.subtitleView, target: self))
+				self.popupItem.setValue(adapter.view, forKey: "swiftuiTitleContentView")
+			} else {
+				self.popupItem.setValue(nil, forKey: "swiftuiTitleContentView")
 			}
-			.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
-				self?.popupItem.progress = progress ?? 0.0
+		}.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
+			if let imageController = self?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
+				imageController.rootView = image
+			} else {
+				self?.popupItem.setValue(image != nil ? LNPopupBarImageAdapter(rootView: image) : nil, forKey: "swiftuiImageController")
 			}
-			.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
-				if let self = self, let anyView = view?.anyView {
-					self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in self?.popupItem.leadingBarButtonItems = $0
-					}
-					popupItem.setValue(self.leadingBarItemsController!, forKey: "swiftuiHiddenLeadingController")
+		}.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
+			self?.popupItem.progress = progress ?? 0.0
+		}.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
+			if let self = self, let anyView = view?.anyView {
+				self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in self?.popupItem.leadingBarButtonItems = $0
 				}
+				popupItem.setValue(self.leadingBarItemsController!, forKey: "swiftuiHiddenLeadingController")
 			}
-			.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
-				if let self = self, let anyView = view?.anyView {
-					self.createOrUpdateBarItemAdapter(&self.trailingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in
-						self?.popupItem.trailingBarButtonItems = $0
-					}
-					popupItem.setValue(self.trailingBarItemsController!, forKey: "swiftuiHiddenTrailingController")
+		}.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
+			if let self = self, let anyView = view?.anyView {
+				self.createOrUpdateBarItemAdapter(&self.trailingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in
+					self?.popupItem.trailingBarButtonItems = $0
 				}
-			})
+				popupItem.setValue(self.trailingBarItemsController!, forKey: "swiftuiHiddenTrailingController")
+			}
+		})
 	}
 	
 	public required init(@ViewBuilder content: () -> PopupContent) {

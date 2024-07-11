@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.9
 
 import PackageDescription
 
@@ -19,8 +19,8 @@ let package = Package(
 			targets: ["LNPopupUI"]),
     ],
     dependencies: [
-		.package(path: "../LNPopupController"),
-//		.package(url: "https://github.com/LeoNatan/LNPopupController.git", from: Version(stringLiteral: "2.18.12")),
+//		.package(path: "../LNPopupController"),
+		.package(url: "https://github.com/LeoNatan/LNPopupController.git", from: Version(stringLiteral: "2.19.0")),
 //		.package(path: "../LNSwiftUIUtils"),
 		.package(url: "https://github.com/LeoNatan/LNSwiftUIUtils.git", from: Version(stringLiteral: "1.1.0"))
     ],

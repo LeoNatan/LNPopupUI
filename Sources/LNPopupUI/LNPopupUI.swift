@@ -9,6 +9,7 @@ import SwiftUI
 import LNSwiftUIUtils
 @_exported import LNPopupController
 
+@MainActor
 @available(iOS 14.0, *)
 public extension ToolbarItemPlacement {
 	static let popupBar: ToolbarItemPlacement = .bottomBar

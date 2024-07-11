@@ -104,10 +104,14 @@ internal class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPop
 		
 		//These hacks are necessary to avoid bugs where the SwiftUI layout system reports an incorrect size when the keyboard is open. See https://github.com/LeoNatan/LNPopupUI/issues/11
 		keyboardObserver1 = NotificationCenter.default.addObserver(forName: UIApplication.keyboardWillShowNotification, object: nil, queue: nil) { [unowned self] notification in
-			self.ignoringSizeChangesDueToKeyboardNonsense = true
+			Task { @MainActor in
+				self.ignoringSizeChangesDueToKeyboardNonsense = true
+			}
 		}
 		keyboardObserver2 = NotificationCenter.default.addObserver(forName: UIApplication.keyboardDidHideNotification, object: nil, queue: nil) { [unowned self] notification in
-			self.ignoringSizeChangesDueToKeyboardNonsense = false
+			Task { @MainActor in
+				self.ignoringSizeChangesDueToKeyboardNonsense = false
+			}
 		}
 	}
 	
@@ -116,7 +120,9 @@ internal class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPop
 	}
 	
 	deinit {
-		NotificationCenter.default.removeObserver(keyboardObserver1!)
-		NotificationCenter.default.removeObserver(keyboardObserver2!)
+		Task { @MainActor in
+			NotificationCenter.default.removeObserver(keyboardObserver1!)
+			NotificationCenter.default.removeObserver(keyboardObserver2!)
+		}
 	}
 }
