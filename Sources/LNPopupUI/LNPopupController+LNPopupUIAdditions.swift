@@ -11,7 +11,7 @@ import SwiftUI
 
 public extension UIViewController {
 	func presentPopupBar<PopupContent: View>(@ViewBuilder with popupContent: @escaping () -> PopupContent, openPopup: Bool = false, animated: Bool, completion: (() -> Void)? = nil) {
-		let controller: UIViewController = LNPopupHostingContentController(content: popupContent)
+		let controller: UIViewController = LNPopupContentHostingController(content: popupContent)
 		presentPopupBar(with: controller, openPopup: openPopup, animated: animated, completion: completion)
 	}
 }

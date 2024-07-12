@@ -1,5 +1,5 @@
 //
-//  LNPopupHostingContentController.swift
+//  LNPopupProxyViewController.swift
 //  LNPopupUI
 //
 //  Created by Léo Natan on 8/6/20.
@@ -92,8 +92,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		readyForHandling = true
 	}
 	
-	static fileprivate func cast<T: View>(_ value: Any?, to type: T) -> LNPopupHostingContentController<T>? {
-		return value as? LNPopupHostingContentController<T>
+	static fileprivate func cast<T: View>(_ value: Any?, to type: T) -> LNPopupContentHostingController<T>? {
+		return value as? LNPopupContentHostingController<T>
 	}
 	
 	fileprivate var target: UIViewController {
@@ -111,7 +111,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			if let popupViewController = LNPopupProxyViewController.cast(self.popupViewController, to: view.self) {
 				popupViewController.popupContentRootView = view
 			} else {
-				self.popupViewController = LNPopupHostingContentController(content: self.currentPopupState.content!)
+				self.popupViewController = LNPopupContentHostingController(content: self.currentPopupState.content!)
 			}
 		}
 	}

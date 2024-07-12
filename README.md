@@ -296,10 +296,10 @@ The included demo project includes an example custom popup bar scene.
 
 In addition to the main SwiftUI functionality, the library offers extensions to `LNPopupController` for hosting SwiftUI views as popup content and custom popup bar content.
 
-Use `LNPopupHostingContentController` to create a popup content hosting controller:
+Use `LNPopupContentHostingController` to create a popup content hosting controller:
 
 ```swift
-let controller = LNPopupHostingContentController {
+let controller = LNPopupContentHostingController {
     MusicPlayer()
         .popupTitle(currentSong.name, subtitle: currentSong.album.name)
         .popupImage(currentSong.artwork ?? currentSong.album.artwork)

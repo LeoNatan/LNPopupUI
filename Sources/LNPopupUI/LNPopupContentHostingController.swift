@@ -1,5 +1,5 @@
 //
-//  LNPopupHostingContentController.swift
+//  LNPopupContentHostingController.swift
 //  LNPopupUI
 //
 //  Created by Léo Natan on 8/6/20.
@@ -9,7 +9,7 @@
 import SwiftUI
 import UIKit
 
-public class LNPopupHostingContentController<PopupContent> : UIHostingController<AnyView> where PopupContent: View {
+public class LNPopupContentHostingController<PopupContent> : UIHostingController<AnyView> where PopupContent: View {
 	@objc var _ln_interactionLimitRect: CGRect = .zero
 	
 	@ViewBuilder
@@ -105,7 +105,7 @@ public class LNPopupHostingContentController<PopupContent> : UIHostingController
 	}
 	
 	private func interactionContainerSubview() -> UIView? {
-		return LNPopupHostingContentController.firstSubview(of: view, ofType: LNPopupUIInteractionContainerView.self)
+		return LNPopupContentHostingController.firstSubview(of: view, ofType: LNPopupUIInteractionContainerView.self)
 	}
 	
 	public override func viewDidLayoutSubviews() {
