@@ -18,7 +18,7 @@ struct RandomTitleSong : Equatable, Identifiable {
 	var subtitle: String = LoremIpsum.words(withNumber: 5)
 }
 
-fileprivate var songs: [RandomTitleSong] = {
+fileprivate let songs: [RandomTitleSong] = {
 	var songs: [RandomTitleSong] = []
 	for idx in 1..<31 {
 		songs.append(RandomTitleSong(id: idx))
