@@ -300,7 +300,7 @@ Use `LNPopupContentHostingController` to create a popup content hosting controll
 
 ```swift
 let controller = LNPopupContentHostingController {
-    MusicPlayer()
+    PlayerView(song: currentSong)
         .popupTitle(currentSong.name, subtitle: currentSong.album.name)
         .popupImage(currentSong.artwork ?? currentSong.album.artwork)
 }
@@ -312,7 +312,7 @@ Or use `UIViewController.presentPopupBar(with:animated:)` directly:
 
 ```swift
 tabBarController?.presentPopupBar(with: {
-    MusicPlayer()
+    PlayerView(song: currentSong)
         .popupTitle(currentSong.name, subtitle: currentSong.album.name)
         .popupImage(currentSong.artwork ?? currentSong.album.artwork)
 }, animated: true)
