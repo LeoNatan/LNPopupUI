@@ -8,7 +8,9 @@
 import SwiftUI
 import LNPopupController
 
+#if swift(>=6.0)
 @MainActor
+#endif
 internal final class LNPopupEnvironmentConsumer<T> {
 	private let wrapped: T
 	private unowned var consumer: AnyObject? = nil
