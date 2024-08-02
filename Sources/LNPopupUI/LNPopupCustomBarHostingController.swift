@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 import LNPopupController
 
-internal class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopupCustomBarViewController {
+public class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopupCustomBarViewController {
 	@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
 	
 	fileprivate let hostingChild: UIHostingController<AnyView>
@@ -27,15 +27,15 @@ internal class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPop
 	var keyboardObserver1: Any!
 	var keyboardObserver2: Any!
 	
-	override var wantsDefaultTapGestureRecognizer: Bool {
+	public override var wantsDefaultTapGestureRecognizer: Bool {
 		return _wantsDefaultTapGestureRecognizer
 	}
 	
-	override var wantsDefaultPanGestureRecognizer: Bool {
+	public override var wantsDefaultPanGestureRecognizer: Bool {
 		return _wantsDefaultPanGestureRecognizer
 	}
 	
-	override var wantsDefaultHighlightGestureRecognizer: Bool {
+	public override var wantsDefaultHighlightGestureRecognizer: Bool {
 		return _wantsDefaultHighlightGestureRecognizer
 	}
 	
@@ -78,7 +78,7 @@ internal class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPop
 		}
 	}
 	
-	override func viewDidLayoutSubviews() {
+	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
 		updatePreferredContentSize()
