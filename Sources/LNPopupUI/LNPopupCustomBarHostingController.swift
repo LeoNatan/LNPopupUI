@@ -84,7 +84,7 @@ public class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopup
 		updatePreferredContentSize()
 	}
 	
-    public required init(@ViewBuilder content: @escaping () -> CustomBarContent) {
+	public required init(@ViewBuilder content: @escaping () -> CustomBarContent) {
 		let content = content()
 		self.content = content
 		hostingChild = UIHostingController(rootView: LNPopupCustomBarHostingController.anyViewIgnoring(content))
@@ -115,7 +115,7 @@ public class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopup
 		}
 	}
 	
-	required init?(coder: NSCoder) {
+	public required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
