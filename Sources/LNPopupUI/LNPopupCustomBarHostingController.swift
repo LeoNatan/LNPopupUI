@@ -84,7 +84,7 @@ public class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopup
 		updatePreferredContentSize()
 	}
 	
-	required init(@ViewBuilder content: @escaping () -> CustomBarContent) {
+    public required init(@ViewBuilder content: @escaping () -> CustomBarContent) {
 		let content = content()
 		self.content = content
 		hostingChild = UIHostingController(rootView: LNPopupCustomBarHostingController.anyViewIgnoring(content))
