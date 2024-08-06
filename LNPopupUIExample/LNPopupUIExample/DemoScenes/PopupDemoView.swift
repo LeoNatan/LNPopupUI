@@ -88,6 +88,23 @@ struct BackgroundViewColorModifier: ViewModifier {
 	}
 }
 
+struct HideShowTabBarModifier: ViewModifier {
+	let includePadding: Bool
+	let hideShowTabBar: () -> Void
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		content.toolbar {
+			ToolbarItem(placement: .navigationBarLeading) {
+				Button {
+					hideShowTabBar()
+				} label: {
+					Image(systemName: "rectangle.bottomthird.inset.fill")
+				}.padding(includePadding ? .horizontal : [], 8)
+			}
+		}
+	}
+}
+
 struct TrailingImageLabelStyle: LabelStyle {
 	func makeBody(configuration: Configuration) -> some View {
 		HStack {
@@ -113,7 +130,10 @@ struct SafeAreaDemoView : View {
 	let appearanceHandler: (() -> Void)?
 	let hideBarHandler: (() -> Void)?
 	
-	init(colorSeed: String = "nil", colorIndex: Int = 0, includeToolbar: Bool = false, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil) {
+	@State private var isBottomBarPresented: Bool
+	let bottomBarPresentationButtonPadding: Bool
+	
+	init(colorSeed: String = "nil", colorIndex: Int = 0, includeToolbar: Bool = false, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil, isBottomBarPresented: State<Bool>? = nil) {
 		self.includeLink = includeLink
 		self.includeToolbar = includeToolbar
 		self.offset = offset
@@ -132,6 +152,9 @@ struct SafeAreaDemoView : View {
 		self.presentBarHandler = presentBarHandler
 		self.appearanceHandler = appearanceHandler
 		self.hideBarHandler = hideBarHandler
+		
+		_isBottomBarPresented = isBottomBarPresented ?? State(initialValue: true)
+		bottomBarPresentationButtonPadding = isBottomBarPresented != nil
 	}
 	
 	var body: some View {
@@ -176,7 +199,7 @@ struct SafeAreaDemoView : View {
 						Spacer()
 						
 						NavigationLink {
-							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss)
+							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss, isBottomBarPresented: _isBottomBarPresented)
 								.navigationTitle("LNPopupUI")
 						} label: {
 							Label {
@@ -194,6 +217,11 @@ struct SafeAreaDemoView : View {
 			.edgesIgnoringSafeArea([.top, .bottom])
 			.fontWeight(.semibold)
 			.tint(Color(uiColor: .label))
+			.modifier(HideShowTabBarModifier(includePadding: bottomBarPresentationButtonPadding) {
+				isBottomBarPresented.toggle()
+			})
+			.toolbar(includeToolbar && isBottomBarPresented ? .visible : .hidden, for: .bottomBar)
+			.toolbar(isBottomBarPresented ? .visible : .hidden, for: .tabBar)
 		}
 	}
 }

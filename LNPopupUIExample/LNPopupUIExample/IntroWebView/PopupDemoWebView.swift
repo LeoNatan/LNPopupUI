@@ -39,7 +39,7 @@ struct PopupDemoWebView: View {
 					Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
 				}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
 			}
-			.popupImage(Image(uiImage: UIImage(named: "AppIcon60x60")!))
+			.popupImage(Image("AppIconPopupBar"))
 			.popupBarItems({
 				ToolbarItemGroup(placement: .popupBar) {
 					Link(destination: url) {

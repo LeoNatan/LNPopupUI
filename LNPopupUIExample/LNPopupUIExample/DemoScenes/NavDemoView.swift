@@ -11,6 +11,7 @@ import LNPopupUI
 
 struct NavDemoView : View {
 	@State private var isBarPresented: Bool = true
+	
 	let demoContent: DemoContent
 	let onDismiss: () -> Void
 	@Environment(\.colorScheme) private var environmentColorScheme

@@ -77,11 +77,6 @@ struct TabDemoView : View {
 				.tabItem {
 					Label("Tab", systemImage: "4.square")
 				}
-			InnerView(tabIdx:4, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Hide Bar", systemImage: "xmark.square")
-				}
-				.toolbar(.hidden, for: .tabBar)
 		}
 		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
 	}
