@@ -2,7 +2,8 @@
 //  LNPopupController+LNPopupUIAdditions.swift
 //  LNPopupUI
 //
-//  Created by Léo Natan on 8/7/24.
+//  Created by Léo Natan on 2024-07-08.
+//  Copyright © 2020-2024 Léo Natan. All rights reserved.
 //
 
 import LNPopupController

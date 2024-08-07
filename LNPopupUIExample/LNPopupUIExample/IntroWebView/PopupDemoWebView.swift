@@ -2,7 +2,8 @@
 //  PopupDemoWebView.swift
 //  LNPopupUIExample
 //
-//  Created by Léo Natan on 10/14/20.
+//  Created by Léo Natan on 2021-09-25.
+//  Copyright © 2020-2024 Léo Natan. All rights reserved.
 //
 
 import SwiftUI

@@ -2,7 +2,8 @@
 //  SplitDemoView.swift
 //  LNPopupUIExample
 //
-//  Created by Léo Natan on 23/10/2023.
+//  Created by Léo Natan on 2023-10-24.
+//  Copyright © 2020-2024 Léo Natan. All rights reserved.
 //
 
 import SwiftUI

@@ -2,7 +2,8 @@
 //  Utils.swift
 //  LNPopupUI
 //
-//  Created by Léo Natan on 9/20/21.
+//  Created by Léo Natan on 2021-09-20.
+//  Copyright © 2020-2024 Léo Natan. All rights reserved.
 //
 
 import UIKit

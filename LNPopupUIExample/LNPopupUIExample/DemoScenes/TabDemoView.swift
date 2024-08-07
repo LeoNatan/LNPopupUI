@@ -2,7 +2,8 @@
 //  TabDemoView.swift
 //  LNPopupUIExample
 //
-//  Created by Leo Natan (Wix) on 9/5/20.
+//  Created by Léo Natan on 2020-09-06.
+//  Copyright © 2020-2024 Léo Natan. All rights reserved.
 //
 
 import SwiftUI

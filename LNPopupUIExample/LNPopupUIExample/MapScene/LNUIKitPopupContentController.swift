@@ -2,7 +2,8 @@
 //  LNUIKitPopupContentController.swift
 //  LNPopupUIExample
 //
-//  Created by Léo Natan on 9/11/20.
+//  Created by Léo Natan on 2020-09-11.
+//  Copyright © 2020-2024 Léo Natan. All rights reserved.
 //
 
 import UIKit

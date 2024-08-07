@@ -2,7 +2,8 @@
 //  LNPopupCustomBarHostingController.swift
 //  LNPopupUI
 //
-//  Created by Léo Natan on 9/3/20.
+//  Created by Léo Natan on 2020-09-04.
+//  Copyright © 2020-2024 Léo Natan. All rights reserved.
 //
 
 import SwiftUI

@@ -2,7 +2,8 @@
 //  CompactSliderDemoView.swift
 //  LNPopupUIExample
 //
-//  Created by Léo Natan on 01/09/2023.
+//  Created by Léo Natan on 2023-09-01.
+//  Copyright © 2020-2024 Léo Natan. All rights reserved.
 //
 
 import SwiftUI
