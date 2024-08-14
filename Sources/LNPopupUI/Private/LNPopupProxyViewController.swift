@@ -255,11 +255,11 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			}
 			
 			self.implicitAnimationController.push()
-			let endImplicitAnims = {
-				self.implicitAnimationController.pop()
+			let endImplicitAnims = { [weak self] in
+				self?.implicitAnimationController.pop()
 			}
 			
-			if self.currentPopupState.isBarPresented == true {
+			if self.currentPopupState.isBarPresented.wrappedValue == true {
 				popupContentHandler()
 							
 				let targetPresentationState: UIViewController.PopupPresentationState = UIViewController.PopupPresentationState(rawValue: target.value(forKeyPath: "ln_popupController.popupControllerTargetState") as! Int)!
@@ -331,13 +331,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	
 	func popupPresentationControllerWillPresentPopupBar(_ popupPresentationController: UIViewController, animated: Bool) {
 		DispatchQueue.main.async {
-			self.currentPopupState?.isBarPresented = true
+			self.currentPopupState?.isBarPresented.wrappedValue = true
 		}
 	}
 	
 	func popupPresentationControllerWillDismissPopupBar(_ popupPresentationController: UIViewController, animated: Bool) {
 		DispatchQueue.main.async {
-			self.currentPopupState?.isBarPresented = false
+			self.currentPopupState?.isBarPresented.wrappedValue = false
 		}
 		
 		popupViewController = nil

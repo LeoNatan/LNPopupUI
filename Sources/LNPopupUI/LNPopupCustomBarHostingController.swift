@@ -121,9 +121,7 @@ public class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopup
 	}
 	
 	deinit {
-		Task { @MainActor in
-			NotificationCenter.default.removeObserver(keyboardObserver1!)
-			NotificationCenter.default.removeObserver(keyboardObserver2!)
-		}
+		NotificationCenter.default.removeObserver(keyboardObserver1!)
+		NotificationCenter.default.removeObserver(keyboardObserver2!)
 	}
 }

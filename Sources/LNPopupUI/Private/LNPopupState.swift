@@ -18,7 +18,7 @@ internal struct LNPopupBarCustomView {
 }
 
 internal struct LNPopupState<PopupContent: View> {
-	@Binding var isBarPresented: Bool
+	var isBarPresented: Binding<Bool>
 	var isPopupOpen: Binding<Bool>?
 	let inheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
 	let inheritsEnvironmentFont: LNPopupEnvironmentConsumer<Bool>?

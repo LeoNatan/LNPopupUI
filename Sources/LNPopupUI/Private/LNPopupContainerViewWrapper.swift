@@ -11,7 +11,7 @@ import UIKit
 import LNPopupController
 
 internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewControllerRepresentable where Content: View, PopupContent: View {
-	@Binding private var isBarPresented: Bool
+	private var isBarPresented: Binding<Bool>
 	private var isPopupOpen: Binding<Bool>?
 	private let passthroughContent: () -> Content
 	private let popupContent: (() -> PopupContent)?
@@ -44,7 +44,7 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 	@Environment(\.popupContentViewCustomizer) var popupContentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
 	
 	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContent: (() -> PopupContent)? = nil, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
-		self._isBarPresented = isBarPresented
+		self.isBarPresented = isBarPresented
 		self.isPopupOpen = isOpen
 		passthroughContent = content
 		self.popupContent = popupContent
@@ -61,7 +61,7 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 		
 		uiViewController.rootView = passthroughContent()
 		
-		let state = LNPopupState(isBarPresented: _isBarPresented,
+		let state = LNPopupState(isBarPresented: isBarPresented,
 								 isPopupOpen: isPopupOpen,
 								 inheritsAppearanceFromDockingView: popupBarInheritsAppearanceFromDockingView,
 								 inheritsEnvironmentFont: popupBarInheritsEnvironmentFont,
@@ -96,7 +96,7 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 
 internal extension LNPopupContainerViewWrapper where PopupContent == Never {
 	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
-		self._isBarPresented = isBarPresented
+		self.isBarPresented = isBarPresented
 		self.isPopupOpen = isOpen
 		passthroughContent = content
 		self.popupContent = nil
