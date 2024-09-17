@@ -335,3 +335,7 @@ Additionally, the demo project uses:
 
 * [LoremIpsum](https://github.com/lukaskubanek/LoremIpsum) Copyright (c) 2013-2020 Lukas Kubanek
 * [swiftui-introspect](https://github.com/siteline/swiftui-introspect) Copyright 2019 Timber Software
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=LeoNatan/LNPopupUI&type=Date)](https://star-history.com/#LeoNatan/LNPopupUI&Date)
