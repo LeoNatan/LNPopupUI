@@ -17,6 +17,8 @@ internal struct LNPopupBarCustomView {
 	let popupBarCustomBarView: AnyView
 }
 
+typealias LNPopupSmallState = (isBarPresented: Bool, isPopupOpen: Bool?)
+
 internal struct LNPopupState<PopupContent: View> {
 	var isBarPresented: Binding<Bool>
 	var isPopupOpen: Binding<Bool>?
@@ -47,4 +49,8 @@ internal struct LNPopupState<PopupContent: View> {
 	let onClose: (() -> Void)?
 	let barCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
 	let contentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
+	
+	var smallState: LNPopupSmallState {
+		return (isBarPresented.wrappedValue, isPopupOpen?.wrappedValue)
+	}
 }

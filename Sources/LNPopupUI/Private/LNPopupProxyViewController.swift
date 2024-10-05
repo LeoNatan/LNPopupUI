@@ -129,6 +129,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		return LNPopupImplicitAnimationController(withWindow: view.window!)
 	}()
 	
+	var currentSmallPopupState: LNPopupSmallState = (false, nil)
 	func handlePopupState(_ state: LNPopupState<PopupContent>) {
 		currentPopupState = state
 			
@@ -259,14 +260,21 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				self?.implicitAnimationController.pop()
 			}
 			
-			if self.currentPopupState.isBarPresented.wrappedValue == true {
+			let newSmallState = self.currentPopupState.smallState
+			guard self.currentSmallPopupState != newSmallState else {
+				return
+			}
+			
+			self.currentSmallPopupState = newSmallState
+			
+			if newSmallState.isBarPresented == true {
 				popupContentHandler()
-							
+				
 				let targetPresentationState: UIViewController.PopupPresentationState = UIViewController.PopupPresentationState(rawValue: target.value(forKeyPath: "ln_popupController.popupControllerTargetState") as! Int)!
 				
 				if targetPresentationState.rawValue >= UIViewController.PopupPresentationState.barPresented.rawValue {
-					if let isPopupOpen = self.currentPopupState.isPopupOpen {
-						if isPopupOpen.wrappedValue == true {
+					if let isPopupOpen = newSmallState.isPopupOpen {
+						if isPopupOpen {
 							target.openPopup(animated: true) {
 								endImplicitAnims()
 							}
@@ -330,12 +338,14 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	//MARK: LNPopupPresentationDelegate
 	
 	func popupPresentationControllerWillPresentPopupBar(_ popupPresentationController: UIViewController, animated: Bool) {
+		currentSmallPopupState = (true, currentSmallPopupState.isPopupOpen)
 		DispatchQueue.main.async {
 			self.currentPopupState?.isBarPresented.wrappedValue = true
 		}
 	}
 	
 	func popupPresentationControllerWillDismissPopupBar(_ popupPresentationController: UIViewController, animated: Bool) {
+		currentSmallPopupState = (false, currentSmallPopupState.isPopupOpen)
 		DispatchQueue.main.async {
 			self.currentPopupState?.isBarPresented.wrappedValue = false
 		}
@@ -347,7 +357,12 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	func popupPresentationController(_ popupPresentationController: UIViewController, willOpenPopupWithContentController popupContentController: UIViewController, animated: Bool) {
-		currentPopupState?.isPopupOpen?.wrappedValue = true
+		if currentPopupState.isPopupOpen != nil {
+			currentSmallPopupState = (currentSmallPopupState.isBarPresented, true)
+		}
+		DispatchQueue.main.async {
+			self.currentPopupState?.isPopupOpen?.wrappedValue = true
+		}
 	}
 	
 	func popupPresentationController(_ popupPresentationController: UIViewController, didOpenPopupWithContentController popupContentController: UIViewController, animated: Bool) {
@@ -355,7 +370,12 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	func popupPresentationController(_ popupPresentationController: UIViewController, willClosePopupWithContentController popupContentController: UIViewController, animated: Bool) {
-		currentPopupState?.isPopupOpen?.wrappedValue = false
+		if currentPopupState.isPopupOpen != nil {
+			currentSmallPopupState = (currentSmallPopupState.isBarPresented, false)
+		}
+		DispatchQueue.main.async {
+			self.currentPopupState?.isPopupOpen?.wrappedValue = false
+		}
 	}
 	
 	func popupPresentationController(_ popupPresentationController: UIViewController, didClosePopupWithContentController popupContentController: UIViewController, animated: Bool) {
