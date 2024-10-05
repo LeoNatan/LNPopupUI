@@ -35,19 +35,19 @@ struct EnlargingButton: View {
 	}
 }
 
-extension CLLocationCoordinate2D: Equatable {
+extension CLLocationCoordinate2D: @retroactive Equatable {
 	static public func == (lhs: Self, rhs: Self) -> Bool {
 		return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
 	}
 }
 
-extension MKCoordinateSpan: Equatable {
+extension MKCoordinateSpan: @retroactive Equatable {
 	static public func == (lhs: Self, rhs: Self) -> Bool {
 		return lhs.longitudeDelta == rhs.longitudeDelta && lhs.latitudeDelta == rhs.latitudeDelta
 	}
 }
 
-extension MKCoordinateRegion: Equatable {
+extension MKCoordinateRegion: @retroactive Equatable {
 	public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
 		return lhs.center == rhs.center && lhs.span == rhs.span
 	}

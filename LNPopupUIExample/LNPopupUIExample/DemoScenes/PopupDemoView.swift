@@ -12,7 +12,7 @@ import LNPopupController
 import LoremIpsum
 import SwiftUIIntrospect
 
-extension NSParagraphStyle: @unchecked Sendable {}
+extension NSParagraphStyle: @retroactive @unchecked Sendable {}
 
 struct DemoContent {
 	let title = LocalizedStringKey(LoremIpsum.title)
