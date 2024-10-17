@@ -29,7 +29,9 @@ struct InnerView : View {
 	
 	var body: some View {
 		ZStack(alignment: .topTrailing) {
-			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "nil", presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, showDismissButton: showDismissButton)
+			let bottomButtonsHandlers = SafeAreaDemoView.BottomButtonHandlers(presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+			
+			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "nil", bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: showDismissButton)
 			if let showDismissButton, showDismissButton == true {
 				VStack {
 					Button("Gallery") {
@@ -43,6 +45,8 @@ struct InnerView : View {
 }
 
 struct TabDemoView : View {
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	
 	@State private var isBarPresented: Bool = true
 	private let onDismiss: () -> Void
 	let demoContent: DemoContent
@@ -62,22 +66,12 @@ struct TabDemoView : View {
 	
 	var body: some View {
 		MaterialTabView {
-			InnerView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Tab", systemImage: "1.square")
-				}
-			InnerView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Tab", systemImage: "2.square")
-				}
-			InnerView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Tab", systemImage: "3.square")
-				}
-			InnerView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Tab", systemImage: "4.square")
-				}
+			ForEach(1..<5) { idx in
+				InnerView(tabIdx:idx - 1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+					.tabItem {
+						Label("Tab", systemImage: "1.square")
+					}
+			}
 		}
 		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
 	}

@@ -90,18 +90,29 @@ struct BackgroundViewColorModifier: ViewModifier {
 }
 
 struct HideShowTabBarModifier: ViewModifier {
-	let includePadding: Bool
-	let hideShowTabBar: () -> Void
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	
+	@Binding var bottomBarHideSupport: SafeAreaDemoView.BottomBarHideSupport?
 	
 	@ViewBuilder func body(content: Content) -> some View {
-		content.toolbar {
-			ToolbarItem(placement: .navigationBarLeading) {
-				Button {
-					hideShowTabBar()
-				} label: {
-					Image(systemName: "rectangle.bottomthird.inset.fill")
-				}.padding(includePadding ? .horizontal : [], 8)
+		if #available(iOS 18.0, *), bottomBarHideSupport?.showsBottomBarHideButton ?? false {
+			content.toolbar {
+				ToolbarItem(placement: .navigationBarLeading) {
+					Button {
+						withAnimation {
+							bottomBarHideSupport?.isBottomBarPresented.toggle()
+						}
+					} label: {
+						if UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular && bottomBarHideSupport?.isBottomBarTab ?? false {
+							Image(systemName: "rectangle.topthird.inset.filled")
+						} else {
+							Image(systemName: "rectangle.bottomthird.inset.filled")
+						}
+					}
+				}
 			}
+		} else {
+			content
 		}
 	}
 }
@@ -116,6 +127,18 @@ struct TrailingImageLabelStyle: LabelStyle {
 }
 
 struct SafeAreaDemoView : View {
+	struct BottomButtonHandlers {
+		var presentBarHandler: (() -> Void)? = nil
+		var appearanceHandler: (() -> Void)? = nil
+		var hideBarHandler: (() -> Void)? = nil
+	}
+	
+	struct BottomBarHideSupport {
+		var showsBottomBarHideButton: Bool = false
+		var isBottomBarTab: Bool? = false
+		var isBottomBarPresented: Bool = true
+	}
+	
 	let includeLink: Bool
 	let includeToolbar: Bool
 	let offset: Bool
@@ -131,10 +154,9 @@ struct SafeAreaDemoView : View {
 	let appearanceHandler: (() -> Void)?
 	let hideBarHandler: (() -> Void)?
 	
-	@State private var isBottomBarPresented: Bool
-	let bottomBarPresentationButtonPadding: Bool
+	@State var bottomBarHideSupport: BottomBarHideSupport?
 	
-	init(colorSeed: String = "nil", colorIndex: Int = 0, includeToolbar: Bool = false, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil, isBottomBarPresented: State<Bool>? = nil) {
+	init(colorSeed: String = "nil", colorIndex: Int = 0, includeToolbar: Bool = false, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, bottomButtonsHandlers: BottomButtonHandlers? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil, bottomBarHideSupport: BottomBarHideSupport? = nil) {
 		self.includeLink = includeLink
 		self.includeToolbar = includeToolbar
 		self.offset = offset
@@ -150,12 +172,11 @@ struct SafeAreaDemoView : View {
 		self.colorSeed = colorSeed
 		self.colorIndex = colorIndex
 		
-		self.presentBarHandler = presentBarHandler
-		self.appearanceHandler = appearanceHandler
-		self.hideBarHandler = hideBarHandler
+		self.presentBarHandler = bottomButtonsHandlers?.presentBarHandler
+		self.appearanceHandler = bottomButtonsHandlers?.appearanceHandler
+		self.hideBarHandler = bottomButtonsHandlers?.hideBarHandler
 		
-		_isBottomBarPresented = isBottomBarPresented ?? State(initialValue: true)
-		bottomBarPresentationButtonPadding = isBottomBarPresented != nil
+		_bottomBarHideSupport = State(initialValue: bottomBarHideSupport)
 	}
 	
 	var body: some View {
@@ -200,8 +221,11 @@ struct SafeAreaDemoView : View {
 						Spacer()
 						
 						NavigationLink {
-							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss, isBottomBarPresented: _isBottomBarPresented)
+							let bottomButtonsHandlers = BottomButtonHandlers(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
+							
+							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss)
 								.navigationTitle("LNPopupUI")
+								.toolbarRoleIfPad18()
 						} label: {
 							Label {
 								Text("Next")
@@ -218,11 +242,9 @@ struct SafeAreaDemoView : View {
 			.edgesIgnoringSafeArea([.top, .bottom])
 			.fontWeight(.semibold)
 			.tint(Color(uiColor: .label))
-			.modifier(HideShowTabBarModifier(includePadding: bottomBarPresentationButtonPadding) {
-				isBottomBarPresented.toggle()
-			})
-			.toolbar(includeToolbar && isBottomBarPresented ? .visible : .hidden, for: .bottomBar)
-			.toolbar(isBottomBarPresented ? .visible : .hidden, for: .tabBar)
+			.modifier(HideShowTabBarModifier(bottomBarHideSupport: $bottomBarHideSupport))
+			.toolbar(includeToolbar && bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .bottomBar)
+			.toolbar(bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .tabBar)
 		}
 	}
 }
@@ -239,6 +261,14 @@ struct HapticFeedbackModifier: ViewModifier {
 
 	@ViewBuilder func body(content: Content) -> some View {
 		content.popupHapticFeedbackEnabled(hapticFeedbackEnabled)
+	}
+}
+
+struct LimitFloatingContentWidthModifier: ViewModifier {
+	@AppStorage(.limitFloatingWidth, store: .settings) var limitFloatingWidth: Bool = true
+	
+	@ViewBuilder func body(content: Content) -> some View {
+		content.popupBarLimitFloatingContentWidth(limitFloatingWidth)
 	}
 }
 
@@ -446,6 +476,7 @@ struct PopupDemoViewModifier: ViewModifier {
 		.popupCloseButtonStyle(closeButtonStyle)
 		.modifier(MarqueeModifier())
 		.modifier(HapticFeedbackModifier())
+		.modifier(LimitFloatingContentWidthModifier())
 		.modifier(FloatingBackgroundEffectModifier(blurEffectStyle: blurEffectStyle, barStyle: barStyle))
 		.modifier(BackgroundEffectModifier(blurEffectStyle: blurEffectStyle, barStyle: barStyle))
 		.modifier(CustomBarModifier(customPopupBar: customPopupBar))
@@ -495,16 +526,22 @@ fileprivate extension View {
 }
 
 struct MaterialTabView<Content: View>: View {
-	let content: Content
+	let tabView: any View
+	
 	
 	init(@ViewBuilder content: () -> Content) {
-		self.content = content()
+		tabView = TabView {
+			content().fixBottomBarAppearance()
+		}
+	}
+	
+	@available(iOS 18.0, *)
+	init<C>(@TabContentBuilder<Never> content: () -> C) where Content == TabContentBuilder<Never>.Content<C>, C : TabContent {
+		tabView = TabView.init<C>(content: content)
 	}
 	
 	var body: some View {
-		TabView {
-			content.fixBottomBarAppearance()
-		}
+		AnyView(tabView)
 	}
 }
 

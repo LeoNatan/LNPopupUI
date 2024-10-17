@@ -10,7 +10,27 @@ import SwiftUI
 import LoremIpsum
 import LNPopupUI
 
+struct ToolbarRolePad18Modifier: ViewModifier {
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	
+	func body(content: Content) -> some View {
+		return content.toolbarRole(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? .editor : .navigationStack)
+	}
+}
+
+extension View {
+	func toolbarRoleIfPad18() -> some View {
+		if #available(iOS 18.0, *) {
+			return self.modifier(ToolbarRolePad18Modifier())
+		} else {
+			return self
+		}
+	}
+}
+
 struct InnerNavView : View {
+	
+	
 	let tabIdx: Int
 	let onDismiss: () -> Void
 	
@@ -19,14 +39,20 @@ struct InnerNavView : View {
 	
 	var body: some View {
 		MaterialNavigationStack {
-			SafeAreaDemoView(colorSeed:"tab_\(tabIdx)", includeLink: true, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler, showDismissButton: true, onDismiss: onDismiss)
+			let bottomButtonsHandlers = SafeAreaDemoView.BottomButtonHandlers(presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+			let bottomBarHideSupport = SafeAreaDemoView.BottomBarHideSupport(showsBottomBarHideButton: true, isBottomBarTab: true)
+			
+			SafeAreaDemoView(colorSeed: "tab_\(tabIdx)", includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
 				.navigationBarTitle("Tab View + Navigation View")
 				.navigationBarTitleDisplayMode(.inline)
+				.toolbarRoleIfPad18()
 		}
 	}
 }
 
 struct TabNavView : View {
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	
 	@State private var isBarPresented: Bool = true
 	
 	private let onDismiss: () -> Void
@@ -46,25 +72,26 @@ struct TabNavView : View {
 	}
 	
 	var body: some View {
-		MaterialTabView {
-			InnerNavView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Tab", systemImage: "1.square")
+		if #available(iOS 18.0, *) {
+			MaterialTabView {
+				ForEach(1..<5) { idx in
+					Tab("Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", systemImage: "\(idx).square") {
+						InnerNavView(tabIdx:idx - 1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+					}
 				}
-			InnerNavView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Tab", systemImage: "2.square").foregroundStyle(.red)
+			}
+			.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
+		} else {
+			MaterialTabView {
+				ForEach(1..<5) { idx in
+					InnerNavView(tabIdx:idx - 1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+						.tabItem {
+							Label("Tab", systemImage: "\(idx).square").foregroundStyle(.red)
+						}
 				}
-			InnerNavView(tabIdx:2, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Tab", systemImage: "3.square")
-				}
-			InnerNavView(tabIdx:3, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.tabItem {
-					Label("Tab", systemImage: "4.square")
-				}
+			}
+			.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
 		}
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
 	}
 }
 

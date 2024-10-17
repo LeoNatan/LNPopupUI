@@ -37,6 +37,19 @@ fileprivate struct LNHeaderFooterView: View {
 	}
 }
 
+extension View {
+	func pagePresentationIfPossible() -> some View {		
+		if #available(iOS 18.0, *) {
+			return self
+				.presentationSizing(
+					.page
+				)
+		} else {
+			return self
+		}
+	}
+}
+
 struct SceneSelection: View {
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 	@Environment(\.verticalSizeClass) var verticalSizeClass
@@ -100,6 +113,7 @@ struct SceneSelection: View {
 						NavDemoView(demoContent: DemoContent()) {
 							viewSheetPresented.toggle()
 						}
+						.pagePresentationIfPossible()
 					})
 					CellPaddedButton("View") {
 						viewPresented.toggle()
