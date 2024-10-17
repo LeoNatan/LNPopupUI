@@ -37,6 +37,7 @@ internal struct LNPopupState<PopupContent: View> {
 	let barProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>?
 	let barMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
 	let hapticFeedbackEnabled: LNPopupEnvironmentConsumer<Bool>?
+	let limitFloatingContentWidth: LNPopupEnvironmentConsumer<Bool>?
 	let marqueeRate: LNPopupEnvironmentConsumer<CGFloat>?
 	let marqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>?
 	let coordinateMarqueeAnimations: LNPopupEnvironmentConsumer<Bool>?

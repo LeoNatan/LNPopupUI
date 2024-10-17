@@ -28,6 +28,7 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>?
 	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
 	@Environment(\.popupHapticFeedbackEnabled) var popupHapticFeedbackEnabled: LNPopupEnvironmentConsumer<Bool>?
+	@Environment(\.popupBarLimitFloatingContentWidth) var popupBarLimitFloatingContentWidth: LNPopupEnvironmentConsumer<Bool>?
 	@Environment(\.popupBarMarqueeRate) var popupBarMarqueeRate: LNPopupEnvironmentConsumer<CGFloat>?
 	@Environment(\.popupBarMarqueeDelay) var popupBarMarqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>?
 	@Environment(\.popupBarCoordinateMarqueeAnimations) var popupBarCoordinateMarqueeAnimations: LNPopupEnvironmentConsumer<Bool>?
@@ -78,6 +79,7 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
 								 hapticFeedbackEnabled: popupHapticFeedbackEnabled,
+								 limitFloatingContentWidth: popupBarLimitFloatingContentWidth,
 								 marqueeRate: popupBarMarqueeRate,
 								 marqueeDelay: popupBarMarqueeDelay,
 								 coordinateMarqueeAnimations: popupBarCoordinateMarqueeAnimations,

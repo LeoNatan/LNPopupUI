@@ -29,7 +29,7 @@ public extension View {
 	///   - onClose: A closure executed when the popup closes. (optional)
 	///   - popupContent: A closure returning the content of the popup.
 	func popup<PopupContent>(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, onOpen: (() -> Void)? = nil, onClose: (() -> Void)? = nil, @ViewBuilder popupContent: @escaping () -> PopupContent) -> some View where PopupContent : View {
-		return ZStack {
+		ZStack {
 			//These two lines are to make sure the system rerenders if the isBarPresented and isPopupOpen bindings change.
 			isBarPresented.wrappedValue ? EmptyView() : EmptyView()
 			isPopupOpen?.wrappedValue ?? false  ? EmptyView() : EmptyView()
@@ -48,7 +48,7 @@ public extension View {
 	///   - onClose: A closure executed when the popup closes. (optional)
 	///   - popupContentController: A UIKit view controller to use as the popup content controller.
 	func popup(isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, onOpen: (() -> Void)? = nil, onClose: (() -> Void)? = nil, popupContentController: UIViewController) -> some View {
-		return ZStack {
+		ZStack {
 			//These two lines are to make sure the system rerenders if the isBarPresented and isPopupOpen bindings change.
 			isBarPresented.wrappedValue ? EmptyView() : EmptyView()
 			isPopupOpen?.wrappedValue ?? false  ? EmptyView() : EmptyView()
@@ -62,14 +62,14 @@ public extension View {
 	///
 	/// - Parameter style: The popup interaction style.
 	func popupInteractionStyle(_ style: UIViewController.PopupInteractionStyle) -> some View {
-		return environment(\.popupInteractionStyle, LNPopupEnvironmentConsumer(style))
+		environment(\.popupInteractionStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Sets the popup close button style.
 	///
 	/// - Parameter style: The popup close button style.
 	func popupCloseButtonStyle(_ style: LNPopupCloseButton.Style) -> some View {
-		return environment(\.popupCloseButtonStyle, LNPopupEnvironmentConsumer(style))
+		environment(\.popupCloseButtonStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Sets the popup bar style.
@@ -78,14 +78,14 @@ public extension View {
 	///
 	/// - Parameter style: The popup bar style.
 	func popupBarStyle(_ style: LNPopupBar.Style) -> some View {
-		return environment(\.popupBarStyle, LNPopupEnvironmentConsumer(style))
+		environment(\.popupBarStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Sets the popup bar's progress style.
 	///
 	/// - Parameter style: The popup bar's progress style.
 	func popupBarProgressViewStyle(_ style: LNPopupBar.ProgressViewStyle) -> some View {
-		return environment(\.popupBarProgressViewStyle, LNPopupEnvironmentConsumer(style))
+		environment(\.popupBarProgressViewStyle, LNPopupEnvironmentConsumer(style))
 	}
 	
 	/// Enables or disables the popup bar marquee scrolling. When enabled, titles and subtitles that are longer than the space available will scroll text over time.
@@ -96,7 +96,7 @@ public extension View {
 	///   - delay: The delay, in seconds, before starting the title and subtitle marquee animation.
 	///   - coordinateAnimations: Coordinate the title and subtitle marquee scroll animations.
 	func popupBarMarqueeScrollEnabled(_ enabled: Bool, scrollRate: CGFloat? = nil, delay: TimeInterval? = nil, coordinateAnimations: Bool? = nil) -> some View {
-		return environment(\.popupBarMarqueeScrollEnabled, LNPopupEnvironmentConsumer(enabled)).environment(\.popupBarMarqueeRate, LNPopupEnvironmentConsumer(scrollRate)).environment(\.popupBarMarqueeDelay, LNPopupEnvironmentConsumer(delay)).environment(\.popupBarCoordinateMarqueeAnimations, LNPopupEnvironmentConsumer(coordinateAnimations))
+		environment(\.popupBarMarqueeScrollEnabled, LNPopupEnvironmentConsumer(enabled)).environment(\.popupBarMarqueeRate, LNPopupEnvironmentConsumer(scrollRate)).environment(\.popupBarMarqueeDelay, LNPopupEnvironmentConsumer(delay)).environment(\.popupBarCoordinateMarqueeAnimations, LNPopupEnvironmentConsumer(coordinateAnimations))
 	}
 	
 	/// Enables or disables popup interaction haptic feedback.
@@ -104,21 +104,21 @@ public extension View {
 	/// - Parameters:
 	///   - enabled: Haptic feedback enabled.
 	func popupHapticFeedbackEnabled(_ enabled: Bool) -> some View {
-		return environment(\.popupHapticFeedbackEnabled, LNPopupEnvironmentConsumer(enabled))
+		environment(\.popupHapticFeedbackEnabled, LNPopupEnvironmentConsumer(enabled))
 	}
 	
 	/// Enables or disables the popup bar extension under the safe area.
 	///
 	/// - Parameter enabled: Extend the popup bar under safe area.
 	func popupBarShouldExtendPopupBarUnderSafeArea(_ enabled: Bool) -> some View {
-		return environment(\.popupBarShouldExtendPopupBarUnderSafeArea, LNPopupEnvironmentConsumer(enabled))
+		environment(\.popupBarShouldExtendPopupBarUnderSafeArea, LNPopupEnvironmentConsumer(enabled))
 	}
 	
 	/// Enables or disables the popup bar to automatically inherit its appearance from the bottom docking view, such as toolbar or tab bar.
 	///
 	/// - Parameter enabled: Inherit the appearance from the popup bar's docking view.
 	func popupBarInheritsAppearanceFromDockingView(_ enabled: Bool) -> some View {
-		return environment(\.popupBarInheritsAppearanceFromDockingView, LNPopupEnvironmentConsumer(enabled))
+		environment(\.popupBarInheritsAppearanceFromDockingView, LNPopupEnvironmentConsumer(enabled))
 	}
 	
 	/// Enables or disables the popup bar to automatically inherit the environment font.
@@ -127,7 +127,7 @@ public extension View {
 	///
 	/// - Parameter enabled: Inherit the environment font.
 	func popupBarInheritsEnvironmentFont(_ enabled: Bool) -> some View {
-		return environment(\.popupBarInheritsEnvironmentFont, LNPopupEnvironmentConsumer(enabled))
+		environment(\.popupBarInheritsEnvironmentFont, LNPopupEnvironmentConsumer(enabled))
 	}
 	
 	/// Sets the popup bar's background style. Use `nil` or `LNBackgroundStyleInherit` to use the most appropriate background style for the environment.
@@ -151,14 +151,14 @@ public extension View {
 	///
 	/// - Parameter effect: The popup bar's background effect.
 	func popupBarBackgroundEffect(_ effect: UIBlurEffect?) -> some View {
-		return environment(\.popupBarBackgroundEffect, LNPopupEnvironmentConsumer(effect))
+		environment(\.popupBarBackgroundEffect, LNPopupEnvironmentConsumer(effect))
 	}
 	
 	/// Sets the popup bar's floating background effect. Use `nil` to use the most appropriate background style for the environment.
 	///
 	/// - Parameter effect: The popup bar's floating background effect.
 	func popupBarFloatingBackgroundEffect(_ effect: UIBlurEffect?) -> some View {
-		return environment(\.popupBarFloatingBackgroundEffect, LNPopupEnvironmentConsumer(effect))
+		environment(\.popupBarFloatingBackgroundEffect, LNPopupEnvironmentConsumer(effect))
 	}
 	
 	/// Sets the floating popup bar background shadow.
@@ -188,6 +188,10 @@ public extension View {
 		shadow.shadowOffset = CGSize(width: xx, height: yy)
 		
 		return environment(\.popupBarFloatingBackgroundShadow, LNPopupEnvironmentConsumer(shadow))
+	}
+	
+	func popupBarLimitFloatingContentWidth(_ enabled: Bool) -> some View {
+		environment(\.popupBarLimitFloatingContentWidth, LNPopupEnvironmentConsumer(enabled))
 	}
 	
 	/// Sets the popup bar image shadow.
@@ -224,7 +228,7 @@ public extension View {
 	/// SwiftUI-scoped attributes are partially supported. Open an issue on GitHub if you need something that is not supported.
 	@available(iOS 15, *)
 	func popupBarTitleTextAttributes(_ attribs: AttributeContainer) -> some View {
-		return environment(\.popupBarTitleTextAttributes, LNPopupEnvironmentConsumer(attribs))
+		environment(\.popupBarTitleTextAttributes, LNPopupEnvironmentConsumer(attribs))
 	}
 	
 	/// Sets the display attributes for the popup bar’s subtitle text.
@@ -232,7 +236,7 @@ public extension View {
 	/// SwiftUI-scoped attributes are partially supported. Open an issue on GitHub if you need something that is not supported.
 	@available(iOS 15, *)
 	func popupBarSubtitleTextAttributes(_ attribs: AttributeContainer) -> some View {
-		return environment(\.popupBarSubtitleTextAttributes, LNPopupEnvironmentConsumer(attribs))
+		environment(\.popupBarSubtitleTextAttributes, LNPopupEnvironmentConsumer(attribs))
 	}
 	
 	/// Sets a custom popup bar view, instead of the default system-provided bars.
@@ -248,7 +252,7 @@ public extension View {
 											 wantsDefaultPanGesture: Bool = true,
 											 wantsDefaultHighlightGesture: Bool = true,
 											 @ViewBuilder popupBarContent: @escaping () -> PopupBarContent) -> some View where PopupBarContent : View {
-		return environment(\.popupBarCustomBarView, LNPopupEnvironmentConsumer(LNPopupBarCustomView(wantsDefaultTapGesture: wantsDefaultTapGesture, wantsDefaultPanGesture: wantsDefaultPanGesture, wantsDefaultHighlightGesture: wantsDefaultHighlightGesture, popupBarCustomBarView: AnyView(popupBarContent()))))
+		environment(\.popupBarCustomBarView, LNPopupEnvironmentConsumer(LNPopupBarCustomView(wantsDefaultTapGesture: wantsDefaultTapGesture, wantsDefaultPanGesture: wantsDefaultPanGesture, wantsDefaultHighlightGesture: wantsDefaultHighlightGesture, popupBarCustomBarView: AnyView(popupBarContent()))))
 	}
 	
 	/// Adds a context menu to the popup bar.
@@ -280,7 +284,7 @@ public extension View {
 	///
 	/// - Parameter menuItems: A `contextMenu` that contains one or more menu items.
 	func popupBarContextMenu<MenuItems>(@ViewBuilder menuItems: () -> MenuItems) -> some View where MenuItems : View {
-		return environment(\.popupBarContextMenu, LNPopupEnvironmentConsumer(AnyView(menuItems())))
+		environment(\.popupBarContextMenu, LNPopupEnvironmentConsumer(AnyView(menuItems())))
 	}
 	
 	/// Gives a low-level access to the `LNPopupBar` object for customization, beyond what is exposed by LNPopupUI.
@@ -291,7 +295,7 @@ public extension View {
 	///   - customizer: A customizing closure that is called to customize the popup bar object.
 	///   - popupBar: The popup bar to customize.
 	func popupBarCustomizer(_ customizer: @escaping (_ popupBar: LNPopupBar) -> Void) -> some View {
-		return environment(\.popupBarCustomizer, LNPopupEnvironmentConsumer(customizer))
+		environment(\.popupBarCustomizer, LNPopupEnvironmentConsumer(customizer))
 	}
 	
 	/// Gives a low-level access to the `LNPopupContentView` object for customization, beyond what is exposed by LNPopupUI.
@@ -302,7 +306,7 @@ public extension View {
 	///   - customizer: A customizing closure that is called to customize the popup content view object.
 	///   - popupContentView: The popup content view to customize.
 	func popupContentViewCustomizer(_ customizer: @escaping (_ popupContentView: LNPopupContentView) -> Void) -> some View {
-		return environment(\.popupContentViewCustomizer, LNPopupEnvironmentConsumer(customizer))
+		environment(\.popupContentViewCustomizer, LNPopupEnvironmentConsumer(customizer))
 	}
 }
 
@@ -351,7 +355,7 @@ public extension View {
 	/// - Parameters:
 	///   - titleContent: A view that describes the popup's title.
 	func popupTitle<TitleContent>(@ViewBuilder _ titleContent: () -> TitleContent) -> some View where TitleContent : View {
-		return preference(key: LNPopupTextTitlePreferenceKey.self, value: LNPopupTitleContentData(titleView: AnyView(erasing: titleContent()), subtitleView: nil))
+		preference(key: LNPopupTextTitlePreferenceKey.self, value: LNPopupTitleContentData(titleView: AnyView(erasing: titleContent()), subtitleView: nil))
 	}
 	
 	/// Configures the view's popup bar title and subtitle with custom labels.
@@ -362,7 +366,7 @@ public extension View {
 	///   - titleContent: A view that describes the popup's title.
 	///   - subtitleContent: A view that describes the popup's subtitle.
 	func popupTitle<TitleContent, SubtitleContent>(@ViewBuilder _ titleContent: () -> TitleContent, @ViewBuilder subtitle subtitleContent: () -> SubtitleContent) -> some View where TitleContent : View, SubtitleContent : View {
-		return preference(key: LNPopupTextTitlePreferenceKey.self, value: LNPopupTitleContentData(titleView: AnyView(erasing: titleContent()), subtitleView: AnyView(erasing: subtitleContent())))
+		preference(key: LNPopupTextTitlePreferenceKey.self, value: LNPopupTitleContentData(titleView: AnyView(erasing: titleContent()), subtitleView: AnyView(erasing: subtitleContent())))
 	}
 	
 	/// Configures the view's popup bar title and subtitle.
@@ -371,7 +375,7 @@ public extension View {
 	///   - title: The title to display.
 	///   - subtitle: The subtitle to display. Defaults to `nil`.
 	func popupTitle<S>(verbatim title: S, subtitle: S? = nil) -> some View where S : StringProtocol {
-		return popupTitle(verbatim: String(title), subtitle: subtitle == nil ? nil : String(subtitle!))
+		popupTitle(verbatim: String(title), subtitle: subtitle == nil ? nil : String(subtitle!))
 	}
 	
 	/// Configures the view's popup bar title and subtitle.
@@ -380,7 +384,7 @@ public extension View {
 	///   - title: The title to display.
 	///   - subtitle: The subtitle to display. Defaults to `nil`.
 	func popupTitle(verbatim title: String, subtitle: String? = nil) -> some View {
-		return preference(key: LNPopupTitlePreferenceKey.self, value: LNPopupTitleData(title: title, subtitle: subtitle))
+		preference(key: LNPopupTitlePreferenceKey.self, value: LNPopupTitleData(title: title, subtitle: subtitle))
 	}
 	
 	/// Configures the view's popup bar image.
@@ -391,7 +395,7 @@ public extension View {
 	///   - image: The image to use.
 	///   - resizable: Mark the image as resizable. Defaults to `true`. If you'd like to control this on your own, set this parameter to `false`.
 	func popupImage(_ image: Image?, resizable: Bool = true) -> some View {
-		return preference(key: LNPopupImagePreferenceKey.self, value: resizable ? image?.resizable() : image)
+		preference(key: LNPopupImagePreferenceKey.self, value: resizable ? image?.resizable() : image)
 	}
 	
 	/// Configures the view's popup bar progress.
@@ -399,7 +403,7 @@ public extension View {
 	/// - Parameters:
 	///   - progress: The popup bar progress.
 	func popupProgress(_ progress: Float) -> some View {
-		return preference(key: LNPopupProgressPreferenceKey.self, value: progress)
+		preference(key: LNPopupProgressPreferenceKey.self, value: progress)
 	}
 	
 	fileprivate func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView where Content : View {
@@ -538,7 +542,7 @@ public extension View {
 	///
 	/// @note This method layers a background view behind this view. The background view might interfere with interaction of elements behind it. Use with care.
 	func popupInteractionContainer() -> some View {
-		return background(LNPopupUIInteractionContainerBackgroundView())
+		background(LNPopupUIInteractionContainerBackgroundView())
 	}
 }
 
@@ -550,7 +554,7 @@ public extension View {
 	///   - bundle: The bundle to search for the image resource and localization content. If `nil`, uses the main `Bundle`. Defaults to `nil`.
 	@available(*, deprecated, message: "Use popupImage(_:) instead.")
 	func popupImage(_ name: String, bundle: Bundle? = nil) -> some View {
-		return popupImage(Image(name, bundle: bundle))
+		popupImage(Image(name, bundle: bundle))
 	}
 	
 	/// Configures the view's popup bar image with a system symbol image.
@@ -559,7 +563,7 @@ public extension View {
 	///   - systemName: The name of the system symbol image. Use the SF Symbols app to look up the names of system symbol images.
 	@available(*, deprecated, message: "Use popupImage(_:) instead.")
 	func popupImage(systemName: String) -> some View {
-		return popupImage(Image(systemName: systemName))
+		popupImage(Image(systemName: systemName))
 	}
 	
 	/// Configures the view's popup bar image based on a `UIImage`.
@@ -568,7 +572,7 @@ public extension View {
 	///   - uiImage: The image to use
 	@available(*, deprecated, message: "Use popupImage(_:) instead.")
 	func popupImage(_ uiImage: UIImage) -> some View {
-		return popupImage(Image(uiImage: uiImage))
+		popupImage(Image(uiImage: uiImage))
 	}
 	
 	/// Configures the view's popup bar image based on a `CGImage`.
@@ -579,6 +583,6 @@ public extension View {
 	///   - orientation: the orientation of the image
 	@available(*, deprecated, message: "Use popupImage(_:) instead.")
 	func popupImage(_ cgImage: CGImage, scale: CGFloat, orientation: UIImage.Orientation = .up) -> some View {
-		return popupImage(Image(decorative: cgImage, scale: scale, orientation: UIImageOrientationToImageOrientation(orientation)))
+		popupImage(Image(decorative: cgImage, scale: scale, orientation: UIImageOrientationToImageOrientation(orientation)))
 	}
 }
