@@ -81,6 +81,7 @@ struct InnerNavView : View {
 						}
 					}
 				}
+				.navigationBarBackButtonHidden(true)
 		}
 	}
 }

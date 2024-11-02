@@ -89,6 +89,7 @@ struct CustomBarMapView: View {
 					.font(.title2)
 			}
 			.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
+			.hoverEffect(.lift)
 			.padding()
 		}
 		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen, popupContentController: popupContentController)
@@ -98,7 +99,9 @@ struct CustomBarMapView: View {
 					Spacer()
 					EnlargingButton(label: "Zoom") { pressing in
 						self.region = pressing ? CustomBarMapView.zoomedRegion : CustomBarMapView.defaultRegion
-					}.padding()
+					}
+					.hoverEffect(.lift)
+					.padding(.vertical, 20)
 					Spacer()
 					
 				}
@@ -109,6 +112,7 @@ struct CustomBarMapView: View {
 						.renderingMode(.template)
 				}
 				.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
+				.hoverEffect(.lift)
 				.padding()
 			}
 		}

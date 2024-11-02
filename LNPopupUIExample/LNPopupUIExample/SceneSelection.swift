@@ -242,6 +242,7 @@ struct SceneSelection: View {
 			
 		}
 		.activitySheet($item)
+//		.font(font)
 		.font(enableFunkyInheritedFont ? font : nil)
 	}
 }

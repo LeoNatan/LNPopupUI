@@ -200,17 +200,17 @@ struct SafeAreaDemoView : View {
 					}.foregroundColor(Color(.label))
 				} else {
 					if let presentBarHandler = presentBarHandler, let hideBarHandler = hideBarHandler {
-						HStack(spacing: 16) {
+						HStack(spacing: 2) {
 							Button {
 								presentBarHandler()
 							} label: {
 								Image(systemName: "dock.arrow.up.rectangle")
-							}
+							}.padding(7).hoverEffect()
 							Button {
 								hideBarHandler()
 							} label: {
 								Image(systemName: "dock.arrow.down.rectangle")
-							}
+							}.padding(7).hoverEffect()
 						}.font(.title2).fontWeight(nil)
 					} else {
 						Text("Center")
@@ -232,7 +232,7 @@ struct SafeAreaDemoView : View {
 							} icon: {
 								Image(systemName: "arrowtriangle.forward.fill").font(.system(size: 8))
 							}.labelStyle(TrailingImageLabelStyle())
-						}.padding()
+						}.padding(7 ).hoverEffect()
 					}
 				}
 			}
@@ -521,8 +521,7 @@ fileprivate struct FixBottomBarAppearanceModifier: ViewModifier {
 
 extension View {
 	func fixBottomBarAppearance() -> some View {
-		return self
-//		return modifier(FixBottomBarAppearanceModifier())
+		return modifier(FixBottomBarAppearanceModifier())
 	}
 }
 

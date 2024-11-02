@@ -38,10 +38,13 @@ struct InnerView : View {
 				VStack {
 					Button("Gallery") {
 						onDismiss()
-					}.fontWeight(.semibold)
-					.padding([.leading, .trailing])
+					}
+					.fontWeight(.semibold)
+					.padding(7)
+					.hoverEffect()
 				}
-				.padding(.top, horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad ? 34 : 4)
+				.padding(.top, horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad ? 27 : 0)
+				.padding(.trailing, 8)
 				.ignoresSafeArea(edges: horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad ? .top : .bottom)
 			}
 		}
