@@ -18,6 +18,8 @@ struct InnerView : View {
 	
 	let presentBarHandler: (() -> Void)?
 	let hideBarHandler: (() -> Void)?
+	
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 
 	init(tabIdx: Int?, showDismissButton: Bool? = true, onDismiss: @escaping () -> Void, presentBarHandler: (() -> Void)?, hideBarHandler: (() -> Void)?) {
 		self.tabIdx = tabIdx
@@ -38,23 +40,18 @@ struct InnerView : View {
 						onDismiss()
 					}.fontWeight(.semibold)
 					.padding([.leading, .trailing])
-				}.padding(.top, 4)
+				}
+				.padding(.top, horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad ? 34 : 4)
+				.ignoresSafeArea(edges: horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad ? .top : .bottom)
 			}
 		}
 	}
 }
 
 struct TabDemoView : View {
-	@Environment(\.horizontalSizeClass) var horizontalSizeClass
-	
-	@State private var isBarPresented: Bool = true
-	private let onDismiss: () -> Void
 	let demoContent: DemoContent
-	
-	init(demoContent: DemoContent, onDismiss: @escaping () -> Void) {
-		self.onDismiss = onDismiss
-		self.demoContent = demoContent
-	}
+	let onDismiss: () -> Void
+	@State private var isBarPresented: Bool = true
 	
 	func presentBarHandler() {
 		isBarPresented = true
@@ -65,15 +62,10 @@ struct TabDemoView : View {
 	}
 	
 	var body: some View {
-		MaterialTabView {
-			ForEach(1..<5) { idx in
-				InnerView(tabIdx:idx - 1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-					.tabItem {
-						Label("Tab", systemImage: "1.square")
-					}
-			}
-		}
-		.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
+		TabGeneratorView(demoContent: demoContent, isBarPresented: $isBarPresented, tabContentGenerator: { idx in
+			InnerView(tabIdx:idx, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+				.fixBottomBarAppearance()
+		})
 	}
 }
 

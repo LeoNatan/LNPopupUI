@@ -225,7 +225,7 @@ struct SafeAreaDemoView : View {
 							
 							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss)
 								.navigationTitle("LNPopupUI")
-								.toolbarRoleIfPad18()
+								.toolbarRoleIfPad18(bottomBarHideSupport?.isBottomBarTab != true)
 						} label: {
 							Label {
 								Text("Next")
@@ -519,15 +519,15 @@ fileprivate struct FixBottomBarAppearanceModifier: ViewModifier {
 	}
 }
 
-fileprivate extension View {
+extension View {
 	func fixBottomBarAppearance() -> some View {
-		return modifier(FixBottomBarAppearanceModifier())
+		return self
+//		return modifier(FixBottomBarAppearanceModifier())
 	}
 }
 
 struct MaterialTabView<Content: View>: View {
 	let tabView: any View
-	
 	
 	init(@ViewBuilder content: () -> Content) {
 		tabView = TabView {

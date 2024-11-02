@@ -9,6 +9,7 @@
 import SwiftUI
 import LoremIpsum
 import LNPopupUI
+import SwiftUIIntrospect
 
 struct ToolbarRolePad18Modifier: ViewModifier {
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -18,19 +19,45 @@ struct ToolbarRolePad18Modifier: ViewModifier {
 	}
 }
 
+@available(iOS 18.0, *)
+struct TabViewStylePad18Modifier: ViewModifier {
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	@AppStorage(.tabBarHasSidebar, store: .settings) var tabBarHasSidebar: Bool = true
+	
+	func body(content: Content) -> some View {
+		if tabBarHasSidebar && horizontalSizeClass == .regular {
+			content.tabViewStyle(.sidebarAdaptable)
+		} else {
+			content.tabViewStyle(.tabBarOnly)
+		}
+	}
+}
+
 extension View {
-	func toolbarRoleIfPad18() -> some View {
+	func toolbarRoleIfPad18(_ forceDisabled: Bool = false) -> some View {
 		if #available(iOS 18.0, *) {
+			if forceDisabled {
+				return self
+			}
+			
 			return self.modifier(ToolbarRolePad18Modifier())
+		} else {
+			return self
+		}
+	}
+	
+	func tabViewStylePad18() -> some View {
+		if #available(iOS 18.0, *) {
+			return self.modifier(TabViewStylePad18Modifier())
 		} else {
 			return self
 		}
 	}
 }
 
+nonisolated(unsafe) private let key = malloc(1)!
+
 struct InnerNavView : View {
-	
-	
 	let tabIdx: Int
 	let onDismiss: () -> Void
 	
@@ -43,25 +70,73 @@ struct InnerNavView : View {
 			let bottomBarHideSupport = SafeAreaDemoView.BottomBarHideSupport(showsBottomBarHideButton: true, isBottomBarTab: true)
 			
 			SafeAreaDemoView(colorSeed: "tab_\(tabIdx)", includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
-				.navigationBarTitle("Tab View + Navigation View")
+				.navigationBarTitle("LNPopupUI")
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbarRoleIfPad18()
+				.introspect(.tabView, on: .iOS(.v18), scope: .ancestor) { tvc in
+					if #available(iOS 18.0, *) {
+						if objc_getAssociatedObject(tvc, key) as? Bool != true {
+							tvc.sidebar.isHidden = true
+							objc_setAssociatedObject(tvc, key, NSNumber(booleanLiteral: true), .OBJC_ASSOCIATION_RETAIN)
+						}
+					}
+				}
 		}
 	}
 }
 
-struct TabNavView : View {
+struct TabGeneratorView<Content>: View where Content: View {
+	let tabContentGenerator: (Int) -> Content
+	
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
+	@AppStorage(.tabBarHasSidebar, store: .settings) var tabBarHasSidebar: Bool = true
 	
-	@State private var isBarPresented: Bool = true
-	
-	private let onDismiss: () -> Void
+	@Binding var isBarPresented: Bool
 	let demoContent: DemoContent
 	
-	init(demoContent: DemoContent, onDismiss: @escaping () -> Void) {
-		self.onDismiss = onDismiss
+	init(demoContent: DemoContent, isBarPresented: Binding<Bool>, @ViewBuilder tabContentGenerator: @escaping (Int) -> Content) {
 		self.demoContent = demoContent
+		self._isBarPresented = isBarPresented
+		self.tabContentGenerator = tabContentGenerator
 	}
+	
+	var body: some View {
+		if #available(iOS 18.0, *) {
+			MaterialTabView {
+				ForEach(1..<5) { idx in
+					Tab("Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", systemImage: "\(idx).square") {
+						tabContentGenerator(idx - 1)
+					}
+				}
+				if tabBarHasSidebar && UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular {
+					ForEach(5..<9) { idx in
+						Tab("Sidebar Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", systemImage: "\(idx).square") {
+							tabContentGenerator(idx - 1)
+						}
+						.tabPlacement(.sidebarOnly)
+					}
+				}
+			}
+			.tabViewStylePad18()
+			.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
+		} else {
+			MaterialTabView {
+				ForEach(1..<5) { idx in
+					tabContentGenerator(idx - 1)
+						.tabItem {
+							Label("Tab", systemImage: "\(idx).square").foregroundStyle(.red)
+						}
+				}
+			}
+			.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
+		}
+	}
+}
+
+struct TabNavView: View {
+	let demoContent: DemoContent
+	let onDismiss: () -> Void
+	@State var isBarPresented: Bool = true
 	
 	func presentBarHandler() {
 		isBarPresented = true
@@ -72,26 +147,9 @@ struct TabNavView : View {
 	}
 	
 	var body: some View {
-		if #available(iOS 18.0, *) {
-			MaterialTabView {
-				ForEach(1..<5) { idx in
-					Tab("Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", systemImage: "\(idx).square") {
-						InnerNavView(tabIdx:idx - 1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-					}
-				}
-			}
-			.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
-		} else {
-			MaterialTabView {
-				ForEach(1..<5) { idx in
-					InnerNavView(tabIdx:idx - 1, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-						.tabItem {
-							Label("Tab", systemImage: "\(idx).square").foregroundStyle(.red)
-						}
-				}
-			}
-			.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
-		}
+		TabGeneratorView(demoContent: demoContent, isBarPresented: $isBarPresented, tabContentGenerator: { idx in
+			InnerNavView(tabIdx:idx, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
+		})
 	}
 }
 

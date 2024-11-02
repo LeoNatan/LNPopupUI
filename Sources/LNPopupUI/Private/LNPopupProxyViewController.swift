@@ -129,8 +129,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		return LNPopupImplicitAnimationController(withWindow: view.window!)
 	}()
 	
+	weak var lastKnownTarget: UIViewController?
 	var currentSmallPopupState: LNPopupSmallState = (false, nil)
-	func handlePopupState(_ state: LNPopupState<PopupContent>) {
+	func handlePopupState(_ state: LNPopupState<PopupContent>, animated: Bool = true) {
 		currentPopupState = state
 			
 		let popupContentHandler = state.content != nil ? viewHandler(state) : viewControllerHandler(state)
@@ -264,11 +265,14 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			}
 			
 			let newSmallState = self.currentPopupState.smallState
-			guard self.currentSmallPopupState != newSmallState else {
+			guard self.lastKnownTarget != target || self.currentSmallPopupState != newSmallState else {
 				return
 			}
 			
+			let animated = animated && self.lastKnownTarget == target
+			
 			self.currentSmallPopupState = newSmallState
+			self.lastKnownTarget = target
 			
 			if newSmallState.isBarPresented == true {
 				popupContentHandler()
@@ -278,11 +282,11 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				if targetPresentationState.rawValue >= UIViewController.PopupPresentationState.barPresented.rawValue {
 					if let isPopupOpen = newSmallState.isPopupOpen {
 						if isPopupOpen {
-							target.openPopup(animated: true) {
+							target.openPopup(animated: animated) {
 								endImplicitAnims()
 							}
 						} else {
-							target.closePopup(animated: true) {
+							target.closePopup(animated: animated) {
 								endImplicitAnims()
 							}
 						}
@@ -302,7 +306,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		}
 		
 		if readyForHandling {
-			handler(true)
+			handler(animated)
 		} else {
 			waitingStateHandle = handler
 		}
@@ -314,6 +318,16 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 //		print("Child: \(target)")
 		
 		readyForHandling = true
+	}
+	
+	override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		
+		coordinator.animate(alongsideTransition: nil) { _ in
+			if self.lastKnownTarget != self.target {
+				self.handlePopupState(self.currentPopupState, animated: false)
+			}
+		}
 	}
 	
 	//MARK: UIContextMenuInteractionDelegate

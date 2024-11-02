@@ -1,3 +1,3 @@
-[submodule "LNPopupSettings"]
-	path = LNPopupSettings
+[submodule "LNPopupUIExample/LNPopupUIExample/Settings"]
+	path = LNPopupUIExample/LNPopupUIExample/Settings
 	url = https://github.com/LeoNatan/LNPopupSettings.git

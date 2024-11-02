@@ -40,7 +40,7 @@ struct NavDemoView : View {
 			let bottomBarHideSupport = SafeAreaDemoView.BottomBarHideSupport(showsBottomBarHideButton: true)
 			
 			SafeAreaDemoView(colorSeed:"nil", includeToolbar: true, includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: false, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
-				.navigationBarTitle("Navigation View")
+				.navigationBarTitle("LNPopupUI")
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {
 					ToolbarItem(placement: .confirmationAction) {
