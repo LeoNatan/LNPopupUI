@@ -12,17 +12,18 @@ import LNPopupUI
 
 struct RandomTitleSong : Equatable, Identifiable {
 	var id: Int
-	var imageName: String {
-		"genre\(id)"
-	}
+	let imageName: String = "genre\(Int.random(in: 1...30))"
 	var title: String = LoremIpsum.title
 	var subtitle: String = LoremIpsum.words(withNumber: 5)
 }
 
-fileprivate let songs: [RandomTitleSong] = {
-	var songs: [RandomTitleSong] = []
-	for idx in 1..<31 {
-		songs.append(RandomTitleSong(id: idx))
+fileprivate let songs: [[RandomTitleSong]] = {
+	var songs: [[RandomTitleSong]] = []
+	for jdx in 0..<4 {
+		songs.append([])
+		for idx in 1..<31 {
+			songs[jdx].append(RandomTitleSong(id: idx))
+		}
 	}
 	return songs
 }()
@@ -30,13 +31,15 @@ fileprivate let songs: [RandomTitleSong] = {
 struct RandomTitlesListView : View {
 	@Environment(\.presentationMode) var presentationMode
 	private let title: String
+	private let idx: Int
 	
 	@Binding var isPopupPresented: Bool
 	private let onSongSelect: (RandomTitleSong) -> Void
 	private let onDismiss: () -> Void
 	
-	init(_ title: String, _ isPopupPresented: Binding<Bool>, onDismiss: @escaping () -> Void, onSongSelect: @escaping (RandomTitleSong) -> Void) {
+	init(_ title: String, idx: Int, _ isPopupPresented: Binding<Bool>, onDismiss: @escaping () -> Void, onSongSelect: @escaping (RandomTitleSong) -> Void) {
 		self.title = title
+		self.idx = idx
 		self._isPopupPresented = isPopupPresented
 		self.onDismiss = onDismiss
 		self.onSongSelect = onSongSelect
@@ -44,7 +47,7 @@ struct RandomTitlesListView : View {
 	
 	var body: some View {
 		MaterialNavigationStack {
-			List(songs) { song in
+			List(songs[idx]) { song in
 				Button {
 					onSongSelect(song)
 				} label: {
@@ -88,6 +91,7 @@ struct RandomTitlesListView : View {
 	}
 }
 
+@available(iOS 18.0, *)
 struct MusicView: View {
 	@State var isPopupBarPresented: Bool = false
 	@State var isPopupOpen: Bool = false
@@ -102,38 +106,35 @@ struct MusicView: View {
 	
 	var body: some View {
 		MaterialTabView {
-			RandomTitlesListView("Music", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
-				currentSong = song
-			})
-			.tabItem {
-				Text("Music")
-				Image(systemName: "play.circle.fill")
+			Tab("Music", systemImage: "play.circle") {
+				RandomTitlesListView("Music", idx: 0, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+					currentSong = song
+				})
 			}
-			RandomTitlesListView("Artists", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
-				currentSong = song
-			})
-			.tabItem {
-				Text("Artists")
-				Image(systemName: "music.mic")
+			Tab("Artists", systemImage: "music.mic") {
+				RandomTitlesListView("Artists", idx: 1, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+					currentSong = song
+				})
 			}
-			RandomTitlesListView("Composers", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
-				currentSong = song
-			})
-			.tabItem {
-				Text("Composers")
-				Image(systemName: "music.quarternote.3")
+			Tab("Composers", systemImage: "music.quarternote.3") {
+				RandomTitlesListView("Composers", idx: 2, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+					currentSong = song
+				})
 			}
-			RandomTitlesListView("Recents", $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
-				currentSong = song
-			})
-			.tabItem {
-				Text("Recents")
-				Image(systemName: "clock.fill")
+			Tab("Recents", systemImage: "clock") {
+				RandomTitlesListView("Recents", idx: 3, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+					currentSong = song
+				})
 			}
 		}
 		.accentColor(.pink)
 		.onChange(of: currentSong) { newValue in
 			isPopupBarPresented = newValue != nil
+		}
+		.onChange(of: isPopupBarPresented) { newValue in
+			if newValue == false {
+				currentSong = nil
+			}
 		}
 		.popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
 			if let currentSong = currentSong {
@@ -145,6 +146,7 @@ struct MusicView: View {
 	}
 }
 
+@available(iOS 18.0, *)
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
 		MusicView(onDismiss: {})

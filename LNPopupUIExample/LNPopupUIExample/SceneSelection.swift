@@ -155,14 +155,19 @@ struct SceneSelection: View {
 					LNHeaderFooterView("Presents a standard test scene with a popup bar.")
 				}
 				Section {
-					CellPaddedButton("Music") {
-						musicSheetPresented.toggle()
-					}
-					.fullScreenCover(isPresented: $musicSheetPresented, content: {
-						MusicView {
+					if #available(iOS 18.0, *) {
+						CellPaddedButton("Music") {
 							musicSheetPresented.toggle()
 						}
-					})
+						.fullScreenCover(isPresented: $musicSheetPresented, content: {
+							MusicView {
+								musicSheetPresented.toggle()
+							}
+						})
+					} else {
+						CellPaddedButton("Music") {
+						}.disabled(true)
+					}
 				} header: {
 					LNHeaderFooterView("Demo Apps")
 				} footer: {

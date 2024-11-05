@@ -265,7 +265,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			}
 			
 			let newSmallState = self.currentPopupState.smallState
+			
+			if newSmallState.isBarPresented {
+				popupContentHandler()
+			}
+			
 			guard self.lastKnownTarget != target || self.currentSmallPopupState != newSmallState else {
+				endImplicitAnims()
 				return
 			}
 			
@@ -275,8 +281,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			self.lastKnownTarget = target
 			
 			if newSmallState.isBarPresented == true {
-				popupContentHandler()
-				
 				let targetPresentationState: UIViewController.PopupPresentationState = UIViewController.PopupPresentationState(rawValue: target.value(forKeyPath: "ln_popupController.popupControllerTargetState") as! Int)!
 				
 				if targetPresentationState.rawValue >= UIViewController.PopupPresentationState.barPresented.rawValue {
