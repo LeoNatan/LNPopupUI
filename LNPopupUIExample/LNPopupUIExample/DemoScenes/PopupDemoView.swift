@@ -223,9 +223,9 @@ struct SafeAreaDemoView : View {
 						NavigationLink {
 							let bottomButtonsHandlers = BottomButtonHandlers(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
 							
-							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss)
+							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: BottomBarHideSupport(showsBottomBarHideButton: false, isBottomBarTab: bottomBarHideSupport?.isBottomBarTab) )
 								.navigationTitle("LNPopupUI")
-								.toolbarRoleIfPad18(bottomBarHideSupport?.isBottomBarTab != true)
+								.toolbarRoleIfPad18(bottomBarHideSupport == nil || bottomBarHideSupport!.isBottomBarTab != true)
 						} label: {
 							Label {
 								Text("Next")
@@ -245,6 +245,9 @@ struct SafeAreaDemoView : View {
 			.modifier(HideShowTabBarModifier(bottomBarHideSupport: $bottomBarHideSupport))
 			.toolbar(includeToolbar && bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .bottomBar)
 			.toolbar(bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .tabBar)
+			.introspect(.viewController, on: .iOS(.v16, .v17, .v18)) { vc in
+				vc.navigationItem.backButtonTitle = String(localized: "Back")
+			}
 		}
 	}
 }

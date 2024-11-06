@@ -21,11 +21,10 @@ struct ToolbarRolePad18Modifier: ViewModifier {
 
 @available(iOS 18.0, *)
 struct TabViewStylePad18Modifier: ViewModifier {
-	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 	@AppStorage(.tabBarHasSidebar, store: .settings) var tabBarHasSidebar: Bool = true
 	
 	func body(content: Content) -> some View {
-		if tabBarHasSidebar && horizontalSizeClass == .regular {
+		if tabBarHasSidebar {
 			content.tabViewStyle(.sidebarAdaptable)
 		} else {
 			content.tabViewStyle(.tabBarOnly)
