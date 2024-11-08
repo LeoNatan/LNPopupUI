@@ -12,6 +12,7 @@ import LNPopupUI
 
 struct NavDemoView : View {
 	@State private var isBarPresented: Bool = true
+	let title: String?
 	
 	let demoContent: DemoContent
 	let onDismiss: () -> Void
@@ -40,7 +41,7 @@ struct NavDemoView : View {
 			let bottomBarHideSupport = SafeAreaDemoView.BottomBarHideSupport(showsBottomBarHideButton: true)
 			
 			SafeAreaDemoView(colorSeed:"nil", includeToolbar: true, includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: false, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
-				.navigationBarTitle("LNPopupUI")
+				.navigationBarTitle(title ?? "LNPopupUI")
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {
 					ToolbarItem(placement: .confirmationAction) {
@@ -57,6 +58,6 @@ struct NavDemoView : View {
 
 struct NavDemoView_Previews: PreviewProvider {
 	static var previews: some View {
-		NavDemoView(demoContent: DemoContent(), onDismiss: {})
+		NavDemoView(title: nil, demoContent: DemoContent(), onDismiss: {})
 	}
 }

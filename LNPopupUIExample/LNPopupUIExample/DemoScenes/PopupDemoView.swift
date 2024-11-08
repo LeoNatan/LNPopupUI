@@ -24,15 +24,15 @@ extension View {
 	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
 		return toolbar {
 			ToolbarItemGroup(placement: .bottomBar) {
-				Button("Present Bar") {
+				Button(presentBarHandler != nil ? "Present Bar" : "Test 1") {
 					presentBarHandler?()
 				}
 				Spacer()
-				Button("Appearance") {
+				Button(appearanceHandler != nil ? "Appearance" : "Test 2") {
 					appearanceHandler?()
 				}
 				Spacer()
-				Button("Dismiss Bar") {
+				Button(hideBarHandler != nil ? "Dismiss Bar" : "Test 3") {
 					hideBarHandler?()
 				}
 			}

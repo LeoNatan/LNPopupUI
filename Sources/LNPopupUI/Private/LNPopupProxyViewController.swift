@@ -98,11 +98,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	fileprivate var target: UIViewController {
+		let appropriateChild = children.first(where: { $0.view.frame == self.view.bounds })
+		
 		//Support NavigationSplitView
-		if children.first == nil && self.splitViewController != nil && self.navigationController != nil {
+		if appropriateChild == nil && self.splitViewController != nil && self.navigationController != nil {
 			return self.navigationController!
 		}
-		return children.first ?? self
+		return appropriateChild ?? self
 	}
 	
 	func viewHandler(_ state: LNPopupState<PopupContent>) -> (() -> Void) {
@@ -314,14 +316,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		} else {
 			waitingStateHandle = handler
 		}
-	}
-	
-	override func addChild(_ childController: UIViewController) {
-		super.addChild(childController)
-		
-//		print("Child: \(target)")
-		
-		readyForHandling = true
 	}
 	
 	override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {

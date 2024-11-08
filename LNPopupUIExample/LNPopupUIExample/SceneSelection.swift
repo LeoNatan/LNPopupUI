@@ -102,7 +102,7 @@ struct SceneSelection: View {
 						navPresented.toggle()
 					}
 					.fullScreenCover(isPresented: $navPresented, content: {
-						NavDemoView(demoContent: DemoContent()) {
+						NavDemoView(title: nil, demoContent: DemoContent()) {
 							navPresented.toggle()
 						}
 					})
@@ -110,7 +110,7 @@ struct SceneSelection: View {
 						viewSheetPresented.toggle()
 					}
 					.sheet(isPresented: $viewSheetPresented, content: {
-						NavDemoView(demoContent: DemoContent()) {
+						NavDemoView(title: nil, demoContent: DemoContent()) {
 							viewSheetPresented.toggle()
 						}
 						.pagePresentationIfPossible()

@@ -9,62 +9,29 @@
 import SwiftUI
 
 struct SplitInnerView: View {
+	let title: String
+	let idx: Int
 	let isGlobal: Bool
-	let showsToolbarItems: Bool
-	let showsTabBarItems: Bool
 	let onDismiss: () -> Void
 	
-	init(isGlobal: Bool, showsToolbarItems: Bool = false, showsTabBarItems: Bool = false, onDismiss: @escaping () -> Void) {
-		self.isGlobal = isGlobal
-		self.showsToolbarItems = showsToolbarItems
-		self.showsTabBarItems = showsTabBarItems
-		self.onDismiss = onDismiss
-	}
-	
-	@ViewBuilder func tabViewOrInner<Content: View>(inner: Content) -> some View {
-		if showsTabBarItems {
-			MaterialTabView {
-				inner
-			}
-		} else {
-			inner
-		}
-	}
-	
 	var body: some View {
-		let inner = tabViewOrInner(inner: InnerView(tabIdx: -1, showDismissButton: false, onDismiss: onDismiss, presentBarHandler: nil, hideBarHandler: nil)
-			.tabItem {
-				Image(systemName: "star")
-				Text("Tab")
-			}
-			.toolbar {
-				ToolbarItem(placement: .confirmationAction) {
-					Button("Gallery") {
-						onDismiss()
-					}
-				}
-				if showsToolbarItems {
-					ToolbarItemGroup(placement: .bottomBar) {
-						Button("Test 1") {
-							
-						}
-						Spacer()
-						Button("Test 2") {
-							
-						}
-						Spacer()
-						Button("Test 3") {
-							
+		let nav = MaterialNavigationStack {
+			InnerView(tabIdx: idx, showDismissButton: false, onDismiss: onDismiss, includeToolbar: !isGlobal, presentBarHandler: nil, hideBarHandler: nil)
+				.toolbar {
+					ToolbarItem(placement: .confirmationAction) {
+						Button("Gallery") {
+							onDismiss()
 						}
 					}
 				}
-			})
-		
-		
-		if isGlobal == false {
-			inner.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
+				.navigationTitle(title)
+				.navigationBarTitleDisplayMode(.inline)
+		}
+			
+		if isGlobal {
+			nav
 		} else {
-			inner
+			nav.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
 		}
 	}
 }
@@ -81,16 +48,13 @@ struct SplitDemoView: View {
 	
 	var body: some View {
 		let splitView = MaterialNavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.content)) {
-			SplitInnerView(isGlobal:isGlobal, onDismiss: onDismiss)
+			SplitInnerView(title: "Sidebar", idx: 600, isGlobal: isGlobal, onDismiss: onDismiss)
 				.navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 400)
-				.navigationTitle("Sidebar")
 		} content: {
-			SplitInnerView(isGlobal:isGlobal, showsToolbarItems: isGlobal == false, onDismiss: onDismiss)
+			SplitInnerView(title: "Content", idx: 2000, isGlobal: isGlobal, onDismiss: onDismiss)
 				.navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 400)
-				.navigationTitle("Content")
 		} detail: {
-			SplitInnerView(isGlobal:isGlobal, showsTabBarItems: isGlobal == false, onDismiss: onDismiss)
-				.navigationTitle("Detail")
+			SplitInnerView(title: "Detail", idx: 1, isGlobal: isGlobal, onDismiss: onDismiss)
 		}
 		.navigationSplitViewStyle(.prominentDetail)
 		

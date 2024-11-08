@@ -16,15 +16,17 @@ struct InnerView : View {
 	let showDismissButton: Bool?
 	let onDismiss: () -> Void
 	
+	let includeToolbar: Bool
 	let presentBarHandler: (() -> Void)?
 	let hideBarHandler: (() -> Void)?
 	
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 
-	init(tabIdx: Int?, showDismissButton: Bool? = true, onDismiss: @escaping () -> Void, presentBarHandler: (() -> Void)?, hideBarHandler: (() -> Void)?) {
+	init(tabIdx: Int?, showDismissButton: Bool? = true, onDismiss: @escaping () -> Void, includeToolbar: Bool = false, presentBarHandler: (() -> Void)?, hideBarHandler: (() -> Void)?) {
 		self.tabIdx = tabIdx
 		self.showDismissButton = showDismissButton
 		self.onDismiss = onDismiss
+		self.includeToolbar = includeToolbar
 		self.presentBarHandler = presentBarHandler
 		self.hideBarHandler = hideBarHandler
 	}
@@ -33,7 +35,7 @@ struct InnerView : View {
 		ZStack(alignment: .topTrailing) {
 			let bottomButtonsHandlers = SafeAreaDemoView.BottomButtonHandlers(presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 			
-			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "nil", bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: showDismissButton)
+			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "nil", includeToolbar: includeToolbar, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: showDismissButton)
 			if let showDismissButton, showDismissButton == true {
 				VStack {
 					Button("Gallery") {
