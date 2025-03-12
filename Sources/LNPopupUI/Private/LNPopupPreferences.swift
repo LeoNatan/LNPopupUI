@@ -24,6 +24,12 @@ internal struct LNPopupTitleContentData : Equatable {
 	}
 }
 
+internal struct LNPopupImageData: Equatable {
+	let image: Image?
+	let aspectRatio: CGFloat?
+	let contentMode: ContentMode
+}
+
 internal struct LNPopupAnyViewWrapper : Equatable {
 	let anyView: AnyView
 	
@@ -45,7 +51,7 @@ internal struct LNPopupProgressPreferenceKey: LNPopupNullablePreferenceKey {
 }
 
 internal struct LNPopupImagePreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = Image?
+	typealias Value = LNPopupImageData?
 }
 
 internal struct LNPopupLeadingBarItemsPreferenceKey: LNPopupNullablePreferenceKey {

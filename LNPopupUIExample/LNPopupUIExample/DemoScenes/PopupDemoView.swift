@@ -539,7 +539,7 @@ struct MaterialTabView<Content: View>: View {
 	
 	@available(iOS 18.0, *)
 	init<C>(@TabContentBuilder<Never> content: () -> C) where Content == TabContentBuilder<Never>.Content<C>, C : TabContent {
-		tabView = TabView.init<C>(content: content)
+		tabView = TabView.init(content: content)
 	}
 	
 	var body: some View {

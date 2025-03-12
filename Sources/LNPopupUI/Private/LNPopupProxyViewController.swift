@@ -50,11 +50,38 @@ internal class LNPopupImplicitAnimationController {
 	}
 }
 
-internal class LNPopupBarImageAdapter: UIHostingController<Image?> {
+internal class LNPopupBarImageAdapter: UIHostingController<AnyView> {
 	@objc(_ln_popupUIRequiresZeroInsets) let popupUIRequiresZeroInsets = true
+	
+	var contentMode: ContentMode = .fit {
+		didSet {
+			if #available(iOS 16.0, *) {
+				sizingOptions = contentMode == .fit ? [.preferredContentSize, .intrinsicContentSize] : []
+			}
+		}
+	}
+	
+	var aspectRatio: CGFloat? = nil
 	
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
+	}
+	
+	override var preferredContentSize: CGSize {
+		get {
+			guard contentMode != .fill else {
+				return CGSize(width: 1, height: 1)
+			}
+			
+			if let aspectRatio {
+				return CGSize(width: aspectRatio, height: 1)
+			}
+			
+			return super.preferredContentSize
+		}
+		set {
+			super.preferredContentSize = newValue
+		}
 	}
 }
 

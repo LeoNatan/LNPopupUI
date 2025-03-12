@@ -47,12 +47,26 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 			} else {
 				self.popupItem.setValue(nil, forKey: "swiftuiTitleContentView")
 			}
-		}.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] image in
-			if let imageController = self?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
-				imageController.rootView = image
-			} else {
-				self?.popupItem.setValue(image != nil ? LNPopupBarImageAdapter(rootView: image) : nil, forKey: "swiftuiImageController")
+		}.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] imageSettings in
+			guard let imageSettings else {
+				self?.popupItem.setValue(nil, forKey: "swiftuiImageController")
+				return
 			}
+			
+			let contentMode = imageSettings.contentMode ?? .fit
+			let view = AnyView(imageSettings.image?.aspectRatio(imageSettings.aspectRatio, contentMode: contentMode))
+			
+			let imageController: LNPopupBarImageAdapter
+			if let existing = self?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
+				imageController = existing
+				imageController.rootView = view
+				
+			} else {
+				imageController = LNPopupBarImageAdapter(rootView: view)
+				self?.popupItem.setValue(imageController, forKey: "swiftuiImageController")
+			}
+			imageController.contentMode = contentMode
+			imageController.aspectRatio = imageSettings.aspectRatio
 		}.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
 			self?.popupItem.progress = progress ?? 0.0
 		}.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
