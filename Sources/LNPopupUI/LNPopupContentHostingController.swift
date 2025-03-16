@@ -53,8 +53,12 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 				return
 			}
 			
-			let contentMode = imageSettings.contentMode ?? .fit
-			let view = AnyView(imageSettings.image?.aspectRatio(imageSettings.aspectRatio, contentMode: contentMode))
+			let contentMode = imageSettings.contentMode
+			var image = imageSettings.image
+			if imageSettings.resizable {
+				image = image.resizable()
+			}
+			let view = AnyView(image.aspectRatio(imageSettings.aspectRatio, contentMode: contentMode))
 			
 			let imageController: LNPopupBarImageAdapter
 			if let existing = self?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {

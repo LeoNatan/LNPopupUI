@@ -25,7 +25,8 @@ internal struct LNPopupTitleContentData : Equatable {
 }
 
 internal struct LNPopupImageData: Equatable {
-	let image: Image?
+	let image: Image
+	let resizable: Bool
 	let aspectRatio: CGFloat?
 	let contentMode: ContentMode
 }

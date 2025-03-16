@@ -56,7 +56,7 @@ internal class LNPopupBarImageAdapter: UIHostingController<AnyView> {
 	var contentMode: ContentMode = .fit {
 		didSet {
 			if #available(iOS 16.0, *) {
-				sizingOptions = contentMode == .fit ? [.preferredContentSize, .intrinsicContentSize] : []
+				sizingOptions = contentMode == .fit ? [.preferredContentSize] : []
 			}
 		}
 	}

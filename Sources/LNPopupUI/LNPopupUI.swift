@@ -397,7 +397,11 @@ public extension View {
 	///   - aspectRatio: The ratio of width to height to use for the resulting popup bar image. Use `nil` to maintain the current aspect ratio.
 	///   - contentMode: A flag that indicates whether this view fits or fills the popup bar image view.
 	func popupImage(_ image: Image?, resizable: Bool = true, aspectRatio: CGFloat? = nil, contentMode: ContentMode = .fit) -> some View {
-		preference(key: LNPopupImagePreferenceKey.self, value: LNPopupImageData(image: resizable ? image?.resizable() : image, aspectRatio: aspectRatio, contentMode: contentMode))
+		if let image {
+			preference(key: LNPopupImagePreferenceKey.self, value: LNPopupImageData(image: image, resizable: resizable, aspectRatio: aspectRatio, contentMode: contentMode))
+		} else {
+			preference(key: LNPopupImagePreferenceKey.self, value: nil)
+		}
 	}
 	
 	/// Configures the view's popup bar progress.
