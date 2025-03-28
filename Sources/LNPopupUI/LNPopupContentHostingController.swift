@@ -133,4 +133,13 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 		let viewToLimitInteractionTo = interactionContainerSubview() ?? super.viewForPopupInteractionGestureRecognizer
 		_ln_interactionLimitRect = view.convert(viewToLimitInteractionTo.bounds, from: viewToLimitInteractionTo)
 	}
+	
+	internal
+	var viewForTransitionViewLookup: UIView? = nil
+	
+	@objc(_ln_transitionViewForPopupTransitionFromPresentationState:toPresentationState:view:)
+	private
+	func transitionViewForPopupTransition(from fromState: UIViewController.PopupPresentationState, to toState: UIViewController.PopupPresentationState, view outView: UnsafeMutablePointer<LNPopupTransitionView>) -> UIView? {
+		private_transitionViewForPopupTransition(from: fromState, to: toState, view: outView)
+	}
 }

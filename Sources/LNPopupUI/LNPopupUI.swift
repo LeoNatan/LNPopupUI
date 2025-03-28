@@ -548,7 +548,16 @@ public extension View {
 	///
 	/// @note This method layers a background view behind this view. The background view might interfere with interaction of elements behind it. Use with care.
 	func popupInteractionContainer() -> some View {
-		background(LNPopupUIInteractionContainerBackgroundView())
+		background(LNPopupUIInteractionContainerBackgroundView().accessibilityHidden(true))
+	}
+}
+
+public extension Image {
+	/// Apply this modifier to designate an `Image` view as the popup transition target. The system will transition to and from this `Image` view when the popup opens and closes.
+	///
+	/// - Note: Transitions are only available for prominent and floating popup bar styles with drag interaction style. Any other combination will result in no transition.
+	func popupTransitionTarget() -> some View {
+		background(LNPopupUITransitionBackground().accessibilityHidden(true)).overlay(LNPopupUITransitionForeground().accessibilityHidden(true))
 	}
 }
 
@@ -558,27 +567,27 @@ public extension View {
 	/// - Parameters:
 	///   - name: The name of the image resource to lookup.
 	///   - bundle: The bundle to search for the image resource and localization content. If `nil`, uses the main `Bundle`. Defaults to `nil`.
-	@available(*, deprecated, message: "Use popupImage(_:) instead.")
+	@available(*, unavailable, message: "Use popupImage(_:) instead.")
 	func popupImage(_ name: String, bundle: Bundle? = nil) -> some View {
-		popupImage(Image(name, bundle: bundle))
+		fatalError("Use popupImage(_:) instead.")
 	}
 	
 	/// Configures the view's popup bar image with a system symbol image.
 	///
 	/// - Parameters:
 	///   - systemName: The name of the system symbol image. Use the SF Symbols app to look up the names of system symbol images.
-	@available(*, deprecated, message: "Use popupImage(_:) instead.")
+	@available(*, unavailable, message: "Use popupImage(_:) instead.")
 	func popupImage(systemName: String) -> some View {
-		popupImage(Image(systemName: systemName))
+		fatalError("Use popupImage(_:) instead.")
 	}
 	
 	/// Configures the view's popup bar image based on a `UIImage`.
 	///
 	/// - Parameters:
 	///   - uiImage: The image to use
-	@available(*, deprecated, message: "Use popupImage(_:) instead.")
+	@available(*, unavailable, message: "Use popupImage(_:) instead.")
 	func popupImage(_ uiImage: UIImage) -> some View {
-		popupImage(Image(uiImage: uiImage))
+		fatalError("Use popupImage(_:) instead.")
 	}
 	
 	/// Configures the view's popup bar image based on a `CGImage`.
@@ -587,8 +596,8 @@ public extension View {
 	///   - cgImage: the base graphical image
 	///   - scale: the scale factor the image is intended for (e.g. 1.0, 2.0, 3.0)
 	///   - orientation: the orientation of the image
-	@available(*, deprecated, message: "Use popupImage(_:) instead.")
+	@available(*, unavailable, message: "Use popupImage(_:) instead.")
 	func popupImage(_ cgImage: CGImage, scale: CGFloat, orientation: UIImage.Orientation = .up) -> some View {
-		popupImage(Image(decorative: cgImage, scale: scale, orientation: UIImageOrientationToImageOrientation(orientation)))
+		fatalError("Use popupImage(_:) instead.")
 	}
 }

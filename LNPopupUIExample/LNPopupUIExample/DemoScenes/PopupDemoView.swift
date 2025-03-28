@@ -139,6 +139,8 @@ struct SafeAreaDemoView : View {
 		var isBottomBarPresented: Bool = true
 	}
 	
+	let demoContent: DemoContent?
+	
 	let includeLink: Bool
 	let includeToolbar: Bool
 	let offset: Bool
@@ -156,7 +158,12 @@ struct SafeAreaDemoView : View {
 	
 	@State var bottomBarHideSupport: BottomBarHideSupport?
 	
-	init(colorSeed: String = "nil", colorIndex: Int = 0, includeToolbar: Bool = false, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, bottomButtonsHandlers: BottomButtonHandlers? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil, bottomBarHideSupport: BottomBarHideSupport? = nil) {
+	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
+	@AppStorage(.enableCustomizations, store: .settings) var enableCustomizations: Bool = false
+	
+	init(demoContent: DemoContent? = nil, colorSeed: String = "nil", colorIndex: Int = 0, includeToolbar: Bool = false, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, bottomButtonsHandlers: BottomButtonHandlers? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil, bottomBarHideSupport: BottomBarHideSupport? = nil) {
+		self.demoContent = demoContent
+		
 		self.includeLink = includeLink
 		self.includeToolbar = includeToolbar
 		self.offset = offset
@@ -181,9 +188,83 @@ struct SafeAreaDemoView : View {
 	
 	var body: some View {
 		VStack(alignment: .center) {
-			Text("Top").offset(x: offset ? 40.0 : 0.0)
-			Spacer()
-			Text("Bottom")
+			if let demoContent, transitionType == 0 {
+				Image("genre\(demoContent.imageNumber)")
+					.resizable()
+					.popupTransitionTarget()
+					.aspectRatio(contentMode: .fit)
+					.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+					.shadow(color: enableCustomizations ? .indigo : .black.opacity(0.5), radius: 20)
+					.padding([.leading, .trailing], 20)
+					.padding([.top], 60)
+				Spacer()
+			} else {
+				VStack {
+					Text("Top").offset(x: offset ? 40.0 : 0.0)
+					Spacer()
+					Text("Bottom")
+				}
+				.frame(maxWidth: .infinity,
+					   maxHeight: .infinity,
+					   alignment: .center)
+				.overlay {
+					ZStack {
+						if let isPopupOpen = isPopupOpen {
+							Button("Custom Close Button") {
+								isPopupOpen.wrappedValue = false
+							}.foregroundColor(Color(.label))
+						} else {
+							if let presentBarHandler = presentBarHandler, let hideBarHandler = hideBarHandler {
+								HStack(spacing: 2) {
+									Button {
+										presentBarHandler()
+									} label: {
+										Image(systemName: "dock.arrow.up.rectangle")
+									}.padding(7).hoverEffect()
+									Button {
+										hideBarHandler()
+									} label: {
+										Image(systemName: "dock.arrow.down.rectangle")
+									}.padding(7).hoverEffect()
+								}.font(.title2).fontWeight(nil)
+							} else {
+								Text("Center")
+							}
+						}
+						if includeLink {
+							HStack {
+								Spacer()
+								
+								NavigationLink {
+									let bottomButtonsHandlers = BottomButtonHandlers(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
+									
+									SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: BottomBarHideSupport(showsBottomBarHideButton: false, isBottomBarTab: bottomBarHideSupport?.isBottomBarTab) )
+										.navigationTitle("LNPopupUI")
+//										.toolbarRoleIfPad18(bottomBarHideSupport == nil || bottomBarHideSupport!.isBottomBarTab != true)
+								} label: {
+									Label {
+										Text("Next")
+									} icon: {
+										Image(systemName: "arrowtriangle.forward.fill").font(.system(size: 8))
+									}.labelStyle(TrailingImageLabelStyle())
+								}.padding(7 ).hoverEffect()
+							}
+						}
+					}
+					.frame(maxWidth: .infinity,
+						   maxHeight: .infinity,
+						   alignment: .center)
+					.edgesIgnoringSafeArea([.top, .bottom])
+					.fontWeight(.semibold)
+					.tint(Color(uiColor: .label))
+					.modifier(HideShowTabBarModifier(bottomBarHideSupport: $bottomBarHideSupport))
+					.toolbar(includeToolbar && bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .bottomBar)
+					.toolbar(bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .tabBar)
+					.introspect(.viewController, on: .iOS(.v16, .v17, .v18)) { vc in
+						vc.navigationItem.backButtonTitle = String(localized: "Back")
+					}
+				}
+			}
 		}
 		.frame(maxWidth: .infinity,
 			   maxHeight: .infinity,
@@ -192,63 +273,6 @@ struct SafeAreaDemoView : View {
 		.fontWeight(.semibold)
 		.modifier(ToolbarModifier(includeToolbar: includeToolbar, presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler))
 		.modifier(ShowDismissModifier(showDismissButton: showDismissButton, onDismiss: onDismiss))
-		.overlay {
-			ZStack {
-				if let isPopupOpen = isPopupOpen {
-					Button("Custom Close Button") {
-						isPopupOpen.wrappedValue = false
-					}.foregroundColor(Color(.label))
-				} else {
-					if let presentBarHandler = presentBarHandler, let hideBarHandler = hideBarHandler {
-						HStack(spacing: 2) {
-							Button {
-								presentBarHandler()
-							} label: {
-								Image(systemName: "dock.arrow.up.rectangle")
-							}.padding(7).hoverEffect()
-							Button {
-								hideBarHandler()
-							} label: {
-								Image(systemName: "dock.arrow.down.rectangle")
-							}.padding(7).hoverEffect()
-						}.font(.title2).fontWeight(nil)
-					} else {
-						Text("Center")
-					}
-				}
-				if includeLink {
-					HStack {
-						Spacer()
-						
-						NavigationLink {
-							let bottomButtonsHandlers = BottomButtonHandlers(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
-							
-							SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: BottomBarHideSupport(showsBottomBarHideButton: false, isBottomBarTab: bottomBarHideSupport?.isBottomBarTab) )
-								.navigationTitle("LNPopupUI")
-								.toolbarRoleIfPad18(bottomBarHideSupport == nil || bottomBarHideSupport!.isBottomBarTab != true)
-						} label: {
-							Label {
-								Text("Next")
-							} icon: {
-								Image(systemName: "arrowtriangle.forward.fill").font(.system(size: 8))
-							}.labelStyle(TrailingImageLabelStyle())
-						}.padding(7 ).hoverEffect()
-					}
-				}
-			}
-			.frame(maxWidth: .infinity,
-				   maxHeight: .infinity,
-				   alignment: .center)
-			.edgesIgnoringSafeArea([.top, .bottom])
-			.fontWeight(.semibold)
-			.tint(Color(uiColor: .label))
-			.modifier(HideShowTabBarModifier(bottomBarHideSupport: $bottomBarHideSupport))
-			.toolbar(includeToolbar && bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .bottomBar)
-			.toolbar(bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .tabBar)
-			.introspect(.viewController, on: .iOS(.v16, .v17, .v18)) { vc in
-				vc.navigationItem.backButtonTitle = String(localized: "Back")
-			}
-		}
 	}
 }
 
@@ -450,7 +474,7 @@ struct PopupDemoViewModifier: ViewModifier {
 		}, onClose: {
 			print("Closed")
 		}) {
-			SafeAreaDemoView(colorSeed: "Popup", offset: closeButtonStyle != .round, isPopupOpen: isPopupOpen)
+			SafeAreaDemoView(demoContent: demoContent, colorSeed: "Popup", offset: closeButtonStyle != .round, isPopupOpen: isPopupOpen)
 				.modifier(CustomTextLabelsModifier(demoContent: demoContent))
 				.popupImage(Image("genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)

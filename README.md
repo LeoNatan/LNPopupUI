@@ -183,6 +183,41 @@ To hide the popup close button, set the `popupCloseButtonStyle` to `.none`.
 
 <p align="center"><img src="./Supplements/close_button_none.png" width="360"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="360"/><br/><br/><img src="./Supplements/close_button_round.png" width="360"/></p>
 
+#### Text Marquee Scroll
+
+Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee scroll is enabled. Otherwise, the text will be truncated. To enable text marquee scrolling, use the `popupBarMarqueeScrollEnabled()` modifier.
+
+<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+
+#### Popup Transitions
+
+The library supports popup image transitions:
+
+<p align="center"><img src="./Supplements/popup_transitions.gif"/></p>
+
+Transitions are opt-in and require you apply the `.popupTransitionTarget()` modifier to your `Image` view in your popup content view, which is discovered automatically by the system and used as the target/source view for popup transitions.
+
+> [!TIP]
+> There must be a single `.popupTransitionTarget()` call inside your popup content view, or results will be undefined.
+
+The system supports `.clipShape()` with basic shapes and a single `shadow()` modifier applied to the `Image` view.
+
+```swift
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	Image("genre\(demoContent.imageNumber)")
+		.resizable()
+		.popupTransitionTarget()
+		.aspectRatio(contentMode: .fit)
+		.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+		.shadow(color: enableCustomizations ? .indigo : .black.opacity(0.5), radius: 20)
+}
+```
+
+> [!CAUTION]
+> Using a complex clip shapes and/or multiple calls to `.shadow()` will result in undefined behavior and visual artifacts in your transitions.
+
+Transitions are only available for prominent and floating popup bar styles with drag interaction style. Any other combination will result in no transition and this method will not be called by the system.
+
 #### Popup Bar Customization
 
 `LNPopupUI` exposes many APIs to customize the default popup bar's appearance. 
@@ -207,12 +242,6 @@ To hide the popup close button, set the `popupCloseButtonStyle` to `.none`.
 ```
 
 <p align="center"><img src="./Supplements/floating_custom.png" width="360"/> <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/compact_custom.png" width="360"/></p>
-
-#### Text Marquee Scroll
-
-Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee scroll is enabled. Otherwise, the text will be truncated. To enable text marquee scrolling, use the `popupBarMarqueeScrollEnabled()` modifier.
-
-<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
 
 #### Context Menus
 

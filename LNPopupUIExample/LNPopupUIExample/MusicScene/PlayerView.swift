@@ -11,16 +11,7 @@ import LNPopupUI
 import LNPopupController
 import LoremIpsum
 import Combine
-
-struct BlurView: UIViewRepresentable {
-	var style: UIBlurEffect.Style = .systemMaterial
-	func makeUIView(context: Context) -> UIVisualEffectView {
-		return UIVisualEffectView(effect: UIBlurEffect(style: style))
-	}
-	func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
-		uiView.effect = UIBlurEffect(style: style)
-	}
-}
+import SwiftUIIntrospect
 
 struct PlayerView: View {
 	let song: RandomTitleSong
@@ -32,16 +23,19 @@ struct PlayerView: View {
 		self.song = song
 	}
 	
+	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
+	
 	var body: some View {
 		GeometryReader { geometry in
 			return VStack {
 				Image(song.imageName)
 					.resizable()
-					.clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+					.popupTransitionTarget()
 					.aspectRatio(contentMode: .fit)
-					.padding([.leading, .trailing], 10)
+					.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+					.shadow(color: .black.opacity(0.5), radius: 10)
+					.padding([.leading, .trailing], 20)
 					.padding([.top], geometry.size.height * 60 / 896.0)
-					.shadow(radius: 5)
 				VStack(spacing: geometry.size.height * 30.0 / 896.0) {
 					HStack {
 						VStack(alignment: .leading) {
@@ -107,6 +101,7 @@ struct PlayerView: View {
 					}
 					.font(.body)
 				}
+				.layoutPriority(1)
 				.padding(geometry.size.height * 40.0 / 896.0)
 			}
 			.frame(minWidth: 0,
@@ -118,8 +113,10 @@ struct PlayerView: View {
 				ZStack {
 					Image(song.imageName)
 						.resizable()
-					BlurView()
-				}
+						.aspectRatio(contentMode: .fill)
+					Color(uiColor: .systemBackground)
+						.opacity(0.55)
+				}.compositingGroup().blur(radius: 90)
 				.edgesIgnoringSafeArea(.all)
 			}())
 		}

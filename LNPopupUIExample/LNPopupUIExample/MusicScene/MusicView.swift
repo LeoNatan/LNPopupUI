@@ -10,13 +10,28 @@ import SwiftUI
 import LoremIpsum
 import LNPopupUI
 
+@MainActor
+var counter: Int = 1
+
+@MainActor
+func nextGenre() -> Int {
+	let rv = counter;
+	counter += 1
+	if counter == 30 {
+		counter = 1
+	}
+	return rv
+}
+
+@MainActor
 struct RandomTitleSong : Equatable, Identifiable {
 	var id: Int
-	let imageName: String = "genre\(Int.random(in: 1...30))"
+	let imageName: String = "genre\(nextGenre())"
 	var title: String = LoremIpsum.title
 	var subtitle: String = LoremIpsum.words(withNumber: 5)
 }
 
+@MainActor
 fileprivate let songs: [[RandomTitleSong]] = {
 	var songs: [[RandomTitleSong]] = []
 	for jdx in 0..<4 {

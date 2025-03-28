@@ -71,7 +71,7 @@ struct InnerNavView : View {
 			SafeAreaDemoView(colorSeed: "tab_\(tabIdx)", includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
 				.navigationBarTitle("LNPopupUI")
 				.navigationBarTitleDisplayMode(.inline)
-				.toolbarRoleIfPad18()
+//				.toolbarRoleIfPad18()
 				.introspect(.tabView, on: .iOS(.v18), scope: .ancestor) { tvc in
 					if #available(iOS 18.0, *) {
 						if objc_getAssociatedObject(tvc, key) as? Bool != true {
