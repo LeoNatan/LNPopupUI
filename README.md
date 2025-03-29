@@ -187,7 +187,7 @@ To hide the popup close button, set the `popupCloseButtonStyle` to `.none`.
 
 Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee scroll is enabled. Otherwise, the text will be truncated. To enable text marquee scrolling, use the `popupBarMarqueeScrollEnabled()` modifier.
 
-<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
 
 #### Popup Transitions
 
