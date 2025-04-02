@@ -30,12 +30,12 @@ struct PlayerView: View {
 			return VStack {
 				Image(song.imageName)
 					.resizable()
-					.popupTransitionTarget()
 					.aspectRatio(contentMode: .fit)
 					.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
 					.shadow(color: .black.opacity(0.5), radius: 10)
 					.padding([.leading, .trailing], 20)
 					.padding([.top], geometry.size.height * 60 / 896.0)
+					.popupTransitionTarget()
 				VStack(spacing: geometry.size.height * 30.0 / 896.0) {
 					HStack {
 						VStack(alignment: .leading) {
@@ -109,16 +109,15 @@ struct PlayerView: View {
 				   minHeight: 0,
 				   maxHeight: .infinity,
 				   alignment: .top)
-			.background({
+			.background {
 				ZStack {
 					Image(song.imageName)
 						.resizable()
-						.aspectRatio(contentMode: .fill)
 					Color(uiColor: .systemBackground)
 						.opacity(0.55)
-				}.compositingGroup().blur(radius: 90)
+				}.compositingGroup().blur(radius: 90, opaque: true)
 				.edgesIgnoringSafeArea(.all)
-			}())
+			}
 		}
 		.popupTitle(song.title)
 		.popupImage(Image(song.imageName).resizable())

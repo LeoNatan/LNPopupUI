@@ -29,7 +29,9 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 		}
 	}
 	
+	fileprivate
 	var leadingBarItemsController: LNPopupBarItemAdapter? = nil
+	fileprivate
 	var trailingBarItemsController: LNPopupBarItemAdapter? = nil
 	
 	fileprivate func transform(_ popupContentRootView: PopupContent) -> AnyView {
@@ -135,11 +137,71 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 	}
 	
 	internal
-	var viewForTransitionViewLookup: UIView? = nil
+	var backgroundViewForTransitionViewLookup: UIView? = nil
+	internal
+	var foregroundViewForTransitionViewLookup: UIView? = nil
 	
 	@objc(_ln_transitionViewForPopupTransitionFromPresentationState:toPresentationState:view:)
-	private
+	fileprivate
 	func transitionViewForPopupTransition(from fromState: UIViewController.PopupPresentationState, to toState: UIViewController.PopupPresentationState, view outView: UnsafeMutablePointer<LNPopupTransitionView>) -> UIView? {
-		private_transitionViewForPopupTransition(from: fromState, to: toState, view: outView)
+		guard let (viewForTransition, isContainer) = findTransitionView(),
+			  let cls = NSClassFromString("_LNPopupTransitionView") as Any as? NSObjectProtocol else {
+			return nil
+		}
+		
+		let transitionView = cls.perform(Selector(("transitionViewWithSourceView:")), with: viewForTransition).takeUnretainedValue() as? UIView
+		
+		outView.pointee = LNPopupUITransitionHelper(sourceView: viewForTransition, isContainer: isContainer)
+		
+		return transitionView
+	}
+	
+	fileprivate
+	func findTransitionView() -> (UIView, Bool)? {
+		guard let backgroundViewForTransitionViewLookup else {
+			return nil
+		}
+		
+		guard var superview = backgroundViewForTransitionViewLookup.superview,
+			  var supersuperview = superview.superview else {
+			return nil
+		}
+		
+		while supersuperview.subviews.count <= 1 {
+			guard let sssv = supersuperview.superview else {
+				return nil
+			}
+			
+			superview = supersuperview
+			supersuperview = sssv
+		}
+		
+		if let foregroundSuperview = foregroundViewForTransitionViewLookup?.superview, let foregroundSupersuperview = foregroundSuperview.superview, supersuperview == foregroundSupersuperview, supersuperview.subviews.first == superview, supersuperview.subviews.last == foregroundSuperview {
+			return (supersuperview, true)
+		}
+		
+		var targetView: UIView
+		if supersuperview._isInheritedView {
+			targetView = supersuperview
+		} else {
+			guard let idx = supersuperview.subviews.firstIndex(of: superview), supersuperview.subviews.count > idx + 1 else {
+				return nil
+			}
+			targetView = supersuperview.subviews[idx + 1]
+		}
+		
+		while let superview = targetView.superview, superview._isInheritedView {
+			targetView = superview
+		}
+		
+		return (targetView, false)
 	}
 }
+
+internal
+protocol LNPopupContentHostingControllerTransitionSupport: AnyObject {
+	var backgroundViewForTransitionViewLookup: UIView? { get set }
+	var foregroundViewForTransitionViewLookup: UIView? { get set }
+}
+
+extension LNPopupContentHostingController: LNPopupContentHostingControllerTransitionSupport { }

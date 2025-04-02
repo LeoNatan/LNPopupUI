@@ -37,11 +37,16 @@ internal class LNPopupUITransitionHelperView : UIView {
 	override func didMoveToWindow() {
 		super.didMoveToWindow()
 		
-		guard helperType == .background, let ancestorVC = self.value(forKey: ancestorKey) as? LNPopupContentHostingControllerTransitionSupport else {
+		guard let ancestorVC = self.value(forKey: ancestorKey) as? LNPopupContentHostingControllerTransitionSupport else {
 			return
 		}
 		
-		ancestorVC.viewForTransitionViewLookup = self
+		switch helperType {
+		case .background:
+			ancestorVC.backgroundViewForTransitionViewLookup = self
+		case .foreground:
+			ancestorVC.foregroundViewForTransitionViewLookup = self
+		}
 	}
 	
 	override var intrinsicContentSize: CGSize {
@@ -73,9 +78,14 @@ internal struct LNPopupUITransitionForeground: UIViewRepresentable {
 }
 
 internal class LNPopupUITransitionHelper: NSObject, LNPopupTransitionView {
+	let isContainer: Bool
 	var originalMasksToBoundsValues: [Bool] = []
 	var viewsForCornerRadius: [UIView]? {
 		var viewToUse = self.sourceView
+		
+		if isContainer {
+			return [viewToUse]
+		}
 		
 		while viewToUse.subviews.count <= 1 {
 			guard let subview = viewToUse.subviews.first else {
@@ -142,10 +152,11 @@ internal class LNPopupUITransitionHelper: NSObject, LNPopupTransitionView {
 	
 	let sourceView: UIView
 	
-	init(sourceView: UIView) {
+	init(sourceView: UIView, isContainer: Bool) {
 		swizzleCALayer()
 		
 		self.sourceView = sourceView
+		self.isContainer = isContainer
 		
 		super.init()
 	}
@@ -195,65 +206,3 @@ var swizzleCALayer: () -> Void = {
 	
 	return {}
 }()
-
-internal
-protocol LNPopupContentHostingControllerTransitionSupport: AnyObject {
-	var viewForTransitionViewLookup: UIView? { get set }
-}
-
-internal
-extension LNPopupContentHostingController {
-	fileprivate
-	func findTransitionView() -> UIView? {
-		guard let viewForTransitionViewLookup else {
-			return nil
-		}
-		
-		guard var superview = viewForTransitionViewLookup.superview,
-			  var supersuperview = superview.superview else {
-			return nil
-		}
-		
-		while supersuperview.subviews.count <= 1 {
-			guard let sssv = supersuperview.superview else {
-				return nil
-			}
-			
-			superview = supersuperview
-			supersuperview = sssv
-		}
-		
-		var targetView: UIView
-		if supersuperview._isInheritedView {
-			targetView = supersuperview
-		} else {
-			guard let idx = supersuperview.subviews.firstIndex(of: superview), supersuperview.subviews.count > idx + 1 else {
-				return nil
-			}
-			targetView = supersuperview.subviews[idx + 1]
-		}
-		
-		while let superview = targetView.superview, superview._isInheritedView {
-			targetView = superview
-		}
-		
-		return targetView
-	}
-	
-	func private_transitionViewForPopupTransition(from fromState: UIViewController.PopupPresentationState, to toState: UIViewController.PopupPresentationState, view outView: UnsafeMutablePointer<LNPopupTransitionView>) -> UIView? {
-		guard let viewForTransition = findTransitionView(),
-			  let cls = NSClassFromString("_LNPopupTransitionView") as Any as? NSObjectProtocol else {
-			return nil
-		}
-		
-		let transitionView = cls.perform(Selector(("transitionViewWithSourceView:")), with: viewForTransition).takeUnretainedValue() as? UIView
-		
-		outView.pointee = LNPopupUITransitionHelper(sourceView: viewForTransition)
-		
-		return transitionView
-	}
-}
-
-extension LNPopupContentHostingController: LNPopupContentHostingControllerTransitionSupport {
-	
-}

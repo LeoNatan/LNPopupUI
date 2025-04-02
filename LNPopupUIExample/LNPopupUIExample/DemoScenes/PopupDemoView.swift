@@ -191,13 +191,19 @@ struct SafeAreaDemoView : View {
 			if let demoContent, transitionType == 0 {
 				Image("genre\(demoContent.imageNumber)")
 					.resizable()
-					.popupTransitionTarget()
 					.aspectRatio(contentMode: .fit)
-					.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-					.shadow(color: enableCustomizations ? .indigo : .black.opacity(0.5), radius: 20)
+					.clipShape(RoundedRectangle(cornerRadius: enableCustomizations ? 100 : 30, style: .continuous))
+					.shadow(color: enableCustomizations ? .indigo : .black.opacity(0.33333), radius: 20)
 					.padding([.leading, .trailing], 20)
 					.padding([.top], 60)
+					.popupTransitionTarget()
 				Spacer()
+			} else if demoContent != nil, transitionType == 2 {
+				Image("genre17-expanded")
+					.resizable()
+					.aspectRatio(contentMode: .fill)
+					.ignoresSafeArea(.all)
+					.popupTransitionTarget()
 			} else {
 				VStack {
 					Text("Top").offset(x: offset ? 40.0 : 0.0)
@@ -453,6 +459,8 @@ struct PopupDemoViewModifier: ViewModifier {
 	@AppStorage(.enableCustomizations, store: .settings) var enableCustomizations: Bool = false
 	@AppStorage(.contextMenuEnabled, store: .settings) var contextMenu: Bool = false
 	
+	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
+	
 	fileprivate func popupInteractionStyleFromAppStorage(_ style: UIViewController.__PopupInteractionStyle) -> UIViewController.PopupInteractionStyle {
 		switch style.rawValue {
 		case 1:
@@ -476,7 +484,7 @@ struct PopupDemoViewModifier: ViewModifier {
 		}) {
 			SafeAreaDemoView(demoContent: demoContent, colorSeed: "Popup", offset: closeButtonStyle != .round, isPopupOpen: isPopupOpen)
 				.modifier(CustomTextLabelsModifier(demoContent: demoContent))
-				.popupImage(Image("genre\(demoContent.imageNumber)"))
+				.popupImage(Image(transitionType == 2 ? "genre17" : "genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
 				.popupBarItems {
 					ToolbarItemGroup(placement: .popupBar) {

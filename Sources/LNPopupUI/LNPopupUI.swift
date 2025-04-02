@@ -550,14 +550,25 @@ public extension View {
 	func popupInteractionContainer() -> some View {
 		background(LNPopupUIInteractionContainerBackgroundView().accessibilityHidden(true))
 	}
+	
+	/// Apply this modifier to designate a view as the popup transition target. The system will transition to and from this view when the popup opens and closes.
+	///
+	/// There should only be a single transition target per popup content view. Applying more will result in undefined behavior.
+	///
+	/// - Note: Transitions are only available for prominent and floating popup bar styles with drag interaction style. Any other combination will result in no transition.
+	func popupTransitionTarget() -> some View {
+		background(LNPopupUITransitionBackground().accessibilityHidden(true)).overlay(LNPopupUITransitionForeground().accessibilityHidden(true))
+	}
 }
 
 public extension Image {
 	/// Apply this modifier to designate an `Image` view as the popup transition target. The system will transition to and from this `Image` view when the popup opens and closes.
 	///
+	/// There should only be a single transition target per popup content view. Applying more will result in undefined behavior.
+	///
 	/// - Note: Transitions are only available for prominent and floating popup bar styles with drag interaction style. Any other combination will result in no transition.
 	func popupTransitionTarget() -> some View {
-		background(LNPopupUITransitionBackground().accessibilityHidden(true)).overlay(LNPopupUITransitionForeground().accessibilityHidden(true))
+		background(LNPopupUITransitionBackground().accessibilityHidden(true))
 	}
 }
 
