@@ -192,10 +192,11 @@ struct SafeAreaDemoView : View {
 				Image("genre\(demoContent.imageNumber)")
 					.resizable()
 					.aspectRatio(contentMode: .fit)
+					.frame(maxWidth: 400)
 					.clipShape(RoundedRectangle(cornerRadius: enableCustomizations ? 100 : 30, style: .continuous))
 					.shadow(color: enableCustomizations ? .indigo : .black.opacity(0.33333), radius: 20)
 					.padding([.leading, .trailing], 20)
-					.padding([.top], 60)
+					.padding([.top], 50)
 					.popupTransitionTarget()
 				Spacer()
 			} else if demoContent != nil, transitionType == 2 {
