@@ -559,6 +559,19 @@ public extension View {
 	func popupTransitionTarget() -> some View {
 		background(LNPopupUITransitionBackground().accessibilityHidden(true)).overlay(LNPopupUITransitionForeground().accessibilityHidden(true))
 	}
+	
+	/// Sets the popup content background color. Provider `nil`, `.clear` or any color with opacity less than 1.0 to have a translucent background.
+	/// - Parameter color: The color to use or `nil`.
+	func popupContentBackgroundColor(_ color: Color?) -> some View {
+		preference(key: LNPopupContentBackgroundColorPreferenceKey.self, value: color.map { UIColor($0) })
+	}
+	
+	/// Sets the popup content background color. Provider `nil`, `.clearColor` or any color with alpha less than 1.0 to have a translucent background.
+	/// - Parameter color: The color to use or `nil`.
+	@_disfavoredOverload
+	func popupContentBackgroundColor(_ color: UIColor?) -> some View {
+		preference(key: LNPopupContentBackgroundColorPreferenceKey.self, value: color)
+	}
 }
 
 public extension Image {

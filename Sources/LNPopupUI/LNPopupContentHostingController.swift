@@ -34,6 +34,8 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 	fileprivate
 	var trailingBarItemsController: LNPopupBarItemAdapter? = nil
 	
+	var userContentBackgroundColor: UIColor? = nil
+	
 	fileprivate func transform(_ popupContentRootView: PopupContent) -> AnyView {
 		return AnyView(popupContentRootView.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
 			self?.popupItem.title = titleData?.title
@@ -88,7 +90,14 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 				}
 				popupItem.setValue(self.trailingBarItemsController!, forKey: "swiftuiHiddenTrailingController")
 			}
-		})
+		}.onPreferenceChange(LNPopupContentBackgroundColorPreferenceKey.self, perform: { [weak self] color in
+			self?.userContentBackgroundColor = color
+			self?.updateContentBackgroundColor()
+		}))
+	}
+	
+	func updateContentBackgroundColor() {
+		view.backgroundColor = userContentBackgroundColor ?? .clear
 	}
 	
 	public required init(@ViewBuilder content: () -> PopupContent) {
@@ -131,6 +140,8 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 	
 	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
+		
+		updateContentBackgroundColor()
 		
 		let viewToLimitInteractionTo = interactionContainerSubview() ?? super.viewForPopupInteractionGestureRecognizer
 		_ln_interactionLimitRect = view.convert(viewToLimitInteractionTo.bounds, from: viewToLimitInteractionTo)

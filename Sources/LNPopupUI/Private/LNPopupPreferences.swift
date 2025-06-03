@@ -63,6 +63,10 @@ internal struct LNPopupTrailingBarItemsPreferenceKey: LNPopupNullablePreferenceK
 	typealias Value = LNPopupAnyViewWrapper?
 }
 
+internal struct LNPopupContentBackgroundColorPreferenceKey: LNPopupNullablePreferenceKey {
+	typealias Value = UIColor?
+}
+
 internal protocol LNPopupNullablePreferenceKey : PreferenceKey {
 	static var defaultValue: Value? {
 		get
