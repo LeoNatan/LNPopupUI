@@ -18,6 +18,8 @@ Generally, it is recommended to present the popup bar on the outermost view, suc
 
 Check the demo project for a quick recreation of Apple’s music app.
 
+**NOTE:** To run the example project, don't forget to update submodules by running: `git submodule update --init --recursive`
+
 ### Features
 
 * Available for iOS 14 and above, as a SPM package for SwiftUI
