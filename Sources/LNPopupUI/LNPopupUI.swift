@@ -453,10 +453,12 @@ public extension View {
 	/// @note For compact popup bars, this is equivalent to trailing button items.
 	///
 	/// - Parameter content: A view representing the bar button items that appear on the popup bar.
-	func popupBarItems<Content>(@ViewBuilder _ content: () -> Content) -> some View where Content : View {
-		let anyView = barItemContainer(content)
+	func popupBarItems<Content>(@ViewBuilder _ content: @escaping () -> Content) -> some View where Content : View {
+		let wrapperCreator = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(content)))
+		}
 		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: wrapperCreator)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -465,10 +467,12 @@ public extension View {
 	///
 	/// - Parameter content: Toolbar content representing the bar button items that appear on the popup bar.
 	@available(iOS 14.0, *)
-	func popupBarItems<Content>(@ToolbarContentBuilder _ content: () -> Content) -> some View where Content : ToolbarContent {
-		let anyView = barItemContainer(content)
+	func popupBarItems<Content>(@ToolbarContentBuilder _ content: @escaping () -> Content) -> some View where Content : ToolbarContent {
+		let wrapperCreator = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(content)))
+		}
 		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: AnyView(anyView)))
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: wrapperCreator)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -476,10 +480,12 @@ public extension View {
 	/// @note For prominent popup bars, leading bar items are positioned in the trailing edge of the popup bar.
 	///
 	/// - Parameter leading: A view representing the bar button items that appear on the leading edge of the popup bar.
-	func popupBarItems<LeadingContent>(@ViewBuilder leading: () -> LeadingContent) -> some View where LeadingContent: View {
-		let anyView = barItemContainer(leading)
+	func popupBarLeadingItems<LeadingContent>(@ViewBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: View {
+		let wrapperCreator = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
+		}
 		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: wrapperCreator)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -488,19 +494,23 @@ public extension View {
 	///
 	/// - Parameter leading: Toolbar content representing the bar button items that appear on the leading edge of the popup bar.
 	@available(iOS 14.0, *)
-	func popupBarItems<LeadingContent>(@ToolbarContentBuilder leading: () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
-		let anyView = barItemContainer(leading)
+	func popupBarLeadingItems<LeadingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
+		let wrapperCreator = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
+		}
 		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: wrapperCreator)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
 	///
 	/// - Parameter trailing: A view representing the bar button items that appear on the trailing edge of the popup bar.
-	func popupBarItems<TrailingContent>(@ViewBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: View {
-		let anyView = barItemContainer(trailing)
+	func popupBarTrailingItems<TrailingContent>(@ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: View {
+		let wrapperCreator = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
+		}
 		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: wrapperCreator)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -509,10 +519,12 @@ public extension View {
 	///
 	/// - Parameter trailing: Toolbar content representing the bar button items that appear on the trailing edge of the popup bar.
 	@available(iOS 14.0, *)
-	func popupBarItems<TrailingContent>(@ToolbarContentBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
-		let anyView = barItemContainer(trailing)
+	func popupBarTrailingItems<TrailingContent>(@ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
+		let wrapperCreator = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
+		}
 		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: anyView))
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: wrapperCreator)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -521,12 +533,16 @@ public extension View {
 	///
 	/// - Parameter leading: A view representing the bar button items that appear on the leading edge of the popup bar.
 	/// - Parameter trailing: A view representing the bar button items that appear on the trailing edge of the popup bar.
-	func popupBarItems<LeadingContent, TrailingContent>(@ViewBuilder leading: () -> LeadingContent, @ViewBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
-		let leadingAnyView = barItemContainer(leading)
-		let trailingAnyView = barItemContainer(trailing)
+	func popupBarItems<LeadingContent, TrailingContent>(@ViewBuilder leading: @escaping () -> LeadingContent, @ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
+		let wrapperCreatorLeading = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
+		}
+		let wrapperCreatorTrailing = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
+		}
 		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: leadingAnyView))
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: trailingAnyView))
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: wrapperCreatorLeading)
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: wrapperCreatorTrailing)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.
@@ -536,12 +552,16 @@ public extension View {
 	/// - Parameter leading: Toolbar content representing the bar button items that appear on the leading edge of the popup bar.
 	/// - Parameter trailing: Toolbar content representing the bar button items that appear on the trailing edge of the popup bar.
 	@available(iOS 14.0, *)
-	func popupBarItems<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: () -> LeadingContent, @ToolbarContentBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
-		let leadingAnyView = barItemContainer(leading)
-		let trailingAnyView = barItemContainer(trailing)
+	func popupBarItems<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent, @ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
+		let wrapperCreatorLeading = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
+		}
+		let wrapperCreatorTrailing = LNPopupAnyViewWrapperCreator {
+			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
+		}
 		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: leadingAnyView))
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: LNPopupAnyViewWrapper(anyView: trailingAnyView))
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: wrapperCreatorLeading)
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: wrapperCreatorTrailing)
 	}
 	
 	/// Designates this view as the popup interaction container. Only gestures within this view will be considered for popup interaction, such as dismissal.

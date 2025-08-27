@@ -244,7 +244,6 @@ struct SceneSelection: View {
 				Text("Share…")
 				Image(systemName: "square.and.arrow.up")
 			}
-			
 		}
 		.activitySheet($item)
 //		.font(font)

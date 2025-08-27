@@ -48,12 +48,17 @@ internal class LNPopupBarItemAdapter: UIHostingController<AnyView> {
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
-		let nav = self.children.first as! UINavigationController
-		self.updater(nav.toolbar.items)
+		let nav = self.children.first as? UINavigationController
+		if let nav {
+			self.updater(nav.topViewController?.toolbarItems)
+		} else {
+			print("LNPopupUI: Unexpected layout, please open an issue at https://github.com/LeoNatan/LNPopupUI/issues/new")
+		}
 	}
 }
 
 internal struct TitleContentView : View {
+	@Environment(\.font) var font
 	@Environment(\.sizeCategory) var sizeCategory
 	@Environment(\.colorScheme) var colorScheme
 	
@@ -74,8 +79,8 @@ internal struct TitleContentView : View {
 		let subtitleColor = popupBar.value(forKey: "_subtitleColor") as! UIColor
 		
 		VStack(spacing: 2) {
-			titleView.font(Font(titleFont)).foregroundColor(Color(titleColor))
-			subtitleView.font(Font(subtitleFont)).foregroundColor(Color(subtitleColor))
+			titleView.font(font ?? Font(titleFont)).foregroundColor(Color(titleColor))
+			subtitleView.font(font ?? Font(subtitleFont)).foregroundColor(Color(subtitleColor))
 		}.lineLimit(1)
 	}
 }
@@ -91,5 +96,16 @@ internal
 extension UIView {
 	var _isInheritedView: Bool {
 		NSStringFromClass(type(of: self)).contains(inheritedNameContainment)
+	}
+}
+
+internal
+extension View {
+	@ViewBuilder func accentTintIfNeeded() -> some View {
+		if #available(iOS 26.0, *) {
+			self.tint(.accentColor)
+		} else {
+			self
+		}
 	}
 }

@@ -39,6 +39,14 @@ internal struct LNPopupAnyViewWrapper : Equatable {
 	}
 }
 
+internal struct LNPopupAnyViewWrapperCreator : Equatable {
+	let creator: () -> LNPopupAnyViewWrapper
+	
+	static func == (lhs: LNPopupAnyViewWrapperCreator, rhs: LNPopupAnyViewWrapperCreator) -> Bool {
+		return false
+	}
+}
+
 internal struct LNPopupTitlePreferenceKey: LNPopupNullablePreferenceKey {
 	typealias Value = LNPopupTitleData?
 }
@@ -56,11 +64,11 @@ internal struct LNPopupImagePreferenceKey: LNPopupNullablePreferenceKey {
 }
 
 internal struct LNPopupLeadingBarItemsPreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = LNPopupAnyViewWrapper?
+	typealias Value = LNPopupAnyViewWrapperCreator?
 }
 
 internal struct LNPopupTrailingBarItemsPreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = LNPopupAnyViewWrapper?
+	typealias Value = LNPopupAnyViewWrapperCreator?
 }
 
 internal struct LNPopupContentBackgroundColorPreferenceKey: LNPopupNullablePreferenceKey {

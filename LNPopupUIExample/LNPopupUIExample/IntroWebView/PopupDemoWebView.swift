@@ -13,7 +13,11 @@ struct WebView : UIViewRepresentable {
 	let url: URL
 	
 	func makeUIView(context: Context) -> WKWebView  {
-		return WKWebView()
+		let rv = WKWebView()
+		if #available(iOS 26.0, *) {
+			rv.scrollView.topEdgeEffect.isHidden = true
+		}
+		return rv
 	}
 	
 	func updateUIView(_ uiView: WKWebView, context: Context) {
@@ -38,16 +42,16 @@ struct PopupDemoWebView: View {
 			.popupTitle {
 				HStack {
 					Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
-				}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+				}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(.body)
 			}
 			.popupImage(Image("AppIconPopupBar"))
-			.popupBarItems({
+			.popupBarItems {
 				ToolbarItemGroup(placement: .popupBar) {
 					Link(destination: url) {
 						Image(systemName: "suit.heart.fill")
 					}
 				}
-			})
+			}
 		}
 	}
 }

@@ -77,18 +77,26 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 			imageController.aspectRatio = imageSettings.aspectRatio
 		}.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
 			self?.popupItem.progress = progress ?? 0.0
-		}.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] view in
-			if let self = self, let anyView = view?.anyView {
-				self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in self?.popupItem.leadingBarButtonItems = $0
+		}.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] viewCreator in
+			//Async so that the navigation controller is created in a different transaction
+			DispatchQueue.main.async {
+				if let self = self, var anyView = viewCreator?.creator().anyView {
+					anyView = AnyView(anyView.accentTintIfNeeded())
+					self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in self?.popupItem.leadingBarButtonItems = $0
+					}
+					self.popupItem.setValue(self.leadingBarItemsController!, forKey: "swiftuiHiddenLeadingController")
 				}
-				popupItem.setValue(self.leadingBarItemsController!, forKey: "swiftuiHiddenLeadingController")
 			}
-		}.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] view in
-			if let self = self, let anyView = view?.anyView {
-				self.createOrUpdateBarItemAdapter(&self.trailingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in
-					self?.popupItem.trailingBarButtonItems = $0
+		}.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] viewCreator in
+			//Async so that the navigation controller is created in a different transaction
+			DispatchQueue.main.async {
+				if let self = self, var anyView = viewCreator?.creator().anyView {
+					anyView = AnyView(anyView.accentTintIfNeeded())
+					self.createOrUpdateBarItemAdapter(&self.trailingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in
+						self?.popupItem.trailingBarButtonItems = $0
+					}
+					self.popupItem.setValue(self.trailingBarItemsController!, forKey: "swiftuiHiddenTrailingController")
 				}
-				popupItem.setValue(self.trailingBarItemsController!, forKey: "swiftuiHiddenTrailingController")
 			}
 		}.onPreferenceChange(LNPopupContentBackgroundColorPreferenceKey.self, perform: { [weak self] color in
 			self?.userContentBackgroundColor = color
