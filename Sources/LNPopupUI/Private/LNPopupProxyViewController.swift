@@ -235,25 +235,44 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					if let barStyle = self.currentPopupState.barStyle?.consume(self) {
 						target.popupBar.barStyle = barStyle
 					}
-					
-					if let barBackgroundEffect = self.currentPopupState.barBackgroundEffect?.consume(self) {
-						appearance.backgroundEffect = barBackgroundEffect
-					}
-					
-					if let barFloatingBackgroundEffect = self.currentPopupState.barFloatingBackgroundEffect?.consume(self) {
-						appearance.floatingBackgroundEffect = barFloatingBackgroundEffect
-					}
-					
-					if let barFloatingBackgroundShadow = self.currentPopupState.barFloatingBackgroundShadow?.consume(self) {
-						appearance.floatingBarBackgroundShadow = barFloatingBackgroundShadow
-					}
-					
-					if let barImageShadow = self.currentPopupState.barImageShadow?.consume(self) {
-						appearance.imageShadow = barImageShadow
-					}
-					
-					target.popupBar.standardAppearance = appearance
 				}
+				
+				if let barBackgroundEffect = self.currentPopupState.barBackgroundEffect?.consume(self) {
+					appearance.backgroundEffect = barBackgroundEffect
+				}
+				
+				if let barFloatingBackgroundEffect = self.currentPopupState.barFloatingBackgroundEffect?.consume(self) {
+					appearance.floatingBackgroundEffect = barFloatingBackgroundEffect
+				}
+				
+				if let barFloatingBackgroundShadow = self.currentPopupState.barFloatingBackgroundShadow?.consume(self) {
+					appearance.floatingBarBackgroundShadow = barFloatingBackgroundShadow
+				}
+				
+#if compiler(>=6.2)
+				if #available(iOS 26.0, *), let barFloatingBackgroundCornerConfiguration = self.currentPopupState.barFloatingBackgroundCornerConfiguration?.consume(self) {
+					let asd: Any?
+					if let barFloatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration as? UICornerConfiguration {
+						//Use a UIView to convert from Swift UICornerConfiguration to ObjC __UICornerConfiguration 🤦‍♂️
+						let view = UIView()
+						view.cornerConfiguration = barFloatingBackgroundCornerConfiguration
+						asd = view.value(forKey: "cornerConfiguration")
+					} else {
+						asd = nil
+					}
+					appearance.floatingBackgroundCornerConfiguration = asd as? __UICornerConfiguration
+				}
+#endif
+				
+				if let customBarPrefersFullBarWidth = self.currentPopupState.customBarPrefersFullBarWidth?.consume(self) {
+					appearance.customBarWantsFullBarWidth = customBarPrefersFullBarWidth
+				}
+				
+				if let barImageShadow = self.currentPopupState.barImageShadow?.consume(self) {
+					appearance.imageShadow = barImageShadow
+				}
+				
+				target.popupBar.standardAppearance = appearance
 				
 				if let contextMenu = self.currentPopupState.contextMenu?.consume(self) {
 					let contextHost = AnyView(Color.green.frame(width: 2, height: 2).contextMenu {

@@ -113,8 +113,11 @@ struct CustomBarMapView: View {
 				}
 				.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
 				.hoverEffect(.lift)
-				.padding()
+				.padding(36)
 			}
+		}
+		.popupContentViewCustomizer { popupContentView in
+			popupContentView.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
 		}
 		.font(nil)
 	}

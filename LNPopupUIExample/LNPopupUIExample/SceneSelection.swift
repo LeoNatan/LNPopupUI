@@ -50,9 +50,21 @@ extension View {
 	}
 }
 
+extension View {
+	@ViewBuilder
+	func deviceAppropriateModalPresentation<Content: View>(isPresented: Binding<Bool>, attachmentAnchor: PopoverAttachmentAnchor = .rect(.bounds), arrowEdge: Edge? = nil, @ViewBuilder content: @escaping () -> Content) -> some View {
+		if UIDevice.current.userInterfaceIdiom == .pad {
+			self.popover(isPresented: isPresented, attachmentAnchor: attachmentAnchor, arrowEdge: arrowEdge, content: content)
+		} else {
+			self.sheet(isPresented: isPresented, content: content)
+		}
+	}
+}
+
 struct SceneSelection: View {
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 	@Environment(\.verticalSizeClass) var verticalSizeClass
+	@Environment(\.colorScheme) var colorScheme
 	
 	@State var tabnavPresented: Bool = false
 	@State var tabPresented: Bool = false
@@ -214,7 +226,7 @@ struct SceneSelection: View {
 					} label: {
 						Image("gears")
 					}
-					.popover(isPresented: $settingsPresented, content: {
+					.deviceAppropriateModalPresentation(isPresented: $settingsPresented, content: {
 						SettingsNavView()
 							.frame(minWidth: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 375 : nil, minHeight: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 600 : nil)
 					})

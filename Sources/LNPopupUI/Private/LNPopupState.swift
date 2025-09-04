@@ -29,13 +29,15 @@ internal struct LNPopupState<PopupContent: View> {
 	let closeButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>?
 	let barStyle: LNPopupEnvironmentConsumer<LNPopupBar.Style>?
 	let barBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
-	let barFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
+	let barFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIVisualEffect>?
 	let barFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
+	let barFloatingBackgroundCornerConfiguration: LNPopupEnvironmentConsumer<Any?>?
 	let barImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
 	let barTitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
 	let barSubtitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
 	let barProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>?
 	let barMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
+	let customBarPrefersFullBarWidth: LNPopupEnvironmentConsumer<Bool>?
 	let hapticFeedbackEnabled: LNPopupEnvironmentConsumer<Bool>?
 	let limitFloatingContentWidth: LNPopupEnvironmentConsumer<Bool>?
 	let marqueeRate: LNPopupEnvironmentConsumer<CGFloat>?

@@ -34,8 +34,9 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 	@Environment(\.popupBarCoordinateMarqueeAnimations) var popupBarCoordinateMarqueeAnimations: LNPopupEnvironmentConsumer<Bool>?
 	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: LNPopupEnvironmentConsumer<Bool>?
 	@Environment(\.popupBarBackgroundEffect) var popupBarBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
-	@Environment(\.popupBarFloatingBackgroundEffect) var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
+	@Environment(\.popupBarFloatingBackgroundEffect) var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIVisualEffect>?
 	@Environment(\.popupBarFloatingBackgroundShadow) var popupBarFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
+	@Environment(\.popupBarFloatingBackgroundCornerConfiguration) var popupBarFloatingBackgroundCornerConfiguration: LNPopupEnvironmentConsumer<Any?>?
 	@Environment(\.popupBarImageShadow) var popupBarImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
 	@Environment(\.popupBarTitleTextAttributes) var popupBarTitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
 	@Environment(\.popupBarSubtitleTextAttributes) var popupBarSubtitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
@@ -43,6 +44,7 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 	@Environment(\.popupBarContextMenu) var popupBarContextMenu: LNPopupEnvironmentConsumer<AnyView>?
 	@Environment(\.popupBarCustomizer) var popupBarCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
 	@Environment(\.popupContentViewCustomizer) var popupContentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
+	@Environment(\.popupBarCustomBarPrefersFullBarWidth) var popupBarCustomBarPrefersFullBarWidth: LNPopupEnvironmentConsumer<Bool>?
 	
 	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContent: (() -> PopupContent)? = nil, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
 		self.isBarPresented = isBarPresented
@@ -73,11 +75,13 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 								 barBackgroundEffect: popupBarBackgroundEffect,
 								 barFloatingBackgroundEffect: popupBarFloatingBackgroundEffect,
 								 barFloatingBackgroundShadow: popupBarFloatingBackgroundShadow,
+								 barFloatingBackgroundCornerConfiguration: popupBarFloatingBackgroundCornerConfiguration,
 								 barImageShadow: popupBarImageShadow,
 								 barTitleTextAttributes: popupBarTitleTextAttributes,
 								 barSubtitleTextAttributes: popupBarSubtitleTextAttributes,
 								 barProgressViewStyle: popupBarProgressViewStyle,
 								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
+								 customBarPrefersFullBarWidth: popupBarCustomBarPrefersFullBarWidth,
 								 hapticFeedbackEnabled: popupHapticFeedbackEnabled,
 								 limitFloatingContentWidth: popupBarLimitFloatingContentWidth,
 								 marqueeRate: popupBarMarqueeRate,

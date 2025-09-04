@@ -49,8 +49,9 @@ internal extension EnvironmentValues {
 	@Entry var popupBarInheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupBarInheritsEnvironmentFont: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupBarBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
-	@Entry var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
+	@Entry var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIVisualEffect>?
 	@Entry var popupBarFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
+	@Entry var popupBarFloatingBackgroundCornerConfiguration: LNPopupEnvironmentConsumer<Any?>?
 	@Entry var popupBarImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
 	@Entry var popupBarTitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
 	@Entry var popupBarSubtitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
@@ -58,6 +59,7 @@ internal extension EnvironmentValues {
 	@Entry var popupBarContextMenu: LNPopupEnvironmentConsumer<AnyView>?
 	@Entry var popupBarCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
 	@Entry var popupContentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
+	@Entry var popupBarCustomBarPrefersFullBarWidth: LNPopupEnvironmentConsumer<Bool>?
 }
 
 internal func UIImageOrientationToImageOrientation(_ o: UIImage.Orientation) -> Image.Orientation {

@@ -14,9 +14,11 @@ struct WebView : UIViewRepresentable {
 	
 	func makeUIView(context: Context) -> WKWebView  {
 		let rv = WKWebView()
+#if compiler(>=6.2)
 		if #available(iOS 26.0, *) {
 			rv.scrollView.topEdgeEffect.isHidden = true
 		}
+#endif
 		return rv
 	}
 	

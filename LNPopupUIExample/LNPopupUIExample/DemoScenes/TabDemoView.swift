@@ -38,7 +38,7 @@ struct InnerView : View {
 			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "nil", includeToolbar: includeToolbar, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: showDismissButton)
 			if let showDismissButton, showDismissButton == true {
 				VStack {
-					Button("Gallery") {
+					CloseButton {
 						onDismiss()
 					}
 					.fontWeight(.semibold)

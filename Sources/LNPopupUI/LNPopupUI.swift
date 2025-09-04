@@ -157,7 +157,7 @@ public extension View {
 	/// Sets the popup bar's floating background effect. Use `nil` to use the most appropriate background style for the environment.
 	///
 	/// - Parameter effect: The popup bar's floating background effect.
-	func popupBarFloatingBackgroundEffect(_ effect: UIBlurEffect?) -> some View {
+	func popupBarFloatingBackgroundEffect(_ effect: UIVisualEffect?) -> some View {
 		environment(\.popupBarFloatingBackgroundEffect, LNPopupEnvironmentConsumer(effect))
 	}
 	
@@ -188,6 +188,17 @@ public extension View {
 		shadow.shadowOffset = CGSize(width: xx, height: yy)
 		
 		return environment(\.popupBarFloatingBackgroundShadow, LNPopupEnvironmentConsumer(shadow))
+	}
+	
+#if compiler(>=6.2)
+	@available(iOS 26.0, *)
+	func popupBarFloatingBackgroundCornerConfiguration(_ configuration: UICornerConfiguration?) -> some View {
+		environment(\.popupBarFloatingBackgroundCornerConfiguration, LNPopupEnvironmentConsumer(configuration))
+	}
+#endif
+	
+	func popupBarCustomBarPrefersFullBarWidth(_ prefersFullWidth: Bool) -> some View {
+		environment(\.popupBarCustomBarPrefersFullBarWidth, LNPopupEnvironmentConsumer(prefersFullWidth))
 	}
 	
 	func popupBarLimitFloatingContentWidth(_ enabled: Bool) -> some View {

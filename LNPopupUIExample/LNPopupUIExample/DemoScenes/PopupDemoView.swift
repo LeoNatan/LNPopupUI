@@ -40,6 +40,31 @@ extension View {
 	}
 }
 
+struct CloseButton: View {
+	let action: @MainActor () -> Void
+	
+	var body: some View {
+		let legacyButton = Button("Gallery", action: action)
+		
+#if compiler(>=6.2)
+		if #available(iOS 26.0, *) {
+			Button(role: .close, action: action) {
+				Label("Done", systemImage: "checkmark")
+					.labelStyle(.iconOnly)
+					.imageScale(.large)
+					.padding(4)
+			}
+			.buttonStyle(.glassProminent)
+			.buttonBorderShape(.circle)
+		} else {
+			legacyButton
+		}
+#else
+		legacyButton
+#endif
+	}
+}
+
 struct ToolbarModifier: ViewModifier {
 	let includeToolbar: Bool
 	let presentBarHandler: (() -> Void)?
@@ -63,7 +88,7 @@ struct ShowDismissModifier: ViewModifier {
 		if showDismissButton {
 			content.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
-					Button("Gallery") {
+					CloseButton {
 						onDismiss?()
 					}
 				}
