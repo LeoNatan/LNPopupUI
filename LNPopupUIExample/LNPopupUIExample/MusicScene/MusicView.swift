@@ -73,11 +73,11 @@ struct RandomTitlesListView : View {
 							.cornerRadius(8)
 						
 						VStack(alignment: .leading) {
-							Text(song.title)
+							LNPopupText(song.title)
 								.font(.headline)
 								.lineLimit(1)
 								.truncationMode(.tail)
-							Text(song.subtitle)
+							LNPopupText(song.subtitle)
 								.font(.subheadline)
 								.lineLimit(1)
 								.truncationMode(.tail)
@@ -86,7 +86,7 @@ struct RandomTitlesListView : View {
 				}
 			}
 			.listStyle(PlainListStyle())
-			.navigationBarTitle(title)
+			.navigationBarTitle(NSLocalizedString(title, comment: ""))
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarLeading) {
@@ -121,22 +121,22 @@ struct MusicView: View {
 	
 	var body: some View {
 		MaterialTabView {
-			Tab("Music", systemImage: "play.circle") {
+			Tab(NSLocalizedString("Music", comment: ""), systemImage: "play.circle") {
 				RandomTitlesListView("Music", idx: 0, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
-			Tab("Artists", systemImage: "music.mic") {
+			Tab(NSLocalizedString("Artists", comment: ""), systemImage: "music.mic") {
 				RandomTitlesListView("Artists", idx: 1, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
-			Tab("Composers", systemImage: "music.quarternote.3") {
+			Tab(NSLocalizedString("Composers", comment: ""), systemImage: "music.quarternote.3") {
 				RandomTitlesListView("Composers", idx: 2, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
-			Tab("Recents", systemImage: "clock") {
+			Tab(NSLocalizedString("Recents", comment: ""), systemImage: "clock") {
 				RandomTitlesListView("Recents", idx: 3, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})

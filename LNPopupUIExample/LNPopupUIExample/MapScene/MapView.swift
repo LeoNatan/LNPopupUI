@@ -10,17 +10,17 @@ import SwiftUI
 import MapKit
 
 struct EnlargingButton: View {
-	let label: LocalizedStringKey
+	let label: String
 	let action: (Bool) -> Void
 	@State var pressed: Bool = false
 	
-	init(label: LocalizedStringKey, perform action: @escaping (Bool) -> Void) {
+	init(label: String, perform action: @escaping (Bool) -> Void) {
 		self.label = label
 		self.action = action
 	}
 	
 	var body: some View {
-		return Text(label)
+		return LNPopupText(label)
 			.font(.title)
 			.foregroundColor(.white)
 			.padding(10)
@@ -115,9 +115,6 @@ struct CustomBarMapView: View {
 				.hoverEffect(.lift)
 				.padding(36)
 			}
-		}
-		.popupContentViewCustomizer { popupContentView in
-			popupContentView.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
 		}
 		.font(nil)
 	}

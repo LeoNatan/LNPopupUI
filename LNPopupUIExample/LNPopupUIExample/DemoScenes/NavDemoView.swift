@@ -41,7 +41,7 @@ struct NavDemoView : View {
 			let bottomBarHideSupport = SafeAreaDemoView.BottomBarHideSupport(showsBottomBarHideButton: true)
 			
 			SafeAreaDemoView(colorSeed:"nil", includeToolbar: true, includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: false, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
-				.navigationBarTitle(title ?? "LNPopupUI")
+				.navigationBarTitle(NSLocalizedString(title ?? "LNPopupUI", comment: ""))
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {
 					ToolbarItem(placement: .confirmationAction) {

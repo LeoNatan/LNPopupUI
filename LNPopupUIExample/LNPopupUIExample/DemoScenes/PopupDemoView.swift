@@ -24,16 +24,22 @@ extension View {
 	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
 		return toolbar {
 			ToolbarItemGroup(placement: .bottomBar) {
-				Button(presentBarHandler != nil ? "Present Bar" : "Test 1") {
+				Button {
 					presentBarHandler?()
+				} label: {
+					LNPopupText(presentBarHandler != nil ? "Present Bar" : "Test 1")
 				}
 				Spacer()
-				Button(appearanceHandler != nil ? "Appearance" : "Test 2") {
+				Button {
 					appearanceHandler?()
+				} label: {
+					LNPopupText(presentBarHandler != nil ? "Appearance" : "Test 2")
 				}
 				Spacer()
-				Button(hideBarHandler != nil ? "Dismiss Bar" : "Test 3") {
+				Button {
 					hideBarHandler?()
+				} label: {
+					LNPopupText(presentBarHandler != nil ? "Dismiss Bar" : "Test 3")
 				}
 			}
 		}
@@ -232,9 +238,9 @@ struct SafeAreaDemoView : View {
 					.popupTransitionTarget()
 			} else {
 				VStack {
-					Text("Top").offset(x: offset ? 60.0 : 0.0)
+					LNPopupText("Top").offset(x: offset ? 60.0 : 0.0)
 					Spacer()
-					Text("Bottom")
+					LNPopupText("Bottom")
 				}
 				.frame(maxWidth: .infinity,
 					   maxHeight: .infinity,
@@ -242,8 +248,10 @@ struct SafeAreaDemoView : View {
 				.overlay {
 					ZStack {
 						if let isPopupOpen = isPopupOpen {
-							Button("Custom Close Button") {
+							Button {
 								isPopupOpen.wrappedValue = false
+							} label: {
+								LNPopupText("Custom Close Button")
 							}.foregroundColor(Color(.label))
 						} else {
 							if let presentBarHandler = presentBarHandler, let hideBarHandler = hideBarHandler {
@@ -260,7 +268,7 @@ struct SafeAreaDemoView : View {
 									}.padding(7).hoverEffect()
 								}.font(.title2).fontWeight(nil)
 							} else {
-								Text("Center")
+								LNPopupText("Center")
 							}
 						}
 						if includeLink {
@@ -275,7 +283,7 @@ struct SafeAreaDemoView : View {
 //										.toolbarRoleIfPad18(bottomBarHideSupport == nil || bottomBarHideSupport!.isBottomBarTab != true)
 								} label: {
 									Label {
-										Text("Next")
+										LNPopupText("Next")
 									} icon: {
 										Image(systemName: "arrowtriangle.forward.fill").font(.system(size: 8))
 									}.labelStyle(TrailingImageLabelStyle())
@@ -440,10 +448,13 @@ struct ContextMenuModifier: ViewModifier {
 	func body(content: Content) -> some View {
 		if includeContextMenu {
 			content.popupBarContextMenu {
-				Button("♥️ - Hearts", action: { print ("♥️ - Hearts") })
-				Button("♣️ - Clubs", action: { print ("♣️ - Clubs") })
-				Button("♠️ - Spades", action: { print ("♠️ - Spades") })
-				Button("♦️ - Diamonds", action: { print ("♦️ - Diamonds") })
+				ForEach(["♥️ - Hearts", "♣️ - Clubs", "♠️ - Spades", "♦️ - Diamonds"], id: \.self) { str in
+					Button {
+						print(str)
+					} label: {
+						LNPopupText(str)
+					}
+				}
 			}
 		} else {
 			content
@@ -647,5 +658,23 @@ struct MaterialNavigationSplitView<Sidebar: View, Content: View, Detail: View>: 
 		} detail: {
 			detail.fixBottomBarAppearance()
 		}
+	}
+}
+
+@MainActor
+struct LNPopupText: View {
+	let text: Text
+	public init(_ content: String) {
+		@AppStorage(PopupSetting.forceRTL) var forceRTL: Bool = false
+		
+		if forceRTL == false {
+			text = Text(LocalizedStringKey(content))
+		} else {
+			text = Text(Bundle.main.localizedString(forKey: content, value: nil, table: nil))
+		}
+	}
+	
+	var body: some View {
+		text
 	}
 }

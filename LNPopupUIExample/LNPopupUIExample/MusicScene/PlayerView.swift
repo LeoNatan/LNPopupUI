@@ -50,9 +50,9 @@ struct PlayerView: View {
 				VStack(spacing: geometry.size.height * 30.0 / 896.0) {
 					HStack {
 						VStack(alignment: .leading) {
-							Text(song.title)
+							LNPopupText(song.title)
 								.font(.system(size: 20, weight: .bold))
-							Text(song.subtitle)
+							LNPopupText(song.subtitle)
 								.font(.system(size: 20, weight: .regular))
 						}
 						.lineLimit(1)

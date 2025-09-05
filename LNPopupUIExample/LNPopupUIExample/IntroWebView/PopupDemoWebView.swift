@@ -43,7 +43,7 @@ struct PopupDemoWebView: View {
 			.popupBarStyle(.floating)
 			.popupTitle {
 				HStack {
-					Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
+					Text(NSLocalizedString("Welcome to ", comment: "")) + Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy) + Text("!")
 				}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(.body)
 			}
 			.popupImage(Image("AppIconPopupBar"))

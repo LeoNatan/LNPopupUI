@@ -23,29 +23,29 @@ struct CompactSliderDemoView: View {
 			InnerView(tabIdx:0, onDismiss: onDismiss, presentBarHandler: nil, hideBarHandler: nil)
 				.tabItem {
 					Image(systemName: "star.fill")
-					Text("Tab")
+					LNPopupText("Tab")
 				}
 			InnerView(tabIdx:1, onDismiss: onDismiss, presentBarHandler: nil, hideBarHandler: nil)
 				.tabItem {
 					Image(systemName: "star.fill")
-					Text("Tab")
+					LNPopupText("Tab")
 				}
 		}.popup(isBarPresented: Binding.constant(true)) {
-			Text("Hello, World!")
+			LNPopupText("Hello, World!")
 			CompactSlider(value: $playbackRate, in: 0.5...3, step: 0.1) {
 				Spacer()
-				Text("\(playbackRate)")
+				LNPopupText("\(playbackRate)")
 			}.padding()
 			CompactSlider(value: $playbackRate2, in: 0.5...3, step: 0.1, direction: .center) {
 				Spacer()
-				Text("\(playbackRate2)")
+				LNPopupText("\(playbackRate2)")
 			}.padding()
 			CompactSlider(from: $playbackRateFrom, to: $playbackRateTo, in: 0...20, step: 1) {
 				Spacer()
-				Text("\(zeroLeadingHours(playbackRateFrom)) — \(zeroLeadingHours(playbackRateTo))")
+				LNPopupText("\(zeroLeadingHours(playbackRateFrom)) — \(zeroLeadingHours(playbackRateTo))")
 			}.padding()
 				.popupImage(Image("genre3"))
-				.popupTitle("CompactSlider")
+				.popupTitle(NSLocalizedString("CompactSlider", comment: ""))
 		}
     }
 	

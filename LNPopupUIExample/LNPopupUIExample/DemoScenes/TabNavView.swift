@@ -69,7 +69,7 @@ struct InnerNavView : View {
 			let bottomBarHideSupport = SafeAreaDemoView.BottomBarHideSupport(showsBottomBarHideButton: true, isBottomBarTab: true)
 			
 			SafeAreaDemoView(colorSeed: "tab_\(tabIdx)", includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
-				.navigationBarTitle("LNPopupUI")
+				.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 				.navigationBarTitleDisplayMode(.inline)
 //				.toolbarRoleIfPad18()
 				.introspect(.tabView, on: .iOS(.v18), scope: .ancestor) { tvc in

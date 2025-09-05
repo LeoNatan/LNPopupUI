@@ -11,25 +11,27 @@ import LNPopupUI
 import ActivityView
 
 fileprivate struct CellPaddedButton: View {
-	let text: LocalizedStringKey
+	let text: String
 	let action: () -> Void
 	
-	public init(_ content: LocalizedStringKey, action: @escaping () -> Void) {
+	public init(_ content: String, action: @escaping () -> Void) {
 		text = content
 		self.action = action
 	}
 	
 	var body: some View {
-		Button(text, action: action)
-//			.padding([.top, .bottom], 4.167)
-			.tint(Color(.label))
+		Button(action: action) {
+			LNPopupText(text)
+		}
+//		.padding([.top, .bottom], 4.167)
+		.tint(Color(.label))
 	}
 }
 
 fileprivate struct LNHeaderFooterView: View {
-	let content: Text
+	let content: LNPopupText
 	public init(_ content: String) {
-		self.content = Text(content)
+		self.content = LNPopupText(content)
 	}
 	
 	var body: some View {
@@ -218,7 +220,7 @@ struct SceneSelection: View {
 				}
 			}
 			.listStyle(InsetGroupedListStyle())
-			.navigationBarTitle("LNPopupUI")
+			.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
 					Button {
@@ -226,6 +228,7 @@ struct SceneSelection: View {
 					} label: {
 						Image("gears")
 					}
+					.buttonStyle(.borderedProminent)
 					.deviceAppropriateModalPresentation(isPresented: $settingsPresented, content: {
 						SettingsNavView()
 							.frame(minWidth: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 375 : nil, minHeight: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 600 : nil)
@@ -240,11 +243,11 @@ struct SceneSelection: View {
 		.popupBarStyle(.floating)
 		.popupBarContextMenu {
 			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI")!) {
-				Text("Visit GitHub Page")
+				LNPopupText("Visit GitHub Page")
 				Image(systemName: "safari")
 			}
 			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI/issues/new/choose")!) {
-				Text("Report an Issue…")
+				LNPopupText("Report an Issue…")
 				Image(systemName: "ant.fill")
 			}
 			Divider()
@@ -253,7 +256,7 @@ struct SceneSelection: View {
 					items: URL(string: "https://github.com/LeoNatan/LNPopupUI")!
 				)
 			} label: {
-				Text("Share…")
+				LNPopupText("Share…")
 				Image(systemName: "square.and.arrow.up")
 			}
 		}
