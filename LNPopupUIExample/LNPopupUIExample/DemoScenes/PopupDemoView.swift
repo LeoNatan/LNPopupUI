@@ -232,7 +232,7 @@ struct SafeAreaDemoView : View {
 					.popupTransitionTarget()
 			} else {
 				VStack {
-					Text("Top").offset(x: offset ? 40.0 : 0.0)
+					Text("Top").offset(x: offset ? 60.0 : 0.0)
 					Spacer()
 					Text("Bottom")
 				}
@@ -397,7 +397,7 @@ struct CustomizationsModifier: ViewModifier {
 	@ViewBuilder func body(content: Content) -> some View {
 		if enableCustomizations {
 			content
-				.popupBarFloatingBackgroundShadow(color: .red, radius: 8)
+				.popupBarFloatingBackgroundShadow(color: .red, radius: 8, x: 0, y: 0)
 				.popupBarImageShadow(color: .yellow, radius: 5)
 				.popupBarTitleTextAttributes(AttributeContainer()
 					.font(Font.custom("Chalkduster", size: 14, relativeTo: .headline))
@@ -408,7 +408,7 @@ struct CustomizationsModifier: ViewModifier {
 					.foregroundColor(.green)
 					.paragraphStyle(customizationParagraphStyle))
 				.popupBarCustomizer { popupBar in
-					if popupBar.effectiveBarStyle == .floating {
+					if [.floating, .floatingCompact].contains(popupBar.effectiveBarStyle) {
 						popupBar.inheritsAppearanceFromDockingView = true
 						popupBar.standardAppearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
 					} else {
@@ -518,7 +518,9 @@ struct PopupDemoViewModifier: ViewModifier {
 							print("Play")
 						} label: {
 							Image(systemName: "play.fill")
-						}.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
+						}
+						.padding(10)
+						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				} trailing: {
 					ToolbarItemGroup(placement: .popupBar) {
@@ -526,7 +528,9 @@ struct PopupDemoViewModifier: ViewModifier {
 							print("Next")
 						} label: {
 							Image(systemName: "forward.fill")
-						}.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
+						}
+						.padding(10)
+						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				}
 			

@@ -13,6 +13,17 @@ import LoremIpsum
 import Combine
 import SwiftUIIntrospect
 
+extension View {
+	@ViewBuilder
+	func hiddenThumbIfPossible() -> some View {
+		if #available(iOS 26.0, *) {
+			self.sliderThumbVisibility(.hidden)
+		} else {
+			self
+		}
+	}
+}
+
 struct PlayerView: View {
 	let song: RandomTitleSong
 	@State var playbackProgress: Float = Float.random(in: 0..<1)
@@ -53,13 +64,9 @@ struct PlayerView: View {
 								.font(.title)
 						}
 					}
-					if #available(iOS 14.0, *) {
-						ProgressView(value: playbackProgress)
-							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
-					} else {
-						Slider(value: $playbackProgress)
-							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
-					}
+					Slider(value: $playbackProgress)
+						.padding([.bottom], geometry.size.height * 30.0 / 896.0)
+						.hiddenThumbIfPossible()
 					HStack {
 						Button {} label: {
 							Image(systemName: "backward.fill")
@@ -122,19 +129,19 @@ struct PlayerView: View {
 		.popupTitle(song.title)
 		.popupImage(Image(song.imageName).resizable())
 		.popupProgress(playbackProgress)
-		.popupBarItems({
+		.popupBarItems {
 			Button {
 				isPlaying.toggle()
 			} label: {
 				Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-			}
+			}.padding(10)
 			
 			Button {
 				print("Next")
 			} label: {
 				Image(systemName: "forward.fill")
-			}
-		})
+			}.padding(10)
+		}
 	}
 }
 

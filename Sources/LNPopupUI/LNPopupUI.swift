@@ -110,6 +110,7 @@ public extension View {
 	/// Enables or disables the popup bar extension under the safe area.
 	///
 	/// - Parameter enabled: Extend the popup bar under safe area.
+	@available(iOS, deprecated: 26.0, message: "No longer supported on iOS 26.0 and later.")
 	func popupBarShouldExtendPopupBarUnderSafeArea(_ enabled: Bool) -> some View {
 		environment(\.popupBarShouldExtendPopupBarUnderSafeArea, LNPopupEnvironmentConsumer(enabled))
 	}

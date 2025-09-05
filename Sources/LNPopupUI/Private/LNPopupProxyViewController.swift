@@ -265,7 +265,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 #endif
 				
 				if let customBarPrefersFullBarWidth = self.currentPopupState.customBarPrefersFullBarWidth?.consume(self) {
-					appearance.customBarWantsFullBarWidth = customBarPrefersFullBarWidth
+					target.popupBar.customBarWantsFullBarWidth = customBarPrefersFullBarWidth
 				}
 				
 				if let barImageShadow = self.currentPopupState.barImageShadow?.consume(self) {
