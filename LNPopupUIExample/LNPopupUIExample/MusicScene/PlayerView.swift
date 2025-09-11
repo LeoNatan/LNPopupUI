@@ -16,11 +16,15 @@ import SwiftUIIntrospect
 extension View {
 	@ViewBuilder
 	func hiddenThumbIfPossible() -> some View {
+#if compiler(>=6.2)
 		if #available(iOS 26.0, *) {
 			self.sliderThumbVisibility(.hidden)
 		} else {
 			self
 		}
+#else
+		self
+#endif
 	}
 }
 

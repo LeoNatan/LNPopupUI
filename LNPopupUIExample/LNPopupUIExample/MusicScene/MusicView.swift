@@ -97,7 +97,7 @@ struct RandomTitlesListView : View {
 					}
 				}
 				ToolbarItem(placement: .confirmationAction) {
-					CloseButton {
+					ToolbarCloseButton {
 						onDismiss()
 					}
 				}

@@ -19,7 +19,7 @@ struct SplitInnerView: View {
 			InnerView(tabIdx: idx, showDismissButton: false, onDismiss: onDismiss, includeToolbar: !isGlobal, presentBarHandler: nil, hideBarHandler: nil)
 				.toolbar {
 					ToolbarItem(placement: .confirmationAction) {
-						CloseButton {
+						ToolbarCloseButton {
 							onDismiss()
 						}
 					}

@@ -35,7 +35,7 @@ struct InnerView : View {
 		ZStack(alignment: .topTrailing) {
 			let bottomButtonsHandlers = SafeAreaDemoView.BottomButtonHandlers(presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 			
-			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "nil", includeToolbar: includeToolbar, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: showDismissButton)
+			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "ZviewZz", includeToolbar: includeToolbar, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: showDismissButton)
 			if let showDismissButton, showDismissButton == true {
 				VStack {
 					CloseButton {

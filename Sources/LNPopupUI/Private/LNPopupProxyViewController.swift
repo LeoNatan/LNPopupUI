@@ -250,17 +250,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				}
 				
 #if compiler(>=6.2)
-				if #available(iOS 26.0, *), let barFloatingBackgroundCornerConfiguration = self.currentPopupState.barFloatingBackgroundCornerConfiguration?.consume(self) {
-					let asd: Any?
-					if let barFloatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration as? UICornerConfiguration {
-						//Use a UIView to convert from Swift UICornerConfiguration to ObjC __UICornerConfiguration 🤦‍♂️
-						let view = UIView()
-						view.cornerConfiguration = barFloatingBackgroundCornerConfiguration
-						asd = view.value(forKey: "cornerConfiguration")
-					} else {
-						asd = nil
-					}
-					appearance.floatingBackgroundCornerConfiguration = asd as? __UICornerConfiguration
+				if #available(iOS 26.0, *), let barFloatingBackgroundCornerConfiguration = self.currentPopupState.barFloatingBackgroundCornerConfiguration?.consume(self), let barFloatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration as? UICornerConfiguration? {
+					appearance.floatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration
 				}
 #endif
 				

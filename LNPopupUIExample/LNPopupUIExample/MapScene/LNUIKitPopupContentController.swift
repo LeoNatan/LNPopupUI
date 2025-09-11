@@ -16,7 +16,7 @@ class LNUIKitPopupContentController : UIViewController {
 		
 		let label = UILabel()
 		label.numberOfLines = 0
-		label.text = String(localized: "UIKit Popup Content Controller")
+		label.text = NSLocalizedString("UIKit Popup Content Controller", comment: "")
 		label.font = .preferredFont(forTextStyle: .title1)
 		label.translatesAutoresizingMaskIntoConstraints = false
 		

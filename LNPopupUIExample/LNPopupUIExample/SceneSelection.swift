@@ -50,6 +50,19 @@ extension View {
 			return self
 		}
 	}
+	
+	@ViewBuilder
+	func buttonStyleIfNeeded() -> some View {
+#if compiler(>=6.2)
+		if #available(iOS 26.0, *) {
+			buttonStyle(.glassProminent)
+		} else {
+			self
+		}
+#else
+		self
+#endif
+	}
 }
 
 extension View {
@@ -228,7 +241,7 @@ struct SceneSelection: View {
 					} label: {
 						Image("gears")
 					}
-					.buttonStyle(.borderedProminent)
+					.buttonStyleIfNeeded()
 					.deviceAppropriateModalPresentation(isPresented: $settingsPresented, content: {
 						SettingsNavView()
 							.frame(minWidth: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 375 : nil, minHeight: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 600 : nil)

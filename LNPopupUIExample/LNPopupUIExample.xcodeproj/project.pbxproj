@@ -568,7 +568,7 @@
 			repositoryURL = "https://github.com/siteline/swiftui-introspect";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
+				minimumVersion = 1.3.0;
 			};
 		};
 		393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
@@ -576,7 +576,7 @@
 			repositoryURL = "https://github.com/buh/CompactSlider";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.5;
+				minimumVersion = 1.2.1;
 			};
 		};
 		394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */ = {

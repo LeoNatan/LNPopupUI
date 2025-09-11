@@ -45,7 +45,7 @@ struct NavDemoView : View {
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {
 					ToolbarItem(placement: .confirmationAction) {
-						CloseButton {
+						ToolbarCloseButton {
 							onDismiss()
 						}
 					}

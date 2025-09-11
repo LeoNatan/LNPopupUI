@@ -46,7 +46,7 @@ extension View {
 	}
 }
 
-struct CloseButton: View {
+struct ToolbarCloseButton: View {
 	let action: @MainActor () -> Void
 	
 	var body: some View {
@@ -67,6 +67,42 @@ struct CloseButton: View {
 		}
 #else
 		legacyButton
+#endif
+	}
+}
+
+#if compiler(>=6.2)
+@available(iOS 26.0, *)
+struct _CloseButton: UIViewRepresentable {
+	let action: @MainActor () -> Void
+	
+	func makeUIView(context: Context) -> UIButton {
+		var config = UIButton.Configuration.prominentGlass()
+			config.image = UIImage(systemName: "checkmark")
+			config.preferredSymbolConfigurationForImage = .init(pointSize: 17)
+		let button = UIButton(configuration: config, primaryAction: UIAction(handler: { _ in
+			action()
+		}))
+		return button
+	}
+	
+	func updateUIView(_ uiView: UIButton, context: Context) {
+	}
+}
+#endif
+
+struct CloseButton: View {
+	let action: @MainActor () -> Void
+	
+	var body: some View {
+#if compiler(>=6.2)
+		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
+			_CloseButton(action: action).frame(width: 46, height: 46)
+		} else {
+			ToolbarCloseButton(action: action)
+		}
+#else
+		ToolbarCloseButton(action: action)
 #endif
 	}
 }
@@ -94,7 +130,7 @@ struct ShowDismissModifier: ViewModifier {
 		if showDismissButton {
 			content.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
-					CloseButton {
+					ToolbarCloseButton {
 						onDismiss?()
 					}
 				}

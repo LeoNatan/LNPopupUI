@@ -53,6 +53,22 @@ extension MKCoordinateRegion: @retroactive Equatable {
 	}
 }
 
+fileprivate
+extension View {
+	@ViewBuilder
+	func popupCornerConfigurationIfPossible() -> some View {
+#if compiler(>=6.2)
+		if #available(iOS 26, *) {
+			popupBarFloatingBackgroundCornerConfiguration(.uniformCorners(radius: .fixed(40)))
+		} else {
+			self
+		}
+#else
+		self
+#endif
+	}
+}
+
 struct CustomBarMapView: View {
 	@Environment(\.colorScheme) var colorScheme
 	
@@ -77,20 +93,31 @@ struct CustomBarMapView: View {
 	@State var isPopupOpen: Bool = false
 	
 	var body: some View {
-		ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
+		MaterialNavigationStack {
 			Map(coordinateRegion: $region)
 				.ignoresSafeArea()
 				.animation(.easeInOut, value: region)
-			Button {
-				onDismiss()
-			} label: {
-				Image(systemName: "chevron.backward")
-					.renderingMode(.template)
-					.font(.title2)
-			}
-			.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
-			.hoverEffect(.lift)
-			.padding()
+				.toolbar {
+					if #available(iOS 26, *) {
+						ToolbarItem(placement: .topBarTrailing) {
+							ToolbarCloseButton {
+								onDismiss()
+							}
+						}
+					} else {
+						ToolbarItem(placement: .topBarLeading) {
+							Button {
+								onDismiss()
+							} label: {
+								Image(systemName: "chevron.backward")
+									.renderingMode(.template)
+									.font(.title2)
+							}
+							.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
+							.hoverEffect(.lift)
+						}
+					}
+				}
 		}
 		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen, popupContentController: popupContentController)
 		.popupBarCustomView(wantsDefaultTapGesture: false, wantsDefaultPanGesture: false, wantsDefaultHighlightGesture: false) {
@@ -116,6 +143,7 @@ struct CustomBarMapView: View {
 				.padding(36)
 			}
 		}
+		.popupCornerConfigurationIfPossible()
 		.font(nil)
 	}
 }
