@@ -235,14 +235,14 @@ The system supports `.clipShape()` with basic shapes and a single `shadow()` mod
 		.popupTransitionTarget()
 		.aspectRatio(contentMode: .fit)
 		.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-		.shadow(color: enableCustomizations ? .indigo : .black.opacity(0.5), radius: 20)
+		.shadow(color: .indigo, radius: 20)
 }
 ```
 
 > [!CAUTION]
-> Using a complex clip shapes and/or multiple calls to `.shadow()` will result in undefined behavior and visual artifacts in your transitions.
+> Using a complex clip shapes and/or multiple calls to `.shadow()` can result in undefined behavior the transition may not be accurate.
 
-Transitions are only available for prominent and floating popup bar styles with drag interaction style. Any other combination will result in no transition and this method will not be called by the system.
+Transitions are only available for drag interaction style, or transition targets are ignored.
 
 #### Popup Bar Customization
 
