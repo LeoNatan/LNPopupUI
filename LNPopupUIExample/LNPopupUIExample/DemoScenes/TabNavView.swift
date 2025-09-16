@@ -72,7 +72,7 @@ struct InnerNavView : View {
 				.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 				.navigationBarTitleDisplayMode(.inline)
 //				.toolbarRoleIfPad18()
-				.introspect(.tabView, on: .iOS(.v18), scope: .ancestor) { tvc in
+				.introspect(.tabView, on: .iOS(.v18, .v26), scope: .ancestor) { tvc in
 					if #available(iOS 18.0, *) {
 						if objc_getAssociatedObject(tvc, key) as? Bool != true {
 							tvc.sidebar.isHidden = true

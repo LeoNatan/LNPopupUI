@@ -53,7 +53,7 @@ struct ToolbarCloseButton: View {
 		let legacyButton = Button("Gallery", action: action)
 		
 #if compiler(>=6.2)
-		if #available(iOS 26.0, *) {
+		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
 			Button(role: .close, action: action) {
 				Label("Done", systemImage: "checkmark")
 					.labelStyle(.iconOnly)
@@ -617,11 +617,19 @@ fileprivate struct FixBottomBarAppearanceModifier: ViewModifier {
 	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
 	
 	func body(content: Content) -> some View {
-		content.introspect(.tabView, on: .iOS(.v16, .v17, .v18), scope: .ancestor) { tabBarController in
-			let isFloating = barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
+		content.introspect(.tabView, on: .iOS(.v16, .v17, .v18, .v26), scope: .ancestor) { tabBarController in
+			guard !LNPopupSettingsHasOS26Glass() else {
+				return
+			}
+			
+			let isFloating = barStyle == .floating || barStyle == .floatingCompact || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
 			tabBarController.tabBar.standardAppearance.backgroundEffect = UIBlurEffect(style: isFloating ? .systemThinMaterial : .systemChromeMaterial)
-		}.introspect(.navigationStack, on: .iOS(.v16, .v17, .v18), scope: .ancestor) { navBarController in
-			let isFloating = barStyle == .floating || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
+		}.introspect(.navigationStack, on: .iOS(.v16, .v17, .v18, .v26), scope: .ancestor) { navBarController in
+			guard !LNPopupSettingsHasOS26Glass() else {
+				return
+			}
+			
+			let isFloating = barStyle == .floating || barStyle == .floatingCompact || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
 			let effect = UIBlurEffect(style: isFloating ? .systemThinMaterial : .systemChromeMaterial)
 			navBarController.navigationBar.standardAppearance.backgroundEffect = effect
 			navBarController.navigationBar.compactAppearance?.backgroundEffect = effect

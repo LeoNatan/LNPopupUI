@@ -19,33 +19,6 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 	private let onOpen: (() -> Void)?
 	private let onClose: (() -> Void)?
 	
-	@Environment(\.font) var inheritedFont
-	@Environment(\.popupBarInheritsAppearanceFromDockingView) var popupBarInheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
-	@Environment(\.popupBarInheritsEnvironmentFont) var popupBarInheritsEnvironmentFont: LNPopupEnvironmentConsumer<Bool>?
-	@Environment(\.popupInteractionStyle) var popupInteractionStyle: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>?
-	@Environment(\.popupCloseButtonStyle) var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>?
-	@Environment(\.popupBarStyle) var popupBarStyle: LNPopupEnvironmentConsumer<LNPopupBar.Style>?
-	@Environment(\.popupBarProgressViewStyle) var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>?
-	@Environment(\.popupBarMarqueeScrollEnabled) var popupBarMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
-	@Environment(\.popupHapticFeedbackEnabled) var popupHapticFeedbackEnabled: LNPopupEnvironmentConsumer<Bool>?
-	@Environment(\.popupBarLimitFloatingContentWidth) var popupBarLimitFloatingContentWidth: LNPopupEnvironmentConsumer<Bool>?
-	@Environment(\.popupBarMarqueeRate) var popupBarMarqueeRate: LNPopupEnvironmentConsumer<CGFloat>?
-	@Environment(\.popupBarMarqueeDelay) var popupBarMarqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>?
-	@Environment(\.popupBarCoordinateMarqueeAnimations) var popupBarCoordinateMarqueeAnimations: LNPopupEnvironmentConsumer<Bool>?
-	@Environment(\.popupBarShouldExtendPopupBarUnderSafeArea) var popupBarShouldExtendPopupBarUnderSafeArea: LNPopupEnvironmentConsumer<Bool>?
-	@Environment(\.popupBarBackgroundEffect) var popupBarBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
-	@Environment(\.popupBarFloatingBackgroundEffect) var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIVisualEffect>?
-	@Environment(\.popupBarFloatingBackgroundShadow) var popupBarFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
-	@Environment(\.popupBarFloatingBackgroundCornerConfiguration) var popupBarFloatingBackgroundCornerConfiguration: LNPopupEnvironmentConsumer<Any?>?
-	@Environment(\.popupBarImageShadow) var popupBarImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
-	@Environment(\.popupBarTitleTextAttributes) var popupBarTitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
-	@Environment(\.popupBarSubtitleTextAttributes) var popupBarSubtitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
-	@Environment(\.popupBarCustomBarView) var popupBarCustomBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>?
-	@Environment(\.popupBarContextMenu) var popupBarContextMenu: LNPopupEnvironmentConsumer<AnyView>?
-	@Environment(\.popupBarCustomizer) var popupBarCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
-	@Environment(\.popupContentViewCustomizer) var popupContentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
-	@Environment(\.popupBarCustomBarPrefersFullBarWidth) var popupBarCustomBarPrefersFullBarWidth: LNPopupEnvironmentConsumer<Bool>?
-	
 	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContent: (() -> PopupContent)? = nil, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
 		self.isBarPresented = isBarPresented
 		self.isPopupOpen = isOpen
@@ -66,36 +39,36 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 		
 		let state = LNPopupState(isBarPresented: isBarPresented,
 								 isPopupOpen: isPopupOpen,
-								 inheritsAppearanceFromDockingView: popupBarInheritsAppearanceFromDockingView,
-								 inheritsEnvironmentFont: popupBarInheritsEnvironmentFont,
-								 inheritedFont: inheritedFont?.uiFont,
-								 interactionStyle: popupInteractionStyle,
-								 closeButtonStyle: popupCloseButtonStyle,
-								 barStyle: popupBarStyle,
-								 barBackgroundEffect: popupBarBackgroundEffect,
-								 barFloatingBackgroundEffect: popupBarFloatingBackgroundEffect,
-								 barFloatingBackgroundShadow: popupBarFloatingBackgroundShadow,
-								 barFloatingBackgroundCornerConfiguration: popupBarFloatingBackgroundCornerConfiguration,
-								 barImageShadow: popupBarImageShadow,
-								 barTitleTextAttributes: popupBarTitleTextAttributes,
-								 barSubtitleTextAttributes: popupBarSubtitleTextAttributes,
-								 barProgressViewStyle: popupBarProgressViewStyle,
-								 barMarqueeScrollEnabled: popupBarMarqueeScrollEnabled,
-								 customBarPrefersFullBarWidth: popupBarCustomBarPrefersFullBarWidth,
-								 hapticFeedbackEnabled: popupHapticFeedbackEnabled,
-								 limitFloatingContentWidth: popupBarLimitFloatingContentWidth,
-								 marqueeRate: popupBarMarqueeRate,
-								 marqueeDelay: popupBarMarqueeDelay,
-								 coordinateMarqueeAnimations: popupBarCoordinateMarqueeAnimations,
-								 shouldExtendPopupBarUnderSafeArea: popupBarShouldExtendPopupBarUnderSafeArea,
-								 customBarView: popupBarCustomBarView,
-								 contextMenu: popupBarContextMenu,
+								 inheritsAppearanceFromDockingView: context.environment.popupBarInheritsAppearanceFromDockingView,
+								 inheritsEnvironmentFont: context.environment.popupBarInheritsEnvironmentFont,
+								 inheritedFont: context.environment.uiFont,
+								 interactionStyle: context.environment.popupInteractionStyle,
+								 closeButtonStyle: context.environment.popupCloseButtonStyle,
+								 barStyle: context.environment.popupBarStyle,
+								 barBackgroundEffect: context.environment.popupBarBackgroundEffect,
+								 barFloatingBackgroundEffect: context.environment.popupBarFloatingBackgroundEffect,
+								 barFloatingBackgroundShadow: context.environment.popupBarFloatingBackgroundShadow,
+								 barFloatingBackgroundCornerConfiguration: context.environment.popupBarFloatingBackgroundCornerConfiguration,
+								 barImageShadow: context.environment.popupBarImageShadow,
+								 barTitleTextAttributes: context.environment.popupBarTitleTextAttributes,
+								 barSubtitleTextAttributes: context.environment.popupBarSubtitleTextAttributes,
+								 barProgressViewStyle: context.environment.popupBarProgressViewStyle,
+								 barMarqueeScrollEnabled: context.environment.popupBarMarqueeScrollEnabled,
+								 customBarPrefersFullBarWidth: context.environment.popupBarCustomBarPrefersFullBarWidth,
+								 hapticFeedbackEnabled: context.environment.popupHapticFeedbackEnabled,
+								 limitFloatingContentWidth: context.environment.popupBarLimitFloatingContentWidth,
+								 marqueeRate: context.environment.popupBarMarqueeRate,
+								 marqueeDelay: context.environment.popupBarMarqueeDelay,
+								 coordinateMarqueeAnimations: context.environment.popupBarCoordinateMarqueeAnimations,
+								 shouldExtendPopupBarUnderSafeArea: context.environment.popupBarShouldExtendPopupBarUnderSafeArea,
+								 customBarView: context.environment.popupBarCustomBarView,
+								 contextMenu: context.environment.popupBarContextMenu,
 								 content: popupContent,
 								 contentController: popupContentController,
 								 onOpen: onOpen,
 								 onClose: onClose,
-								 barCustomizer: popupBarCustomizer,
-								 contentViewCustomizer: popupContentViewCustomizer)
+								 barCustomizer: context.environment.popupBarCustomizer,
+								 contentViewCustomizer: context.environment.popupContentViewCustomizer)
 		uiViewController.handlePopupState(state)
 	}
 }

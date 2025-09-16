@@ -54,7 +54,7 @@ extension View {
 	@ViewBuilder
 	func buttonStyleIfNeeded() -> some View {
 #if compiler(>=6.2)
-		if #available(iOS 26.0, *) {
+		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
 			buttonStyle(.glassProminent)
 		} else {
 			self
@@ -98,7 +98,7 @@ struct SceneSelection: View {
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
 	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
 	
-	let font = Font.custom("Chalkduster", size: 15)
+	let font = Font.custom("Chalkduster", size: 15, relativeTo: .subheadline)
 //	let font = Font.custom("Avenir Next", fixedSize: 15).weight(.heavy).italic()
 //	let font = Font.custom("Zapfino", size: 15).italic().weight(.heavy).width(.condensed)
 //	let font = Font.system(size: 15, weight: .regular)

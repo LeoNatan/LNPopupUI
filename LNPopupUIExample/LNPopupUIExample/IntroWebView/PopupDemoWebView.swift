@@ -31,6 +31,8 @@ struct WebView : UIViewRepresentable {
 let url = URL(string: "https://github.com/LeoNatan/LNPopupUI")!
 
 struct PopupDemoWebView: View {
+	@Environment(\.font) var inheritedFont
+	
 	var body: some View {
 		GeometryReader { geometry in
 			ZStack(alignment: .top) {
@@ -44,7 +46,7 @@ struct PopupDemoWebView: View {
 			.popupTitle {
 				HStack {
 					Text(NSLocalizedString("Welcome to ", comment: "")) + Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy) + Text("!")
-				}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(.body)
+				}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(inheritedFont ?? .body)
 			}
 			.popupImage(Image("AppIconPopupBar"))
 			.popupBarItems {
