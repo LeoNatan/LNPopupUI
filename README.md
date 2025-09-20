@@ -24,19 +24,19 @@ Check the demo project for a quick recreation of Apple’s music app.
 ### Features
 
 * Supports iOS 26 glass design, while maintaining a system-apropriate look and feel on previous iOS versions
-* Available for iOS 14 and above, as a SPM package for SwiftUI
-* A SwiftUI library, wrapping the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController); the library works internally with SwiftUI’s generated UIKit content to present the framework in a native manner
+* Available for iOS 14 and above, as an SPM package for SwiftUI
+* For UIKit, check out the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController)
 
 ## Adding to Your Project
 
 ### Swift Package Manager
 
-`LNPopupUI` supports SPM versions 5.5 (Xcode 13) and above. In Xcode, click `File` -> `Swift Packages` -> `Add Package Dependency`, enter `https://github.com/LeoNatan/LNPopupUI`. Select the version you’d like to use.
+`LNPopupUI` supports SPM versions 6.0 (Xcode 16) and above. In Xcode, click `File`  →  `Add Package Dependencies…`, enter `https://github.com/LeoNatan/LNPopupUI`. Select the version you’d like to use.
 
 You can also manually add the package to your Package.swift file:
 
 ```swift
-.package(url: "https://github.com/LeoNatan/LNPopupUI.git", from: "1.5.0")
+.package(url: "https://github.com/LeoNatan/LNPopupUI.git", from: "2.5.0")
 ```
 
 And the dependency in your target:
