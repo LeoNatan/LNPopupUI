@@ -3,6 +3,7 @@
 //  LNPopupUI
 //
 //  Created by Léo Natan on 20/9/25.
+//  Copyright © 2020-2025 Léo Natan. All rights reserved.
 //
 
 import SwiftUI
