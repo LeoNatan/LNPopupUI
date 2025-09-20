@@ -85,20 +85,6 @@ internal struct TitleContentView : View {
 	}
 }
 
-fileprivate var inheritedNameContainment: String = {
-	//InheritedView
-	let b64d = "SW5oZXJpdGVkVmlldw==".data(using: .utf8)!
-	let str = String(data: Data(base64Encoded: b64d)!, encoding: .utf8)!
-	return str
-}()
-
-internal
-extension UIView {
-	var _isInheritedView: Bool {
-		NSStringFromClass(type(of: self)).contains(inheritedNameContainment)
-	}
-}
-
 internal
 extension View {
 	@ViewBuilder func accentTintIfNeeded() -> some View {
