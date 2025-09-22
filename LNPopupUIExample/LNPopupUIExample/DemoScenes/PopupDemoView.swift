@@ -23,7 +23,7 @@ struct DemoContent {
 extension View {
 	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
 		return toolbar {
-			ToolbarItemGroup(placement: .bottomBar) {
+			let c = ToolbarItemGroup(placement: .bottomBar) {
 				Button {
 					presentBarHandler?()
 				} label: {
@@ -50,24 +50,12 @@ struct ToolbarCloseButton: View {
 	let action: @MainActor () -> Void
 	
 	var body: some View {
-		let legacyButton = Button("Gallery", action: action)
-		
-#if compiler(>=6.2)
-		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
-			Button(role: .close, action: action) {
-				Label("Done", systemImage: "checkmark")
-					.labelStyle(.iconOnly)
-					.imageScale(.large)
-					.padding(4)
-			}
-			.buttonStyle(.glassProminent)
-			.buttonBorderShape(.circle)
-		} else {
-			legacyButton
+		Button {
+			action()
+		} label: {
+			Label("Gallery", systemImage: "checkmark")
+				.labelStyle(.toolbarDone)
 		}
-#else
-		legacyButton
-#endif
 	}
 }
 
@@ -78,8 +66,11 @@ struct _CloseButton: UIViewRepresentable {
 	
 	func makeUIView(context: Context) -> UIButton {
 		var config = UIButton.Configuration.prominentGlass()
-			config.image = UIImage(systemName: "checkmark")
-			config.preferredSymbolConfigurationForImage = .init(pointSize: 17)
+		config.imageColorTransformer = UIConfigurationColorTransformer { _ in
+				.white.withAlphaComponent(0.75)
+		}
+		config.image = UIImage(systemName: "checkmark")
+		config.preferredSymbolConfigurationForImage = .init(pointSize: 17)
 		let button = UIButton(configuration: config, primaryAction: UIAction(handler: { _ in
 			action()
 		}))

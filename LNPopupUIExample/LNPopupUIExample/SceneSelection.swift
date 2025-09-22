@@ -50,19 +50,6 @@ extension View {
 			return self
 		}
 	}
-	
-	@ViewBuilder
-	func buttonStyleIfNeeded() -> some View {
-#if compiler(>=6.2)
-		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
-			buttonStyle(.glassProminent)
-		} else {
-			self
-		}
-#else
-		self
-#endif
-	}
 }
 
 extension View {
@@ -235,13 +222,13 @@ struct SceneSelection: View {
 			.listStyle(InsetGroupedListStyle())
 			.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 			.toolbar {
-				ToolbarItem(placement: .navigationBarTrailing) {
+				ToolbarItem(placement: .primaryAction) {
 					Button {
 						settingsPresented.toggle()
 					} label: {
-						Image("gears")
+						Label("Settings", image: "gears")
+							.labelStyle(.iconOnly)
 					}
-					.buttonStyleIfNeeded()
 					.deviceAppropriateModalPresentation(isPresented: $settingsPresented, content: {
 						SettingsNavView()
 							.frame(minWidth: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 375 : nil, minHeight: verticalSizeClass == .regular && horizontalSizeClass == .regular ? 600 : nil)

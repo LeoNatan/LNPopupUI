@@ -98,23 +98,9 @@ struct CustomBarMapView: View {
 				.ignoresSafeArea()
 				.animation(.easeInOut, value: region)
 				.toolbar {
-					if #available(iOS 26, *) {
-						ToolbarItem(placement: .topBarTrailing) {
-							ToolbarCloseButton {
-								onDismiss()
-							}
-						}
-					} else {
-						ToolbarItem(placement: .topBarLeading) {
-							Button {
-								onDismiss()
-							} label: {
-								Image(systemName: "chevron.backward")
-									.renderingMode(.template)
-									.font(.title2)
-							}
-							.buttonStyle(MyButtonStyle(colorScheme: colorScheme))
-							.hoverEffect(.lift)
+					ToolbarItem(placement: .confirmationAction) {
+						ToolbarCloseButton {
+							onDismiss()
 						}
 					}
 				}
