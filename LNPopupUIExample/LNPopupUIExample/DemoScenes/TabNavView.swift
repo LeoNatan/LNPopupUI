@@ -11,14 +11,6 @@ import LoremIpsum
 import LNPopupUI
 import SwiftUIIntrospect
 
-struct ToolbarRolePad18Modifier: ViewModifier {
-	@Environment(\.horizontalSizeClass) var horizontalSizeClass
-	
-	func body(content: Content) -> some View {
-		return content.toolbarRole(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? .editor : .navigationStack)
-	}
-}
-
 @available(iOS 18.0, *)
 struct TabViewStylePad18Modifier: ViewModifier {
 	@AppStorage(.tabBarHasSidebar, store: .settings) var tabBarHasSidebar: Bool = true
@@ -33,18 +25,6 @@ struct TabViewStylePad18Modifier: ViewModifier {
 }
 
 extension View {
-	func toolbarRoleIfPad18(_ forceDisabled: Bool = false) -> some View {
-		if #available(iOS 18.0, *) {
-			if forceDisabled {
-				return self
-			}
-			
-			return self.modifier(ToolbarRolePad18Modifier())
-		} else {
-			return self
-		}
-	}
-	
 	func tabViewStylePad18() -> some View {
 		if #available(iOS 18.0, *) {
 			return self.modifier(TabViewStylePad18Modifier())
@@ -71,7 +51,6 @@ struct InnerNavView : View {
 			SafeAreaDemoView(colorSeed: "tab_\(tabIdx)", includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
 				.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 				.navigationBarTitleDisplayMode(.inline)
-//				.toolbarRoleIfPad18()
 				.introspect(.tabView, on: .iOS(.v18, .v26), scope: .ancestor) { tvc in
 					if #available(iOS 18.0, *) {
 						if objc_getAssociatedObject(tvc, key) as? Bool != true {

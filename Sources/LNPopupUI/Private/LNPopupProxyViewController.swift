@@ -295,7 +295,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				self.currentPopupState.barCustomizer?.consume(self)?(target.popupBar)
 				self.currentPopupState.contentViewCustomizer?.consume(self)?(target.popupContentView)
 				
-				target.popupBar.layoutIfNeeded()
+//				target.popupBar.layoutIfNeeded()
 			}
 			
 			self.implicitAnimationController.push()

@@ -23,7 +23,7 @@ struct DemoContent {
 extension View {
 	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
 		return toolbar {
-			let c = ToolbarItemGroup(placement: .bottomBar) {
+			ToolbarItemGroup(placement: .bottomBar) {
 				Button {
 					presentBarHandler?()
 				} label: {
@@ -218,6 +218,7 @@ struct SafeAreaDemoView : View {
 	
 	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
 	@AppStorage(.enableCustomizations, store: .settings) var enableCustomizations: Bool = false
+	@AppStorage(.hidesBottomBarWhenPushed, store: .settings) var hidesBottomBarWhenPushed: Bool = true
 	
 	init(demoContent: DemoContent? = nil, colorSeed: String = "nil", colorIndex: Int = 0, includeToolbar: Bool = false, includeLink: Bool = false, offset: Bool = false, isPopupOpen: Binding<Bool>? = nil, bottomButtonsHandlers: BottomButtonHandlers? = nil, showDismissButton: Bool? = nil, onDismiss: (() -> Void)? = nil, bottomBarHideSupport: BottomBarHideSupport? = nil) {
 		self.demoContent = demoContent
@@ -305,9 +306,8 @@ struct SafeAreaDemoView : View {
 								NavigationLink {
 									let bottomButtonsHandlers = BottomButtonHandlers(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
 									
-									SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: includeToolbar, includeLink: includeLink, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: BottomBarHideSupport(showsBottomBarHideButton: false, isBottomBarTab: bottomBarHideSupport?.isBottomBarTab) )
+									SafeAreaDemoView(colorSeed: colorSeed, colorIndex: colorIndex + 1, includeToolbar: hidesBottomBarWhenPushed ? false : includeToolbar, includeLink: includeLink, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: nil )
 										.navigationTitle("LNPopupUI")
-//										.toolbarRoleIfPad18(bottomBarHideSupport == nil || bottomBarHideSupport!.isBottomBarTab != true)
 								} label: {
 									Label {
 										LNPopupText("Next")

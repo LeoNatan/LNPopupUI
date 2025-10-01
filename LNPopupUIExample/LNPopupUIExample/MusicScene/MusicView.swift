@@ -86,7 +86,7 @@ struct RandomTitlesListView : View {
 				}
 			}
 			.listStyle(PlainListStyle())
-			.navigationBarTitle(NSLocalizedString(title, comment: ""))
+			.navigationTitle(NSLocalizedString(title, comment: ""))
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarLeading) {
@@ -106,6 +106,16 @@ struct RandomTitlesListView : View {
 	}
 }
 
+struct MinimizeIfPossibleModifier: ViewModifier {
+	func body(content: Content) -> some View {
+		if #available(iOS 26, *) {
+			content.tabBarMinimizeBehavior(.onScrollDown)
+		} else {
+			content
+		}
+	}
+}
+
 @available(iOS 18.0, *)
 struct MusicView: View {
 	@State var isPopupBarPresented: Bool = false
@@ -119,29 +129,35 @@ struct MusicView: View {
 		self.onDismiss = onDismiss
 	}
 	
+	@State var searchText: String = ""
+	
 	var body: some View {
 		MaterialTabView {
-			Tab(NSLocalizedString("Music", comment: ""), systemImage: "play.circle") {
-				RandomTitlesListView("Music", idx: 0, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+			Tab(NSLocalizedString("Home", comment: ""), systemImage: "music.note.house.fill") {
+				RandomTitlesListView("Home", idx: 0, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
-			Tab(NSLocalizedString("Artists", comment: ""), systemImage: "music.mic") {
-				RandomTitlesListView("Artists", idx: 1, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+			Tab(NSLocalizedString("New", comment: ""), systemImage: "square.grid.2x2.fill") {
+				RandomTitlesListView("New", idx: 1, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
-			Tab(NSLocalizedString("Composers", comment: ""), systemImage: "music.quarternote.3") {
-				RandomTitlesListView("Composers", idx: 2, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+			Tab(NSLocalizedString("Library", comment: ""), systemImage: ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? "music.note.square.stack.fill" : "square.stack.fill") {
+				RandomTitlesListView("Library", idx: 2, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
-			Tab(NSLocalizedString("Recents", comment: ""), systemImage: "clock") {
-				RandomTitlesListView("Recents", idx: 3, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
-					currentSong = song
-				})
+			Tab(role: .search) {
+				NavigationStack {
+					ContentUnavailableView.search
+						.navigationTitle(NSLocalizedString("Search", comment: ""))
+						.navigationBarTitleDisplayMode(.inline)
+						.searchable(text: $searchText)
+				}
 			}
 		}
+		.modifier(MinimizeIfPossibleModifier())
 		.accentColor(.pink)
 		.onChange(of: currentSong) { newValue in
 			isPopupBarPresented = newValue != nil
