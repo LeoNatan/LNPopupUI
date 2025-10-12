@@ -174,51 +174,57 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
 				target.popupPresentationDelegate = self
 				
-				let inheritsEnvironmentFont = self.currentPopupState.inheritsEnvironmentFont?.consume(self)
+				let inheritsEnvironmentFont = self.currentPopupState.environment.popupBarInheritsEnvironmentFont?.consume(self)
 				if(inheritsEnvironmentFont == nil || inheritsEnvironmentFont! == true) {
-					target.popupBar.setValue(self.currentPopupState.inheritedFont, forKey: "swiftuiInheritedFont")
+					target.popupBar.setValue(self.currentPopupState.environment.uiFont, forKey: "swiftuiInheritedFont")
 				}
 				
-				if let closeButtonStyle = self.currentPopupState.closeButtonStyle?.consume(self) {
+				if let closeButtonStyle = self.currentPopupState.environment.popupCloseButtonStyle?.consume(self) {
 					target.popupContentView.popupCloseButtonStyle = closeButtonStyle
 				}
-				if let interactionStyle = self.currentPopupState.interactionStyle?.consume(self) {
+				if let closeButtonPositioning = self.currentPopupState.environment.popupCloseButtonPositioning?.consume(self) {
+					target.popupContentView.popupCloseButtonPositioning = closeButtonPositioning
+				}
+				if let interactionStyle = self.currentPopupState.environment.popupInteractionStyle?.consume(self) {
 					target.popupInteractionStyle = interactionStyle
 				}
-				if let barProgressViewStyle = self.currentPopupState.barProgressViewStyle?.consume(self) {
+				if let barProgressViewStyle = self.currentPopupState.environment.popupBarProgressViewStyle?.consume(self) {
 					target.popupBar.progressViewStyle = barProgressViewStyle
 				}
-				if let barMarqueeScrollEnabled = self.currentPopupState.barMarqueeScrollEnabled?.consume(self) {
+				if let barMarqueeScrollEnabled = self.currentPopupState.environment.popupBarMarqueeScrollEnabled?.consume(self) {
 					appearance.marqueeScrollEnabled = barMarqueeScrollEnabled
 				}
-				if let hapticFeedbackEnabled = self.currentPopupState.hapticFeedbackEnabled?.consume(self) {
+				if let popupBarShineEnabled = self.currentPopupState.environment.popupBarShineEnabled?.consume(self) {
+					appearance.isFloatingBarShineEnabled = popupBarShineEnabled
+				}
+				if let hapticFeedbackEnabled = self.currentPopupState.environment.popupHapticFeedbackEnabled?.consume(self) {
 					target.allowPopupHapticFeedbackGeneration = hapticFeedbackEnabled
 				}
-				if let limitFloatingContentWidth = self.currentPopupState.limitFloatingContentWidth?.consume(self) {
+				if let limitFloatingContentWidth = self.currentPopupState.environment.popupBarLimitFloatingContentWidth?.consume(self) {
 					target.popupBar.limitFloatingContentWidth = limitFloatingContentWidth
 				}
-				if let marqueeRate = self.currentPopupState.marqueeRate?.consume(self) {
+				if let marqueeRate = self.currentPopupState.environment.popupBarMarqueeRate?.consume(self) {
 					appearance.marqueeScrollRate = marqueeRate
 				}
-				if let marqueeDelay = self.currentPopupState.marqueeDelay?.consume(self) {
+				if let marqueeDelay = self.currentPopupState.environment.popupBarMarqueeDelay?.consume(self) {
 					appearance.marqueeScrollDelay = marqueeDelay
 				}
-				if let coordinateMarqueeAnimations = self.currentPopupState.coordinateMarqueeAnimations?.consume(self) {
+				if let coordinateMarqueeAnimations = self.currentPopupState.environment.popupBarCoordinateMarqueeAnimations?.consume(self) {
 					appearance.coordinateMarqueeScroll = coordinateMarqueeAnimations
 				}
-				if #available(iOS 15.0, *), let popupBarTitleTextAttributes = self.currentPopupState.barTitleTextAttributes?.consume(self) as? AttributeContainer {
+				if #available(iOS 15.0, *), let popupBarTitleTextAttributes = self.currentPopupState.environment.popupBarTitleTextAttributes?.consume(self) as? AttributeContainer {
 					appearance.titleTextAttributes = popupBarTitleTextAttributes.swiftUIToUIKit
 				}
-				if #available(iOS 15.0, *), let popupBarSubtitleTextAttributes = self.currentPopupState.barSubtitleTextAttributes?.consume(self) as? AttributeContainer {
+				if #available(iOS 15.0, *), let popupBarSubtitleTextAttributes = self.currentPopupState.environment.popupBarSubtitleTextAttributes?.consume(self) as? AttributeContainer {
 					appearance.subtitleTextAttributes = popupBarSubtitleTextAttributes.swiftUIToUIKit
 				}
-				if let shouldExtendPopupBarUnderSafeArea = self.currentPopupState.shouldExtendPopupBarUnderSafeArea?.consume(self) {
+				if let shouldExtendPopupBarUnderSafeArea = self.currentPopupState.environment.popupBarShouldExtendPopupBarUnderSafeArea?.consume(self) {
 					target.shouldExtendPopupBarUnderSafeArea = shouldExtendPopupBarUnderSafeArea
 				}
-				if let inheritsAppearanceFromDockingView = self.currentPopupState.inheritsAppearanceFromDockingView?.consume(self) {
+				if let inheritsAppearanceFromDockingView = self.currentPopupState.environment.popupBarInheritsAppearanceFromDockingView?.consume(self) {
 					target.popupBar.inheritsAppearanceFromDockingView = inheritsAppearanceFromDockingView
 				}
-				if let customBarView = self.currentPopupState.customBarView?.consume(self) {
+				if let customBarView = self.currentPopupState.environment.popupBarCustomBarView?.consume(self) {
 					let rv: LNPopupCustomBarHostingController<AnyView>
 					if let customController = target.popupBar.customBarViewController as? LNPopupCustomBarHostingController<AnyView> {
 						rv = customController
@@ -232,40 +238,40 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					rv._wantsDefaultHighlightGestureRecognizer = customBarView.wantsDefaultHighlightGesture
 				} else {
 					target.popupBar.customBarViewController = nil
-					if let barStyle = self.currentPopupState.barStyle?.consume(self) {
+					if let barStyle = self.currentPopupState.environment.popupBarStyle?.consume(self) {
 						target.popupBar.barStyle = barStyle
 					}
 				}
 				
-				if let barBackgroundEffect = self.currentPopupState.barBackgroundEffect?.consume(self) {
+				if let barBackgroundEffect = self.currentPopupState.environment.popupBarBackgroundEffect?.consume(self) {
 					appearance.backgroundEffect = barBackgroundEffect
 				}
 				
-				if let barFloatingBackgroundEffect = self.currentPopupState.barFloatingBackgroundEffect?.consume(self) {
+				if let barFloatingBackgroundEffect = self.currentPopupState.environment.popupBarFloatingBackgroundEffect?.consume(self) {
 					appearance.floatingBackgroundEffect = barFloatingBackgroundEffect
 				}
 				
-				if let barFloatingBackgroundShadow = self.currentPopupState.barFloatingBackgroundShadow?.consume(self) {
+				if let barFloatingBackgroundShadow = self.currentPopupState.environment.popupBarFloatingBackgroundShadow?.consume(self) {
 					appearance.floatingBarBackgroundShadow = barFloatingBackgroundShadow
 				}
 				
 #if compiler(>=6.2)
-				if #available(iOS 26.0, *), let barFloatingBackgroundCornerConfiguration = self.currentPopupState.barFloatingBackgroundCornerConfiguration?.consume(self), let barFloatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration as? UICornerConfiguration? {
+				if #available(iOS 26.0, *), let barFloatingBackgroundCornerConfiguration = self.currentPopupState.environment.popupBarFloatingBackgroundCornerConfiguration?.consume(self), let barFloatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration as? UICornerConfiguration? {
 					appearance.floatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration
 				}
 #endif
 				
-				if let customBarPrefersFullBarWidth = self.currentPopupState.customBarPrefersFullBarWidth?.consume(self) {
+				if let customBarPrefersFullBarWidth = self.currentPopupState.environment.popupBarCustomBarPrefersFullBarWidth?.consume(self) {
 					target.popupBar.customBarWantsFullBarWidth = customBarPrefersFullBarWidth
 				}
 				
-				if let barImageShadow = self.currentPopupState.barImageShadow?.consume(self) {
+				if let barImageShadow = self.currentPopupState.environment.popupBarImageShadow?.consume(self) {
 					appearance.imageShadow = barImageShadow
 				}
 				
 				target.popupBar.standardAppearance = appearance
 				
-				if let contextMenu = self.currentPopupState.contextMenu?.consume(self) {
+				if let contextMenu = self.currentPopupState.environment.popupBarContextMenu?.consume(self) {
 					let contextHost = AnyView(Color.green.frame(width: 2, height: 2).contextMenu {
 						contextMenu
 					})

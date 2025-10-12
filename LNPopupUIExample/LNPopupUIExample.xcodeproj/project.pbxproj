@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3906A9F52C38C2560071EDAA /* SwiftUIIntrospect-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */; };
 		390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */; };
+		3937096B2E8D6B9E00936583 /* DumbSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937096A2E8D6B9E00936583 /* DumbSearchView.swift */; };
 		393841D82AA13A2700460600 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 393841D72AA13A2700460600 /* CompactSlider */; };
 		393841DB2AA13BA800460600 /* CompactSliderDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */; };
 		394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394215F528F305D500D806A4 /* PopupDemoView.swift */; };
@@ -54,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNPopupUIExampleApp.swift; sourceTree = "<group>"; };
+		3937096A2E8D6B9E00936583 /* DumbSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DumbSearchView.swift; sourceTree = "<group>"; };
 		393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactSliderDemoView.swift; sourceTree = "<group>"; };
 		394215F528F305D500D806A4 /* PopupDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDemoView.swift; sourceTree = "<group>"; };
 		394DC7262604D19B0010BED4 /* LNPopupUIExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupUIExample-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 		398DB7AF250401DB00CD89DB /* DemoScenes */ = {
 			isa = PBXGroup;
 			children = (
+				3937096A2E8D6B9E00936583 /* DumbSearchView.swift */,
 				394215F528F305D500D806A4 /* PopupDemoView.swift */,
 				39AAAA6B25040FA900E5FD41 /* TabNavView.swift */,
 				39AAAA6F2504144300E5FD41 /* TabDemoView.swift */,
@@ -321,6 +324,7 @@
 				3973F1262CD5902400A9D40F /* SettingsViewController.swift in Sources */,
 				3973F1272CD5902400A9D40F /* SettingKeys.m in Sources */,
 				395781D924DC5D2700A604D1 /* MusicView.swift in Sources */,
+				3937096B2E8D6B9E00936583 /* DumbSearchView.swift in Sources */,
 				398404EA25003925006C9011 /* SceneSelection.swift in Sources */,
 				39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */,
 				39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */,

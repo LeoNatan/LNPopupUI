@@ -108,11 +108,15 @@ struct RandomTitlesListView : View {
 
 struct MinimizeIfPossibleModifier: ViewModifier {
 	func body(content: Content) -> some View {
+#if compiler(>=6.2)
 		if #available(iOS 26, *) {
 			content.tabBarMinimizeBehavior(.onScrollDown)
 		} else {
 			content
 		}
+#else
+		content
+#endif
 	}
 }
 
@@ -128,8 +132,6 @@ struct MusicView: View {
 	init(onDismiss: @escaping () -> Void) {
 		self.onDismiss = onDismiss
 	}
-	
-	@State var searchText: String = ""
 	
 	var body: some View {
 		MaterialTabView {
@@ -149,12 +151,7 @@ struct MusicView: View {
 				})
 			}
 			Tab(role: .search) {
-				NavigationStack {
-					ContentUnavailableView.search
-						.navigationTitle(NSLocalizedString("Search", comment: ""))
-						.navigationBarTitleDisplayMode(.inline)
-						.searchable(text: $searchText)
-				}
+				DumbSearchView()
 			}
 		}
 		.modifier(MinimizeIfPossibleModifier())
@@ -172,7 +169,8 @@ struct MusicView: View {
 				PlayerView(song: currentSong)
 			}
 		}
-		.popupBarProgressViewStyle(.top)
+		.popupBarShineEnabled(true)
+		.popupBarProgressViewStyle(.bottom)
 		.font(nil)
 	}
 }

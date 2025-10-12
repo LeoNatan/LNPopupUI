@@ -82,10 +82,13 @@ struct TabGeneratorView<Content>: View where Content: View {
 	var body: some View {
 		if #available(iOS 18.0, *) {
 			MaterialTabView {
-				ForEach(1..<5) { idx in
+				ForEach(1..<4) { idx in
 					Tab("Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", systemImage: "\(idx).square") {
 						tabContentGenerator(idx - 1)
 					}
+				}
+				Tab(role: .search) {
+					DumbSearchView()
 				}
 				if tabBarHasSidebar && UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular {
 					ForEach(5..<9) { idx in

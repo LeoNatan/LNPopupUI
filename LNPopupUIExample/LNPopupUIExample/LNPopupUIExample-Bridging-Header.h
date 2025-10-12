@@ -11,4 +11,11 @@
 
 #import "Settings/SettingKeys.h"
 
+@interface UIImage ()
+
++ (instancetype)_systemImageNamed:(NSString*)name NS_SWIFT_NAME(init(_systemName:));
++ (instancetype)_systemImageNamed:(NSString*)name withConfiguration:(nullable UIImageConfiguration *)configuration allowPrivate:(BOOL)allowPrivate;
+
+@end
+
 #endif /* LNPopupUIExample_Bridging_Header_h */

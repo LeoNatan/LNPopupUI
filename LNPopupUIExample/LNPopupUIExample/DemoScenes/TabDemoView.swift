@@ -13,8 +13,7 @@ import LNSwiftUIUtils
 
 struct InnerView : View {
 	let tabIdx: Int?
-	let showDismissButton: Bool?
-	let onDismiss: () -> Void
+	let onDismiss: (() -> Void)?
 	
 	let includeToolbar: Bool
 	let presentBarHandler: (() -> Void)?
@@ -22,9 +21,8 @@ struct InnerView : View {
 	
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 
-	init(tabIdx: Int?, showDismissButton: Bool? = true, onDismiss: @escaping () -> Void, includeToolbar: Bool = false, presentBarHandler: (() -> Void)?, hideBarHandler: (() -> Void)?) {
+	init(tabIdx: Int?, onDismiss: (() -> Void)? = nil, includeToolbar: Bool = false, presentBarHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) {
 		self.tabIdx = tabIdx
-		self.showDismissButton = showDismissButton
 		self.onDismiss = onDismiss
 		self.includeToolbar = includeToolbar
 		self.presentBarHandler = presentBarHandler
@@ -35,15 +33,15 @@ struct InnerView : View {
 		ZStack(alignment: .topTrailing) {
 			let bottomButtonsHandlers = SafeAreaDemoView.BottomButtonHandlers(presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 			
-			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "ZviewZz", includeToolbar: includeToolbar, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: showDismissButton)
-			if let showDismissButton, showDismissButton == true {
+			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "ZviewZz", includeToolbar: includeToolbar, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: false)
+			if let onDismiss {
 				VStack {
-					CloseButton {
-						onDismiss()
-					}
-					.fontWeight(.semibold)
-					.padding(7)
-					.hoverEffect()
+						CloseButton {
+							onDismiss()
+						}
+						.fontWeight(.semibold)
+						.padding(7)
+						.hoverEffect()
 				}
 				.padding(.top, horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad ? 27 : 0)
 				.padding(.trailing, 8)

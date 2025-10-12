@@ -20,29 +20,67 @@ struct DemoContent {
 	let imageNumber = Int.random(in: 1..<31)
 }
 
-extension View {
-	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
-		return toolbar {
-			ToolbarItemGroup(placement: .bottomBar) {
-				Button {
-					presentBarHandler?()
-				} label: {
-					LNPopupText(presentBarHandler != nil ? "Present Bar" : "Test 1")
-				}
-				Spacer()
-				Button {
-					appearanceHandler?()
-				} label: {
-					LNPopupText(presentBarHandler != nil ? "Appearance" : "Test 2")
-				}
-				Spacer()
-				Button {
-					hideBarHandler?()
-				} label: {
-					LNPopupText(presentBarHandler != nil ? "Dismiss Bar" : "Test 3")
+struct DemoToolbarModifier: ViewModifier {
+	let presentBarHandler: (() -> Void)?
+	let appearanceHandler: (() -> Void)?
+	let hideBarHandler: (() -> Void)?
+	
+	@Environment(\.colorScheme) var colorScheme
+	
+	func body(content: Content) -> some View {
+		content
+			.toolbar {
+				ToolbarItemGroup(placement: .bottomBar) {
+					Button {
+						presentBarHandler?()
+					} label: {
+						if presentBarHandler != nil  {
+							Label("Present Bar", systemImage: "dock.arrow.up.rectangle")
+								.labelStyle(.iconOnly)
+						} else {
+							Label("Test 1", systemImage: "1.square")
+								.labelStyle(.iconOnly)
+						}
+					}
+					Button {
+						hideBarHandler?()
+					} label: {
+						if hideBarHandler != nil  {
+							Label("Dismiss Bar", systemImage: "dock.arrow.down.rectangle")
+								.labelStyle(.iconOnly)
+						} else {
+							Label("Test 2", systemImage: "2.square")
+								.labelStyle(.iconOnly)
+						}
+					}
+					Spacer()
+					Button {
+						appearanceHandler?()
+					} label: {
+						if hideBarHandler != nil  {
+							Label {
+								Text("Appearance")
+							} icon: {
+								//🤦‍♂️
+								if colorScheme == .light {
+									Image(uiImage: UIImage(_systemName: "appearance"))
+								} else {
+									Image(uiImage: UIImage(_systemName: "appearance"))
+								}
+							}.labelStyle(.iconOnly)
+						} else {
+							Label("Test 3", systemImage: "3.square")
+								.labelStyle(.iconOnly)
+						}
+					}
 				}
 			}
-		}
+	}
+}
+
+extension View {
+	func demoToolbar(presentBarHandler: (() -> Void)? = nil, appearanceHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) -> some View {
+		modifier(DemoToolbarModifier(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler))
 	}
 }
 
@@ -255,7 +293,7 @@ struct SafeAreaDemoView : View {
 					.clipShape(RoundedRectangle(cornerRadius: enableCustomizations ? 100 : 30, style: .continuous))
 					.shadow(color: enableCustomizations ? .indigo : .black.opacity(0.33333), radius: 20)
 					.padding([.leading, .trailing], 20)
-					.padding([.top], 50)
+					.padding([.top], 70)
 					.popupTransitionTarget()
 				Spacer()
 			} else if demoContent != nil, transitionType == 2 {
@@ -513,8 +551,10 @@ struct PopupDemoViewModifier: ViewModifier {
 	let includeContextMenu: Bool
 	
 	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
+	@AppStorage(.shineEnabled, store: .settings) var shineEnabled: Bool = false
 	@AppStorage(.interactionStyle, store: .settings) var interactionStyle: UIViewController.__PopupInteractionStyle = .default
-	@AppStorage(.closeButtonStyle, store: .settings) var closeButtonStyle: LNPopupCloseButton.Style = .default
+	@AppStorage(.closeButtonStyle, store: .settings) var _closeButtonStyle: LNPopupCloseButton.Style = .default
+	@AppStorage(.closeButtonPositioning, store: .settings) var closeButtonPositioning: LNPopupCloseButton.Positioning = .default
 	@AppStorage(.progressViewStyle, store: .settings) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
 	@AppStorage(.visualEffectViewBlurEffect, store: .settings) var blurEffectStyle: UIBlurEffect.Style = .default
 	
@@ -524,6 +564,10 @@ struct PopupDemoViewModifier: ViewModifier {
 	@AppStorage(.contextMenuEnabled, store: .settings) var contextMenu: Bool = false
 	
 	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
+	
+	var closeButtonStyle: LNPopupCloseButton.Style {
+		_closeButtonStyle == .default && LNPopupSettingsHasOS26Glass() ? .shinyGlass : _closeButtonStyle
+	}
 	
 	fileprivate func popupInteractionStyleFromAppStorage(_ style: UIViewController.__PopupInteractionStyle) -> UIViewController.PopupInteractionStyle {
 		switch style.rawValue {
@@ -546,7 +590,7 @@ struct PopupDemoViewModifier: ViewModifier {
 		}, onClose: {
 			print("Closed")
 		}) {
-			SafeAreaDemoView(demoContent: demoContent, colorSeed: "Popup", offset: closeButtonStyle != .round, isPopupOpen: isPopupOpen)
+			SafeAreaDemoView(demoContent: demoContent, colorSeed: "Popup", offset: [.grabber, .chevron].contains(closeButtonStyle), isPopupOpen: isPopupOpen)
 				.modifier(CustomTextLabelsModifier(demoContent: demoContent))
 				.popupImage(Image(transitionType == 2 ? "genre17" : "genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
@@ -574,9 +618,11 @@ struct PopupDemoViewModifier: ViewModifier {
 			
 		}
 		.popupBarStyle(barStyle)
+		.popupBarShineEnabled(shineEnabled)
 		.popupInteractionStyle(popupInteractionStyleFromAppStorage(interactionStyle))
 		.popupBarProgressViewStyle(progressViewStyle)
 		.popupCloseButtonStyle(closeButtonStyle)
+		.popupCloseButtonPositioning(closeButtonPositioning)
 		.modifier(MarqueeModifier())
 		.modifier(HapticFeedbackModifier())
 		.modifier(LimitFloatingContentWidthModifier())

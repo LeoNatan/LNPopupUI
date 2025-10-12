@@ -40,6 +40,8 @@ struct PlayerView: View {
 	
 	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
 	
+	@Environment(\.popupBarPlacement) var popupBarPlacement
+	
 	var body: some View {
 		GeometryReader { geometry in
 			return VStack {
@@ -140,11 +142,13 @@ struct PlayerView: View {
 				Image(systemName: isPlaying ? "pause.fill" : "play.fill")
 			}.padding(10)
 			
-			Button {
-				print("Next")
-			} label: {
-				Image(systemName: "forward.fill")
-			}.padding(10)
+			if popupBarPlacement != .inline {
+				Button {
+					print("Next")
+				} label: {
+					Image(systemName: "forward.fill")
+				}.padding(10)
+			}
 		}
 	}
 }

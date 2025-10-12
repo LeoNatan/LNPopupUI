@@ -22,30 +22,7 @@ typealias LNPopupSmallState = (isBarPresented: Bool, isPopupOpen: Bool?)
 internal struct LNPopupState<PopupContent: View> {
 	var isBarPresented: Binding<Bool>
 	var isPopupOpen: Binding<Bool>?
-	let inheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
-	let inheritsEnvironmentFont: LNPopupEnvironmentConsumer<Bool>?
-	let inheritedFont: UIFont?
-	let interactionStyle: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>?
-	let closeButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>?
-	let barStyle: LNPopupEnvironmentConsumer<LNPopupBar.Style>?
-	let barBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
-	let barFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIVisualEffect>?
-	let barFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
-	let barFloatingBackgroundCornerConfiguration: LNPopupEnvironmentConsumer<Any?>?
-	let barImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
-	let barTitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
-	let barSubtitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
-	let barProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>?
-	let barMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
-	let customBarPrefersFullBarWidth: LNPopupEnvironmentConsumer<Bool>?
-	let hapticFeedbackEnabled: LNPopupEnvironmentConsumer<Bool>?
-	let limitFloatingContentWidth: LNPopupEnvironmentConsumer<Bool>?
-	let marqueeRate: LNPopupEnvironmentConsumer<CGFloat>?
-	let marqueeDelay: LNPopupEnvironmentConsumer<TimeInterval>?
-	let coordinateMarqueeAnimations: LNPopupEnvironmentConsumer<Bool>?
-	let shouldExtendPopupBarUnderSafeArea: LNPopupEnvironmentConsumer<Bool>?
-	let customBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>?
-	let contextMenu: LNPopupEnvironmentConsumer<AnyView>?
+	let environment: EnvironmentValues
 	let content: (() -> PopupContent)?
 	let contentController: UIViewController?
 	let onOpen: (() -> Void)?

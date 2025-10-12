@@ -42,7 +42,6 @@ struct PopupDemoWebView: View {
 					.frame(maxWidth: .infinity, minHeight: geometry.safeAreaInsets.top, maxHeight: geometry.safeAreaInsets.top)
 			}
 			.ignoresSafeArea(.all)
-			.popupBarStyle(.floating)
 			.popupTitle {
 				HStack {
 					Text(NSLocalizedString("Welcome to ", comment: "")) + Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy) + Text("!")

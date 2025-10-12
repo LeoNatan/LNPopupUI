@@ -9,6 +9,8 @@
 import SwiftUI
 import LNPopupController
 
+prefix operator ^^
+
 #if swift(>=6.0)
 @MainActor
 #endif
@@ -34,12 +36,19 @@ internal final class LNPopupEnvironmentConsumer<T> {
 	}
 }
 
+internal
+prefix func ^^<T>(_ wrapped: T?) -> LNPopupEnvironmentConsumer<T>? {
+	LNPopupEnvironmentConsumer(wrapped)
+}
+
 internal extension EnvironmentValues {
 	@Entry var popupInteractionStyle: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>?
 	@Entry var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>?
+	@Entry var popupCloseButtonPositioning: LNPopupEnvironmentConsumer<LNPopupCloseButton.Positioning>?
 	@Entry var popupBarStyle: LNPopupEnvironmentConsumer<LNPopupBar.Style>?
 	@Entry var popupBarProgressViewStyle: LNPopupEnvironmentConsumer<LNPopupBar.ProgressViewStyle>?
 	@Entry var popupBarMarqueeScrollEnabled: LNPopupEnvironmentConsumer<Bool>?
+	@Entry var popupBarShineEnabled: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupBarLimitFloatingContentWidth: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupHapticFeedbackEnabled: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupBarMarqueeRate: LNPopupEnvironmentConsumer<CGFloat>?

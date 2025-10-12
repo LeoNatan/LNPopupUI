@@ -28,17 +28,6 @@ fileprivate struct CellPaddedButton: View {
 	}
 }
 
-fileprivate struct LNHeaderFooterView: View {
-	let content: LNPopupText
-	public init(_ content: String) {
-		self.content = LNPopupText(content)
-	}
-	
-	var body: some View {
-		content.font(.footnote)
-	}
-}
-
 extension View {
 	func pagePresentationIfPossible() -> some View {		
 		if #available(iOS 18.0, *) {
@@ -164,9 +153,9 @@ struct SceneSelection: View {
 						}
 					}
 				} header: {
-					LNHeaderFooterView("Standard Scenes")
+					LNPopupText("Standard Scenes")
 				} footer: {
-					LNHeaderFooterView("Presents a standard test scene with a popup bar.")
+					LNPopupText("Presents a standard test scene with a popup bar.")
 				}
 				Section {
 					if #available(iOS 18.0, *) {
@@ -183,9 +172,9 @@ struct SceneSelection: View {
 						}.disabled(true)
 					}
 				} header: {
-					LNHeaderFooterView("Demo Apps")
+					LNPopupText("Demo Apps")
 				} footer: {
-					LNHeaderFooterView("Presents a rudimentary recreation of a music app.")
+					LNPopupText("Presents a rudimentary recreation of a music app.")
 				}
 				Section {
 					CellPaddedButton("Maps") {
@@ -197,9 +186,9 @@ struct SceneSelection: View {
 						}
 					})
 				} header: {
-					LNHeaderFooterView("Custom Popup Bar")
+					LNPopupText("Custom Popup Bar")
 				} footer: {
-					LNHeaderFooterView("Presents a scene with a custom popup bar view and a UIKit popup content controller")
+					LNPopupText("Presents a scene with a custom popup bar view and a UIKit popup content controller")
 				}
 				
 				if enableExternalScenes {
@@ -213,9 +202,9 @@ struct SceneSelection: View {
 							}
 						})
 					} header: {
-						LNHeaderFooterView("External Libraries—Gestures")
+						LNPopupText("External Libraries—Gestures")
 					} footer: {
-						LNHeaderFooterView("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")
+						LNPopupText("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")
 					}
 				}
 			}
@@ -241,6 +230,7 @@ struct SceneSelection: View {
 			PopupDemoWebView()
 		})
 		.popupBarStyle(.floating)
+		.popupBarShineEnabled(true)
 		.popupBarContextMenu {
 			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI")!) {
 				LNPopupText("Visit GitHub Page")

@@ -16,7 +16,7 @@ struct SplitInnerView: View {
 	
 	var body: some View {
 		let nav = MaterialNavigationStack {
-			InnerView(tabIdx: idx, showDismissButton: false, onDismiss: onDismiss, includeToolbar: !isGlobal, presentBarHandler: nil, hideBarHandler: nil)
+			InnerView(tabIdx: idx, onDismiss: onDismiss, includeToolbar: !isGlobal, presentBarHandler: nil, hideBarHandler: nil)
 				.toolbar {
 					ToolbarItem(placement: .confirmationAction) {
 						ToolbarCloseButton {

@@ -8,7 +8,7 @@ This is a SwiftUI wrapper of the [LNPopupController framework](https://github.co
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/graphs/contributors) [![Swift Package Manager compatible](https://img.shields.io/badge/swift%20package%20manager-compatible-green)](https://swift.org/package-manager/)
 
-<p align="center"><img src="./Supplements/open_floating_popup.gif"/></p>
+<p align="center"><img src="./Supplements/intro.gif"/></p>
 
 Once a popup bar is presented with a content view, the user can swipe or tap the popup bar at any point to present the content view. After finishing, the user dismisses the popup by either swiping the content view or tapping the popup close button.
 
@@ -95,13 +95,13 @@ TabView {
 }
 ```
 
-<p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="414"/></p>
 
 ### Appearance and Behavior
 
 `LNPopupUI` provides functionality to present users with popup bars, open popups and let the user interact with them. By default, the framework chooses styles to match the user’s current operating system version, but can all be customized as required.
 
-<p align="center"><img src="./Supplements/floating_bar_style.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_bar_style.gif" width="414"/></p>
 
 The defaults are:
 
@@ -144,24 +144,24 @@ Starting with iOS 26, the framework supports primarily a floating and a compact 
 
 ###### Floating Compact:
 
-<p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="414"/></p>
 
 ###### Floating:
 
-<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="414"/></p>
 
 ##### Legacy Bar Styles
 
 On iOS 18 and below, the framework presents popup bar styles and animations that are appropriate for the user's operating system. Non-floating prominent and compact bar styles are also available.
 
 ###### Floating:
-<p align="center"><img src="./Supplements/legacy_floating_no_scroll.gif" width="360"/>
+<p align="center"><img src="./Supplements/legacy_floating_no_scroll.gif" width="414"/>
 
 ###### Prominent:
-<p align="center"><img src="./Supplements/legacy_modern_no_scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/legacy_modern_no_scroll.gif" width="414"/></p>
 
 ###### Compact:
-<p align="center"><img src="./Supplements/legacy_compact_scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/legacy_compact_scroll.gif" width="414"/></p>
 
 > [!NOTE]
 > On iOS 26 and later, non-floating bar styles will be automatically converted to the appropriate floating style.
@@ -177,7 +177,7 @@ Customizing the popup interaction style is achieved by calling the `.popupIntera
 .popupInteractionStyle(.drag)
 ```
 
-<p align="center"><img src="./Supplements/interaction_snap.gif" width="360"/> <img src="./Supplements/interaction_drag.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/interaction_snap.gif" width="414"/> <img src="./Supplements/interaction_drag.gif" width="414"/></p>
 
 #### Progress View Style
 
@@ -192,7 +192,7 @@ Customizing the popup bar progress view style is achieved by calling the `.popup
 .popupBarProgressViewStyle(.top)
 ```
 
-<p align="center"><img src="./Supplements/progress_view_none.png" width="360"/><br/><br/><img src="./Supplements/progress_view_top.png" width="360"/><br/><br/><img src="./Supplements/progress_view_bottom.png" width="360"/></p>
+<p align="center"><img src="./Supplements/progress_view_none.png" width="414"/><br/><br/><img src="./Supplements/progress_view_top.png" width="414"/><br/><br/><img src="./Supplements/progress_view_bottom.png" width="414"/></p>
 
 #### Close Button Style
 
@@ -202,18 +202,20 @@ Customizing the popup close button style is achieved by calling the `.popupClose
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
     //Popup content view
 }
-.popupCloseButtonStyle(.round)
+.popupCloseButtonStyle(.prominentGlass)
 ```
 
-To hide the popup close button, call the `popupCloseButtonStyle()` modifier with a value of `.none`.
+Hide the popup close button by calling the `popupCloseButtonStyle()` modifier with a value of `.none`.
 
-<p align="center"><img src="./Supplements/close_button_grabber.png" width="360"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="360"/><br/><br/><img src="./Supplements/close_button_round.png" width="360"/><br/><br/><img src="./Supplements/close_button_none.png" width="360"/></p>
+To set the position of the popup close button, use the `popupCloseButtonPositioning()` modifier.
+
+<p align="center"><img src="./Supplements/close_button_grabber.png" width="414"/><br/><br/><img src="./Supplements/close_button_glass.png" width="414"/> <img src="./Supplements/close_button_chevron.png" width="414"/><br/><br/><img src="./Supplements/close_button_round.png" width="414"/> <img src="./Supplements/close_button_none.png" width="414"/></p>
 
 #### Text Marquee Scroll
 
-Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee scroll is enabled. Otherwise, the text will be truncated. To enable text marquee scrolling, use the `popupBarMarqueeScrollEnabled()` modifier.
+Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee scroll is enabled. Otherwise, the text will be truncated. To enable or disable text marquee scrolling, use the `popupBarMarqueeScrollEnabled()` modifier.
 
-<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_compact_scroll.gif" width="414"/> <img src="./Supplements/floating_compact_no_scroll_delay.gif" width="414"/></p>
 
 #### Popup Transitions
 
@@ -253,6 +255,7 @@ Transitions are only available for drag interaction style, or transition targets
     //Popup content view
 }
 .popupBarInheritsAppearanceFromDockingView(false)
+.popupBarFloatingBackgroundShadow(color: .red, radius: 8, x: 0, y: 0)
 .popupBarTitleTextAttributes(AttributeContainer()
     .font(Font.custom("Chalkduster", size: 14, relativeTo: .headline))
     .foregroundColor(.yellow)
@@ -261,13 +264,13 @@ Transitions are only available for drag interaction style, or transition targets
     .font(.custom("Chalkduster", size: 12, relativeTo: .subheadline))
     .foregroundColor(.green)
     .paragraphStyle(customizationParagraphStyle))
-    .popupBarFloatingBackgroundShadow(color: .red, radius: 8)
-    .popupBarImageShadow(color: .yellow, radius: 5)
-    .popupBarFloatingBackgroundEffect(UIBlurEffect(style: .dark))
-    .popupBarBackgroundEffect(UIBlurEffect(style: .dark))
+.popupBarFloatingBackgroundShadow(color: .red, radius: 8)
+.popupBarImageShadow(color: .yellow, radius: 5)
+.popupBarFloatingBackgroundEffect(UIBlurEffect(style: .dark))
+.popupBarBackgroundEffect(UIBlurEffect(style: .dark))
 ```
 
-<p align="center"><img src="./Supplements/floating_custom.png" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_custom.png" width="414"/></p>
 
 #### Context Menus
 
@@ -294,7 +297,7 @@ You can add a context menu to your popup bar by calling the `.popupBarContextMen
 }
 ```
 
-<p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="360"/></p>
+<p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="414"/></p>
 
 #### ProMotion Support
 
@@ -306,7 +309,7 @@ For iPhone 13 Pro and above, you need to add the `CADisableMinimumFrameDurationO
 
 The library has full right-to-left support.
 
-<p align="center"><img src="./Supplements/rtl_english.png" width="360"/> <img src="./Supplements/rtl_hebrew.png" width="360"/></p>
+<p align="center"><img src="./Supplements/rtl_english.png" width="414"/> <img src="./Supplements/rtl_hebrew.png" width="414"/></p>
 
 #### Custom Popup Bar View
 
@@ -323,7 +326,7 @@ You can display your own view as the popup bar, instead of the system-provided o
 
 The `wantsDefaultTapGesture`, `wantsDefaultPanGesture` and `wantsDefaultHighlightGesture` arguments control whether the default system gestures of the popup bar should be enabled or disabled.
 
-<p align="center"><img src="./Supplements/custom_bar.png" width="360"/></p>
+<p align="center"><img src="./Supplements/custom_bar.png" width="414"/></p>
 
 > [!TIP]
 > Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the SwiftUI view system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar view of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the [many customization APIs](#popup-bar-customization) to tweak the standard bar styles to fit your app’s design.
