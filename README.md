@@ -350,7 +350,7 @@ The included demo project includes an example custom popup bar scene.
 > [!TIP]
 > The `.popupBarCustomizer()` modifier exposes the underlying `LNPopupBar` from the `LNPopupController` framework. This framework allows modifying properties that are not exposed natively in SwiftUI, such as direct gesture recognizer control. While it is possible to customize the appearance the bar using this modifier, this API only accepts UIKit data types, such as `UIColor` and `UIFont`. Instead, use the SwiftUI-native customization APIs, which support SwiftUI-native data types, such as `Color` and `Font`, and are better integrated with rest of the SwiftUI view model.
 
-### `LNPopupController` additions
+### `LNPopupController` SwiftUI additions
 
 In addition to the main SwiftUI functionality, the library offers extensions to `LNPopupController` for hosting SwiftUI views as popup content and custom popup bar content.
 

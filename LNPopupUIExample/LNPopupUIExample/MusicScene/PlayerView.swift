@@ -131,23 +131,27 @@ struct PlayerView: View {
 				}.compositingGroup().blur(radius: 90, opaque: true)
 				.edgesIgnoringSafeArea(.all)
 			}
+			.tint(.white)
+			.environment(\.colorScheme, .dark)
 		}
 		.popupTitle(song.title)
 		.popupImage(Image(song.imageName).resizable())
 		.popupProgress(playbackProgress)
 		.popupBarItems {
-			Button {
-				isPlaying.toggle()
-			} label: {
-				Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-			}.padding(10)
-			
-			if popupBarPlacement != .inline {
+			ToolbarItemGroup(placement: .popupBar) {
 				Button {
-					print("Next")
+					isPlaying.toggle()
 				} label: {
-					Image(systemName: "forward.fill")
-				}.padding(10)
+					Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+				}
+				
+				if popupBarPlacement != .inline {
+					Button {
+						print("Next")
+					} label: {
+						Image(systemName: "forward.fill")
+					}
+				}
 			}
 		}
 	}

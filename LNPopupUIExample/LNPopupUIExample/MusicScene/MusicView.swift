@@ -43,6 +43,17 @@ fileprivate let songs: [[RandomTitleSong]] = {
 	return songs
 }()
 
+extension View {
+	@ViewBuilder
+	func noVerticalListRowInsetsIfPossible() -> some View {
+		if #available(iOS 26.0, *) {
+			listRowInsets(.vertical, 4.0)
+		} else {
+			self
+		}
+	}
+}
+
 struct RandomTitlesListView : View {
 	@Environment(\.presentationMode) var presentationMode
 	private let title: String
@@ -66,36 +77,29 @@ struct RandomTitlesListView : View {
 				Button {
 					onSongSelect(song)
 				} label: {
-					HStack(spacing: 20) {
+					HStack(spacing: 10) {
 						Image(song.imageName)
 							.resizable()
 							.frame(width: 48, height: 48)
 							.cornerRadius(8)
-						
-						VStack(alignment: .leading) {
+						VStack(alignment: .leading, spacing: 2) {
 							LNPopupText(song.title)
-								.font(.headline)
+								.font(.body)
 								.lineLimit(1)
 								.truncationMode(.tail)
 							LNPopupText(song.subtitle)
-								.font(.subheadline)
+								.font(.footnote)
 								.lineLimit(1)
 								.truncationMode(.tail)
 						}
 					}
 				}
+				.noVerticalListRowInsetsIfPossible()
 			}
 			.listStyle(PlainListStyle())
 			.navigationTitle(NSLocalizedString(title, comment: ""))
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
-				ToolbarItem(placement: .navigationBarLeading) {
-					Button {
-						isPopupPresented = false
-					} label: {
-						Image(systemName: isPopupPresented ? "rectangle.bottomthird.inset.fill" : "rectangle")
-					}
-				}
 				ToolbarItem(placement: .confirmationAction) {
 					ToolbarCloseButton {
 						onDismiss()

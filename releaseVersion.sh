@@ -39,6 +39,7 @@ fi
 echo -e "\033[1;34mUpdating framework version\033[0m"
 
 /usr/libexec/PlistBuddy LNPopupUIExample/LNPopupUIExample/Info.plist -c "Set CFBundleShortVersionString $NEXT_VERSION" -c "Set CFBundleVersion 1"
+sed -i '' "s|// LNPopupUI:[0-9.]*|// LNPopupUI:$NEXT_VERSION|g" Package.swift
 
 echo -e "\033[1;34mCommitting all changes to Git for release $NEXT_VERSION\033[0m"
 
