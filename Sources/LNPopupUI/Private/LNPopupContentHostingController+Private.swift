@@ -72,7 +72,8 @@ extension LNPopupContentHostingController {
 			DispatchQueue.main.async {
 				if let self = self, var anyView = viewCreator?.creator().anyView {
 					anyView = AnyView(anyView.accentTintIfNeeded())
-					self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in self?.popupItem.leadingBarButtonItems = $0
+					self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in
+						self?.popupItem.leadingBarButtonItems = $0
 					}
 					self.popupItem.setValue(self.leadingBarItemsController!, forKey: "swiftuiHiddenLeadingController")
 				}

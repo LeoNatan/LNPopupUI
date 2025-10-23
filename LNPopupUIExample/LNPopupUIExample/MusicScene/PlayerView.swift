@@ -134,7 +134,7 @@ struct PlayerView: View {
 			.tint(.white)
 			.environment(\.colorScheme, .dark)
 		}
-		.popupTitle(song.title)
+		.popupTitle(song.title, subtitle: song.subtitle)
 		.popupImage(Image(song.imageName).resizable())
 		.popupProgress(playbackProgress)
 		.popupBarItems {

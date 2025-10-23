@@ -601,7 +601,6 @@ struct PopupDemoViewModifier: ViewModifier {
 						} label: {
 							Image(systemName: "play.fill")
 						}
-						.padding(10)
 						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				} trailing: {
@@ -611,7 +610,6 @@ struct PopupDemoViewModifier: ViewModifier {
 						} label: {
 							Image(systemName: "forward.fill")
 						}
-						.padding(10)
 						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				}
