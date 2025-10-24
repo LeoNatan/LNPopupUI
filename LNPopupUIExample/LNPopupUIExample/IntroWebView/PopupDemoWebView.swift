@@ -51,7 +51,7 @@ struct PopupDemoWebView: View {
 			.popupBarItems {
 				ToolbarItemGroup(placement: .popupBar) {
 					Link(destination: url) {
-						Image(systemName: "suit.heart.fill")
+						Label("LNPopupUI", systemImage: "suit.heart.fill")
 					}
 				}
 			}

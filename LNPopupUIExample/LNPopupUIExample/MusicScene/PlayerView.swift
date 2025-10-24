@@ -142,14 +142,14 @@ struct PlayerView: View {
 				Button {
 					isPlaying.toggle()
 				} label: {
-					Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+					Label(isPlaying ? "Pause" : "Play", systemImage: isPlaying ? "pause.fill" : "play.fill")
 				}
 				
 				if popupBarPlacement != .inline {
 					Button {
 						print("Next")
 					} label: {
-						Image(systemName: "forward.fill")
+						Label("Next", systemImage: "forward.fill")
 					}
 				}
 			}

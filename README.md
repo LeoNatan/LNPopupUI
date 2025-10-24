@@ -27,7 +27,7 @@ Check the demo project for a quick recreation of Apple’s music app.
 * Available for iOS 14 and above, as an SPM package for SwiftUI
 * For UIKit, check out the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController)
 
-## Adding to Your Project
+## Adding to Your Project and Using the Framework
 
 ### Swift Package Manager
 
@@ -42,12 +42,8 @@ You can also manually add the package to your Package.swift file:
 And the dependency in your target:
 
 ```swift
-.target(name: "BestExampleApp", dependencies: ["LNPopupUI"]),
+.target(name: "MyExampleApp", dependencies: ["LNPopupUI"]),
 ```
-
-## Using the Library
-
-### Project Integration
 
 Import the module in your project:
 
@@ -55,24 +51,37 @@ Import the module in your project:
 import LNPopupUI
 ```
 
-### Popups
+## Managing a Popup Presentation
 
-Popups consist of a popup bar and a popup content view. Information for the popup bar, such as the title, image and bar button items, is configured using the provided modifier APIs.
+A popup presentation consists of the following concepts:
 
-To present the popup bar, use the `popup(isBarPresented:isPopupOpen:content:)` modifier. The user is then able to interact with the popup bar and popup content. 
+- **Popup container view** —the `View` that hosts the popup presentation. Normally this is the outer-most tab or navigation view, but can be any view.
+- **Popup content controller**—a `View` that represents the content, when the popup is open.
+- **Popup bar**—a bar, docked to the bottom of the container view, either above the container’s bottom bar (tab bar or toolbar) or directly at the bottom of the screen, presenting at-a-glance information to the user and allows interaction by the user. Can be a default system popup bar style or a completely custom implementation.
+- **Popup items**—the source of data that is displayed on the popup bar at any given time.
+- **Custom popup bar view**—optional, when presenting a custom popup bar
 
-To present and dismiss the popup bar programmatically, toggle the `isPopupBarPresented` bound var. To open or close the popup programmatically, toggle the `isPopupOpen` bound var.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./Supplements/overview-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./Supplements/overview.png">
+  <img src="./Supplements/overview.png">
+</picture>
+
+To add a popup presentation to your scene, you use the `popup(isBarPresented:isPopupOpen:content:)` modifier. The user is then able to interact with the popup bar and popup content. 
+
+To present and dismiss the popup bar programmatically, toggle the `isPopupBarPresented` bound boolean var. To open or close the popup programmatically, toggle the `isPopupOpen` bound boolean var.
 
 For more information, see the documentation in [LNPopupUI.swift](https://github.com/LeoNatan/LNPopupUI/blob/master/Sources/LNPopupUI/LNPopupUI.swift).
 
 
 ```swift
+//Container view
 TabView {
     //Container content  
     AlbumViews()
 }
 .popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content, visible when the popup opens
+    //Popup content view, visible when the popup opens
     PlayerView(song: currentSong)
         .popupTitle(currentSong.title)
         .popupSubtitle(currentSong.subtitle)
@@ -97,7 +106,7 @@ TabView {
 
 <p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="414"/></p>
 
-### Appearance and Behavior
+## Appearance and Behavior
 
 `LNPopupUI` provides functionality to present users with popup bars, open popups and let the user interact with them. By default, the framework chooses styles to match the user’s current operating system version, but can all be customized as required.
 
@@ -127,11 +136,11 @@ You can also present completely custom popup bars. For more information, see [Cu
 
 By default, for navigation and tab container views, the popup bar inherits its appearance from the bottom bar. For other container views, a default appearance is used, most suitable for the current environment.
 
-To disable inheriting the bottom bar’s appearance, call the `popupBarInheritsAppearanceFromDockingView()` modifier with `false` value.
+To disable inheriting the bottom bar’s appearance, call the `popupBarInheritsAppearanceFromDockingView(_:)` modifier with `false` value.
 
-#### Bar Style
+### Bar Style
 
-Customizing the popup bar style is achieved by calling the `.popupBarStyle()` modifier.
+Customizing the popup bar style is achieved by calling the `.popupBarStyle(_:)` modifier.
 
 Starting with iOS 26, the framework supports primarily a floating and a compact floating popup bar.
 
@@ -142,33 +151,33 @@ Starting with iOS 26, the framework supports primarily a floating and a compact 
 .popupBarStyle(.floating)
 ```
 
-###### Floating Compact:
+##### Floating Compact:
 
 <p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="414"/></p>
 
-###### Floating:
+##### Floating:
 
 <p align="center"><img src="./Supplements/floating_no_scroll.gif" width="414"/></p>
 
-##### Legacy Bar Styles
+#### Legacy Bar Styles
 
 On iOS 18 and below, the framework presents popup bar styles and animations that are appropriate for the user's operating system. Non-floating prominent and compact bar styles are also available.
 
-###### Floating:
+##### Floating:
 <p align="center"><img src="./Supplements/legacy_floating_no_scroll.gif" width="414"/>
 
-###### Prominent:
+##### Prominent:
 <p align="center"><img src="./Supplements/legacy_modern_no_scroll.gif" width="414"/></p>
 
-###### Compact:
+##### Compact:
 <p align="center"><img src="./Supplements/legacy_compact_scroll.gif" width="414"/></p>
 
 > [!NOTE]
 > On iOS 26 and later, non-floating bar styles will be automatically converted to the appropriate floating style.
 
-#### Interaction Style
+### Interaction Style
 
-Customizing the popup interaction style is achieved by calling the `.popupInteractionStyle()` modifier.
+Customizing the popup interaction style is achieved by calling the `.popupInteractionStyle(_:)` modifier.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -179,11 +188,11 @@ Customizing the popup interaction style is achieved by calling the `.popupIntera
 
 <p align="center"><img src="./Supplements/interaction_snap.gif" width="414"/> <img src="./Supplements/interaction_drag.gif" width="414"/></p>
 
-#### Progress View Style
+### Progress View Style
 
 By default, progress view is hidden.
 
-Customizing the popup bar progress view style is achieved by calling the `.popupBarProgressViewStyle()` modifier.
+Customizing the popup bar progress view style is achieved by calling the `.popupBarProgressViewStyle(_:)` modifier.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -194,9 +203,9 @@ Customizing the popup bar progress view style is achieved by calling the `.popup
 
 <p align="center"><img src="./Supplements/progress_view_none.png" width="414"/><br/><br/><img src="./Supplements/progress_view_top.png" width="414"/><br/><br/><img src="./Supplements/progress_view_bottom.png" width="414"/></p>
 
-#### Close Button Style
+### Close Button Style
 
-Customizing the popup close button style is achieved by calling the `.popupCloseButtonStyle()` modifier.
+Customizing the popup close button style is achieved by calling the `.popupCloseButtonStyle(_:)` modifier.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -205,19 +214,81 @@ Customizing the popup close button style is achieved by calling the `.popupClose
 .popupCloseButtonStyle(.prominentGlass)
 ```
 
-Hide the popup close button by calling the `popupCloseButtonStyle()` modifier with a value of `.none`.
+Hide the popup close button by calling the `popupCloseButtonStyle(_:)` modifier with a value of `.none`.
 
-To set the position of the popup close button, use the `popupCloseButtonPositioning()` modifier.
+To set the position of the popup close button, use the `popupCloseButtonPositioning(_:)` modifier.
 
 <p align="center"><img src="./Supplements/close_button_grabber.png" width="414"/><br/><br/><img src="./Supplements/close_button_glass.png" width="414"/> <img src="./Supplements/close_button_chevron.png" width="414"/><br/><br/><img src="./Supplements/close_button_round.png" width="414"/> <img src="./Supplements/close_button_none.png" width="414"/></p>
 
-#### Text Marquee Scroll
+### Text Marquee Scroll
 
-Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee scroll is enabled. Otherwise, the text will be truncated. To enable or disable text marquee scrolling, use the `popupBarMarqueeScrollEnabled()` modifier.
+Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee scroll is enabled. Otherwise, the text will be truncated. To enable or disable text marquee scrolling, use the `popupBarMarqueeScrollEnabled(_:)` modifier.
 
 <p align="center"><img src="./Supplements/floating_compact_scroll.gif" width="414"/> <img src="./Supplements/floating_compact_no_scroll_delay.gif" width="414"/></p>
 
-#### Popup Transitions
+### Popup Bar Minimization
+
+The library supports popup bar minimization starting with iOS 26. Currently, it is supported with `TabView` container views.
+
+<p align="center"><img style="border: 1px solid #555555;" src="./Supplements/floating_minimize.gif" width="414"/></p>
+
+To enable, set the minimization behavior of the tab view:
+
+```swift
+TabView {
+	// ...
+}.tabBarMinimizeBehavior(.onScrollDown)
+```
+
+To adjust the content of the accessory view based on the placement of the popup bar, add the `popupBarPlacement` environment variable to your popup content view or your custom popup bar view.
+
+
+Content view:
+```swift
+struct PlayerView: View {
+	@Environment(\.popupBarPlacement) var popupBarPlacement
+	
+	var body: some View {
+		...
+		.popupBarItems {
+			ToolbarItemGroup(placement: .popupBar) {
+				PlayButton()
+				
+				if popupBarPlacement != .inline {
+					NextButton()
+				}
+			}
+		}
+	}
+}
+```
+
+Custom bar view:
+```swift
+struct CustomBarView: View {
+	@Environment(\.popupBarPlacement) var popupBarPlacement
+
+    var body: some View {
+        switch placement {
+        case .inline:
+            ControlsPlaybackView()
+        case .regular:
+            SliderPlaybackView()
+    }
+}
+```
+
+Popup bar minimization is enabled by default, and is supported for system and custom popup bars, with the exception of custom bars with `.popupBarCustomBarPrefersFullBarWidth(true)`. To disable popup bar minimization, use the `popupBarMinimizationEnabled(_:)` modifier with a value of `false`.
+
+```swift
+TabView {
+	// ...
+}
+.tabBarMinimizeBehavior(.onScrollDown)
+.popupBarMinimizationEnabled(false)
+```
+
+### Popup Transitions
 
 The library supports popup image transitions:
 
@@ -246,7 +317,7 @@ The system supports `.clipShape()` with basic shapes and a single `shadow()` mod
 
 Transitions are only available for drag interaction style, or transition targets are ignored.
 
-#### Popup Bar Customization
+### Popup Bar Customization
 
 `LNPopupUI` exposes many APIs to customize the default popup bar's appearance. 
 
@@ -272,9 +343,9 @@ Transitions are only available for drag interaction style, or transition targets
 
 <p align="center"><img src="./Supplements/floating_custom.png" width="414"/></p>
 
-#### Context Menus
+### Context Menus
 
-You can add a context menu to your popup bar by calling the `.popupBarContextMenu()` modifier.
+You can add a context menu to your popup bar by calling the `.popupBarContextMenu(menuItems:)` modifier.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -299,21 +370,21 @@ You can add a context menu to your popup bar by calling the `.popupBarContextMen
 
 <p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="414"/></p>
 
-#### ProMotion Support
+### ProMotion Support
 
 `LNPopupUI` fully supports ProMotion on iPhone and iPad.
 
 For iPhone 13 Pro and above, you need to add the `CADisableMinimumFrameDurationOnPhone` key to your Info.plist and set it to `true`. See [Optimizing ProMotion Refresh Rates for iPhone 13 Pro and iPad Pro](https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro?language=objc) for more information. `LNPopupUI` will log a single warning message in the console if this key is missing, or is set to `false`.
 
-#### Full Right-to-Left Support
+### Full Right-to-Left Support
 
 The library has full right-to-left support.
 
 <p align="center"><img src="./Supplements/rtl_english.png" width="414"/> <img src="./Supplements/rtl_hebrew.png" width="414"/></p>
 
-#### Custom Popup Bar View
+### Custom Popup Bar View
 
-You can display your own view as the popup bar, instead of the system-provided ones, by using the `.popupBarCustomView()` modifier.
+You can display your own view as the popup bar, instead of the system-provided ones, by using the `.popupBarCustomView(wantsDefaultTapGesture:wantsDefaultPanGesture:wantsDefaultHighlightGesture:popupBarContent:)` modifier.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -333,9 +404,9 @@ The `wantsDefaultTapGesture`, `wantsDefaultPanGesture` and `wantsDefaultHighligh
 
 The included demo project includes an example custom popup bar scene.
 
-#### Low-Level Bar Customization
+### Low-Level Bar Customization
 
-`LNPopupUI` exposes the `.popupBarCustomizer()` modifier, which allows lower-level customization through the UIKit `LNPopupBar` object.
+`LNPopupUI` exposes the `.popupBarCustomizer(_:)` modifier, which allows lower-level customization through the UIKit `LNPopupBar` object.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -348,9 +419,9 @@ The included demo project includes an example custom popup bar scene.
 ```
 
 > [!TIP]
-> The `.popupBarCustomizer()` modifier exposes the underlying `LNPopupBar` from the `LNPopupController` framework. This framework allows modifying properties that are not exposed natively in SwiftUI, such as direct gesture recognizer control. While it is possible to customize the appearance the bar using this modifier, this API only accepts UIKit data types, such as `UIColor` and `UIFont`. Instead, use the SwiftUI-native customization APIs, which support SwiftUI-native data types, such as `Color` and `Font`, and are better integrated with rest of the SwiftUI view model.
+> The `.popupBarCustomizer(_:)` modifier exposes the underlying `LNPopupBar` from the `LNPopupController` framework. This framework allows modifying properties that are not exposed natively in SwiftUI, such as direct gesture recognizer control. While it is possible to customize the appearance the bar using this modifier, this API only accepts UIKit data types, such as `UIColor` and `UIFont`. Instead, use the SwiftUI-native customization APIs, which support SwiftUI-native data types, such as `Color` and `Font`, and are better integrated with rest of the SwiftUI view model.
 
-### `LNPopupController` SwiftUI additions
+## `LNPopupController` SwiftUI additions
 
 In addition to the main SwiftUI functionality, the library offers extensions to `LNPopupController` for hosting SwiftUI views as popup content and custom popup bar content.
 

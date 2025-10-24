@@ -69,6 +69,7 @@ internal extension EnvironmentValues {
 	@Entry var popupBarCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
 	@Entry var popupContentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
 	@Entry var popupBarCustomBarPrefersFullBarWidth: LNPopupEnvironmentConsumer<Bool>?
+	@Entry var popupBarMinimizationEnabled: LNPopupEnvironmentConsumer<Bool>?
 }
 
 internal func UIImageOrientationToImageOrientation(_ o: UIImage.Orientation) -> Image.Orientation {

@@ -36,10 +36,8 @@ struct DemoToolbarModifier: ViewModifier {
 					} label: {
 						if presentBarHandler != nil  {
 							Label("Present Bar", systemImage: "dock.arrow.up.rectangle")
-								.labelStyle(.iconOnly)
 						} else {
 							Label("Test 1", systemImage: "1.square")
-								.labelStyle(.iconOnly)
 						}
 					}
 					Button {
@@ -47,10 +45,8 @@ struct DemoToolbarModifier: ViewModifier {
 					} label: {
 						if hideBarHandler != nil  {
 							Label("Dismiss Bar", systemImage: "dock.arrow.down.rectangle")
-								.labelStyle(.iconOnly)
 						} else {
 							Label("Test 2", systemImage: "2.square")
-								.labelStyle(.iconOnly)
 						}
 					}
 					Spacer()
@@ -64,13 +60,14 @@ struct DemoToolbarModifier: ViewModifier {
 								//🤦‍♂️
 								if colorScheme == .light {
 									Image(uiImage: UIImage(_systemName: "appearance"))
+										.renderingMode(.template)
 								} else {
 									Image(uiImage: UIImage(_systemName: "appearance"))
+										.renderingMode(.template)
 								}
-							}.labelStyle(.iconOnly)
+							}
 						} else {
 							Label("Test 3", systemImage: "3.square")
-								.labelStyle(.iconOnly)
 						}
 					}
 				}
@@ -601,6 +598,7 @@ struct PopupDemoViewModifier: ViewModifier {
 						} label: {
 							Image(systemName: "play.fill")
 						}
+						.frame(minWidth: 30)
 						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				} trailing: {
@@ -610,6 +608,7 @@ struct PopupDemoViewModifier: ViewModifier {
 						} label: {
 							Image(systemName: "forward.fill")
 						}
+						.frame(minWidth: 30)
 						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
 					}
 				}

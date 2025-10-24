@@ -94,4 +94,40 @@ extension View {
 			self
 		}
 	}
+	
+	func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView where Content : View {
+		let content = {
+			Color.clear.toolbar {
+				ToolbarItemGroup(placement: .popupBar) {
+					content().font(.body)
+				}
+			}
+		}
+		
+		let view: any View
+		if #available(iOS 16.0, *) {
+			view = NavigationStack(root: content)
+		} else {
+			view = NavigationView(content: content).navigationViewStyle(.stack)
+		}
+		
+		return AnyView(view)
+	}
+	
+	func barItemContainer<Content>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView where Content : ToolbarContent {
+		let content = {
+			Color.clear.toolbar {
+				content()
+			}.font(.body)
+		}
+		
+		let view: any View
+		if #available(iOS 16.0, *) {
+			view = NavigationStack(root: content)
+		} else {
+			view = NavigationView(content: content).navigationViewStyle(.stack)
+		}
+		
+		return AnyView(view)
+	}
 }

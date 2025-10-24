@@ -102,14 +102,14 @@ public extension View {
 	///   - scrollRate: The scroll rate, in points, of the title and subtitle marquee animation.
 	///   - delay: The delay, in seconds, before starting the title and subtitle marquee animation.
 	///   - coordinateAnimations: Coordinate the title and subtitle marquee scroll animations.
-	func popupBarMarqueeScrollEnabled(_ enabled: Bool, scrollRate: CGFloat? = nil, delay: TimeInterval? = nil, coordinateAnimations: Bool? = nil) -> some View {
+	func popupBarMarqueeScrollEnabled(_ enabled: Bool? = true, scrollRate: CGFloat? = nil, delay: TimeInterval? = nil, coordinateAnimations: Bool? = nil) -> some View {
 		environment(\.popupBarMarqueeScrollEnabled, ^^enabled).environment(\.popupBarMarqueeRate, ^^scrollRate).environment(\.popupBarMarqueeDelay, ^^delay).environment(\.popupBarCoordinateMarqueeAnimations, ^^coordinateAnimations)
 	}
 	
 	/// Enables or disables outer shine on a floating popup bar.
 	///
-	/// - Note: Shine is only supported on iOS 26.0 and later.
-	func popupBarShineEnabled(_ enabled: Bool) -> some View {
+	/// Shine is only supported on iOS 26.0 and later.
+	func popupBarShineEnabled(_ enabled: Bool? = true) -> some View {
 		environment(\.popupBarShineEnabled, ^^enabled)
 	}
 	
@@ -117,7 +117,7 @@ public extension View {
 	///
 	/// - Parameters:
 	///   - enabled: Haptic feedback enabled.
-	func popupHapticFeedbackEnabled(_ enabled: Bool) -> some View {
+	func popupHapticFeedbackEnabled(_ enabled: Bool?) -> some View {
 		environment(\.popupHapticFeedbackEnabled, ^^enabled)
 	}
 	
@@ -125,14 +125,14 @@ public extension View {
 	///
 	/// - Parameter enabled: Extend the popup bar under safe area.
 	@available(iOS, deprecated: 26.0, message: "No longer supported on iOS 26.0 and later.")
-	func popupBarShouldExtendPopupBarUnderSafeArea(_ enabled: Bool) -> some View {
+	func popupBarShouldExtendPopupBarUnderSafeArea(_ enabled: Bool?) -> some View {
 		environment(\.popupBarShouldExtendPopupBarUnderSafeArea, ^^enabled)
 	}
 	
 	/// Enables or disables the popup bar to automatically inherit its appearance from the bottom docking view, such as toolbar or tab bar.
 	///
 	/// - Parameter enabled: Inherit the appearance from the popup bar's docking view.
-	func popupBarInheritsAppearanceFromDockingView(_ enabled: Bool) -> some View {
+	func popupBarInheritsAppearanceFromDockingView(_ enabled: Bool?) -> some View {
 		environment(\.popupBarInheritsAppearanceFromDockingView, ^^enabled)
 	}
 	
@@ -141,7 +141,7 @@ public extension View {
 	/// The inherited font will be used as the title font. The subtitle font will be a derivative of the inherited font.
 	///
 	/// - Parameter enabled: Inherit the environment font.
-	func popupBarInheritsEnvironmentFont(_ enabled: Bool) -> some View {
+	func popupBarInheritsEnvironmentFont(_ enabled: Bool?) -> some View {
 		environment(\.popupBarInheritsEnvironmentFont, ^^enabled)
 	}
 	
@@ -206,17 +206,20 @@ public extension View {
 	}
 	
 #if compiler(>=6.2)
+	/// A configuration that defines the corners of the background view for floating bars.
 	@available(iOS 26.0, *)
 	func popupBarFloatingBackgroundCornerConfiguration(_ configuration: UICornerConfiguration?) -> some View {
 		environment(\.popupBarFloatingBackgroundCornerConfiguration, ^^configuration)
 	}
 #endif
 	
-	func popupBarCustomBarPrefersFullBarWidth(_ prefersFullWidth: Bool) -> some View {
+	/// Enables or disables full bar width for the custom popup bars.
+	func popupBarCustomBarPrefersFullBarWidth(_ prefersFullWidth: Bool?) -> some View {
 		environment(\.popupBarCustomBarPrefersFullBarWidth, ^^prefersFullWidth)
 	}
 	
-	func popupBarLimitFloatingContentWidth(_ enabled: Bool) -> some View {
+	/// In wide enough environments, such as iPadOS, enables or disables limiting the width of content of floating bars to a system-determined value.
+	func popupBarLimitFloatingContentWidth(_ enabled: Bool?) -> some View {
 		environment(\.popupBarLimitFloatingContentWidth, ^^enabled)
 	}
 	
@@ -313,6 +316,18 @@ public extension View {
 		environment(\.popupBarContextMenu, ^^AnyView(menuItems()))
 	}
 	
+	/// Enables or disables popup bar minimization into the bottom bar.
+	///
+	/// Minimization is supported on iOS 26.0 and later, for tab view containers.
+	@ViewBuilder
+	func popupBarMinimizationEnabled(_ enabled: Bool?) -> some View {
+		if let enabled {
+			environment(\.popupBarMinimizationEnabled, ^^enabled)
+		} else {
+			environment(\.popupBarMinimizationEnabled, nil)
+		}
+	}
+	
 	/// Gives a low-level access to the `LNPopupBar` object for customization, beyond what is exposed by LNPopupUI.
 	///
 	///	The popup bar customization closure is called after all other popup bar modifiers have been applied.
@@ -376,7 +391,7 @@ public extension View {
 	
 	/// Configures the view's popup bar title with a custom label.
 	///
-	/// - Note: When using custom labels, marquee scroll and text attributes settings have no effect.
+	/// When using custom labels, marquee scroll and text attributes settings have no effect.
 	///
 	/// - Parameters:
 	///   - titleContent: A view that describes the popup's title.
@@ -386,7 +401,7 @@ public extension View {
 	
 	/// Configures the view's popup bar title and subtitle with custom labels.
 	///
-	/// - Note: When using custom labels, marquee scroll and text attributes settings have no effect.
+	/// When using custom labels, marquee scroll and text attributes settings have no effect.
 	///
 	/// - Parameters:
 	///   - titleContent: A view that describes the popup's title.
@@ -436,42 +451,6 @@ public extension View {
 	///   - progress: The popup bar progress.
 	func popupProgress(_ progress: Float) -> some View {
 		preference(key: LNPopupProgressPreferenceKey.self, value: progress)
-	}
-	
-	fileprivate func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView where Content : View {
-		let content = {
-			Color.clear.toolbar {
-				ToolbarItemGroup(placement: .popupBar) {
-					content().font(.body)
-				}
-			}
-		}
-		
-		let view: any View
-		if #available(iOS 16.0, *) {
-			view = NavigationStack(root: content)
-		} else {
-			view = NavigationView(content: content).navigationViewStyle(.stack)
-		}
-		
-		return AnyView(view)
-	}
-	
-	fileprivate func barItemContainer<Content>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView where Content : ToolbarContent {
-		let content = {
-			Color.clear.toolbar {
-				content()
-			}.font(.body)
-		}
-		
-		let view: any View
-		if #available(iOS 16.0, *) {
-			view = NavigationStack(root: content)
-		} else {
-			view = NavigationView(content: content).navigationViewStyle(.stack)
-		}
-		
-		return AnyView(view)
 	}
 	
 	/// Sets the bar button items to display on the popup bar.

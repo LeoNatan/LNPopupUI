@@ -170,8 +170,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			
 			UIView.performWithoutAnimation {
 				let appearance = target.popupBar.standardAppearance.copy()
-				
-				target.popupBar.setValue(true, forKey: "_applySwiftUILayoutFixes")
 				target.popupPresentationDelegate = self
 				
 				let inheritsEnvironmentFont = self.currentPopupState.environment.popupBarInheritsEnvironmentFont?.consume(self)
@@ -265,6 +263,10 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					target.popupBar.customBarWantsFullBarWidth = customBarPrefersFullBarWidth
 				}
 				
+				if let popupBarMinimizationEnabled = self.currentPopupState.environment.popupBarMinimizationEnabled?.consume(self) {
+					target.popupBar.supportsMinimization = popupBarMinimizationEnabled
+				}
+				
 				if let barImageShadow = self.currentPopupState.environment.popupBarImageShadow?.consume(self) {
 					appearance.imageShadow = barImageShadow
 				}
@@ -300,8 +302,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 				
 				self.currentPopupState.barCustomizer?.consume(self)?(target.popupBar)
 				self.currentPopupState.contentViewCustomizer?.consume(self)?(target.popupContentView)
-				
-//				target.popupBar.layoutIfNeeded()
 			}
 			
 			self.implicitAnimationController.push()
