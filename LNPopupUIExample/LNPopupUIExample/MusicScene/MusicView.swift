@@ -25,7 +25,7 @@ func nextGenre() -> Int {
 
 @MainActor
 struct RandomTitleSong : Equatable, Identifiable {
-	var id: Int
+	var id: String
 	let imageName: String = "genre\(nextGenre())"
 	var title: String = LoremIpsum.title
 	var subtitle: String = LoremIpsum.words(withNumber: 5)
@@ -36,8 +36,8 @@ fileprivate let songs: [[RandomTitleSong]] = {
 	var songs: [[RandomTitleSong]] = []
 	for jdx in 0..<4 {
 		songs.append([])
-		for idx in 1..<31 {
-			songs[jdx].append(RandomTitleSong(id: idx))
+		for idx in 1...Int.random(in: 25...45) {
+			songs[jdx].append(RandomTitleSong(id: "\(jdx)-\(idx)"))
 		}
 	}
 	return songs
@@ -59,14 +59,12 @@ struct RandomTitlesListView : View {
 	private let title: String
 	private let idx: Int
 	
-	@Binding var isPopupPresented: Bool
 	private let onSongSelect: (RandomTitleSong) -> Void
 	private let onDismiss: () -> Void
 	
-	init(_ title: String, idx: Int, _ isPopupPresented: Binding<Bool>, onDismiss: @escaping () -> Void, onSongSelect: @escaping (RandomTitleSong) -> Void) {
+	init(_ title: String, idx: Int, onDismiss: @escaping () -> Void, onSongSelect: @escaping (RandomTitleSong) -> Void) {
 		self.title = title
 		self.idx = idx
-		self._isPopupPresented = isPopupPresented
 		self.onDismiss = onDismiss
 		self.onSongSelect = onSongSelect
 	}
@@ -126,7 +124,6 @@ struct MinimizeIfPossibleModifier: ViewModifier {
 
 @available(iOS 18.0, *)
 struct MusicView: View {
-	@State var isPopupBarPresented: Bool = false
 	@State var isPopupOpen: Bool = false
 	
 	@State var currentSong: RandomTitleSong?
@@ -140,17 +137,17 @@ struct MusicView: View {
 	var body: some View {
 		MaterialTabView {
 			Tab(NSLocalizedString("Home", comment: ""), systemImage: "music.note.house.fill") {
-				RandomTitlesListView("Home", idx: 0, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+				RandomTitlesListView("Home", idx: 0, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
 			Tab(NSLocalizedString("New", comment: ""), systemImage: "square.grid.2x2.fill") {
-				RandomTitlesListView("New", idx: 1, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+				RandomTitlesListView("New", idx: 1, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
 			Tab(NSLocalizedString("Library", comment: ""), systemImage: ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? "music.note.square.stack.fill" : "square.stack.fill") {
-				RandomTitlesListView("Library", idx: 2, $isPopupBarPresented, onDismiss:onDismiss, onSongSelect: { song in
+				RandomTitlesListView("Library", idx: 2, onDismiss:onDismiss, onSongSelect: { song in
 					currentSong = song
 				})
 			}
@@ -160,18 +157,8 @@ struct MusicView: View {
 		}
 		.modifier(MinimizeIfPossibleModifier())
 		.accentColor(.pink)
-		.onChange(of: currentSong) { newValue in
-			isPopupBarPresented = newValue != nil
-		}
-		.onChange(of: isPopupBarPresented) { newValue in
-			if newValue == false {
-				currentSong = nil
-			}
-		}
-		.popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
-			if let currentSong = currentSong {
-				PlayerView(song: currentSong)
-			}
+		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen) {
+			PlayerView(song: currentSong)
 		}
 		.popupBarShineEnabled(true)
 		.popupBarProgressViewStyle(.bottom)
@@ -180,8 +167,6 @@ struct MusicView: View {
 }
 
 @available(iOS 18.0, *)
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		MusicView(onDismiss: {})
-	}
+#Preview {
+	MusicView(onDismiss: {})
 }

@@ -9,88 +9,78 @@
 import SwiftUI
 
 extension LNPopupContentHostingController {
-	@ViewBuilder
-	fileprivate func titleContentView(fromTitleView titleView: AnyView, subtitleView: AnyView?, target: UIViewController) -> TitleContentView {
-		TitleContentView(titleView: titleView, subtitleView: subtitleView, popupBar: target.popupBar)
-	}
-	
-	@available(iOS 14.0, *)
-	fileprivate func createOrUpdateBarItemAdapter(_ vc: inout LNPopupBarItemAdapter?, userNavigationViewWrapper anyView: AnyView, barButtonUpdater: @escaping ([UIBarButtonItem]?) -> Void) {
-		UIView.performWithoutAnimation {
-			if let vc = vc {
-				vc.rootView = anyView
-			} else {
-				vc = LNPopupBarItemAdapter(rootView: anyView, updater: barButtonUpdater)
-			}
-		}
-	}
-	
 	internal
 	func transform(_ popupContentRootView: PopupContent) -> AnyView {
-		return AnyView(popupContentRootView.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleData in
-			self?.popupItem.title = titleData?.title
-			self?.popupItem.subtitle = titleData?.subtitle
-		}.onPreferenceChange(LNPopupTextTitlePreferenceKey.self) { [weak self] titleData in
-			guard let self = self else {
+		return AnyView(popupContentRootView.onPreferenceChange(LNPopupItemPreferenceKey.self) { [weak self] popupItemWrapper in
+			guard let self, let popupItemWrapper else {
 				return
 			}
 			
-			if let titleData = titleData {
-				let adapter = LNPopupBarTitleViewAdapter(rootView: titleContentView(fromTitleView: titleData.titleView, subtitleView: titleData.subtitleView, target: self))
-				self.popupItem.setValue(adapter.view, forKey: "swiftuiTitleContentView")
-			} else {
-				self.popupItem.setValue(nil, forKey: "swiftuiTitleContentView")
+			guard let container = self.popupPresentationContainer else {
+				fatalError()
 			}
-		}.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] imageSettings in
-			guard let imageSettings else {
-				self?.popupItem.setValue(nil, forKey: "swiftuiImageController")
+			
+			if let directPopupItem = popupItemWrapper.value {
+				container.popupBar.usesContentControllersAsDataSource = false
+				if let popupItem = container.popupBar.popupItem, directPopupItem.isUpdatable(popupItem) {
+					directPopupItem.update(popupItem, popupBar: container.popupBar)
+				} else {
+					container.popupBar.popupItem = directPopupItem.lnPopupItem(for: container.popupBar)
+				}
+			} else {
+				container.popupBar.usesContentControllersAsDataSource = true
+			}
+		}.onPreferenceChange(LNPopupTitlePreferenceKey.self) { [weak self] titleDataWrapper in
+			guard let titleDataWrapper else {
 				return
 			}
 			
-			let contentMode = imageSettings.contentMode
-			var image = imageSettings.image
-			if imageSettings.resizable {
-				image = image.resizable()
+			self?.popupItem.title = titleDataWrapper.value?.title
+			self?.popupItem.subtitle = titleDataWrapper.value?.subtitle
+		}.onPreferenceChange(LNPopupTextTitlePreferenceKey.self) { [weak self] titleDataWrapper in
+			guard let titleDataWrapper, let self = self else {
+				return
 			}
-			let view = AnyView(image.aspectRatio(imageSettings.aspectRatio, contentMode: contentMode))
 			
-			let imageController: LNPopupBarImageAdapter
-			if let existing = self?.popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
-				imageController = existing
-				imageController.rootView = view
-				
-			} else {
-				imageController = LNPopupBarImageAdapter(rootView: view)
-				self?.popupItem.setValue(imageController, forKey: "swiftuiImageController")
+			createOrUpdateTitleAdapter(in: self.popupItem, for: titleDataWrapper.value, popupBar: self.popupBar)
+		}.onPreferenceChange(LNPopupImagePreferenceKey.self) { [weak self] imageSettingsWrapper in
+			guard let self, let imageSettingsWrapper else {
+				return
 			}
-			imageController.contentMode = contentMode
-			imageController.aspectRatio = imageSettings.aspectRatio
-		}.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progress in
-			self?.popupItem.progress = progress ?? 0.0
-		}.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] viewCreator in
+			
+			createOrUpdateImageAdapter(in: self.popupItem, for: imageSettingsWrapper.value)
+		}.onPreferenceChange(LNPopupProgressPreferenceKey.self) { [weak self] progressWrapper in
+			guard let progressWrapper else {
+				return
+			}
+			
+			self?.popupItem.progress = progressWrapper.value!
+		}.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] viewCreatorWrapper in
+			guard let self, let viewCreatorWrapper else {
+				return
+			}
+			
 			//Async so that the navigation controller is created in a different transaction
 			DispatchQueue.main.async {
-				if let self = self, var anyView = viewCreator?.creator().anyView {
-					anyView = AnyView(anyView.accentTintIfNeeded())
-					self.createOrUpdateBarItemAdapter(&self.leadingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in
-						self?.popupItem.leadingBarButtonItems = $0
-					}
-					self.popupItem.setValue(self.leadingBarItemsController!, forKey: "swiftuiHiddenLeadingController")
-				}
+				let anyView = viewCreatorWrapper.value?.creator().anyView
+				createOrUpdateBarItemAdapter(in: self.popupItem, key: "swiftuiHiddenLeadingController", buttonKeyPath: \.leadingBarButtonItems, userNavigationViewWrapper: anyView)
 			}
-		}.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] viewCreator in
+		}.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] viewCreatorWrapper in
+			guard let self, let viewCreatorWrapper else {
+				return
+			}
+			
 			//Async so that the navigation controller is created in a different transaction
 			DispatchQueue.main.async {
-				if let self = self, var anyView = viewCreator?.creator().anyView {
-					anyView = AnyView(anyView.accentTintIfNeeded())
-					self.createOrUpdateBarItemAdapter(&self.trailingBarItemsController, userNavigationViewWrapper: anyView) { [weak self] in
-						self?.popupItem.trailingBarButtonItems = $0
-					}
-					self.popupItem.setValue(self.trailingBarItemsController!, forKey: "swiftuiHiddenTrailingController")
-				}
+				let anyView = viewCreatorWrapper.value?.creator().anyView
+				createOrUpdateBarItemAdapter(in: self.popupItem, key: "swiftuiHiddenTrailingController", buttonKeyPath: \.trailingBarButtonItems, userNavigationViewWrapper: anyView)
 			}
-		}.onPreferenceChange(LNPopupContentBackgroundColorPreferenceKey.self, perform: { [weak self] color in
-			self?.userContentBackgroundColor = color
+		}.onPreferenceChange(LNPopupContentBackgroundColorPreferenceKey.self, perform: { [weak self] colorWrapper in
+			guard let colorWrapper else {
+				return
+			}
+			
+			self?.userContentBackgroundColor = colorWrapper.value
 			self?.updateContentBackgroundColor()
 		}))
 	}

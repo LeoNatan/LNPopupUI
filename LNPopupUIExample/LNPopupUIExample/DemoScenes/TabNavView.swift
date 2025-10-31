@@ -135,8 +135,6 @@ struct TabNavView: View {
 	}
 }
 
-struct TabNavView_Previews: PreviewProvider {
-	static var previews: some View {
-		TabNavView(demoContent: DemoContent(), onDismiss: {})
-	}
+#Preview {
+	TabNavView(demoContent: DemoContent(), onDismiss: {})
 }

@@ -256,8 +256,6 @@ struct SceneSelection: View {
 	}
 }
 
-struct SceneSelection_Previews: PreviewProvider {
-	static var previews: some View {
-		SceneSelection()
-	}
+#Preview {
+	SceneSelection()
 }

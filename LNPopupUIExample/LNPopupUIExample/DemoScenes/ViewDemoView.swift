@@ -34,8 +34,6 @@ struct ViewDemoView : View {
 	}
 }
 
-struct ViewDemoView_Previews: PreviewProvider {
-	static var previews: some View {
-		ViewDemoView(demoContent: DemoContent(), onDismiss: {})
-	}
+#Preview {
+	ViewDemoView(demoContent: DemoContent(), onDismiss: {})
 }

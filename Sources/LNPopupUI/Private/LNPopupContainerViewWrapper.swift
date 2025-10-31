@@ -43,9 +43,7 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 								 content: popupContent,
 								 contentController: popupContentController,
 								 onOpen: onOpen,
-								 onClose: onClose,
-								 barCustomizer: context.environment.popupBarCustomizer,
-								 contentViewCustomizer: context.environment.popupContentViewCustomizer)
+								 onClose: onClose)
 		uiViewController.handlePopupState(state)
 	}
 }

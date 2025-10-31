@@ -300,8 +300,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					self.popupContextMenuInteraction = nil
 				}
 				
-				self.currentPopupState.barCustomizer?.consume(self)?(target.popupBar)
-				self.currentPopupState.contentViewCustomizer?.consume(self)?(target.popupContentView)
+				self.currentPopupState.environment.popupBarCustomizer?.consume(self)?(target.popupBar)
+				self.currentPopupState.environment.popupContentViewCustomizer?.consume(self)?(target.popupContentView)
 			}
 			
 			self.implicitAnimationController.push()

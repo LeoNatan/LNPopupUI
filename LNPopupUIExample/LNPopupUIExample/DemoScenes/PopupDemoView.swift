@@ -591,7 +591,7 @@ struct PopupDemoViewModifier: ViewModifier {
 				.modifier(CustomTextLabelsModifier(demoContent: demoContent))
 				.popupImage(Image(transitionType == 2 ? "genre17" : "genre\(demoContent.imageNumber)"))
 				.popupProgress(0.5)
-				.popupBarItems {
+				.popupBarButtons {
 					ToolbarItemGroup(placement: .popupBar) {
 						Button {
 							print("Play")
@@ -635,15 +635,6 @@ struct PopupDemoViewModifier: ViewModifier {
 extension View {
 	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool) -> some View {
 		return self.modifier(PopupDemoViewModifier(demoContent: demoContent, isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, includeContextMenu: includeContextMenu))
-	}
-}
-
-struct SafeAreaDemoView_Previews: PreviewProvider {
-	static var previews: some View {
-		SafeAreaDemoView()
-		SafeAreaDemoView(colorSeed: "offset", offset: true)
-		SafeAreaDemoView(colorSeed: "includeLink", includeLink: true)
-		SafeAreaDemoView(colorSeed: "colorIndex", colorIndex: 4)
 	}
 }
 
@@ -755,4 +746,20 @@ struct LNPopupText: View {
 	var body: some View {
 		text
 	}
+}
+
+#Preview {
+	SafeAreaDemoView()
+}
+
+#Preview {
+	SafeAreaDemoView(colorSeed: "offset", offset: true)
+}
+
+#Preview {
+	SafeAreaDemoView(colorSeed: "includeLink", includeLink: true)
+}
+
+#Preview {
+	SafeAreaDemoView(colorSeed: "colorIndex", colorIndex: 4)
 }

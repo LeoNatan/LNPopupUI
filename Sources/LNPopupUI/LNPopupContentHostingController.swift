@@ -15,10 +15,6 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 	var interactionLimitRect: CGRect = .zero
 	
 	internal
-	var leadingBarItemsController: LNPopupBarItemAdapter? = nil
-	internal
-	var trailingBarItemsController: LNPopupBarItemAdapter? = nil
-	internal
 	var userContentBackgroundColor: UIColor? = nil
 	
 	public required

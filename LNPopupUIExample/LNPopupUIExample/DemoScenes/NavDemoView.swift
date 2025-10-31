@@ -56,8 +56,6 @@ struct NavDemoView : View {
 	}
 }
 
-struct NavDemoView_Previews: PreviewProvider {
-	static var previews: some View {
-		NavDemoView(title: nil, demoContent: DemoContent(), onDismiss: {})
-	}
+#Preview {
+	NavDemoView(title: nil, demoContent: DemoContent(), onDismiss: {})
 }

@@ -8,6 +8,7 @@
 
 import SwiftUI
 import WebKit
+import LNPopupUI
 
 struct WebView : UIViewRepresentable {
 	let url: URL
@@ -38,20 +39,19 @@ struct PopupDemoWebView: View {
 			ZStack(alignment: .top) {
 				WebView(url: url)
 				Color(red: 0.12, green:0.14, blue:0.15)
-//				BlurView()
 					.frame(maxWidth: .infinity, minHeight: geometry.safeAreaInsets.top, maxHeight: geometry.safeAreaInsets.top)
 			}
 			.ignoresSafeArea(.all)
-			.popupTitle {
-				HStack {
-					Text(NSLocalizedString("Welcome to ", comment: "")) + Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy) + Text("!")
-				}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(inheritedFont ?? .body)
-			}
-			.popupImage(Image("AppIconPopupBar"))
-			.popupBarItems {
-				ToolbarItemGroup(placement: .popupBar) {
-					Link(destination: url) {
-						Label("LNPopupUI", systemImage: "suit.heart.fill")
+			.popupItem {
+				PopupItem(id: "intro", image: Image("AppIconPopupBar")) {
+					HStack {
+						Text(NSLocalizedString("Welcome to ", comment: "")) + Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy) + Text("!")
+					}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(inheritedFont ?? .body)
+				} buttons: {
+					ToolbarItemGroup(placement: .popupBar) {
+						Link(destination: url) {
+							Label("LNPopupUI", systemImage: "suit.heart.fill")
+						}
 					}
 				}
 			}

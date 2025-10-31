@@ -27,8 +27,6 @@ internal struct LNPopupState<PopupContent: View> {
 	let contentController: UIViewController?
 	let onOpen: (() -> Void)?
 	let onClose: (() -> Void)?
-	let barCustomizer: LNPopupEnvironmentConsumer<((LNPopupBar) -> Void)>?
-	let contentViewCustomizer: LNPopupEnvironmentConsumer<((LNPopupContentView) -> Void)>?
 	
 	var smallState: LNPopupSmallState {
 		return (isBarPresented.wrappedValue, isPopupOpen?.wrappedValue)

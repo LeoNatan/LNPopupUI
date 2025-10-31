@@ -80,7 +80,7 @@ internal struct TitleContentView : View {
 		
 		VStack(spacing: 2) {
 			titleView.font(font ?? Font(titleFont)).foregroundColor(Color(titleColor))
-			subtitleView.font(font ?? Font(subtitleFont)).foregroundColor(Color(subtitleColor))
+			subtitleView?.font(font ?? Font(subtitleFont)).foregroundColor(Color(subtitleColor))
 		}.lineLimit(1)
 	}
 }
@@ -94,40 +94,141 @@ extension View {
 			self
 		}
 	}
-	
-	func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView where Content : View {
-		let content = {
-			Color.clear.toolbar {
-				ToolbarItemGroup(placement: .popupBar) {
-					content().font(.body)
-				}
+}
+
+func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView where Content : View {
+	let content = {
+		Color.clear.toolbar {
+			ToolbarItemGroup(placement: .popupBar) {
+				content().font(.body)
 			}
 		}
-		
-		let view: any View
-		if #available(iOS 16.0, *) {
-			view = NavigationStack(root: content)
-		} else {
-			view = NavigationView(content: content).navigationViewStyle(.stack)
-		}
-		
-		return AnyView(view)
 	}
 	
-	func barItemContainer<Content>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView where Content : ToolbarContent {
-		let content = {
-			Color.clear.toolbar {
-				content()
-			}.font(.body)
-		}
-		
-		let view: any View
-		if #available(iOS 16.0, *) {
-			view = NavigationStack(root: content)
+	let view: any View
+	if #available(iOS 16.0, *) {
+		view = NavigationStack(root: content)
+	} else {
+		view = NavigationView(content: content).navigationViewStyle(.stack)
+	}
+	
+	return AnyView(view)
+}
+
+func barItemContainer<Content>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView where Content : ToolbarContent {
+	let content = {
+		Color.clear.toolbar {
+			content()
+		}.font(.body)
+	}
+	
+	let view: any View
+	if #available(iOS 16.0, *) {
+		view = NavigationStack(root: content)
+	} else {
+		view = NavigationView(content: content).navigationViewStyle(.stack)
+	}
+	
+	return AnyView(view)
+}
+
+func barItemContainer<Content>(_ content: Content) -> AnyView where Content : ToolbarContent {
+	let content = {
+		Color.clear.toolbar {
+			content
+		}.font(.body)
+	}
+	
+	let view: any View
+	if #available(iOS 16.0, *) {
+		view = NavigationStack(root: content)
+	} else {
+		view = NavigationView(content: content).navigationViewStyle(.stack)
+	}
+	
+	return AnyView(view)
+}
+
+internal
+func createOrUpdateBarItemAdapter(in popupItem: LNPopupItem, key: String, buttonKeyPath: ReferenceWritableKeyPath<LNPopupItem, [UIBarButtonItem]?>, userNavigationViewWrapper anyView: AnyView?) {
+	if let anyView {
+		let anyView = AnyView(anyView.accentTintIfNeeded())
+		if let adapter = popupItem.value(forKey: key) as? LNPopupBarItemAdapter {
+			adapter.rootView = anyView
 		} else {
-			view = NavigationView(content: content).navigationViewStyle(.stack)
+			let adapter = LNPopupBarItemAdapter(rootView: anyView) { [weak popupItem] buttonItems in
+				guard let popupItem, popupItem[keyPath: buttonKeyPath] != buttonItems else { return }
+				popupItem[keyPath: buttonKeyPath] = buttonItems
+			}
+			popupItem.setValue(adapter, forKey: key)
 		}
+	} else {
+		popupItem.setValue(nil, forKey: key)
+		popupItem[keyPath: buttonKeyPath] = []
+	}
+}
+
+fileprivate
+func titleContentView(fromTitleView titleView: AnyView?, subtitleView: AnyView?, popupBar: LNPopupBar) -> TitleContentView? {
+	if let titleView {
+		return TitleContentView(titleView: titleView, subtitleView: subtitleView, popupBar: popupBar)
+	} else {
+		return nil
+	}
+}
+
+internal
+func createOrUpdateTitleAdapter(in popupItem: LNPopupItem, for titleData: LNPopupTitleContentData?, popupBar: LNPopupBar) {
+	let view = titleContentView(fromTitleView: titleData?.titleView, subtitleView: titleData?.subtitleView, popupBar: popupBar)
+	createOrUpdateTitleAdapter(in: popupItem, for: view)
+}
+
+internal
+func createOrUpdateTitleAdapter(in popupItem: LNPopupItem, for view: TitleContentView?) {
+	if let view {
+		if let adapter = popupItem.value(forKey: "swiftuiTitleContentViewController") as? LNPopupBarTitleViewAdapter {
+			adapter.rootView = view
+		} else {
+			let adapter = LNPopupBarTitleViewAdapter(rootView: view)
+			popupItem.setValue(adapter, forKey: "swiftuiTitleContentViewController")
+		}
+	} else {
+		popupItem.setValue(nil, forKey: "swiftuiTitleContentViewController")
+	}
+}
+
+internal
+func createOrUpdateImageAdapter(in popupItem: LNPopupItem, for imageData: LNPopupImageData?) {
+	if let imageData {
+		let contentMode = imageData.contentMode
+		var image = imageData.image
+		if imageData.resizable {
+			image = image.resizable()
+		}
+		let view = AnyView(image.aspectRatio(imageData.aspectRatio, contentMode: contentMode))
 		
-		return AnyView(view)
+		if let adapter = popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
+			adapter.rootView = view
+			adapter.contentMode = contentMode
+			adapter.aspectRatio = imageData.aspectRatio
+		} else {
+			let adapter = LNPopupBarImageAdapter(rootView: view)
+			adapter.contentMode = contentMode
+			adapter.aspectRatio = imageData.aspectRatio
+			popupItem.setValue(adapter, forKey: "swiftuiImageController")
+		}
+	} else {
+		popupItem.setValue(nil, forKey: "swiftuiImageController")
+	}
+}
+
+@usableFromInline internal
+struct EquatableEmptyView: View, Equatable {
+	@usableFromInline
+	init() {}
+	
+	@usableFromInline
+	var body: some View {
+		EmptyView()
 	}
 }

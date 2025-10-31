@@ -149,8 +149,6 @@ struct MyButtonStyle: ButtonStyle {
 	
 }
 
-struct MapView_Previews: PreviewProvider {
-	static var previews: some View {
-		CustomBarMapView(onDismiss: {})
-	}
+#Preview {
+	CustomBarMapView(onDismiss: {})
 }

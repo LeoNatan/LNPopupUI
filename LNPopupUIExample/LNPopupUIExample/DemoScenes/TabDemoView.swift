@@ -72,8 +72,6 @@ struct TabDemoView : View {
 	}
 }
 
-struct TabDemoView_Previews: PreviewProvider {
-	static var previews: some View {
-		TabDemoView(demoContent: DemoContent(), onDismiss: {})
-	}
+#Preview {
+	TabDemoView(demoContent: DemoContent(), onDismiss: {})
 }
