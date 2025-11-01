@@ -48,11 +48,9 @@ internal class LNPopupBarItemAdapter: UIHostingController<AnyView> {
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
-		let nav = self.children.first as? UINavigationController
-		if let nav {
+		
+		if let nav = self.children.first as? UINavigationController {
 			self.updater(nav.topViewController?.toolbarItems)
-		} else {
-			print("LNPopupUI: Unexpected layout, please open an issue at https://github.com/LeoNatan/LNPopupUI/issues/new")
 		}
 	}
 }
@@ -106,30 +104,17 @@ func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView
 	}
 	
 	let view: any View
-	if #available(iOS 16.0, *) {
-		view = NavigationStack(root: content)
-	} else {
+//	if #available(iOS 16.0, *) {
+//		view = NavigationStack(root: content)
+//	} else {
 		view = NavigationView(content: content).navigationViewStyle(.stack)
-	}
+//	}
 	
 	return AnyView(view)
 }
 
 func barItemContainer<Content>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView where Content : ToolbarContent {
-	let content = {
-		Color.clear.toolbar {
-			content()
-		}.font(.body)
-	}
-	
-	let view: any View
-	if #available(iOS 16.0, *) {
-		view = NavigationStack(root: content)
-	} else {
-		view = NavigationView(content: content).navigationViewStyle(.stack)
-	}
-	
-	return AnyView(view)
+	barItemContainer(content())
 }
 
 func barItemContainer<Content>(_ content: Content) -> AnyView where Content : ToolbarContent {
@@ -140,11 +125,11 @@ func barItemContainer<Content>(_ content: Content) -> AnyView where Content : To
 	}
 	
 	let view: any View
-	if #available(iOS 16.0, *) {
-		view = NavigationStack(root: content)
-	} else {
+//	if #available(iOS 16.0, *) {
+//		view = NavigationStack(root: content)
+//	} else {
 		view = NavigationView(content: content).navigationViewStyle(.stack)
-	}
+//	}
 	
 	return AnyView(view)
 }

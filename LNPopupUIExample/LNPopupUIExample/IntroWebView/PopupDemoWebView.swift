@@ -20,6 +20,7 @@ struct WebView : UIViewRepresentable {
 			rv.scrollView.topEdgeEffect.isHidden = true
 		}
 #endif
+		rv.load(URLRequest(url: url))
 		return rv
 	}
 	

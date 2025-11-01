@@ -8,7 +8,7 @@ This is a SwiftUI wrapper of the [LNPopupController framework](https://github.co
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/graphs/contributors) [![Swift Package Manager compatible](https://img.shields.io/badge/swift%20package%20manager-compatible-green)](https://swift.org/package-manager/)
 
-<p align="center"><img src="./Supplements/intro.gif"/></p>
+<p align="center"><img style="border: 1px solid #555555;" src="./Supplements/intro.gif"/></p>
 
 Once a popup bar is presented with a content view, the user can swipe or tap the popup bar at any point to present the content view. After finishing, the user dismisses the popup by either swiping the content view or tapping the popup close button.
 
@@ -77,34 +77,113 @@ For more information, see the documentation in [LNPopupUI.swift](https://github.
 ```swift
 //Container view
 TabView {
-    //Container content  
-    AlbumViews()
+  //Container content  
+  AlbumViews()
 }
 .popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view, visible when the popup opens
-    PlayerView(song: currentSong)
-        .popupTitle(currentSong.title)
-        .popupSubtitle(currentSong.subtitle)
-        .popupImage(Image(currentSong.imageName))
-        .popupBarItems {
-            ToolbarItemGroup(placement: .popupBar) {
-                Button {
-                    isPlaying.toggle()
-                } label: {
-                    Image(systemName: "pause.fill")
-                }
-            
-                Button {
-                    nextSong()
-                } label: {
-                    Image(systemName: "forward.fill")
-                }
-            }
-        }
+  //Popup content view, visible when the popup opens
+  PlayerView(song: currentSong)
+  	.popupItems(selection: $currentSong) {
+  	  for song in playlist {
+	  // Create a popup item for each song in the playlist, with the song's art, name, album and playback controls.
+	  PopupItem(id: song, title: song.name, subtitle: song.albumName, image: song.art, progress: playbackState.progress) {
+	    playbackButtons(for: song, with: playbackState)
+	  }
+  	}
 }
 ```
 
 <p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="414"/></p>
+
+### Popup Items
+
+Popup items provide the information that is displayed in the popup bar. In LNPopupUI, you can provide popup item information with three different family if `View` modifiers. You place a call to one of these modifier families inside your popup content hierarchy.
+
+If you do not provide a popup item, the popup bar will remain empty.
+
+Popup items have no effect when presenging a custom popup bar.
+
+>  [!WARNING]
+> Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as `popupItem(popupItem:)`, a multiple popup item providing modifier, such as `popupItems(selection:items:)` or modifiers to update the default popup item, such as ``popupTitle(_:subtitle:)`.
+
+#### Single Popup Item
+
+This family of modifies allows providing an instance of the `PopupItem` model. `PopupItem` encapsulates all information necessary for your app to display information on a popup bar. Popup items allow setting string, `AttributedString` and custom view titles and subtitles.
+
+Providing popup items with these modifiers does not enable popup item paging.
+
+```swift
+TabView {
+  //Container content
+}.popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
+  popupContent()
+    .popupItem {
+      // Create a popup item with an image, a custom view title and a button.
+      PopupItem(id: "intro", image: Image("MyImage")) {
+        Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
+      } buttons: {
+        ToolbarItemGroup(placement: .popupBar) {
+          Link(destination: url) {
+            Label("LNPopupUI", systemImage: "suit.heart.fill")
+          }
+        }
+      }
+    }
+}
+```
+
+#### **Multiple** **Popup** **Items** With **Paging** Support
+
+This family of modifiers allows provding one or more popup items, representing a collection of data. A single popup item is displayed on a popup bar at a time, and the user can page between popup items by swiping left and right on the popup bar. If a single item is provided, paging is disabled.
+
+<p align="center"><img style="border: 1px solid #555555;" src="./Supplements/floating_paging.gif" width="414"/></p>
+
+When a user pages to a different popup item, the identifier of that popup item is reflected in the `selection` binding.
+
+```swift
+TabView {
+  //Container content
+}
+.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+  ContentView()
+    .popupItems(selection: $currentSong) {
+      for song in playlist {
+        // Create a popup item for each song in the playlist, with the song's art, name, album and playback controls.
+        PopupItem(id: song, title: song.name, subtitle: song.albumName, image: song.art, progress: playbackState.progress) {
+          playbackButtons(for: song, with: playbackState)
+        }
+      }
+    }
+}
+```
+
+> [!TIP]
+> Providing an empty list of popup items using this API is considered a developer error, and will result in an empty popup bar.
+
+#### Default Popup Item
+
+This family of modifiers updates the default popup item for the popup content hierarchy.
+
+```swift
+TabView {
+  //Container content
+}.popup(isBarPresented: $isPopupBarPresented, isPopupOpen: $isPopupOpen) {
+  popupContent()
+    .popupTitle("Welcome to LNPopupUI!", subtitle: "Enjoy!")
+  	.popupImage(Image("MyImage"))
+  	.popupBarButtons {
+      ToolbarItemGroup(placement: .popupBar) {
+        Link(destination: url) {
+          Label("LNPopupUI", systemImage: "suit.heart.fill")
+        }
+      }
+    }
+}
+```
+
+> [!NOTE]
+>
+> This API is considered legacy, and while fully supported, it is recommended to switch to using either `popupItem(popupItem:)` or `popupItems(selection:items:)`.
 
 ## Appearance and Behavior
 
@@ -146,7 +225,7 @@ Starting with iOS 26, the framework supports primarily a floating and a compact 
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view
+  //Popup content view
 }
 .popupBarStyle(.floating)
 ```
@@ -181,7 +260,7 @@ Customizing the popup interaction style is achieved by calling the `.popupIntera
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view
+  //Popup content view
 }
 .popupInteractionStyle(.drag)
 ```
@@ -196,7 +275,7 @@ Customizing the popup bar progress view style is achieved by calling the `.popup
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view
+  //Popup content view
 }
 .popupBarProgressViewStyle(.top)
 ```
@@ -209,7 +288,7 @@ Customizing the popup close button style is achieved by calling the `.popupClose
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view
+  //Popup content view
 }
 .popupCloseButtonStyle(.prominentGlass)
 ```
@@ -236,7 +315,7 @@ To enable, set the minimization behavior of the tab view:
 
 ```swift
 TabView {
-	// ...
+  // ...
 }.tabBarMinimizeBehavior(.onScrollDown)
 ```
 
@@ -246,35 +325,37 @@ To adjust the content of the accessory view based on the placement of the popup 
 Content view:
 ```swift
 struct PlayerView: View {
-	@Environment(\.popupBarPlacement) var popupBarPlacement
-	
-	var body: some View {
-		...
-		.popupBarItems {
-			ToolbarItemGroup(placement: .popupBar) {
-				PlayButton()
-				
-				if popupBarPlacement != .inline {
-					NextButton()
-				}
-			}
-		}
-	}
+  @Environment(\.popupBarPlacement) var popupBarPlacement
+
+  var body: some View {
+    ...
+    .popupItem {
+      PopupItem(identifier: "id", title: "Hello World") {
+        ToolbarItemGroup(placement: .popupBar) {
+          PlayButton()
+
+          if popupBarPlacement != .inline {
+            NextButton()
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
 Custom bar view:
 ```swift
 struct CustomBarView: View {
-	@Environment(\.popupBarPlacement) var popupBarPlacement
+  @Environment(\.popupBarPlacement) var popupBarPlacement
 
-    var body: some View {
-        switch placement {
-        case .inline:
-            ControlsPlaybackView()
-        case .regular:
-            SliderPlaybackView()
-    }
+  var body: some View {
+    switch placement {
+      case .inline:
+        ControlsPlaybackView()
+      case .regular:
+        SliderPlaybackView()
+  }
 }
 ```
 
@@ -282,7 +363,7 @@ Popup bar minimization is enabled by default, and is supported for system and cu
 
 ```swift
 TabView {
-	// ...
+  // ...
 }
 .tabBarMinimizeBehavior(.onScrollDown)
 .popupBarMinimizationEnabled(false)
@@ -303,12 +384,12 @@ The system supports `.clipShape()` with basic shapes and a single `shadow()` mod
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-	Image("genre\(demoContent.imageNumber)")
-		.resizable()
-		.popupTransitionTarget()
-		.aspectRatio(contentMode: .fit)
-		.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-		.shadow(color: .indigo, radius: 20)
+  Image("genre\(demoContent.imageNumber)")
+    .resizable()
+    .popupTransitionTarget()
+    .aspectRatio(contentMode: .fit)
+    .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+    .shadow(color: .indigo, radius: 20)
 }
 ```
 
@@ -328,13 +409,13 @@ Transitions are only available for drag interaction style, or transition targets
 .popupBarInheritsAppearanceFromDockingView(false)
 .popupBarFloatingBackgroundShadow(color: .red, radius: 8, x: 0, y: 0)
 .popupBarTitleTextAttributes(AttributeContainer()
-    .font(Font.custom("Chalkduster", size: 14, relativeTo: .headline))
-    .foregroundColor(.yellow)
-    .paragraphStyle(customizationParagraphStyle))
+  .font(Font.custom("Chalkduster", size: 14, relativeTo: .headline))
+  .foregroundColor(.yellow)
+  .paragraphStyle(customizationParagraphStyle))
 .popupBarSubtitleTextAttributes(AttributeContainer()
-    .font(.custom("Chalkduster", size: 12, relativeTo: .subheadline))
-    .foregroundColor(.green)
-    .paragraphStyle(customizationParagraphStyle))
+  .font(.custom("Chalkduster", size: 12, relativeTo: .subheadline))
+  .foregroundColor(.green)
+  .paragraphStyle(customizationParagraphStyle))
 .popupBarFloatingBackgroundShadow(color: .red, radius: 8)
 .popupBarImageShadow(color: .yellow, radius: 5)
 .popupBarFloatingBackgroundEffect(UIBlurEffect(style: .dark))
@@ -349,22 +430,22 @@ You can add a context menu to your popup bar by calling the `.popupBarContextMen
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view
+	//Popup content view
 }
 .popupBarContextMenu {
-    Button {
-        print("Context Menu Item 1")
-    } label: {
-        Text("Context Menu Item 1")
-        Image(systemName: "globe")
-    }
-    
-    Button {
-        print("Context Menu Item 2")
-    } label: {
-        Text("Context Menu Item 2")
-        Image(systemName: "location.circle")
-    }
+  Button {
+    print("Context Menu Item 1")
+  } label: {
+    Text("Context Menu Item 1")
+    Image(systemName: "globe")
+  }
+  
+  Button {
+  	print("Context Menu Item 2")
+  } label: {
+    Text("Context Menu Item 2")
+    Image(systemName: "location.circle")
+  }
 }
 ```
 
@@ -388,7 +469,7 @@ You can display your own view as the popup bar, instead of the system-provided o
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view
+  //Popup content view
 }
 .popupBarCustomView(wantsDefaultTapGesture: false, wantsDefaultPanGesture: false, wantsDefaultHighlightGesture: false) {
   //Custom popup bar view content
@@ -410,11 +491,11 @@ The included demo project includes an example custom popup bar scene.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
-    //Popup content view
+  //Popup content view
 }
 .popupBarCustomizer { popupBar in
-    popupBar.popupOpenGestureRecognizer.delegate = self.gestureRecognizerDelegateHelper
-    popupBar.barHighlightGestureRecognizer.isEnabled = false
+  popupBar.popupOpenGestureRecognizer.delegate = self.gestureRecognizerDelegateHelper
+  popupBar.barHighlightGestureRecognizer.isEnabled = false
 }
 ```
 
@@ -429,29 +510,31 @@ Use `LNPopupContentHostingController` to create a popup content hosting controll
 
 ```swift
 let controller = LNPopupContentHostingController {
-    PlayerView(song: currentSong)
-        .popupTitle(currentSong.name, subtitle: currentSong.album.name)
-        .popupImage(currentSong.artwork ?? currentSong.album.artwork)
+  PlayerView(song: currentSong)
+    .popupItem {
+			PopupItem(id: "id", title: currentSong.name, subtitle: currentSong.albumName, image: currentSong.art)
+    }
 }
 
-tabBarController?.presentPopupBar(with: controller, animated: true)
+tabBarController?.presentPopupBar(with: controller)
 ```
 
 Or use `UIViewController.presentPopupBar(with:animated:)` directly:
 
 ```swift
-tabBarController?.presentPopupBar(with: {
-    PlayerView(song: currentSong)
-        .popupTitle(currentSong.name, subtitle: currentSong.album.name)
-        .popupImage(currentSong.artwork ?? currentSong.album.artwork)
-}, animated: true)
+tabBarController?.presentPopupBar {
+  PlayerView(song: currentSong)
+    .popupItem {
+			PopupItem(id: "id", title: currentSong.name, subtitle: currentSong.albumName, image: currentSong.art)
+    }
+}
 ```
 
 Use `LNPopupCustomBarHostingController` to create a custom popup bar hosting controller:
 
 ```swift
 tabBarController?.popupBar.customBarViewController = LNPopupCustomBarHostingController {
-    MyCustomPlaybackControlsView()
+  MyCustomPlaybackControlsView()
 }
 ```
 

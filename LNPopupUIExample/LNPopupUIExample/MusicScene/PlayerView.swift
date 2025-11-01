@@ -27,21 +27,19 @@ struct PlaybackState {
 
 @available(iOS 17.0, *)
 struct PlayerView: View {
-	let song: RandomTitleSong?
+	@Binding var song: RandomTitleSong
+	let currentPlaylist: [RandomTitleSong]?
+	
 	@State var playbackState = PlaybackState()
 	
 	@Environment(\.popupBarPlacement) var popupBarPlacement
 	
-	func imageNameToUse() -> String {
-		song?.imageName ?? "NotPlaying"
-	}
-	
 	@ViewBuilder
 	func albumArtImage(with geometry: GeometryProxy) -> some View {
-		Image(imageNameToUse())
+		Image(song.imageName)
 			.resizable()
 			.clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-			.shadow(color: song == nil ? .clear : Color(.sRGBLinear, white: 0, opacity: 0.33), radius: 10)
+			.shadow(color: song.isNotPlaying ? .clear : Color(.sRGBLinear, white: 0, opacity: 0.33), radius: 10)
 			.aspectRatio(1.0, contentMode: .fit)
 			.padding([.leading, .trailing], 10)
 			.padding([.top], geometry.size.height * 60 / 896.0)
@@ -51,9 +49,9 @@ struct PlayerView: View {
 	func titles(with geometry: GeometryProxy) -> some View {
 		HStack {
 			VStack(alignment: .leading) {
-				Text(song?.title ?? NSLocalizedString("Not Playing", comment: ""))
+				Text(song.title)
 					.font(.system(size: 20, weight: .bold))
-				Text(song?.subtitle ?? "")
+				Text(song.albumName ?? "")
 					.font(.system(size: 20, weight: .regular))
 			}
 			.lineLimit(1)
@@ -95,7 +93,7 @@ struct PlayerView: View {
 			Button {
 				playbackState.isPlaying.toggle()
 			} label: {
-				let isPlaying = song != nil && playbackState.isPlaying
+				let isPlaying = song.isNotPlaying == false && playbackState.isPlaying
 				Image(systemName: isPlaying ? "pause.fill" : "play.fill")
 					.contentTransition(.symbolEffect(.replace))
 			}
@@ -144,13 +142,41 @@ struct PlayerView: View {
 	
 	@State var selectedPopupItemIdentifier = ""
 	
+	func popupItem(for song: RandomTitleSong) -> PopupItem<RandomTitleSong, String, String, some ToolbarContent> {
+		PopupItem(id: song, title: song.title, subtitle: song.albumName, image: Image(song.imageName), progress: playbackState.progress) {
+			let isPlaying = song.isNotPlaying == false && playbackState.isPlaying
+			
+			ToolbarItem(placement: .popupBar) {
+				HStack(spacing: 20) {
+					Button {
+						playbackState.isPlaying.toggle()
+					} label: {
+						Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+					}
+					.accessibilityLabel(isPlaying ? "Pause" : "Play")
+					.frame(minWidth: popupBarPlacement == .inline ? nil : 30)
+					.disabled(song.isNotPlaying)
+					
+					if popupBarPlacement != .inline {
+						Button {
+							print("Next")
+						} label: {
+							Image(systemName: "forward.fill")
+						}
+						.accessibilityLabel("Next")
+						.frame(minWidth: 30)
+						.disabled(song.isNotPlaying)
+					}
+				}
+				.animation(.spring(duration: 0.1), value: popupBarPlacement)
+				.contentTransition(.symbolEffect(.replace))
+			}
+		}
+	}
+	
 	var body: some View {
-		let title = song?.title ?? NSLocalizedString("Not Playing", comment: "")
-		let subtitle = song?.subtitle
-		let image = song?.imageName != nil ? Image(song!.imageName) : Image("NotPlaying")
-		
 		GeometryReader { geometry in
-			return VStack {
+			VStack {
 				albumArtImage(with: geometry)
 				VStack(spacing: geometry.size.height * 30.0 / 896.0) {
 					titles(with: geometry)
@@ -159,7 +185,7 @@ struct PlayerView: View {
 					volumeControls(with: geometry)
 					secondaryControls(with: geometry)
 				}
-				.disabled(song == nil)
+				.disabled(song.isNotPlaying)
 				.padding(geometry.size.height * 40.0 / 896.0)
 			}
 			.frame(minWidth: 0,
@@ -170,7 +196,7 @@ struct PlayerView: View {
 			.background {
 				ZStack {
 					ZStack {
-						Image(imageNameToUse())
+						Image(song.imageName)
 							.resizable()
 						Color(uiColor: .systemBackground)
 							.opacity(0.4)
@@ -183,41 +209,26 @@ struct PlayerView: View {
 		}
 		.tint(.white)
 		.environment(\.colorScheme, .dark)
-
-		.popupItem(PopupItem(id: "popup", title: title, subtitle: subtitle, image: image, progress: playbackState.progress) {
-			let isPlaying = song != nil && playbackState.isPlaying
-			
-			ToolbarItem(placement: .popupBar) {
-				HStack(spacing: 20) {
-					Button {
-						playbackState.isPlaying.toggle()
-					} label: {
-						Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-					}
-					.accessibilityLabel(isPlaying ? "Pause" : "Play")
-					.frame(minWidth: popupBarPlacement == .inline ? nil : 30)
-					.disabled(song == nil)
-					
-					if popupBarPlacement != .inline {
-						Button {
-							print("Next")
-						} label: {
-							Image(systemName: "forward.fill")
-						}
-						.accessibilityLabel("Next")
-						.frame(minWidth: 30)
-						.disabled(song == nil)
-					}
-				}
-				.animation(.spring(duration: 0.1), value: popupBarPlacement)
-				.contentTransition(.symbolEffect(.replace))
-			}
-		})
 		
+		// A single popup item:
+//		.popupItem {
+//			popupItem(for: song)
+//		}
+		
+		// A popup item list of all songs, with paging support:
+		.popupItems(selection: $song) {
+			if let currentPlaylist {
+				for song in currentPlaylist {
+					popupItem(for: song)
+				}
+			} else {
+				popupItem(for: song)
+			}
+		}
 	}
 }
 
 @available(iOS 17.0, *)
 #Preview {
-	PlayerView(song: RandomTitleSong(id: "12"))
+	PlayerView(song: Binding.constant(RandomTitleSong(id: "12")), currentPlaylist: nil)
 }

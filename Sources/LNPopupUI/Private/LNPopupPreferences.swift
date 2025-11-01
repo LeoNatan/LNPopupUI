@@ -15,13 +15,9 @@ internal struct LNPopupTitleData : Equatable {
 	let subtitle: String?
 }
 
-internal struct LNPopupTitleContentData : Equatable {
+internal struct LNPopupTitleContentData {
 	let titleView: AnyView
 	let subtitleView: AnyView?
-	
-	static func == (lhs: LNPopupTitleContentData, rhs: LNPopupTitleContentData) -> Bool {
-		return false
-	}
 }
 
 internal struct LNPopupImageData: Equatable {
@@ -39,19 +35,20 @@ internal struct LNPopupImageData: Equatable {
 	}
 }
 
-internal struct LNPopupAnyViewWrapper : Equatable {
-	let anyView: AnyView
+internal
+struct LNPopupItemData {
+	let selection: Binding<AnyHashable>
+	let popupItems: [any PopupItemProtocol & ToAnyHashable]
 	
-	static func == (lhs: LNPopupAnyViewWrapper, rhs: LNPopupAnyViewWrapper) -> Bool {
-		return false
-	}
-}
-
-internal struct LNPopupAnyViewWrapperCreator : Equatable {
-	let creator: () -> LNPopupAnyViewWrapper
-	
-	static func == (lhs: LNPopupAnyViewWrapperCreator, rhs: LNPopupAnyViewWrapperCreator) -> Bool {
-		return false
+	func selectedPopupItem() -> TypeErasedPopupItem? {
+		if let item = popupItems.first(where: { $0.anyId == selection.wrappedValue }) {
+			return item.toAnyHashable()
+		} else {
+			let directPopupItem = popupItems.first?.toAnyHashable()
+			selection.wrappedValue = directPopupItem?.id
+			
+			return directPopupItem
+		}
 	}
 }
 
@@ -87,7 +84,11 @@ prefix func %%<T>(_ wrapped: T?) -> LNPopupPreferenceValue<T> {
 }
 
 internal struct LNPopupItemPreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = LNPopupPreferenceValue<AnyPopupItem>?
+	typealias Value = LNPopupPreferenceValue<TypeErasedPopupItem>?
+}
+
+internal struct LNPopupItemsPreferenceKey: LNPopupNullablePreferenceKey {
+	typealias Value = LNPopupPreferenceValue<LNPopupItemData>?
 }
 
 internal struct LNPopupTitlePreferenceKey: LNPopupNullablePreferenceKey {
@@ -107,11 +108,11 @@ internal struct LNPopupImagePreferenceKey: LNPopupNullablePreferenceKey {
 }
 
 internal struct LNPopupLeadingBarItemsPreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = LNPopupPreferenceValue<LNPopupAnyViewWrapperCreator>?
+	typealias Value = LNPopupPreferenceValue<AnyView>?
 }
 
 internal struct LNPopupTrailingBarItemsPreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = LNPopupPreferenceValue<LNPopupAnyViewWrapperCreator>?
+	typealias Value = LNPopupPreferenceValue<AnyView>?
 }
 
 internal struct LNPopupContentBackgroundColorPreferenceKey: LNPopupNullablePreferenceKey {

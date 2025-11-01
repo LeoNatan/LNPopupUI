@@ -8,7 +8,13 @@
 
 import SwiftUI
 import LNSwiftUIUtils
+import os.log
 @_exported import LNPopupController
+
+fileprivate
+let logger = {
+	Logger(subsystem: "com.LeoNatan.LNPopupUI", category: "APIUsage")
+}()
 
 public extension ToolbarItemPlacement {
 #if swift(>=6.0)
@@ -312,7 +318,6 @@ public extension View {
 	/// Enables or disables popup bar minimization into the bottom bar.
 	///
 	/// Minimization is supported on iOS 26.0 and later, for tab view containers.
-	@ViewBuilder
 	func popupBarMinimizationEnabled(_ enabled: Bool?) -> some View {
 		environment(\.popupBarMinimizationEnabled, ^^enabled)
 	}
@@ -338,11 +343,12 @@ public extension View {
 	}
 }
 
-/// Modifiers for directly specifying one or more popup items
-public extension View {
+/// Modifiers for specifying a single popup item.
+public
+extension View {
 	/// Configures the view's popup item to be displayed in a popup bar.
 	///
-	/// A popup item is used to display in the popup container view's popup bar. A popup item can container a `String`, `AttributedString` or `View` titles and subtitle.
+	/// Popup items are used to display in the popup containing view's popup bar.
 	///
 	/// ```swift
 	///	// Create a popup item with an image, a custom view title and a button.
@@ -365,16 +371,16 @@ public extension View {
 	///	}
 	///	 ```
 	///
-	/// - Warning: You should never mix direct popup item specifier modifiers with default popup item modifiers, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``, in the same popup content hierarchy.
+	/// - Warning: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as ``SwiftUICore/View/popupItem(popupItem:)``, a multiple popup item providing modifier, such as ``SwiftUICore/View/popupItems(selection:items:)`` or modifiers to update the default popup item, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``.
 	/// - Parameters:
 	///   - popupItem: The popup item to display in a popup bar.
 	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, ButtonToolbarContent: ToolbarContent>(_ popupItem: PopupItem<Identifier, TitleContent, SubtitleContent, ButtonToolbarContent>) -> some View {
-		preference(key: LNPopupItemPreferenceKey.self, value: %%AnyPopupItem(popupItem))
+		preference(key: LNPopupItemPreferenceKey.self, value: %%AnyPopupItem(popupItem).toAnyHashable())
 	}
 	
 	/// Configures the view's popup item to be displayed in a popup bar.
 	///
-	/// A popup item is used to display in the popup container view's popup bar. A popup item can container a `String`, `AttributedString` or `View` titles and subtitle.
+	/// Popup items are used to display in the popup containing view's popup bar.
 	///
 	/// ```swift
 	///	TabView {
@@ -385,11 +391,11 @@ public extension View {
 	///	    .popupItem {
 	///	      // Create a popup item with an image, a custom view title and a button.
 	///       PopupItem(id: "intro", image: Image("MyImage")) {
-	///	      	Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
+	///	        Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
 	///       } buttons: {
-	///       	ToolbarItemGroup(placement: .popupBar) {
+	///         ToolbarItemGroup(placement: .popupBar) {
 	///       	  Link(destination: url) {
-	///       	  	Label("LNPopupUI", systemImage: "suit.heart.fill")
+	///             Label("LNPopupUI", systemImage: "suit.heart.fill")
 	///       	  }
 	///       	}
 	///       }
@@ -397,16 +403,66 @@ public extension View {
 	///	}
 	///	 ```
 	///
-	/// - Warning: You should never mix direct popup item specifier modifiers with default popup item modifiers, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``, in the same popup content hierarchy.
+	/// - Warning: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as ``SwiftUICore/View/popupItem(popupItem:)``, a multiple popup item providing modifier, such as ``SwiftUICore/View/popupItems(selection:items:)`` or modifiers to update the default popup item, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``.
 	/// - Parameters:
-	///   - provider: A closure that returns the popup item to display in a popup bar.
-	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, ButtonToolbarContent: ToolbarContent>(provider: () -> PopupItem<Identifier, TitleContent, SubtitleContent, ButtonToolbarContent>) -> some View {
-		preference(key: LNPopupItemPreferenceKey.self, value: %%AnyPopupItem(provider()))
+	///   - popupItem: The popup item to display in a popup bar.
+	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, ButtonToolbarContent: ToolbarContent>(popupItem: () -> PopupItem<Identifier, TitleContent, SubtitleContent, ButtonToolbarContent>) -> some View {
+		preference(key: LNPopupItemPreferenceKey.self, value: %%AnyPopupItem(popupItem()).toAnyHashable())
+	}
+}
+
+/// Modifiers for specifying multiple popup items with paging support.
+public
+extension View {
+	/// Configures the view's popup items to be displayed in a popup bar.
+	///
+	/// The popup item list must contain at least one item.
+	///
+	/// This modifier enables popup item paging. If the popup item list contains more than one item, the user is able to swipe left and right on the popup bar to select a different item. The selected item identifier is reflected in the provided selection binding.
+	///
+	/// Popup items are used to display in the popup containing view's popup bar.
+	///
+	/// ```swift
+	/// TabView {
+	///   // ...
+	/// }
+	/// .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	///   ContentView()
+	///     .popupItems(selection: $currentSong) {
+	///       for song in playlist {
+	///         // Create a popup item for each song in the playlist, with the song's art, name, album and playback controls.
+	///         PopupItem(id: song, title: song.name, subtitle: song.albumName, image: song.art, progress: playbackState.progress) {
+	///           playbackButtons(for: song, with: playbackState)
+	///         }
+	///       }
+	///     }
+	/// }
+	///	 ```
+	///
+	/// - Warning: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as ``SwiftUICore/View/popupItem(popupItem:)``, a multiple popup item providing modifier, such as ``SwiftUICore/View/popupItems(selection:items:)`` or modifiers to update the default popup item, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``.
+	/// - Parameters:
+	///   - selection: The selection in the popup item list. The value of this binding must match the `id` of the popup items provided by `items`.
+	///   - items: The popup items.
+	@ViewBuilder
+	func popupItems<Identifier: Hashable>(selection: Binding<Identifier>, @PopupItemBuilder<Identifier> items: () -> [AnyPopupItem<Identifier>]) -> some View {
+		let items =   items()
+		if items.isEmpty {
+			let _ = logger.error("The popup item list cannot be empty; ignoring.")
+			preference(key: LNPopupItemsPreferenceKey.self, value: nil)
+		} else {
+			//The compiler has ensured all popup item identifiers in this list have the same underlying type, so it's safe to cast to and from AnyHashable here.
+			preference(key: LNPopupItemsPreferenceKey.self, value: %%LNPopupItemData(selection: Binding {
+				AnyHashable(selection.wrappedValue)
+			} set: { newValue in
+				selection.wrappedValue = newValue as! Identifier
+			}, popupItems: items))
+		}
 	}
 }
 
 /// Modifiers for the default popup item
-public extension View {
+public
+extension View {
 	/// Configures the default popup item's title and subtitle.
 	///
 	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
@@ -510,11 +566,7 @@ public extension View {
 	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter content: A view representing the bar buttons that appear on the popup bar.
 	func popupBarButtons<Content>(@ViewBuilder _ content: @escaping () -> Content) -> some View where Content : View {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(content)))
-		}
-		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(content))
 	}
 	
 	/// Configures the default popup item's bar buttons.
@@ -525,11 +577,7 @@ public extension View {
 	/// - Parameter content: Toolbar content representing the bar buttons that appear on the popup bar.
 	@available(iOS, introduced: 14.0)
 	func popupBarButtons<Content>(@ToolbarContentBuilder _ content: @escaping () -> Content) -> some View where Content : ToolbarContent {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(content)))
-		}
-		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(content))
 	}
 }
 
@@ -579,11 +627,7 @@ public extension View {
 	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
 	@available(iOS, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
 	func popupBarLeadingButtons<LeadingContent>(@ViewBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: View {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
-		}
-		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
 	}
 	
 	/// Configures the default popup item's leading bar buttons.
@@ -596,11 +640,7 @@ public extension View {
 	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
 	@available(iOS, introduced: 14.0, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
 	func popupBarLeadingButtons<LeadingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
-		}
-		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
 	}
 	
 	/// Configures the default popup item's trailing bar buttons.
@@ -609,11 +649,7 @@ public extension View {
 	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
 	@available(iOS, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
 	func popupBarTrailingButtons<TrailingContent>(@ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: View {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
-		}
-		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
 	}
 	
 	/// Configures the default popup item's trailing bar buttons.
@@ -624,11 +660,7 @@ public extension View {
 	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
 	@available(iOS, introduced: 14.0, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
 	func popupBarTrailingButtons<TrailingContent>(@ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
-		}
-		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
 	}
 	
 	/// Configures the default popup item's leading and trailing bar buttons.
@@ -639,15 +671,8 @@ public extension View {
 	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
 	@available(iOS, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
 	func popupBarButtons<LeadingContent, TrailingContent>(@ViewBuilder leading: @escaping () -> LeadingContent, @ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
-		let wrapperCreatorLeading = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
-		}
-		let wrapperCreatorTrailing = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
-		}
-		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%wrapperCreatorLeading)
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreatorTrailing)
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
 	}
 	
 	/// Configures the default popup item's leading and trailing bar buttons.
@@ -661,15 +686,8 @@ public extension View {
 	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
 	@available(iOS, introduced: 14.0, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
 	func popupBarButtons<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent, @ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
-		let wrapperCreatorLeading = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
-		}
-		let wrapperCreatorTrailing = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
-		}
-		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%wrapperCreatorLeading)
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreatorTrailing)
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
 	}
 	
 	/// Configures the default popup item's bar buttons.
@@ -680,11 +698,7 @@ public extension View {
 	/// - Parameter content: A view representing the bar buttons that appear on the popup bar.
 	@available(*, deprecated, renamed: "popupBarButtons(_:)")
 	func popupBarItems<Content>(@ViewBuilder _ content: @escaping () -> Content) -> some View where Content : View {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(content)))
-		}
-		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		popupBarButtons(content)
 	}
 	
 	/// Configures the default popup item's bar buttons.
@@ -697,11 +711,7 @@ public extension View {
 	/// - Parameter content: Toolbar content representing the bar buttons that appear on the popup bar.
 	@available(iOS, introduced: 14.0, deprecated, renamed: "popupBarButtons(_:)")
 	func popupBarItems<Content>(@ToolbarContentBuilder _ content: @escaping () -> Content) -> some View where Content : ToolbarContent {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(content)))
-		}
-		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		popupBarButtons(content)
 	}
 	
 	/// Configures the default popup item's leading bar buttons.
@@ -712,11 +722,7 @@ public extension View {
 	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
 	@available(*, deprecated, renamed: "popupBarLeadingButtons(_:)")
 	func popupBarLeadingItems<LeadingContent>(@ViewBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: View {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
-		}
-		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		popupBarLeadingButtons(leading: leading)
 	}
 	
 	/// Configures the default popup item's leading bar buttons.
@@ -729,11 +735,7 @@ public extension View {
 	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
 	@available(iOS, introduced: 14.0, deprecated, renamed: "popupBarLeadingButtons(_:)")
 	func popupBarLeadingItems<LeadingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
-		}
-		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		popupBarLeadingButtons(leading: leading)
 	}
 	
 	/// Configures the default popup item's trailing bar buttons.
@@ -742,11 +744,7 @@ public extension View {
 	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
 	@available(*, deprecated, renamed: "popupBarTrailingButtons(_:)")
 	func popupBarTrailingItems<TrailingContent>(@ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: View {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
-		}
-		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		popupBarTrailingButtons(trailing: trailing)
 	}
 	
 	/// Configures the default popup item's trailing bar buttons.
@@ -757,11 +755,7 @@ public extension View {
 	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
 	@available(iOS, introduced: 14.0, deprecated, renamed: "popupBarTrailingButtons(_:)")
 	func popupBarTrailingItems<TrailingContent>(@ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
-		let wrapperCreator = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
-		}
-		
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreator)
+		popupBarTrailingButtons(trailing: trailing)
 	}
 	
 	/// Configures the default popup item's leading and trailing bar buttons.
@@ -773,15 +767,7 @@ public extension View {
 	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
 	@available(*, deprecated, renamed: "popupBarButtons(leading:trailing:)")
 	func popupBarItems<LeadingContent, TrailingContent>(@ViewBuilder leading: @escaping () -> LeadingContent, @ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
-		let wrapperCreatorLeading = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
-		}
-		let wrapperCreatorTrailing = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
-		}
-		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%wrapperCreatorLeading)
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreatorTrailing)
+		popupBarButtons(leading: leading, trailing: trailing)
 	}
 	
 	/// Configures the default popup item's leading and trailing bar buttons.
@@ -793,14 +779,6 @@ public extension View {
 	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
 	@available(iOS, introduced: 14.0, deprecated, renamed: "popupBarButtons(leading:trailing:)")
 	func popupBarItems<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent, @ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
-		let wrapperCreatorLeading = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(leading)))
-		}
-		let wrapperCreatorTrailing = LNPopupAnyViewWrapperCreator {
-			LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(trailing)))
-		}
-		
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%wrapperCreatorLeading)
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%wrapperCreatorTrailing)
+		popupBarButtons(leading: leading, trailing: trailing)
 	}
 }

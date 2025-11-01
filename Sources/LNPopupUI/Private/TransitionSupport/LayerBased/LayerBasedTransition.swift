@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import os
+import os.log
 
 fileprivate
 let logger = {

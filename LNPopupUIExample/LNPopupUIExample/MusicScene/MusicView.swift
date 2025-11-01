@@ -24,11 +24,25 @@ func nextGenre() -> Int {
 }
 
 @MainActor
-struct RandomTitleSong : Equatable, Identifiable {
+struct RandomTitleSong : Hashable, Identifiable {
+	static let notPLayingId = "not_playing"
+	
 	var id: String
-	let imageName: String = "genre\(nextGenre())"
+	var imageName: String = "genre\(nextGenre())"
 	var title: String = LoremIpsum.title
-	var subtitle: String = LoremIpsum.words(withNumber: 5)
+	var albumName: String? = LoremIpsum.words(withNumber: 5).capitalized
+	
+	static let notPlaying: RandomTitleSong = {
+		var rv = RandomTitleSong(id: "notPlaying")
+		rv.title = NSLocalizedString("Not Playing", comment: "")
+		rv.imageName = "NotPlaying"
+		rv.albumName = nil
+		return rv
+	}()
+	
+	var isNotPlaying: Bool {
+		id == Self.notPLayingId
+	}
 }
 
 @MainActor
@@ -52,26 +66,37 @@ extension View {
 			self
 		}
 	}
+	
+	@ViewBuilder
+	func selectedSongBackground(_ selected: Bool) -> some View {
+		if selected {
+			listRowBackground(Color.accent.opacity(0.2))
+		} else {
+			self
+		}
+	}
 }
 
 struct RandomTitlesListView : View {
 	@Environment(\.presentationMode) var presentationMode
 	private let title: String
-	private let idx: Int
+	private let currentSong: RandomTitleSong
+	private let songs: [RandomTitleSong]
 	
 	private let onSongSelect: (RandomTitleSong) -> Void
 	private let onDismiss: () -> Void
 	
-	init(_ title: String, idx: Int, onDismiss: @escaping () -> Void, onSongSelect: @escaping (RandomTitleSong) -> Void) {
+	init(_ title: String, currentSong: RandomTitleSong, songs: [RandomTitleSong], onDismiss: @escaping () -> Void, onSongSelect: @escaping (RandomTitleSong) -> Void) {
 		self.title = title
-		self.idx = idx
+		self.currentSong = currentSong
+		self.songs = songs
 		self.onDismiss = onDismiss
 		self.onSongSelect = onSongSelect
 	}
 	
 	var body: some View {
 		MaterialNavigationStack {
-			List(songs[idx]) { song in
+			List(songs) { song in
 				Button {
 					onSongSelect(song)
 				} label: {
@@ -85,15 +110,19 @@ struct RandomTitlesListView : View {
 								.font(.body)
 								.lineLimit(1)
 								.truncationMode(.tail)
-							LNPopupText(song.subtitle)
-								.font(.footnote)
-								.lineLimit(1)
-								.truncationMode(.tail)
+							if let albumName = song.albumName {
+								LNPopupText(albumName)
+									.font(.footnote)
+									.lineLimit(1)
+									.truncationMode(.tail)
+							}
 						}
 					}
 				}
+				.selectedSongBackground(song.id == currentSong.id)
 				.noVerticalListRowInsetsIfPossible()
 			}
+			.animation(.spring, value: currentSong)
 			.listStyle(PlainListStyle())
 			.navigationTitle(NSLocalizedString(title, comment: ""))
 			.navigationBarTitleDisplayMode(.inline)
@@ -126,7 +155,8 @@ struct MinimizeIfPossibleModifier: ViewModifier {
 struct MusicView: View {
 	@State var isPopupOpen: Bool = false
 	
-	@State var currentSong: RandomTitleSong?
+	@State var currentPlaylist: [RandomTitleSong]?
+	@State var currentSong: RandomTitleSong = .notPlaying
 	
 	private let onDismiss: () -> Void
 	
@@ -134,22 +164,19 @@ struct MusicView: View {
 		self.onDismiss = onDismiss
 	}
 	
+	let titles = ["Home", "New", "Library"]
+	let imageNames = ["music.note.house.fill", "square.grid.2x2.fill", ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? "music.note.square.stack.fill" : "square.stack.fill"]
+	
 	var body: some View {
 		MaterialTabView {
-			Tab(NSLocalizedString("Home", comment: ""), systemImage: "music.note.house.fill") {
-				RandomTitlesListView("Home", idx: 0, onDismiss:onDismiss, onSongSelect: { song in
-					currentSong = song
-				})
-			}
-			Tab(NSLocalizedString("New", comment: ""), systemImage: "square.grid.2x2.fill") {
-				RandomTitlesListView("New", idx: 1, onDismiss:onDismiss, onSongSelect: { song in
-					currentSong = song
-				})
-			}
-			Tab(NSLocalizedString("Library", comment: ""), systemImage: ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? "music.note.square.stack.fill" : "square.stack.fill") {
-				RandomTitlesListView("Library", idx: 2, onDismiss:onDismiss, onSongSelect: { song in
-					currentSong = song
-				})
+			ForEach(0..<3) { tabIdx in
+				let title = NSLocalizedString(titles[tabIdx], comment: "")
+				Tab(NSLocalizedString(title, comment: ""), systemImage: imageNames[tabIdx]) {
+					RandomTitlesListView(title, currentSong: currentSong, songs: songs[tabIdx], onDismiss:onDismiss, onSongSelect: { song in
+						currentPlaylist = songs[tabIdx]
+						currentSong = song
+					})
+				}
 			}
 			Tab(role: .search) {
 				DumbSearchView()
@@ -158,7 +185,7 @@ struct MusicView: View {
 		.modifier(MinimizeIfPossibleModifier())
 		.accentColor(.pink)
 		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen) {
-			PlayerView(song: currentSong)
+			PlayerView(song: $currentSong, currentPlaylist: currentPlaylist)
 		}
 		.popupBarShineEnabled(true)
 		.popupBarProgressViewStyle(.bottom)

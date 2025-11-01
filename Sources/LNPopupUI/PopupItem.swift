@@ -3,6 +3,7 @@
 //  LNPopupUI
 //
 //  Created by Léo Natan on 25/10/25.
+//  Copyright © 2020-2025 Léo Natan. All rights reserved.
 //
 
 import SwiftUI
@@ -132,6 +133,7 @@ extension PopupItem where TitleContent == AttributedString, SubtitleContent == A
 	///   - image: An optional image of the popup item.
 	///   - progress: An optional progress of the popup item.
 	///   - buttons: Optional bar buttons of the popup item.
+	@_disfavoredOverload
 	init(id: Identifier, title: AttributedString, subtitle: AttributedString? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> ButtonToolbarContent = { emptyToolbarItem() }) {
 		self.init(id: id, titleContainer: AttributedStringTitleContainer(title, subtitle), image: image, buttons: buttons(), progress: progress, private: ())
 	}
@@ -170,14 +172,50 @@ extension PopupItem where TitleContent: View & Equatable, SubtitleContent: View 
 
 /// A type-erased popup item.
 public
-struct AnyPopupItem {
+struct AnyPopupItem<Identifier: Hashable>: Identifiable {
 	internal
-	let base: any PopupItemProtocol
+	let base: any PopupItemProtocol<Identifier>
+	let toAnyHashable: () -> AnyPopupItem<AnyHashable>
+	
+	public var id: Identifier {
+		base.id
+	}
+	
+	var anyId: AnyHashable {
+		AnyHashable(base.id)
+	}
 	
 	/// Creates a type-erased popup item that wraps the given instance.
 	/// - Parameter base: A popup item to wrap.
 	public
-	init<Identifier: Hashable, TitleContent, SubtitleContent, ButtonToolbarContent: ToolbarContent>(_ base: PopupItem<Identifier, TitleContent, SubtitleContent, ButtonToolbarContent>) {
+	init<TitleContent, SubtitleContent, ButtonToolbarContent: ToolbarContent>(_ base: PopupItem<Identifier, TitleContent, SubtitleContent, ButtonToolbarContent>) {
 		self.base = base
+		self.toAnyHashable = {
+			AnyPopupItem<AnyHashable>(base.toAnyHashable())
+		}
 	}
+}
+
+@resultBuilder public
+struct PopupItemBuilder<Identifier: Hashable> {
+	public static
+	func buildBlock(_ components: [AnyPopupItem<Identifier>]...) -> [AnyPopupItem<Identifier>] { components.flatMap { $0 } }
+	
+	public static
+	func buildExpression<TitleContent, SubtitleContent, ButtonToolbarContent: ToolbarContent>(_ expression: PopupItem<Identifier, TitleContent, SubtitleContent, ButtonToolbarContent>?) -> [AnyPopupItem<Identifier>] { if let expression { [AnyPopupItem<Identifier>(expression)] } else { [] } }
+	
+	public static
+	func buildOptional(_ component: [AnyPopupItem<Identifier>]?) -> [AnyPopupItem<Identifier>] { component ?? [] }
+	
+	public static
+	func buildEither(first component: [AnyPopupItem<Identifier>]) -> [AnyPopupItem<Identifier>] { component }
+	
+	public static
+	func buildEither(second component: [AnyPopupItem<Identifier>]) -> [AnyPopupItem<Identifier>] { component }
+	
+	public static
+	func buildArray(_ components: [[AnyPopupItem<Identifier>]]) -> [AnyPopupItem<Identifier>] { components.flatMap { $0 } }
+	
+	public static
+	func buildLimitedAvailability(_ component: [AnyPopupItem<Identifier>]) -> [AnyPopupItem<Identifier>] { component }
 }

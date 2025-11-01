@@ -10,19 +10,22 @@
 import SwiftUI
 import UIKit
 
-public class LNPopupContentHostingController<PopupContent> : UIHostingController<AnyView> where PopupContent: View {
-	@objc(_ln_interactionLimitRect) private
-	var interactionLimitRect: CGRect = .zero
-	
-	internal
-	var userContentBackgroundColor: UIColor? = nil
-	
+public class LNPopupContentHostingController<PopupContent> : UIHostingController<AnyView>, LNPopupBarDataSource, LNPopupBarDelegate where PopupContent: View {
 	public required
 	init(@ViewBuilder content: () -> PopupContent) {
 		self.popupContentRootView = content()
 		super.init(rootView: AnyView(EmptyView()))
 		rootView = transform(self.popupContentRootView)
 	}
+	
+	@objc(_ln_interactionLimitRect) private
+	var interactionLimitRect: CGRect = .zero
+	
+	internal
+	var userContentBackgroundColor: UIColor? = nil
+	
+	internal
+	var popupItemData: LNPopupItemData? = nil
 	
 	public
 	var popupContentRootView: PopupContent {
@@ -53,6 +56,21 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 		}
 		
 		return layerBasedTransitionViewForPopupTransition(from: fromState, to: toState, view: outView)
+	}
+	
+	public
+	func popupBar(_ popupBar: LNPopupBar, popupItemBefore popupItem: LNPopupItem) -> LNPopupItem? {
+		popupItemBefore(for: popupBar)
+	}
+	
+	public
+	func popupBar(_ popupBar: LNPopupBar, popupItemAfter popupItem: LNPopupItem) -> LNPopupItem? {
+		popupItemAfter(for: popupBar)
+	}
+	
+	public
+	func popupBar(_ popupBar: LNPopupBar, didDisplay newPopupItem: LNPopupItem, previous previousPopupItem: LNPopupItem?) {
+		updatePopupItemSelection(newPopupItem)
 	}
 	
 	required dynamic

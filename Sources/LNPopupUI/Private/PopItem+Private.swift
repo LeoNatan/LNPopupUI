@@ -3,6 +3,7 @@
 //  LNPopupUI
 //
 //  Created by Léo Natan on 28/10/25.
+//  Copyright © 2020-2025 Léo Natan. All rights reserved.
 //
 
 import SwiftUI
@@ -89,7 +90,7 @@ struct ButtonContainer<Content: ToolbarContent> {
 	let content: Content
 	
 	func update(_ popupItem: LNPopupItem) {
-		let wrapper = LNPopupAnyViewWrapper(anyView: AnyView(barItemContainer(content))).anyView
+		let wrapper = barItemContainer(content)
 		createOrUpdateBarItemAdapter(in: popupItem, key: "swiftuiHiddenTrailingController", buttonKeyPath: \.barButtonItems, userNavigationViewWrapper: wrapper)
 	}
 	
@@ -110,6 +111,8 @@ func emptyToolbarItem() -> some ToolbarContent {
 	ToolbarItem(placement: .popupBar) {}
 }
 
+fileprivate let userInfoKey = "_lnpopup_ui_identifier"
+
 extension PopupItem {
 //	static
 //	func == (lhs: Self, rhs: Self) -> Bool {
@@ -118,11 +121,21 @@ extension PopupItem {
 	
 	internal
 	init(id: Identifier, titleContainer: TitleContainer<TitleContent, SubtitleContent>, image: PopupItemImageType?, buttons: ButtonToolbarContent, progress: Float?, private: Void) {
+		self.init(id: id, titleContainer: titleContainer, image: image, buttonContainer: ButtonContainer(content: buttons), progress: progress, private: `private`)
+	}
+	
+	internal
+	init(id: Identifier, titleContainer: TitleContainer<TitleContent, SubtitleContent>, image: PopupItemImageType?, buttonContainer: ButtonContainer<ButtonToolbarContent>, progress: Float?, private: Void) {
 		self.id = id
 		self.titleContainer = titleContainer
 		self.image = image
-		self.buttonContainer = ButtonContainer(content: buttons)
+		self.buttonContainer = buttonContainer
 		self.progress = progress
+	}
+	
+	internal
+	func toAnyHashable() -> PopupItem<AnyHashable, TitleContent, SubtitleContent, ButtonToolbarContent> {
+		PopupItem<AnyHashable, TitleContent, SubtitleContent, ButtonToolbarContent>(id: AnyHashable(id), titleContainer: titleContainer, image: image, buttonContainer: buttonContainer, progress: progress, private: ())
 	}
 	
 	internal
@@ -142,17 +155,8 @@ extension PopupItem {
 	}
 	
 	internal
-	func isUpdatable(_ popupItem: LNPopupItem) -> Bool {
-		guard let identifier = popupItem.userInfo?["_lnpopup_ui_identifier"] as? AnyHashable else {
-			return false
-		}
-		
-		return identifier == id as AnyHashable
-	}
-	
-	internal
 	func update(_ popupItem: LNPopupItem, popupBar: LNPopupBar) {
-		popupItem.userInfo = ["_lnpopup_ui_identifier": id]
+		popupItem.userInfo = [userInfoKey: id]
 		
 		titleContainer.update(popupItem, popupBar: popupBar)
 		
@@ -181,17 +185,11 @@ extension PopupItem {
 	}
 }
 
-extension PopupItem {
-	var anyID: AnyHashable {
-		id
-	}
-}
-
 internal
-protocol PopupItemProtocol {
-	var anyID: AnyHashable { get }
+protocol PopupItemProtocol<Identifier> {
+	associatedtype Identifier: Hashable
+	var id: Identifier { get }
 	func lnPopupItem(for popupBar: LNPopupBar) -> LNPopupItem
-	func isUpdatable(_ popupItem: LNPopupItem) -> Bool
 	func update(_ popupItem: LNPopupItem, popupBar: LNPopupBar)
 }
 
@@ -217,12 +215,27 @@ extension AnyPopupItem {
 	}
 	
 	internal
-	func isUpdatable(_ popupItem: LNPopupItem) -> Bool {
-		base.isUpdatable(popupItem)
-	}
-	
-	internal
 	func update(_ popupItem: LNPopupItem, popupBar: LNPopupBar) {
 		base.update(popupItem, popupBar: popupBar)
+	}
+}
+
+func anyhashableID(from lnPopupItem: LNPopupItem) -> AnyHashable? {
+	lnPopupItem.userInfo?[userInfoKey] as? AnyHashable
+}
+
+typealias TypeErasedPopupItem = AnyPopupItem<AnyHashable>
+
+internal
+protocol ToAnyHashable {
+	var anyId: AnyHashable { get }
+	var toAnyHashable: () -> AnyPopupItem<AnyHashable> { get }
+}
+
+extension AnyPopupItem: ToAnyHashable, PopupItemProtocol {}
+
+extension Array<any ToAnyHashable> {
+	subscript(any index: Index) -> Element {
+		self[index].toAnyHashable()
 	}
 }
