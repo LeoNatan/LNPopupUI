@@ -104,7 +104,7 @@ If you do not provide a popup item, the popup bar will remain empty.
 Popup items have no effect when presenging a custom popup bar.
 
 >  [!WARNING]
-> Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as `popupItem(popupItem:)`, a multiple popup item providing modifier, such as `popupItems(selection:items:)` or modifiers to update the default popup item, such as ``popupTitle(_:subtitle:)`.
+> Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as `popupItem(popupItem:)`, a multiple popup item providing modifier, such as `popupItems(selection:items:)` or modifiers to update the default popup item, such as `popupTitle(_:subtitle:)`.
 
 #### Single Popup Item
 
