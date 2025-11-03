@@ -70,15 +70,11 @@ struct PlayerView: View {
 		let slider = Slider(value: $playbackState.progress)
 			.padding([.bottom], geometry.size.height * 30.0 / 896.0)
 		
-#if compiler(>=6.2)
 		if #available(iOS 26.0, *) {
 			slider.sliderThumbVisibility(.hidden)
 		} else {
 			slider
 		}
-#else
-		slider
-#endif
 	}
 	
 	@ViewBuilder

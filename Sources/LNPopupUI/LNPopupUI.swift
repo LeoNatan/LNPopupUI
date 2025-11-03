@@ -201,13 +201,11 @@ public extension View {
 		return environment(\.popupBarFloatingBackgroundShadow, ^^shadow)
 	}
 	
-#if compiler(>=6.2)
 	/// A configuration that defines the corners of the background view for floating bars.
 	@available(iOS 26.0, *)
 	func popupBarFloatingBackgroundCornerConfiguration(_ configuration: UICornerConfiguration?) -> some View {
 		environment(\.popupBarFloatingBackgroundCornerConfiguration, ^^configuration)
 	}
-#endif
 	
 	/// Enables or disables full bar width for the custom popup bars.
 	func popupBarCustomBarPrefersFullBarWidth(_ prefersFullWidth: Bool?) -> some View {

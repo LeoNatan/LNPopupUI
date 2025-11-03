@@ -57,15 +57,11 @@ fileprivate
 extension View {
 	@ViewBuilder
 	func popupCornerConfigurationIfPossible() -> some View {
-#if compiler(>=6.2)
 		if #available(iOS 26, *) {
 			popupBarFloatingBackgroundCornerConfiguration(.uniformCorners(radius: .fixed(40)))
 		} else {
 			self
 		}
-#else
-		self
-#endif
 	}
 }
 

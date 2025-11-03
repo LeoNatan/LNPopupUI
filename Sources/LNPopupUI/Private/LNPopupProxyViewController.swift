@@ -253,11 +253,9 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					appearance.floatingBarBackgroundShadow = barFloatingBackgroundShadow
 				}
 				
-#if compiler(>=6.2)
 				if #available(iOS 26.0, *), let barFloatingBackgroundCornerConfiguration = self.currentPopupState.environment.popupBarFloatingBackgroundCornerConfiguration?.consume(self), let barFloatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration as? UICornerConfiguration? {
 					appearance.floatingBackgroundCornerConfiguration = barFloatingBackgroundCornerConfiguration
 				}
-#endif
 				
 				if let customBarPrefersFullBarWidth = self.currentPopupState.environment.popupBarCustomBarPrefersFullBarWidth?.consume(self) {
 					target.popupBar.customBarWantsFullBarWidth = customBarPrefersFullBarWidth

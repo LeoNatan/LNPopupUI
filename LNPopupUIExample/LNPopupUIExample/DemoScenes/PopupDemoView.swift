@@ -94,7 +94,6 @@ struct ToolbarCloseButton: View {
 	}
 }
 
-#if compiler(>=6.2)
 @available(iOS 26.0, *)
 struct _CloseButton: UIViewRepresentable {
 	let action: @MainActor () -> Void
@@ -115,21 +114,16 @@ struct _CloseButton: UIViewRepresentable {
 	func updateUIView(_ uiView: UIButton, context: Context) {
 	}
 }
-#endif
 
 struct CloseButton: View {
 	let action: @MainActor () -> Void
 	
 	var body: some View {
-#if compiler(>=6.2)
 		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
 			_CloseButton(action: action).frame(width: 46, height: 46)
 		} else {
 			ToolbarCloseButton(action: action)
 		}
-#else
-		ToolbarCloseButton(action: action)
-#endif
 	}
 }
 

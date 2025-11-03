@@ -139,15 +139,11 @@ struct RandomTitlesListView : View {
 
 struct MinimizeIfPossibleModifier: ViewModifier {
 	func body(content: Content) -> some View {
-#if compiler(>=6.2)
 		if #available(iOS 26, *) {
 			content.tabBarMinimizeBehavior(.onScrollDown)
 		} else {
 			content
 		}
-#else
-		content
-#endif
 	}
 }
 
