@@ -34,6 +34,38 @@ struct PlayerView: View {
 	
 	@Environment(\.popupBarPlacement) var popupBarPlacement
 	
+	func canPrev() -> Bool {
+		guard let currentPlaylist, let idx = currentPlaylist.firstIndex(of: song), idx > 0 else {
+			return false
+		}
+		
+		return true
+	}
+	
+	func prev() {
+		guard let currentPlaylist, let idx = currentPlaylist.firstIndex(of: song), idx > 0 else {
+			return
+		}
+		
+		song = currentPlaylist[idx - 1]
+	}
+	
+	func canNext() -> Bool {
+		guard let currentPlaylist, let idx = currentPlaylist.firstIndex(of: song), idx < currentPlaylist.count - 1 else {
+			return false
+		}
+		
+		return true
+	}
+	
+	func next() {
+		guard let currentPlaylist, let idx = currentPlaylist.firstIndex(of: song), idx < currentPlaylist.count - 1 else {
+			return
+		}
+		
+		song = currentPlaylist[idx + 1]
+	}
+	
 	@ViewBuilder
 	func albumArtImage(with geometry: GeometryProxy) -> some View {
 		Image(song.imageName)
@@ -81,10 +113,11 @@ struct PlayerView: View {
 	func playbackControls(with geometry: GeometryProxy) -> some View {
 		HStack {
 			Button {
-				//TODO: Support
+				prev()
 			} label: {
 				Image(systemName: "backward.fill")
 			}
+			.disabled(!canPrev())
 			.frame(minWidth: 0, maxWidth: .infinity)
 			Button {
 				playbackState.isPlaying.toggle()
@@ -96,10 +129,11 @@ struct PlayerView: View {
 			.font(.system(size: 50, weight: .bold))
 			.frame(minWidth: 0, maxWidth: .infinity, minHeight: 50, maxHeight: 50)
 			Button {
-				//TODO: Support
+				next()
 			} label: {
 				Image(systemName: "forward.fill")
 			}
+			.disabled(!canNext())
 			.frame(minWidth: 0, maxWidth: .infinity)
 		}
 		.font(.system(size: 30, weight: .regular))
@@ -155,13 +189,13 @@ struct PlayerView: View {
 					
 					if popupBarPlacement != .inline {
 						Button {
-							print("Next")
+							next()
 						} label: {
 							Image(systemName: "forward.fill")
 						}
 						.accessibilityLabel("Next")
 						.frame(minWidth: 30)
-						.disabled(song.isNotPlaying)
+						.disabled(song.isNotPlaying || !canNext())
 					}
 				}
 				.animation(.spring(duration: 0.1), value: popupBarPlacement)

@@ -33,7 +33,7 @@ struct RandomTitleSong : Hashable, Identifiable {
 	var albumName: String? = LoremIpsum.words(withNumber: 5).capitalized
 	
 	static let notPlaying: RandomTitleSong = {
-		var rv = RandomTitleSong(id: "notPlaying")
+		var rv = RandomTitleSong(id: notPLayingId)
 		rv.title = NSLocalizedString("Not Playing", comment: "")
 		rv.imageName = "NotPlaying"
 		rv.albumName = nil
@@ -77,6 +77,7 @@ extension View {
 	}
 }
 
+@available(iOS 17.0, *)
 struct RandomTitlesListView : View {
 	@Environment(\.presentationMode) var presentationMode
 	private let title: String
@@ -122,6 +123,7 @@ struct RandomTitlesListView : View {
 				.selectedSongBackground(song.id == currentSong.id)
 				.noVerticalListRowInsetsIfPossible()
 			}
+			.safeAreaPadding(.bottom, 8)
 			.animation(.spring, value: currentSong)
 			.listStyle(PlainListStyle())
 			.navigationTitle(NSLocalizedString(title, comment: ""))
