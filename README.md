@@ -85,11 +85,12 @@ TabView {
   PlayerView(song: currentSong)
   	.popupItems(selection: $currentSong) {
   	  for song in playlist {
-	  // Create a popup item for each song in the playlist, with the song's art, name, album and playback controls.
-	  PopupItem(id: song, title: song.name, subtitle: song.albumName, image: song.art, progress: playbackState.progress) {
-	    playbackButtons(for: song, with: playbackState)
-	  }
-  	}
+	    // Create a popup item for each song in the playlist, with the song's art, name, album and playback controls.
+	    PopupItem(id: song, title: song.name, subtitle: song.albumName, image: song.art, progress: playbackState.progress) {
+	      playbackButtons(for: song, with: playbackState)
+	    }
+  	  }
+    }
 }
 ```
 
