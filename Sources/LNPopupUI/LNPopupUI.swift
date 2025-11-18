@@ -162,14 +162,14 @@ public extension View {
 	///
 	/// - Parameter effect: The popup bar's background effect.
 	func popupBarBackgroundEffect(_ effect: UIBlurEffect?) -> some View {
-		environment(\.popupBarBackgroundEffect, ^^effect)
+		environment(\.popupBarBackgroundEffect, ^?effect)
 	}
 	
 	/// Sets the popup bar's floating background effect. Use `nil` to use the most appropriate background style for the environment.
 	///
 	/// - Parameter effect: The popup bar's floating background effect.
 	func popupBarFloatingBackgroundEffect(_ effect: UIVisualEffect?) -> some View {
-		environment(\.popupBarFloatingBackgroundEffect, ^^effect)
+		environment(\.popupBarFloatingBackgroundEffect, ^?effect)
 	}
 	
 	/// Sets the floating popup bar background shadow.
@@ -198,7 +198,7 @@ public extension View {
 		let yy = y ?? shadow.shadowOffset.height
 		shadow.shadowOffset = CGSize(width: xx, height: yy)
 		
-		return environment(\.popupBarFloatingBackgroundShadow, ^^shadow)
+		return environment(\.popupBarFloatingBackgroundShadow, ^?shadow)
 	}
 	
 	/// A configuration that defines the corners of the background view for floating bars.
@@ -243,7 +243,7 @@ public extension View {
 		let yy = y ?? shadow.shadowOffset.height
 		shadow.shadowOffset = CGSize(width: xx, height: yy)
 		
-		return environment(\.popupBarImageShadow, ^^shadow)
+		return environment(\.popupBarImageShadow, ^?shadow)
 	}
 	
 	/// Sets the display attributes for the popup bar’s title text.

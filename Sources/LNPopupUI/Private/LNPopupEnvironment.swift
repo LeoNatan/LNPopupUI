@@ -10,6 +10,7 @@ import SwiftUI
 import LNPopupController
 
 prefix operator ^^
+prefix operator ^?
 
 #if swift(>=6.0)
 @MainActor
@@ -41,6 +42,32 @@ prefix func ^^<T>(_ wrapped: T?) -> LNPopupEnvironmentConsumer<T>? {
 	LNPopupEnvironmentConsumer(wrapped)
 }
 
+#if swift(>=6.0)
+@MainActor
+#endif
+internal final class LNPopupEnvironmentNullableConsumer<T> {
+	private let wrapped: T?
+	private unowned var consumer: AnyObject? = nil
+	
+	init?(_ wrapped: T?) {
+		self.wrapped = wrapped
+	}
+	
+	func consume(_ consumer: AnyObject) -> T?? {
+		guard self.consumer == nil || self.consumer === consumer else {
+			return nil
+		}
+		
+		self.consumer = consumer
+		return wrapped
+	}
+}
+
+internal
+prefix func ^?<T>(_ wrapped: T?) -> LNPopupEnvironmentNullableConsumer<T>? {
+	LNPopupEnvironmentNullableConsumer(wrapped)
+}
+
 internal extension EnvironmentValues {
 	@Entry var popupInteractionStyle: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>?
 	@Entry var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>?
@@ -57,11 +84,11 @@ internal extension EnvironmentValues {
 	@Entry var popupBarShouldExtendPopupBarUnderSafeArea: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupBarInheritsAppearanceFromDockingView: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupBarInheritsEnvironmentFont: LNPopupEnvironmentConsumer<Bool>?
-	@Entry var popupBarBackgroundEffect: LNPopupEnvironmentConsumer<UIBlurEffect>?
-	@Entry var popupBarFloatingBackgroundEffect: LNPopupEnvironmentConsumer<UIVisualEffect>?
-	@Entry var popupBarFloatingBackgroundShadow: LNPopupEnvironmentConsumer<NSShadow>?
+	@Entry var popupBarBackgroundEffect: LNPopupEnvironmentNullableConsumer<UIBlurEffect>?
+	@Entry var popupBarFloatingBackgroundEffect: LNPopupEnvironmentNullableConsumer<UIVisualEffect>?
+	@Entry var popupBarFloatingBackgroundShadow: LNPopupEnvironmentNullableConsumer<NSShadow>?
 	@Entry var popupBarFloatingBackgroundCornerConfiguration: LNPopupEnvironmentConsumer<Any?>?
-	@Entry var popupBarImageShadow: LNPopupEnvironmentConsumer<NSShadow>?
+	@Entry var popupBarImageShadow: LNPopupEnvironmentNullableConsumer<NSShadow>?
 	@Entry var popupBarTitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
 	@Entry var popupBarSubtitleTextAttributes: LNPopupEnvironmentConsumer<Any>?
 	@Entry var popupBarCustomBarView: LNPopupEnvironmentConsumer<LNPopupBarCustomView>?
