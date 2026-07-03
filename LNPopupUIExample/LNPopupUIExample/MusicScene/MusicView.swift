@@ -95,6 +95,8 @@ struct RandomTitlesListView : View {
 		self.onSongSelect = onSongSelect
 	}
 	
+	@Environment(\.font) var font
+	
 	var body: some View {
 		MaterialNavigationStack {
 			List(songs) { song in
@@ -108,12 +110,12 @@ struct RandomTitlesListView : View {
 							.cornerRadius(8)
 						VStack(alignment: .leading, spacing: 2) {
 							LNPopupText(song.title)
-								.font(.body)
+								.font(font ?? .body)
 								.lineLimit(1)
 								.truncationMode(.tail)
 							if let albumName = song.albumName {
 								LNPopupText(albumName)
-									.font(.footnote)
+									.font(font ?? .footnote)
 									.lineLimit(1)
 									.truncationMode(.tail)
 							}
@@ -162,25 +164,50 @@ struct MusicView: View {
 		self.onDismiss = onDismiss
 	}
 	
-	let titles = ["Home", "New", "Library"]
-	let imageNames = ["music.note.house.fill", "square.grid.2x2.fill", ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? "music.note.square.stack.fill" : "square.stack.fill"]
+	let titles = ["Home", "New", "Library", "Radio"]
+	let imageNames = ["music.note.house.fill", "square.grid.2x2.fill", ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? "music.note.square.stack.fill" : "square.stack.fill", "dot.radiowaves.left.and.right"]
 	
 	@AppStorage(.minimizationEnabled, store: .settings) var minimizationEnabled: Bool = true
+	@AppStorage(.disableSearchTab, store: .settings) var disableSearchTab: Bool = false
+	
+	@TabContentBuilder<Never>
+	func tabCreator(_ tabIdx: Int) -> some TabContent<Never> {
+		let title = NSLocalizedString(titles[tabIdx], comment: "")
+		Tab(NSLocalizedString(title, comment: ""), systemImage: imageNames[tabIdx]) {
+			RandomTitlesListView(title, currentSong: currentSong, songs: songs[tabIdx], onDismiss:onDismiss, onSongSelect: { song in
+				currentPlaylist = songs[tabIdx]
+				currentSong = song
+			})
+		}
+	}
 	
 	var body: some View {
 		MaterialTabView {
-			ForEach(0..<3) { tabIdx in
-				let title = NSLocalizedString(titles[tabIdx], comment: "")
-				Tab(NSLocalizedString(title, comment: ""), systemImage: imageNames[tabIdx]) {
-					RandomTitlesListView(title, currentSong: currentSong, songs: songs[tabIdx], onDismiss:onDismiss, onSongSelect: { song in
-						currentPlaylist = songs[tabIdx]
-						currentSong = song
-					})
+			ForEach(0..<2) { tabIdx in
+				tabCreator(tabIdx)
+			}
+			if disableSearchTab {
+				Tab(NSLocalizedString("Not Search", comment: ""), systemImage: "loupe") {
+					DumbSearchView()
+				}
+				ForEach(2..<4) { tabIdx in
+					tabCreator(tabIdx)
+				}
+			} else {
+				tabCreator(2)
+				if #available(iOS 27.0, *) {
+#if compiler(>=6.4)
+					Tab(NSLocalizedString("Search", comment: ""), systemImage: "magnifyingglass", role: .prominent) {
+						DumbSearchView()
+					}
+#endif
+				} else {
+					Tab(role: .search) {
+						DumbSearchView()
+					}
 				}
 			}
-			Tab(role: .search) {
-				DumbSearchView()
-			}
+			
 		}
 		.modifier(MinimizeIfPossibleModifier())
 		.accentColor(.pink)
@@ -190,7 +217,6 @@ struct MusicView: View {
 		.popupBarShineEnabled(ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27)
 		.popupBarProgressViewStyle(.bottom)
 		.popupBarMinimizationEnabled(minimizationEnabled)
-		.font(nil)
 	}
 }
 

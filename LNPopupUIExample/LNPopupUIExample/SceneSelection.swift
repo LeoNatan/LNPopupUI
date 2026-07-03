@@ -71,7 +71,6 @@ struct SceneSelection: View {
 	@State private var item: ActivityItem? = nil
 	
 	@AppStorage(.enableFunkyInheritedFont, store: .settings) var enableFunkyInheritedFont: Bool = false
-	@AppStorage(.enableExternalScenes, store: .settings) var enableExternalScenes: Bool = false
 	
 	let font = Font.custom("Chalkduster", size: 15, relativeTo: .subheadline)
 //	let font = Font.custom("Avenir Next", fixedSize: 15).weight(.heavy).italic()
@@ -213,6 +212,7 @@ struct SceneSelection: View {
 		})
 		.popupBarStyle(.floating)
 		.popupBarShineEnabled(ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27)
+		.popupBarMinimizationEnabled(false)
 		.popupBarContextMenu {
 			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI")!) {
 				LNPopupText("Visit GitHub Page")
@@ -233,7 +233,6 @@ struct SceneSelection: View {
 			}
 		}
 		.activitySheet($item)
-//		.font(font)
 		.font(enableFunkyInheritedFont ? font : nil)
 	}
 }

@@ -88,9 +88,20 @@ struct ToolbarCloseButton: View {
 		Button {
 			action()
 		} label: {
-			Label("Gallery", systemImage: "checkmark")
+			Label("Gallery", systemImage: "xmark")
 				.labelStyle(.toolbarDone)
 		}
+	}
+}
+
+fileprivate
+extension UIFont {
+	func addingTraits(_ traits: [UIFontDescriptor.TraitKey: Any]) -> UIFont {
+		return UIFont(descriptor: fontDescriptor.addingAttributes([.traits: traits]), size: pointSize)
+	}
+	
+	func withWeight(_ weight: UIFont.Weight) -> UIFont {
+		addingTraits([.weight: weight])
 	}
 }
 
@@ -100,11 +111,8 @@ struct _CloseButton: UIViewRepresentable {
 	
 	func makeUIView(context: Context) -> UIButton {
 		var config = UIButton.Configuration.prominentGlass()
-		config.imageColorTransformer = UIConfigurationColorTransformer { _ in
-				.white.withAlphaComponent(0.75)
-		}
-		config.image = UIImage(systemName: "checkmark")
-		config.preferredSymbolConfigurationForImage = .init(pointSize: 17)
+		config.image = UIImage(systemName: "xmark")
+		config.preferredSymbolConfigurationForImage = .init(font: .preferredFont(forTextStyle: .body).withWeight(.medium), scale: .large)
 		let button = UIButton(configuration: config, primaryAction: UIAction(handler: { _ in
 			action()
 		}))
@@ -602,12 +610,7 @@ struct PopupDemoViewModifier: ViewModifier {
 						Button {
 							print("Next")
 						} label: {
-							Label {
-								Text("Next")
-							} icon: {
-								Image(systemName: "forward.fill")
-							}
-							.labelStyle(.iconOnly)
+							Image(systemName: "forward.fill")
 						}
 						.frame(minWidth: 30)
 						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))

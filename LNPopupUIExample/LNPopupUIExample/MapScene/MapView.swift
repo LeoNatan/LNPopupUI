@@ -19,9 +19,11 @@ struct EnlargingButton: View {
 		self.action = action
 	}
 	
+	@Environment(\.font) var font
+	
 	var body: some View {
 		return LNPopupText(label)
-			.font(.title)
+			.font(font ?? .title)
 			.foregroundColor(.white)
 			.padding(10)
 			.background(RoundedRectangle(cornerRadius: 10).foregroundColor(.blue))
@@ -126,16 +128,17 @@ struct CustomBarMapView: View {
 			}
 		}
 		.popupCornerConfigurationIfPossible()
-		.font(nil)
 	}
 }
 
 struct MyButtonStyle: ButtonStyle {
 	let colorScheme: ColorScheme
 	
+	@Environment(\.font) var font
+	
 	func makeBody(configuration: Self.Configuration) -> some View {
 		configuration.label
-			.font(.title2)
+			.font(font ?? .title2)
 			.frame(width: 15, height: 15, alignment: .center)
 			.padding(10)
 			.foregroundColor(.white)
