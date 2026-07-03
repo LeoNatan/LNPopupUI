@@ -165,6 +165,8 @@ struct MusicView: View {
 	let titles = ["Home", "New", "Library"]
 	let imageNames = ["music.note.house.fill", "square.grid.2x2.fill", ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? "music.note.square.stack.fill" : "square.stack.fill"]
 	
+	@AppStorage(.minimizationEnabled, store: .settings) var minimizationEnabled: Bool = true
+	
 	var body: some View {
 		MaterialTabView {
 			ForEach(0..<3) { tabIdx in
@@ -185,8 +187,9 @@ struct MusicView: View {
 		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen) {
 			PlayerView(song: $currentSong, currentPlaylist: currentPlaylist)
 		}
-		.popupBarShineEnabled(true)
+		.popupBarShineEnabled(ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27)
 		.popupBarProgressViewStyle(.bottom)
+		.popupBarMinimizationEnabled(minimizationEnabled)
 		.font(nil)
 	}
 }

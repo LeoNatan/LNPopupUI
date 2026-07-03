@@ -554,6 +554,8 @@ struct PopupDemoViewModifier: ViewModifier {
 	@AppStorage(.enableCustomizations, store: .settings) var enableCustomizations: Bool = false
 	@AppStorage(.contextMenuEnabled, store: .settings) var contextMenu: Bool = false
 	
+	@AppStorage(.minimizationEnabled, store: .settings) var minimizationEnabled: Bool = true
+	
 	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
 	
 	var closeButtonStyle: LNPopupCloseButton.Style {
@@ -600,7 +602,12 @@ struct PopupDemoViewModifier: ViewModifier {
 						Button {
 							print("Next")
 						} label: {
-							Image(systemName: "forward.fill")
+							Label {
+								Text("Next")
+							} icon: {
+								Image(systemName: "forward.fill")
+							}
+							.labelStyle(.iconOnly)
 						}
 						.frame(minWidth: 30)
 						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
@@ -623,6 +630,7 @@ struct PopupDemoViewModifier: ViewModifier {
 		.modifier(CustomizationsModifier(enableCustomizations: enableCustomizations))
 		.popupBarShouldExtendPopupBarUnderSafeArea(extendBar)
 		.modifier(ContextMenuModifier(includeContextMenu: includeContextMenu))
+		.popupBarMinimizationEnabled(minimizationEnabled)
 	}
 }
 

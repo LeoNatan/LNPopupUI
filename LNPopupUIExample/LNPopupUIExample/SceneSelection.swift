@@ -62,7 +62,6 @@ struct SceneSelection: View {
 	@State var navPresented: Bool = false
 	@State var viewPresented: Bool = false
 	@State var viewSheetPresented: Bool = false
-	@State var compactSliderSheetPresented: Bool = false
 	@State var musicSheetPresented: Bool = false
 	@State var mapSheetPresented: Bool = false
 	@State var splitViewPresented: Bool = false
@@ -190,23 +189,6 @@ struct SceneSelection: View {
 				} footer: {
 					LNPopupText("Presents a scene with a custom popup bar view and a UIKit popup content controller")
 				}
-				
-				if enableExternalScenes {
-					Section {
-						CellPaddedButton("CompactSlider") {
-							compactSliderSheetPresented.toggle()
-						}
-						.fullScreenCover(isPresented: $compactSliderSheetPresented, content: {
-							CompactSliderDemoView {
-								compactSliderSheetPresented.toggle()
-							}
-						})
-					} header: {
-						LNPopupText("External Libraries—Gestures")
-					} footer: {
-						LNPopupText("Presents a popup content view with [CompactSlider](https://github.com/buh/CompactSlider) elements, to test gesture handling in the library.")
-					}
-				}
 			}
 			.listStyle(InsetGroupedListStyle())
 			.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
@@ -230,7 +212,7 @@ struct SceneSelection: View {
 			PopupDemoWebView()
 		})
 		.popupBarStyle(.floating)
-		.popupBarShineEnabled(true)
+		.popupBarShineEnabled(ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27)
 		.popupBarContextMenu {
 			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI")!) {
 				LNPopupText("Visit GitHub Page")

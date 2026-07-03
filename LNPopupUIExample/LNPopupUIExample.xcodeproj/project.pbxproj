@@ -10,8 +10,6 @@
 		3906A9F52C38C2560071EDAA /* SwiftUIIntrospect-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */; };
 		390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */; };
 		3937096B2E8D6B9E00936583 /* DumbSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937096A2E8D6B9E00936583 /* DumbSearchView.swift */; };
-		393841D82AA13A2700460600 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 393841D72AA13A2700460600 /* CompactSlider */; };
-		393841DB2AA13BA800460600 /* CompactSliderDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */; };
 		394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394215F528F305D500D806A4 /* PopupDemoView.swift */; };
 		394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */ = {isa = PBXBuildFile; productRef = 394E1AAB276C137400C5BE31 /* ActivityView */; };
 		395781D924DC5D2700A604D1 /* MusicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D824DC5D2700A604D1 /* MusicView.swift */; };
@@ -56,7 +54,6 @@
 /* Begin PBXFileReference section */
 		390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNPopupUIExampleApp.swift; sourceTree = "<group>"; };
 		3937096A2E8D6B9E00936583 /* DumbSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DumbSearchView.swift; sourceTree = "<group>"; };
-		393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactSliderDemoView.swift; sourceTree = "<group>"; };
 		394215F528F305D500D806A4 /* PopupDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDemoView.swift; sourceTree = "<group>"; };
 		394DC7262604D19B0010BED4 /* LNPopupUIExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupUIExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		395781D124DC5D2700A604D1 /* LNPopupUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,7 +88,6 @@
 				394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */,
 				39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */,
 				3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */,
-				393841D82AA13A2700460600 /* CompactSlider in Frameworks */,
 				39D6C8C62B2D06DA00F53E70 /* LNTouchVisualizer in Frameworks */,
 				3906A9F52C38C2560071EDAA /* SwiftUIIntrospect-Static in Frameworks */,
 			);
@@ -103,7 +99,6 @@
 		393841D92AA13A4400460600 /* GestureTesting */ = {
 			isa = PBXGroup;
 			children = (
-				393841DA2AA13BA800460600 /* CompactSliderDemoView.swift */,
 			);
 			path = GestureTesting;
 			sourceTree = "<group>";
@@ -244,7 +239,6 @@
 				39E18E3A24F059F50096391B /* LNPopupUI */,
 				3998CA54268BC3C300A60468 /* LoremIpsum */,
 				394E1AAB276C137400C5BE31 /* ActivityView */,
-				393841D72AA13A2700460600 /* CompactSlider */,
 				39D6C8C52B2D06DA00F53E70 /* LNTouchVisualizer */,
 				3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */,
 			);
@@ -281,7 +275,6 @@
 			packageReferences = (
 				3998CA53268BC3B700A60468 /* XCRemoteSwiftPackageReference "LoremIpsum" */,
 				394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */,
-				393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */,
 				39D6C8C42B2D06DA00F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */,
 				3906A9F32C38C2560071EDAA /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 			);
@@ -314,7 +307,6 @@
 			files = (
 				3985A1E525378E73004AA4D7 /* PopupDemoWebView.swift in Sources */,
 				390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */,
-				393841DB2AA13BA800460600 /* CompactSliderDemoView.swift in Sources */,
 				3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */,
 				396FBEBC2AE6838100310DEB /* SplitDemoView.swift in Sources */,
 				398404EE2500451E006C9011 /* MapView.swift in Sources */,
@@ -575,14 +567,6 @@
 				minimumVersion = 26.0.0;
 			};
 		};
-		393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/buh/CompactSlider";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.1;
-			};
-		};
 		394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftUI-Plus/ActivityView";
@@ -614,11 +598,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3906A9F32C38C2560071EDAA /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
 			productName = "SwiftUIIntrospect-Static";
-		};
-		393841D72AA13A2700460600 /* CompactSlider */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 393841D62AA13A2700460600 /* XCRemoteSwiftPackageReference "CompactSlider" */;
-			productName = CompactSlider;
 		};
 		394E1AAB276C137400C5BE31 /* ActivityView */ = {
 			isa = XCSwiftPackageProductDependency;
