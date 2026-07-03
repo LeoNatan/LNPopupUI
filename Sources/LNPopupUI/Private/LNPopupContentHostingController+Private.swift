@@ -89,20 +89,32 @@ extension LNPopupContentHostingController {
 				return
 			}
 			
-			//Async so that the navigation controller is created in a different transaction
-			DispatchQueue.main.async {
+			let work = {
 				let anyView = viewCreatorWrapper.value
 				createOrUpdateBarItemAdapter(in: self.popupItem, key: "swiftuiHiddenLeadingController", buttonKeyPath: \.leadingBarButtonItems, userNavigationViewWrapper: anyView)
+			}
+			
+			if #available(iOS 27.0, *) {
+				work()
+			} else {
+				//Async so that the navigation controller is created in a different transaction
+				DispatchQueue.main.async(execute: work)
 			}
 		}.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] viewCreatorWrapper in
 			guard let self, let viewCreatorWrapper else {
 				return
 			}
 			
-			//Async so that the navigation controller is created in a different transaction
-			DispatchQueue.main.async {
+			let work = {
 				let anyView = viewCreatorWrapper.value
 				createOrUpdateBarItemAdapter(in: self.popupItem, key: "swiftuiHiddenTrailingController", buttonKeyPath: \.trailingBarButtonItems, userNavigationViewWrapper: anyView)
+			}
+			
+			if #available(iOS 27.0, *) {
+				work()
+			} else {
+				//Async so that the navigation controller is created in a different transaction
+				DispatchQueue.main.async(execute: work)
 			}
 		}.onPreferenceChange(LNPopupContentBackgroundColorPreferenceKey.self, perform: { [weak self] colorWrapper in
 			guard let colorWrapper else {

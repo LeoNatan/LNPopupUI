@@ -94,7 +94,7 @@ extension View {
 	}
 }
 
-func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView where Content : View {
+func barItemContainer<Content: View>(@ViewBuilder _ content: () -> Content) -> AnyView {
 	let content = {
 		Color.clear.toolbar {
 			ToolbarItemGroup(placement: .popupBar) {
@@ -103,35 +103,21 @@ func barItemContainer<Content>(@ViewBuilder _ content: () -> Content) -> AnyView
 		}
 	}
 	
-	let view: any View
-//	if #available(iOS 16.0, *) {
-//		view = NavigationStack(root: content)
-//	} else {
-		view = NavigationView(content: content).navigationViewStyle(.stack)
-//	}
-	
-	return AnyView(view)
+	return AnyView(NavigationView(content: content).navigationViewStyle(.stack))
 }
 
-func barItemContainer<Content>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView where Content : ToolbarContent {
-	barItemContainer(content())
+func barItemContainer<Content: ToolbarContent>(@ToolbarContentBuilder _ content: () -> Content) -> AnyView {
+	return barItemContainer(content())
 }
 
-func barItemContainer<Content>(_ content: Content) -> AnyView where Content : ToolbarContent {
+func barItemContainer<Content: ToolbarContent>(_ content: Content) -> AnyView {
 	let content = {
 		Color.clear.toolbar {
 			content
 		}.font(.body)
 	}
 	
-	let view: any View
-//	if #available(iOS 16.0, *) {
-//		view = NavigationStack(root: content)
-//	} else {
-		view = NavigationView(content: content).navigationViewStyle(.stack)
-//	}
-	
-	return AnyView(view)
+	return AnyView(NavigationView(content: content).navigationViewStyle(.stack))
 }
 
 internal
