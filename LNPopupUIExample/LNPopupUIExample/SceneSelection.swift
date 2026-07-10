@@ -212,7 +212,7 @@ struct SceneSelection: View {
 		})
 		.popupBarStyle(.floating)
 		.popupBarShineEnabled(ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27)
-		.popupBarMinimizationEnabled(false)
+		.popupBarInheritsBottomBarMetrics(false)
 		.popupBarContextMenu {
 			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI")!) {
 				LNPopupText("Visit GitHub Page")

@@ -69,6 +69,7 @@ struct TabGeneratorView<Content>: View where Content: View {
 	
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 	@AppStorage(.tabBarHasSidebar, store: .settings) var tabBarHasSidebar: Bool = true
+	@AppStorage(.enableProminentSearchTab, store: .settings) var enableProminentSearchTab: Bool = true
 	
 	@Binding var isBarPresented: Bool
 	let demoContent: DemoContent
@@ -83,16 +84,48 @@ struct TabGeneratorView<Content>: View where Content: View {
 		if #available(iOS 18.0, *) {
 			MaterialTabView {
 				ForEach(1..<4) { idx in
-					Tab("Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", systemImage: "\(idx).square") {
+					Tab(NSLocalizedString("Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", comment: ""), systemImage: "\(idx).square") {
 						tabContentGenerator(idx - 1)
 					}
 				}
-				Tab(role: .search) {
-					DumbSearchView()
+				let shouldProminent = {
+					if #available(iOS 27.0, *) {
+						if enableProminentSearchTab {
+#if compiler(>=6.4)
+							true
+#else
+							false
+#endif
+						} else {
+							false
+						}
+					} else {
+						false
+					}
+				}()
+				
+				let simpleSearchTab = {
+					Tab(role: .search) {
+						DumbSearchView()
+					}
+				}
+				
+				if shouldProminent {
+#if compiler(>=6.4)
+					if #available(iOS 27.0, *) {
+						Tab(NSLocalizedString("Search", comment: ""), systemImage: "magnifyingglass", role: .prominent) {
+							DumbSearchView()
+						}
+					}
+#else
+					simpleSearchTab()
+#endif
+				} else {
+					simpleSearchTab()
 				}
 				if tabBarHasSidebar && UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular {
 					ForEach(5..<9) { idx in
-						Tab("Sidebar Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", systemImage: "\(idx).square") {
+						Tab(NSLocalizedString("Sidebar Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", comment: ""), systemImage: "\(idx).square") {
 							tabContentGenerator(idx - 1)
 						}
 						.tabPlacement(.sidebarOnly)
@@ -106,7 +139,7 @@ struct TabGeneratorView<Content>: View where Content: View {
 				ForEach(1..<5) { idx in
 					tabContentGenerator(idx - 1)
 						.tabItem {
-							Label("Tab", systemImage: "\(idx).square").foregroundStyle(.red)
+							Label(NSLocalizedString("Tab", comment: ""), systemImage: "\(idx).square").foregroundStyle(.red)
 						}
 				}
 			}

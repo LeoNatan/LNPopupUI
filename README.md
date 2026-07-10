@@ -360,14 +360,14 @@ struct CustomBarView: View {
 }
 ```
 
-Popup bar minimization is enabled by default, and is supported for system and custom popup bars, with the exception of custom bars with `.popupBarCustomBarPrefersFullBarWidth(true)`. To disable popup bar minimization, use the `popupBarMinimizationEnabled(_:)` modifier with a value of `false`.
+Popup bar minimization is enabled by default, and is supported for system and custom popup bars, with the exception of custom bars with `.popupBarCustomBarPrefersFullBarWidth(true)`. To disable popup bar minimization, use the `popupBarInheritsBottomBarMetrics(_:)` modifier with a value of `false`.
 
 ```swift
 TabView {
   // ...
 }
 .tabBarMinimizeBehavior(.onScrollDown)
-.popupBarMinimizationEnabled(false)
+.popupBarInheritsBottomBarMetrics(false)
 ```
 
 ### Popup Transitions

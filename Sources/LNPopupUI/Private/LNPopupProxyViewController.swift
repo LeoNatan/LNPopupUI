@@ -261,8 +261,8 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					target.popupBar.customBarWantsFullBarWidth = customBarPrefersFullBarWidth
 				}
 				
-				if let popupBarMinimizationEnabled = self.currentPopupState.environment.popupBarMinimizationEnabled?.consume(self) {
-					target.popupBar.supportsMinimization = popupBarMinimizationEnabled
+				if let popupBarInheritsBottomBarMetrics = self.currentPopupState.environment.popupBarInheritsBottomBarMetrics?.consume(self) {
+					target.popupBar.inheritsBottomBarMetrics = popupBarInheritsBottomBarMetrics
 				}
 				
 				if let barImageShadow = self.currentPopupState.environment.popupBarImageShadow?.consume(self) {
@@ -303,7 +303,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			}
 			
 			self.implicitAnimationController.push()
-			let endImplicitAnims = { [weak self] in
+			let endImplicitAnims = { [weak self = self] in
 				self?.implicitAnimationController.pop()
 			}
 			

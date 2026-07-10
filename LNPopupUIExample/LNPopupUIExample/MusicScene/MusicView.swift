@@ -167,8 +167,9 @@ struct MusicView: View {
 	let titles = ["Home", "New", "Library", "Radio"]
 	let imageNames = ["music.note.house.fill", "square.grid.2x2.fill", ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 ? "music.note.square.stack.fill" : "square.stack.fill", "dot.radiowaves.left.and.right"]
 	
-	@AppStorage(.minimizationEnabled, store: .settings) var minimizationEnabled: Bool = true
+	@AppStorage(.minimizationEnabled, store: .settings) var inheritsBottomBarMetrics: Bool = true
 	@AppStorage(.disableSearchTab, store: .settings) var disableSearchTab: Bool = false
+	@AppStorage(.enableProminentSearchTab, store: .settings) var enableProminentSearchTab: Bool = true
 	
 	@TabContentBuilder<Never>
 	func tabCreator(_ tabIdx: Int) -> some TabContent<Never> {
@@ -195,16 +196,40 @@ struct MusicView: View {
 				}
 			} else {
 				tabCreator(2)
-				if #available(iOS 27.0, *) {
+				let shouldProminent = {
+					if #available(iOS 27.0, *) {
+						if enableProminentSearchTab {
 #if compiler(>=6.4)
-					Tab(NSLocalizedString("Search", comment: ""), systemImage: "magnifyingglass", role: .prominent) {
-						DumbSearchView()
-					}
+							true
+#else
+							false
 #endif
-				} else {
+						} else {
+							false
+						}
+					} else {
+						false
+					}
+				}()
+				
+				let simpleSearchTab = {
 					Tab(role: .search) {
 						DumbSearchView()
 					}
+				}
+				
+				if shouldProminent {
+#if compiler(>=6.4)
+					if #available(iOS 27.0, *) {
+						Tab(NSLocalizedString("Search", comment: ""), systemImage: "magnifyingglass", role: .prominent) {
+							DumbSearchView()
+						}
+					}
+#else
+					simpleSearchTab()
+#endif
+				} else {
+					simpleSearchTab()
 				}
 			}
 			
@@ -216,7 +241,7 @@ struct MusicView: View {
 		}
 		.popupBarShineEnabled(ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27)
 		.popupBarProgressViewStyle(.bottom)
-		.popupBarMinimizationEnabled(minimizationEnabled)
+		.popupBarInheritsBottomBarMetrics(inheritsBottomBarMetrics)
 	}
 }
 

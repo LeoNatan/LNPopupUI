@@ -313,11 +313,13 @@ public extension View {
 		environment(\.popupBarContextMenu, ^^AnyView(menuItems()))
 	}
 	
-	/// Enables or disables popup bar minimization into the bottom bar.
+	/// Enables or disables inheriting bottom docking view metrics for the popup bar, including minimization into tab bars.
 	///
-	/// Minimization is supported on iOS 26.0 and later, for tab view containers.
-	func popupBarMinimizationEnabled(_ enabled: Bool?) -> some View {
-		environment(\.popupBarMinimizationEnabled, ^^enabled)
+	/// When enabled, floating popup bars will inherit certain metrics from their bottom docking views, such as toolbars and tab bars. This also enables popup bar minimization into tab bars.
+	///
+	/// Supported on iOS 26.0 and later.
+	func popupBarInheritsBottomBarMetrics(_ enabled: Bool?) -> some View {
+		environment(\.popupBarInheritsBottomBarMetrics, ^^enabled)
 	}
 	
 	/// Gives a low-level access to the `LNPopupBar` object for customization, beyond what is exposed by LNPopupUI.
@@ -617,6 +619,14 @@ extension View {
 
 /// Deprecations
 public extension View {
+	/// Enables or disables popup bar minimization into the bottom bar.
+	///
+	/// Minimization is supported on iOS 26.0 and later, for tab view containers.
+	@available(iOS, introduced: 14.0, deprecated: 27.0, renamed: "popupBarInheritsBottomBarMetrics(_:)")
+	func popupBarMinimizationEnabled(_ enabled: Bool?) -> some View {
+		popupBarInheritsBottomBarMetrics(enabled)
+	}
+	
 	/// Configures the default popup item's leading bar buttons.
 	///
 	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.

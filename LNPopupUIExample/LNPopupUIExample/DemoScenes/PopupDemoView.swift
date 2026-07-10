@@ -562,7 +562,7 @@ struct PopupDemoViewModifier: ViewModifier {
 	@AppStorage(.enableCustomizations, store: .settings) var enableCustomizations: Bool = false
 	@AppStorage(.contextMenuEnabled, store: .settings) var contextMenu: Bool = false
 	
-	@AppStorage(.minimizationEnabled, store: .settings) var minimizationEnabled: Bool = true
+	@AppStorage(.minimizationEnabled, store: .settings) var inheritsBottomBarMetrics: Bool = true
 	
 	@AppStorage(.transitionType, store: .settings) var transitionType: Int = 0
 	
@@ -633,7 +633,7 @@ struct PopupDemoViewModifier: ViewModifier {
 		.modifier(CustomizationsModifier(enableCustomizations: enableCustomizations))
 		.popupBarShouldExtendPopupBarUnderSafeArea(extendBar)
 		.modifier(ContextMenuModifier(includeContextMenu: includeContextMenu))
-		.popupBarMinimizationEnabled(minimizationEnabled)
+		.popupBarInheritsBottomBarMetrics(inheritsBottomBarMetrics)
 	}
 }
 
