@@ -75,6 +75,7 @@ struct PlayerView: View {
 			.aspectRatio(1.0, contentMode: .fit)
 			.padding([.leading, .trailing], 10)
 			.padding([.top], geometry.size.height * 60 / 896.0)
+			.popupTransitionTarget()
 	}
 	
 	@ViewBuilder

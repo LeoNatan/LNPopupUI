@@ -40,6 +40,16 @@ class LNPopupUILayerTransitionHelper: NSObject, LNPopupTransitionView {
 		super.init()
 	}
 	
+	@objc
+	var alpha: CGFloat {
+		get {
+			CGFloat(sourceLayer.opacity)
+		}
+		set {
+			sourceLayer.opacity = Float(newValue)
+		}
+	}
+	
 	var cornerRadius: CGFloat {
 		get {
 			cornerRadiusLayers?.first?.cornerRadius ?? 0.0

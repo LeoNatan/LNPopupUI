@@ -265,6 +265,10 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					target.popupBar.inheritsBottomBarMetrics = popupBarInheritsBottomBarMetrics
 				}
 				
+				if let popupContentAllowsContentTransition = self.currentPopupState.environment.popupContentAllowsContentTransition?.consume(self) {
+					target.popupContentView.allowsContentTransition = popupContentAllowsContentTransition
+				}
+				
 				if let barImageShadow = self.currentPopupState.environment.popupBarImageShadow?.consume(self) {
 					appearance.imageShadow = barImageShadow
 				}

@@ -322,6 +322,17 @@ public extension View {
 		environment(\.popupBarInheritsBottomBarMetrics, ^^enabled)
 	}
 	
+	/// Enables or disables content transition in the popup content view.
+	///
+	/// Disable this in cases where the transition introduces unwanted layout issues.
+	///
+	/// Supported on iOS 26.0 and later.
+	///
+	/// - Note: This does not disable popup image transitions.
+	func popupContentAllowsContentTransition(_ allows: Bool?) -> some View {
+		environment(\.popupContentAllowsContentTransition, ^^allows)
+	}
+	
 	/// Gives a low-level access to the `LNPopupBar` object for customization, beyond what is exposed by LNPopupUI.
 	///
 	///	The popup bar customization closure is called after all other popup bar modifiers have been applied.

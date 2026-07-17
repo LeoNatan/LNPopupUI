@@ -116,14 +116,14 @@ extension LNPopupContentHostingController {
 				//Async so that the navigation controller is created in a different transaction
 				DispatchQueue.main.async(execute: work)
 			}
-		}.onPreferenceChange(LNPopupContentBackgroundColorPreferenceKey.self, perform: { [weak self] colorWrapper in
+		}.onPreferenceChange(LNPopupContentBackgroundColorPreferenceKey.self) { [weak self] colorWrapper in
 			guard let colorWrapper else {
 				return
 			}
 			
 			self?.userContentBackgroundColor = colorWrapper.value
 			self?.updateContentBackgroundColor()
-		}))
+		})
 	}
 	
 	func updateContentBackgroundColor() {

@@ -128,6 +128,7 @@ struct CustomBarMapView: View {
 			}
 		}
 		.popupCornerConfigurationIfPossible()
+		.popupContentAllowsContentTransition(false)
 	}
 }
 
