@@ -26,6 +26,7 @@
 		3985A1E525378E73004AA4D7 /* PopupDemoWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3985A1E425378E73004AA4D7 /* PopupDemoWebView.swift */; };
 		398DB7AD250400BE00CD89DB /* NavDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398DB7AC250400BE00CD89DB /* NavDemoView.swift */; };
 		3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 3998CA54268BC3C300A60468 /* LoremIpsum */; };
+		39A8BE93300B478E001B1E10 /* LNPopupUI.icon in Resources */ = {isa = PBXBuildFile; fileRef = 39A8BE92300B478E001B1E10 /* LNPopupUI.icon */; };
 		39AAAA6C25040FA900E5FD41 /* TabNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA6B25040FA900E5FD41 /* TabNavView.swift */; };
 		39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA6F2504144300E5FD41 /* TabDemoView.swift */; };
 		39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA71250415E800E5FD41 /* ViewDemoView.swift */; };
@@ -73,6 +74,7 @@
 		398404ED2500451E006C9011 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		3985A1E425378E73004AA4D7 /* PopupDemoWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupDemoWebView.swift; sourceTree = "<group>"; };
 		398DB7AC250400BE00CD89DB /* NavDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavDemoView.swift; sourceTree = "<group>"; };
+		39A8BE92300B478E001B1E10 /* LNPopupUI.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = LNPopupUI.icon; sourceTree = "<group>"; };
 		39AAAA6B25040FA900E5FD41 /* TabNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavView.swift; sourceTree = "<group>"; };
 		39AAAA6F2504144300E5FD41 /* TabDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDemoView.swift; sourceTree = "<group>"; };
 		39AAAA71250415E800E5FD41 /* ViewDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDemoView.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 		395781C824DC5D2700A604D1 = {
 			isa = PBXGroup;
 			children = (
+				39A8BE92300B478E001B1E10 /* LNPopupUI.icon */,
 				395781EA24DC5DE800A604D1 /* LNPopupUI */,
 				395781D324DC5D2700A604D1 /* LNPopupUIExample */,
 				395781D224DC5D2700A604D1 /* Products */,
@@ -293,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				395781E124DC5D2800A604D1 /* LaunchScreen.storyboard in Resources */,
+				39A8BE93300B478E001B1E10 /* LNPopupUI.icon in Resources */,
 				395781DE24DC5D2800A604D1 /* Preview Assets.xcassets in Resources */,
 				395781DB24DC5D2800A604D1 /* Assets.xcassets in Resources */,
 			);
@@ -475,7 +479,7 @@
 		395781E624DC5D2800A604D1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = LNPopupUI;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LNPopupUIExample/LNPopupUIExample.entitlements;
@@ -509,7 +513,7 @@
 		395781E724DC5D2800A604D1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = LNPopupUI;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = LNPopupUIExample/LNPopupUIExample.entitlements;
