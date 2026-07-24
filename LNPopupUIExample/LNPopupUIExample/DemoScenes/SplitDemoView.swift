@@ -16,7 +16,7 @@ struct SplitInnerView: View {
 	
 	var body: some View {
 		let nav = MaterialNavigationStack {
-			InnerView(tabIdx: idx, onDismiss: onDismiss, includeToolbar: !isGlobal, presentBarHandler: nil, hideBarHandler: nil)
+			InnerView(tabIdx: idx, onDismiss: onDismiss, includeToolbar: false, presentBarHandler: nil, hideBarHandler: nil, noCloseButton: true)
 				.toolbar {
 					ToolbarItem(placement: .confirmationAction) {
 						ToolbarCloseButton {
@@ -27,7 +27,7 @@ struct SplitInnerView: View {
 				.navigationTitle(title)
 				.navigationBarTitleDisplayMode(.inline)
 		}
-			
+		
 		if isGlobal {
 			nav
 		} else {
@@ -50,13 +50,10 @@ struct SplitDemoView: View {
 		let splitView = MaterialNavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.content)) {
 			SplitInnerView(title: "Sidebar", idx: 600, isGlobal: isGlobal, onDismiss: onDismiss)
 				.navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 400)
-		} content: {
-			SplitInnerView(title: "Content", idx: 2000, isGlobal: isGlobal, onDismiss: onDismiss)
-				.navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 400)
 		} detail: {
 			SplitInnerView(title: "Detail", idx: 1, isGlobal: isGlobal, onDismiss: onDismiss)
-		}
-		.navigationSplitViewStyle(.prominentDetail)
+		}.navigationSplitViewStyle(.balanced)
+			.navigationSplitViewColumnWidth(min: 270, ideal: 375, max: 450)
 		
 		if isGlobal {
 			splitView.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))

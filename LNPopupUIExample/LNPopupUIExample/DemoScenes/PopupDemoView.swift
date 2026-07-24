@@ -585,6 +585,8 @@ struct PopupDemoViewModifier: ViewModifier {
 		}
 	}
 	
+	@State var buttonShown = true
+	
 	func body(content: Content) -> some View {
 		content.popup(isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, onOpen: {
 			print("Opened")
@@ -597,23 +599,28 @@ struct PopupDemoViewModifier: ViewModifier {
 				.popupProgress(0.5)
 				.popupBarButtons {
 					ToolbarItemGroup(placement: .popupBar) {
-						Button {
-							print("Play")
-						} label: {
-							Image(systemName: "play.fill")
+						HStack(spacing: 20) {
+							Button {
+								print("Play")
+								buttonShown.toggle()
+							} label: {
+								Image(systemName: "play.fill")
+							}
+							.frame(minWidth: 30)
+							.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
+							
+							if buttonShown {
+								Button {
+									print("Next")
+									
+								} label: {
+									Image(systemName: "forward.fill")
+								}
+								.frame(minWidth: 30)
+								.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
+							}
 						}
-						.frame(minWidth: 30)
-						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
-					}
-				} trailing: {
-					ToolbarItemGroup(placement: .popupBar) {
-						Button {
-							print("Next")
-						} label: {
-							Image(systemName: "forward.fill")
-						}
-						.frame(minWidth: 30)
-						.modifier(CustomizationsTintModifier(enableCustomizations: enableCustomizations))
+						.animation(.spring, value: buttonShown)
 					}
 				}
 			
@@ -709,16 +716,14 @@ struct MaterialNavigationStack<Content: View>: View {
 }
 
 @available(iOS 17.0, *)
-struct MaterialNavigationSplitView<Sidebar: View, Content: View, Detail: View>: View {
+struct MaterialNavigationSplitView<Sidebar: View, Detail: View>: View {
 	let sidebar: Sidebar
-	let content: Content
 	let detail: Detail
 	let columnVisibility: Binding<NavigationSplitViewVisibility>
 	let preferredCompactColumn: Binding<NavigationSplitViewColumn>
 	
-	public init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder content: () -> Content, @ViewBuilder detail: () -> Detail) {
+	init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) {
 		self.sidebar = sidebar()
-		self.content = content()
 		self.detail = detail()
 		self.columnVisibility = columnVisibility
 		self.preferredCompactColumn = preferredCompactColumn
@@ -727,8 +732,6 @@ struct MaterialNavigationSplitView<Sidebar: View, Content: View, Detail: View>: 
 	var body: some View {
 		NavigationSplitView(columnVisibility: columnVisibility, preferredCompactColumn: preferredCompactColumn) {
 			sidebar.fixBottomBarAppearance()
-		} content: {
-			content.fixBottomBarAppearance()
 		} detail: {
 			detail.fixBottomBarAppearance()
 		}

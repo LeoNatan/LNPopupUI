@@ -18,15 +18,17 @@ struct InnerView : View {
 	let includeToolbar: Bool
 	let presentBarHandler: (() -> Void)?
 	let hideBarHandler: (() -> Void)?
+	let noCloseButton: Bool
 	
 	@Environment(\.horizontalSizeClass) var horizontalSizeClass
-
-	init(tabIdx: Int?, onDismiss: (() -> Void)? = nil, includeToolbar: Bool = false, presentBarHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil) {
+	
+	init(tabIdx: Int?, onDismiss: (() -> Void)? = nil, includeToolbar: Bool = false, presentBarHandler: (() -> Void)? = nil, hideBarHandler: (() -> Void)? = nil, noCloseButton: Bool? = nil) {
 		self.tabIdx = tabIdx
 		self.onDismiss = onDismiss
 		self.includeToolbar = includeToolbar
 		self.presentBarHandler = presentBarHandler
 		self.hideBarHandler = hideBarHandler
+		self.noCloseButton = noCloseButton ?? false
 	}
 	
 	var body: some View {
@@ -36,12 +38,14 @@ struct InnerView : View {
 			SafeAreaDemoView(colorSeed: tabIdx != nil ? (tabIdx! == -1 ? "tab_\(Int.random(in: 0..<1000))" : "tab_\(tabIdx!)") : "ZviewZz", includeToolbar: includeToolbar, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: false)
 			if let onDismiss {
 				VStack {
+					if !noCloseButton {
 						CloseButton {
 							onDismiss()
 						}
 						.fontWeight(.semibold)
 						.padding(7)
 						.hoverEffect()
+					}
 				}
 				.padding(.top, horizontalSizeClass == .regular && UIDevice.current.userInterfaceIdiom == .pad ? 27 : 0)
 				.padding(.trailing, 8)
