@@ -590,6 +590,71 @@ extension View {
 	func popupBarButtons<Content>(@ToolbarContentBuilder _ content: @escaping () -> Content) -> some View where Content : ToolbarContent {
 		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(content))
 	}
+	
+	/// Configures the default popup item's leading bar buttons.
+	///
+	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
+	func popupBarLeadingButtons<LeadingContent>(@ViewBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: View {
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+	}
+	
+	/// Configures the default popup item's leading bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// For prominent popup bars, leading bar items are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
+	func popupBarLeadingButtons<LeadingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+	}
+	
+	/// Configures the default popup item's trailing bar buttons.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
+	func popupBarTrailingButtons<TrailingContent>(@ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: View {
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
+	}
+	
+	/// Configures the default popup item's trailing bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
+	func popupBarTrailingButtons<TrailingContent>(@ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
+	}
+	
+	/// Configures the default popup item's leading and trailing bar buttons.
+	///
+	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
+	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
+	func popupBarButtons<LeadingContent, TrailingContent>(@ViewBuilder leading: @escaping () -> LeadingContent, @ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
+	}
+	
+	/// Configures the default popup item's leading and trailing bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
+	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
+	func popupBarButtons<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent, @ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
+	}
 }
 
 public
@@ -636,77 +701,6 @@ public extension View {
 	@available(iOS, introduced: 14.0, deprecated: 27.0, renamed: "popupBarInheritsBottomBarMetrics(_:)")
 	func popupBarMinimizationEnabled(_ enabled: Bool?) -> some View {
 		popupBarInheritsBottomBarMetrics(enabled)
-	}
-	
-	/// Configures the default popup item's leading bar buttons.
-	///
-	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.
-	///
-	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
-	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
-	@available(iOS, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
-	func popupBarLeadingButtons<LeadingContent>(@ViewBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: View {
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
-	}
-	
-	/// Configures the default popup item's leading bar buttons.
-	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
-	///
-	/// For prominent popup bars, leading bar items are positioned in the trailing edge of the popup bar.
-	///
-	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
-	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
-	@available(iOS, introduced: 14.0, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
-	func popupBarLeadingButtons<LeadingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
-	}
-	
-	/// Configures the default popup item's trailing bar buttons.
-	///
-	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
-	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
-	@available(iOS, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
-	func popupBarTrailingButtons<TrailingContent>(@ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: View {
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
-	}
-	
-	/// Configures the default popup item's trailing bar buttons.
-	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
-	///
-	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
-	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
-	@available(iOS, introduced: 14.0, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
-	func popupBarTrailingButtons<TrailingContent>(@ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
-		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
-	}
-	
-	/// Configures the default popup item's leading and trailing bar buttons.
-	///
-	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
-	///
-	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
-	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
-	@available(iOS, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
-	func popupBarButtons<LeadingContent, TrailingContent>(@ViewBuilder leading: @escaping () -> LeadingContent, @ViewBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
-	}
-	
-	/// Configures the default popup item's leading and trailing bar buttons.
-	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
-	///
-	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
-	///
-	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
-	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
-	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
-	@available(iOS, introduced: 14.0, deprecated: 26.0, message: "Non-floating bars are no longer supported on iOS 26.0 and later.")
-	func popupBarButtons<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: @escaping () -> LeadingContent, @ToolbarContentBuilder trailing: @escaping () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
-		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
-			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
 	}
 	
 	/// Configures the default popup item's bar buttons.
