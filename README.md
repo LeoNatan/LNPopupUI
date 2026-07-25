@@ -8,7 +8,7 @@ This is a SwiftUI wrapper of the [LNPopupController framework](https://github.co
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupUI.svg)](https://github.com/LeoNatan/LNPopupUI/graphs/contributors) [![Swift Package Manager compatible](https://img.shields.io/badge/swift%20package%20manager-compatible-green)](https://swift.org/package-manager/)
 
-<p align="center"><img style="border: 1px solid #555555;" src="./Supplements/intro.gif"/></p>
+<p align="center"><table style="border: none;"><tr><td rowspan="2"><img style="border: 1px solid #555555; width: 400px" src="./Supplements/intro.gif"/></td><td height="450"><p align="center"><img style="border: 1px solid #555555; width: 500px" src="./Supplements/intro-mac.png"/></p></td></tr><td height="450"><p align="center"><img style="border: 1px solid #555555; width: 500px" src="./Supplements/intro-ipad.png"/></p></td></table></p>
 
 Once a popup bar is presented with a content view, the user can swipe or tap the popup bar at any point to present the content view. After finishing, the user dismisses the popup by either swiping the content view or tapping the popup close button.
 
@@ -23,7 +23,8 @@ Check the demo project for a quick recreation of Apple’s music app.
 
 ### Features
 
-* Supports iOS 26 glass design, while maintaining a system-apropriate look and feel on previous iOS versions
+* Supports iOS 27 & iOS 26 glass design, while maintaining an appropriate look and feel on previous iOS versions
+* Full support for iOS, iPadOS and Mac Catalyst (*Mac Catalyst* with *Optimize for Mac* or *Scaled to Match iPad*,  and *Designed for iPad*)
 * Available for iOS 14 and above, as an SPM package for SwiftUI
 * For UIKit, check out the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController)
 
