@@ -36,7 +36,7 @@ struct NavDemoView : View {
 	}
 	
 	var body: some View {
-		MaterialNavigationStack {
+		NavigationStack {
 			let bottomButtonsHandlers = SafeAreaDemoView.BottomButtonHandlers(presentBarHandler: presentBarHandler, appearanceHandler: appearanceHandler, hideBarHandler: hideBarHandler)
 			let bottomBarHideSupport = SafeAreaDemoView.BottomBarHideSupport(showsBottomBarHideButton: true)
 			

@@ -3,37 +3,23 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3906A9F52C38C2560071EDAA /* SwiftUIIntrospect-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */; };
 		390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */; };
-		3937096B2E8D6B9E00936583 /* DumbSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3937096A2E8D6B9E00936583 /* DumbSearchView.swift */; };
-		394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394215F528F305D500D806A4 /* PopupDemoView.swift */; };
 		394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */ = {isa = PBXBuildFile; productRef = 394E1AAB276C137400C5BE31 /* ActivityView */; };
-		395781D924DC5D2700A604D1 /* MusicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781D824DC5D2700A604D1 /* MusicView.swift */; };
 		395781DB24DC5D2800A604D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 395781DA24DC5D2800A604D1 /* Assets.xcassets */; };
-		395781DE24DC5D2800A604D1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 395781DD24DC5D2800A604D1 /* Preview Assets.xcassets */; };
 		395781E124DC5D2800A604D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 395781DF24DC5D2800A604D1 /* LaunchScreen.storyboard */; };
-		395781F324DC692300A604D1 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395781F224DC692300A604D1 /* PlayerView.swift */; };
-		396FBEBC2AE6838100310DEB /* SplitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396FBEBB2AE6838100310DEB /* SplitDemoView.swift */; };
-		3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B338254D7772004AEBC9 /* UIColor+SeedColors.swift */; };
 		3973F1262CD5902400A9D40F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3973F1252CD5902400A9D40F /* SettingsViewController.swift */; };
 		3973F1272CD5902400A9D40F /* SettingKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 3973F1242CD5902400A9D40F /* SettingKeys.m */; };
 		398404EA25003925006C9011 /* SceneSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398404E925003925006C9011 /* SceneSelection.swift */; };
-		398404EE2500451E006C9011 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398404ED2500451E006C9011 /* MapView.swift */; };
-		3985A1E525378E73004AA4D7 /* PopupDemoWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3985A1E425378E73004AA4D7 /* PopupDemoWebView.swift */; };
-		398DB7AD250400BE00CD89DB /* NavDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398DB7AC250400BE00CD89DB /* NavDemoView.swift */; };
 		3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 3998CA54268BC3C300A60468 /* LoremIpsum */; };
 		39A8BE93300B478E001B1E10 /* LNPopupUI.icon in Resources */ = {isa = PBXBuildFile; fileRef = 39A8BE92300B478E001B1E10 /* LNPopupUI.icon */; };
-		39AAAA6C25040FA900E5FD41 /* TabNavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA6B25040FA900E5FD41 /* TabNavView.swift */; };
-		39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA6F2504144300E5FD41 /* TabDemoView.swift */; };
-		39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AAAA71250415E800E5FD41 /* ViewDemoView.swift */; };
 		39D6C8C62B2D06DA00F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8C52B2D06DA00F53E70 /* LNTouchVisualizer */; };
 		39D6C8C72B2D06E000F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8C52B2D06DA00F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39E18E3C24F059F50096391B /* LNPopupUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */; };
 		39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; };
 /* End PBXBuildFile section */
 
@@ -54,33 +40,27 @@
 
 /* Begin PBXFileReference section */
 		390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNPopupUIExampleApp.swift; sourceTree = "<group>"; };
-		3937096A2E8D6B9E00936583 /* DumbSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DumbSearchView.swift; sourceTree = "<group>"; };
-		394215F528F305D500D806A4 /* PopupDemoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupDemoView.swift; sourceTree = "<group>"; };
 		394DC7262604D19B0010BED4 /* LNPopupUIExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupUIExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		395781D124DC5D2700A604D1 /* LNPopupUIExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupUIExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		395781D824DC5D2700A604D1 /* MusicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicView.swift; sourceTree = "<group>"; };
 		395781DA24DC5D2800A604D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		395781DD24DC5D2800A604D1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		395781E024DC5D2800A604D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		395781E224DC5D2800A604D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		395781EA24DC5DE800A604D1 /* LNPopupUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LNPopupUI; path = ..; sourceTree = "<group>"; };
-		395781F224DC692300A604D1 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
-		396FBEBB2AE6838100310DEB /* SplitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitDemoView.swift; sourceTree = "<group>"; };
-		3971B338254D7772004AEBC9 /* UIColor+SeedColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SeedColors.swift"; sourceTree = "<group>"; };
 		3973F1232CD5902400A9D40F /* SettingKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingKeys.h; sourceTree = "<group>"; };
 		3973F1242CD5902400A9D40F /* SettingKeys.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingKeys.m; sourceTree = "<group>"; };
 		3973F1252CD5902400A9D40F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		398404E925003925006C9011 /* SceneSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneSelection.swift; sourceTree = "<group>"; };
-		398404ED2500451E006C9011 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		3985A1E425378E73004AA4D7 /* PopupDemoWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupDemoWebView.swift; sourceTree = "<group>"; };
-		398DB7AC250400BE00CD89DB /* NavDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavDemoView.swift; sourceTree = "<group>"; };
 		39A8BE92300B478E001B1E10 /* LNPopupUI.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = LNPopupUI.icon; sourceTree = "<group>"; };
-		39AAAA6B25040FA900E5FD41 /* TabNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavView.swift; sourceTree = "<group>"; };
-		39AAAA6F2504144300E5FD41 /* TabDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabDemoView.swift; sourceTree = "<group>"; };
-		39AAAA71250415E800E5FD41 /* ViewDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewDemoView.swift; sourceTree = "<group>"; };
 		39D6C89A2B2CC40A00F53E70 /* LNPopupUIExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupUIExample.entitlements; sourceTree = "<group>"; };
-		39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LNUIKitPopupContentController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		39B0CADB301488B500D09CB0 /* DemoScenes */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DemoScenes; sourceTree = "<group>"; };
+		39B0CAE4301488BD00D09CB0 /* ColorUtils */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ColorUtils; sourceTree = "<group>"; };
+		39B0CAE8301488C200D09CB0 /* MusicScene */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MusicScene; sourceTree = "<group>"; };
+		39B0CAED301488CB00D09CB0 /* MapScene */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MapScene; sourceTree = "<group>"; };
+		39B0CAF1301488CE00D09CB0 /* IntroWebView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = IntroWebView; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		395781CE24DC5D2700A604D1 /* Frameworks */ = {
@@ -98,13 +78,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		393841D92AA13A4400460600 /* GestureTesting */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = GestureTesting;
-			sourceTree = "<group>";
-		};
 		394DC7222604D1500010BED4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,30 +111,20 @@
 			isa = PBXGroup;
 			children = (
 				39D6C89A2B2CC40A00F53E70 /* LNPopupUIExample.entitlements */,
-				3971B335254D769B004AEBC9 /* ColorUtils */,
-				398DB7AF250401DB00CD89DB /* DemoScenes */,
-				398DB7B0250401E300CD89DB /* MusicScene */,
-				393841D92AA13A4400460600 /* GestureTesting */,
-				398DB7B1250401F800CD89DB /* MapScene */,
-				3985A1E325378E57004AA4D7 /* IntroWebView */,
+				39B0CAE4301488BD00D09CB0 /* ColorUtils */,
+				39B0CADB301488B500D09CB0 /* DemoScenes */,
+				39B0CAE8301488C200D09CB0 /* MusicScene */,
+				39B0CAED301488CB00D09CB0 /* MapScene */,
+				39B0CAF1301488CE00D09CB0 /* IntroWebView */,
 				394DC7222604D1500010BED4 /* Settings */,
 				390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */,
 				398404E925003925006C9011 /* SceneSelection.swift */,
 				395781DA24DC5D2800A604D1 /* Assets.xcassets */,
 				395781DF24DC5D2800A604D1 /* LaunchScreen.storyboard */,
 				395781E224DC5D2800A604D1 /* Info.plist */,
-				395781DC24DC5D2800A604D1 /* Preview Content */,
 				394DC7262604D19B0010BED4 /* LNPopupUIExample-Bridging-Header.h */,
 			);
 			path = LNPopupUIExample;
-			sourceTree = "<group>";
-		};
-		395781DC24DC5D2800A604D1 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				395781DD24DC5D2800A604D1 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		395781EB24DC5E2400A604D1 /* Frameworks */ = {
@@ -169,54 +132,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		3971B335254D769B004AEBC9 /* ColorUtils */ = {
-			isa = PBXGroup;
-			children = (
-				3971B338254D7772004AEBC9 /* UIColor+SeedColors.swift */,
-			);
-			path = ColorUtils;
-			sourceTree = "<group>";
-		};
-		3985A1E325378E57004AA4D7 /* IntroWebView */ = {
-			isa = PBXGroup;
-			children = (
-				3985A1E425378E73004AA4D7 /* PopupDemoWebView.swift */,
-			);
-			path = IntroWebView;
-			sourceTree = "<group>";
-		};
-		398DB7AF250401DB00CD89DB /* DemoScenes */ = {
-			isa = PBXGroup;
-			children = (
-				3937096A2E8D6B9E00936583 /* DumbSearchView.swift */,
-				394215F528F305D500D806A4 /* PopupDemoView.swift */,
-				39AAAA6B25040FA900E5FD41 /* TabNavView.swift */,
-				39AAAA6F2504144300E5FD41 /* TabDemoView.swift */,
-				398DB7AC250400BE00CD89DB /* NavDemoView.swift */,
-				39AAAA71250415E800E5FD41 /* ViewDemoView.swift */,
-				396FBEBB2AE6838100310DEB /* SplitDemoView.swift */,
-			);
-			path = DemoScenes;
-			sourceTree = "<group>";
-		};
-		398DB7B0250401E300CD89DB /* MusicScene */ = {
-			isa = PBXGroup;
-			children = (
-				395781D824DC5D2700A604D1 /* MusicView.swift */,
-				395781F224DC692300A604D1 /* PlayerView.swift */,
-			);
-			path = MusicScene;
-			sourceTree = "<group>";
-		};
-		398DB7B1250401F800CD89DB /* MapScene */ = {
-			isa = PBXGroup;
-			children = (
-				39E77917250C02B400E80FFF /* LNUIKitPopupContentController.swift */,
-				398404ED2500451E006C9011 /* MapView.swift */,
-			);
-			path = MapScene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,6 +151,13 @@
 			dependencies = (
 				3998CA5C268CE8E300A60468 /* PBXTargetDependency */,
 				3998CA5A268CE8DF00A60468 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				39B0CADB301488B500D09CB0 /* DemoScenes */,
+				39B0CAE4301488BD00D09CB0 /* ColorUtils */,
+				39B0CAE8301488C200D09CB0 /* MusicScene */,
+				39B0CAED301488CB00D09CB0 /* MapScene */,
+				39B0CAF1301488CE00D09CB0 /* IntroWebView */,
 			);
 			name = LNPopupUIExample;
 			packageProductDependencies = (
@@ -297,7 +219,6 @@
 			files = (
 				395781E124DC5D2800A604D1 /* LaunchScreen.storyboard in Resources */,
 				39A8BE93300B478E001B1E10 /* LNPopupUI.icon in Resources */,
-				395781DE24DC5D2800A604D1 /* Preview Assets.xcassets in Resources */,
 				395781DB24DC5D2800A604D1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,23 +230,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3985A1E525378E73004AA4D7 /* PopupDemoWebView.swift in Sources */,
 				390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */,
-				3971B339254D7772004AEBC9 /* UIColor+SeedColors.swift in Sources */,
-				396FBEBC2AE6838100310DEB /* SplitDemoView.swift in Sources */,
-				398404EE2500451E006C9011 /* MapView.swift in Sources */,
-				394215F628F305D500D806A4 /* PopupDemoView.swift in Sources */,
-				39AAAA72250415E800E5FD41 /* ViewDemoView.swift in Sources */,
-				39AAAA6C25040FA900E5FD41 /* TabNavView.swift in Sources */,
 				3973F1262CD5902400A9D40F /* SettingsViewController.swift in Sources */,
 				3973F1272CD5902400A9D40F /* SettingKeys.m in Sources */,
-				395781D924DC5D2700A604D1 /* MusicView.swift in Sources */,
-				3937096B2E8D6B9E00936583 /* DumbSearchView.swift in Sources */,
 				398404EA25003925006C9011 /* SceneSelection.swift in Sources */,
-				39AAAA702504144300E5FD41 /* TabDemoView.swift in Sources */,
-				39E77918250C02B400E80FFF /* LNUIKitPopupContentController.swift in Sources */,
-				395781F324DC692300A604D1 /* PlayerView.swift in Sources */,
-				398DB7AD250400BE00CD89DB /* NavDemoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,7 +393,6 @@
 				CODE_SIGN_ENTITLEMENTS = LNPopupUIExample/LNPopupUIExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"LNPopupUIExample/Preview Content\"";
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
@@ -496,17 +403,20 @@
 				);
 				INFOPLIST_FILE = LNPopupUIExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupUIExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "LNPOPUP DEBUG";
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupUIExample/LNPopupUIExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -519,23 +429,25 @@
 				CODE_SIGN_ENTITLEMENTS = LNPopupUIExample/LNPopupUIExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"LNPopupUIExample/Preview Content\"";
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "LNPOPUP=1";
 				INFOPLIST_FILE = LNPopupUIExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupUIExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = LNPOPUP;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupUIExample/LNPopupUIExample-Bridging-Header.h";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
 		};

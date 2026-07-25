@@ -10,24 +10,6 @@ import SwiftUI
 import LNPopupUI
 import ActivityView
 
-fileprivate struct CellPaddedButton: View {
-	let text: String
-	let action: () -> Void
-	
-	public init(_ content: String, action: @escaping () -> Void) {
-		text = content
-		self.action = action
-	}
-	
-	var body: some View {
-		Button(action: action) {
-			LNPopupText(text)
-		}
-//		.padding([.top, .bottom], 4.167)
-		.tint(Color(.label))
-	}
-}
-
 extension View {
 	func pagePresentationIfPossible() -> some View {		
 		if #available(iOS 18.0, *) {
@@ -44,7 +26,7 @@ extension View {
 extension View {
 	@ViewBuilder
 	func deviceAppropriateModalPresentation<Content: View>(isPresented: Binding<Bool>, attachmentAnchor: PopoverAttachmentAnchor = .rect(.bounds), arrowEdge: Edge? = nil, @ViewBuilder content: @escaping () -> Content) -> some View {
-		if UIDevice.current.userInterfaceIdiom == .pad {
+		if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac {
 			self.popover(isPresented: isPresented, attachmentAnchor: attachmentAnchor, arrowEdge: arrowEdge, content: content)
 		} else {
 			self.sheet(isPresented: isPresented, content: content)
@@ -66,6 +48,7 @@ struct SceneSelection: View {
 	@State var mapSheetPresented: Bool = false
 	@State var splitViewPresented: Bool = false
 	@State var splitViewGlobalPresented: Bool = false
+	@State var dynamicBarContentPresented: Bool = false
 	
 	@State var settingsPresented: Bool = false
 	@State private var item: ActivityItem? = nil
@@ -80,10 +63,10 @@ struct SceneSelection: View {
 //	let font = Font.system(size: 15, weight: .black).monospaced().lowercaseSmallCaps()
 	
 	var body: some View {
-		MaterialNavigationStack {
+		NavigationStack {
 			List {
 				Section {
-					CellPaddedButton("Tab View + Navigation View") {
+					Button("Tab View + Navigation View") {
 						tabnavPresented.toggle()
 					}
 					.fullScreenCover(isPresented: $tabnavPresented, content: {
@@ -91,7 +74,7 @@ struct SceneSelection: View {
 							tabnavPresented.toggle()
 						}
 					})
-					CellPaddedButton("Tab View") {
+					Button("Tab View") {
 						tabPresented.toggle()
 					}
 					.fullScreenCover(isPresented: $tabPresented, content: {
@@ -99,7 +82,7 @@ struct SceneSelection: View {
 							tabPresented.toggle()
 						}
 					})
-					CellPaddedButton("Navigation View") {
+					Button("Navigation View") {
 						navPresented.toggle()
 					}
 					.fullScreenCover(isPresented: $navPresented, content: {
@@ -107,7 +90,7 @@ struct SceneSelection: View {
 							navPresented.toggle()
 						}
 					})
-					CellPaddedButton("Navigation View (Sheet)") {
+					Button("Navigation View (Sheet)") {
 						viewSheetPresented.toggle()
 					}
 					.sheet(isPresented: $viewSheetPresented, content: {
@@ -116,7 +99,7 @@ struct SceneSelection: View {
 						}
 						.pagePresentationIfPossible()
 					})
-					CellPaddedButton("View") {
+					Button("View") {
 						viewPresented.toggle()
 					}
 					.fullScreenCover(isPresented: $viewPresented, content: {
@@ -126,14 +109,14 @@ struct SceneSelection: View {
 					})
 					if #available(iOS 17, *) {
 						Group {
-							CellPaddedButton("Split View (All)") {
+							Button("Split View (All)") {
 								splitViewPresented.toggle()
 							}.fullScreenCover(isPresented: $splitViewPresented) {
 								SplitDemoView(isGlobal: false) {
 									splitViewPresented.toggle()
 								}
 							}
-							CellPaddedButton("Split View (Global)") {
+							Button("Split View (Global)") {
 								splitViewGlobalPresented.toggle()
 							}
 							.fullScreenCover(isPresented: $splitViewGlobalPresented) {
@@ -155,9 +138,25 @@ struct SceneSelection: View {
 				} footer: {
 					LNPopupText("Presents a standard test scene with a popup bar.")
 				}
+				if #available(iOS 17, *) {
+					Section {
+						Button("Dynamic Bar Content") {
+							dynamicBarContentPresented.toggle()
+						}
+						.fullScreenCover(isPresented: $dynamicBarContentPresented) {
+							DynamicBarContent {
+								dynamicBarContentPresented.toggle()
+							}
+						}
+					} header: {
+						LNPopupText("Dynamic Bar Content")
+					} footer: {
+						LNPopupText("Presents a scene where the popup bar content is dynamically updated, depending on available space")
+					}
+				}
 				Section {
 					if #available(iOS 18.0, *) {
-						CellPaddedButton("Music") {
+						Button("Music") {
 							musicSheetPresented.toggle()
 						}
 						.fullScreenCover(isPresented: $musicSheetPresented, content: {
@@ -166,8 +165,8 @@ struct SceneSelection: View {
 							}
 						})
 					} else {
-						CellPaddedButton("Music") {
-						}.disabled(true)
+						Button("Music") {}
+							.disabled(true)
 					}
 				} header: {
 					LNPopupText("Demo Apps")
@@ -175,7 +174,7 @@ struct SceneSelection: View {
 					LNPopupText("Presents a rudimentary recreation of a music app.")
 				}
 				Section {
-					CellPaddedButton("Maps") {
+					Button("Maps") {
 						mapSheetPresented.toggle()
 					}
 					.fullScreenCover(isPresented: $mapSheetPresented, content: {
@@ -189,6 +188,7 @@ struct SceneSelection: View {
 					LNPopupText("Presents a scene with a custom popup bar view and a UIKit popup content controller")
 				}
 			}
+			.foregroundStyle(.primary)
 			.listStyle(InsetGroupedListStyle())
 			.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 			.toolbar {
@@ -196,8 +196,13 @@ struct SceneSelection: View {
 					Button {
 						settingsPresented.toggle()
 					} label: {
+#if targetEnvironment(macCatalyst)
+						Label("Settings", systemImage: "gearshape")
+							.labelStyle(.iconOnly)
+#else
 						Label("Settings", image: "gears")
 							.labelStyle(.iconOnly)
+#endif
 					}
 					.deviceAppropriateModalPresentation(isPresented: $settingsPresented, content: {
 						SettingsNavView()
@@ -210,8 +215,14 @@ struct SceneSelection: View {
 		.popup(isBarPresented: Binding.constant(true), popupContent: {
 			PopupDemoWebView()
 		})
+#if targetEnvironment(macCatalyst)
+		.popupCloseButtonPositioning(.leading)
+		.popupCloseButtonStyle(.glass)
+#else
+		.popupCloseButtonStyle(.grabber)
 		.popupBarStyle(.floating)
 		.popupBarShineEnabled(ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27)
+#endif
 		.popupBarInheritsBottomBarMetrics(false)
 		.popupBarContextMenu {
 			Link(destination: URL(string: "https://github.com/LeoNatan/LNPopupUI")!) {

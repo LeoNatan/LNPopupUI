@@ -98,7 +98,7 @@ struct RandomTitlesListView : View {
 	@Environment(\.font) var font
 	
 	var body: some View {
-		MaterialNavigationStack {
+		NavigationStack {
 			List(songs) { song in
 				Button {
 					onSongSelect(song)
@@ -183,7 +183,7 @@ struct MusicView: View {
 	}
 	
 	var body: some View {
-		MaterialTabView {
+		TabView {
 			ForEach(0..<2) { tabIdx in
 				tabCreator(tabIdx)
 			}

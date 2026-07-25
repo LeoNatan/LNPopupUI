@@ -12,7 +12,11 @@ import SwiftUI
 struct LNPopupUIExample: App {
 	var body: some Scene {
 		WindowGroup {
+#if targetEnvironment(macCatalyst)
+			DynamicBarContent(onDismiss: {})
+#else
 			SceneSelection()
+#endif
 		}
 	}
 }

@@ -44,21 +44,13 @@ struct InnerNavView : View {
 	let hideBarHandler: () -> Void
 	
 	var body: some View {
-		MaterialNavigationStack {
+		NavigationStack {
 			let bottomButtonsHandlers = SafeAreaDemoView.BottomButtonHandlers(presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
 			let bottomBarHideSupport = SafeAreaDemoView.BottomBarHideSupport(showsBottomBarHideButton: true, isBottomBarTab: true)
 			
 			SafeAreaDemoView(colorSeed: "tab_\(tabIdx)", includeLink: true, bottomButtonsHandlers: bottomButtonsHandlers, showDismissButton: true, onDismiss: onDismiss, bottomBarHideSupport: bottomBarHideSupport)
 				.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 				.navigationBarTitleDisplayMode(.inline)
-				.introspect(.tabView, on: .iOS(.v18, .v26), scope: .ancestor) { tvc in
-					if #available(iOS 18.0, *) {
-						if objc_getAssociatedObject(tvc, key) as? Bool != true {
-							tvc.sidebar.isHidden = true
-							objc_setAssociatedObject(tvc, key, NSNumber(booleanLiteral: true), .OBJC_ASSOCIATION_RETAIN)
-						}
-					}
-				}
 				.navigationBarBackButtonHidden(true)
 		}
 	}
@@ -82,7 +74,7 @@ struct TabGeneratorView<Content>: View where Content: View {
 	
 	var body: some View {
 		if #available(iOS 18.0, *) {
-			MaterialTabView {
+			TabView {
 				ForEach(1..<4) { idx in
 					Tab(NSLocalizedString("Tab\(UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular ? " \(idx)" : "")", comment: ""), systemImage: "\(idx).square") {
 						tabContentGenerator(idx - 1)
@@ -135,7 +127,7 @@ struct TabGeneratorView<Content>: View where Content: View {
 			.tabViewStylePad18()
 			.popupDemo(demoContent: demoContent, isBarPresented: $isBarPresented, includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
 		} else {
-			MaterialTabView {
+			TabView {
 				ForEach(1..<5) { idx in
 					tabContentGenerator(idx - 1)
 						.tabItem {

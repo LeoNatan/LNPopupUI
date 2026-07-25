@@ -91,7 +91,7 @@ struct CustomBarMapView: View {
 	@State var isPopupOpen: Bool = false
 	
 	var body: some View {
-		MaterialNavigationStack {
+		NavigationStack {
 			Map(coordinateRegion: $region)
 				.ignoresSafeArea()
 				.animation(.easeInOut, value: region)

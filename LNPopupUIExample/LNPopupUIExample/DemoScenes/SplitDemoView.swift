@@ -15,7 +15,7 @@ struct SplitInnerView: View {
 	let onDismiss: () -> Void
 	
 	var body: some View {
-		let nav = MaterialNavigationStack {
+		let nav = NavigationStack {
 			InnerView(tabIdx: idx, onDismiss: onDismiss, includeToolbar: false, presentBarHandler: nil, hideBarHandler: nil, noCloseButton: true)
 				.toolbar {
 					ToolbarItem(placement: .confirmationAction) {
@@ -47,7 +47,7 @@ struct SplitDemoView: View {
 	}
 	
 	var body: some View {
-		let splitView = MaterialNavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.content)) {
+		let splitView = NavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.content)) {
 			SplitInnerView(title: "Sidebar", idx: 600, isGlobal: isGlobal, onDismiss: onDismiss)
 				.navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 400)
 		} detail: {

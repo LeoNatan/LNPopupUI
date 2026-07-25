@@ -173,7 +173,7 @@ struct PlayerView: View {
 	
 	@State var selectedPopupItemIdentifier = ""
 	
-	func popupItem(for song: RandomTitleSong) -> PopupItem<RandomTitleSong, String, String, some ToolbarContent> {
+	func popupItem(for song: RandomTitleSong) -> PopupItem<RandomTitleSong, String, String, Never, some ToolbarContent> {
 		PopupItem(id: song, title: song.title, subtitle: song.albumName, image: Image(song.imageName), progress: playbackState.progress) {
 			let isPlaying = song.isNotPlaying == false && playbackState.isPlaying
 			

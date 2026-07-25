@@ -71,7 +71,6 @@ struct TabDemoView : View {
 	var body: some View {
 		TabGeneratorView(demoContent: demoContent, isBarPresented: $isBarPresented, tabContentGenerator: { idx in
 			InnerView(tabIdx:idx, onDismiss: onDismiss, presentBarHandler: presentBarHandler, hideBarHandler: hideBarHandler)
-				.fixBottomBarAppearance()
 		})
 	}
 }

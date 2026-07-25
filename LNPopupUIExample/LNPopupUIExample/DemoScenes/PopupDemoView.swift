@@ -192,16 +192,18 @@ struct HideShowTabBarModifier: ViewModifier {
 	@ViewBuilder func body(content: Content) -> some View {
 		if #available(iOS 18.0, *), bottomBarHideSupport?.showsBottomBarHideButton ?? false {
 			content.toolbar {
-				ToolbarItem(placement: .navigationBarLeading) {
-					Button {
-						withAnimation {
-							bottomBarHideSupport?.isBottomBarPresented.toggle()
-						}
-					} label: {
-						if UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular && bottomBarHideSupport?.isBottomBarTab ?? false {
-							Image(systemName: "rectangle.topthird.inset.filled")
-						} else {
-							Image(systemName: "rectangle.bottomthird.inset.filled")
+				if bottomBarHideSupport.map({ !($0.isBottomBarTab ?? false) || !$0.isCatalyst }) ?? true {
+					ToolbarItem(placement: .navigationBarLeading) {
+						Button {
+							withAnimation {
+								bottomBarHideSupport?.isBottomBarPresented.toggle()
+							}
+						} label: {
+							if UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular && bottomBarHideSupport?.isBottomBarTab ?? false {
+								Image(systemName: "rectangle.topthird.inset.filled")
+							} else {
+								Image(systemName: "rectangle.bottomthird.inset.filled")
+							}
 						}
 					}
 				}
@@ -232,6 +234,7 @@ struct SafeAreaDemoView : View {
 		var showsBottomBarHideButton: Bool = false
 		var isBottomBarTab: Bool? = false
 		var isBottomBarPresented: Bool = true
+		let isCatalyst = ProcessInfo.processInfo.isMacCatalystApp || ProcessInfo.processInfo.isiOSAppOnMac
 	}
 	
 	let demoContent: DemoContent?
@@ -363,7 +366,7 @@ struct SafeAreaDemoView : View {
 					.tint(Color(uiColor: .label))
 					.modifier(HideShowTabBarModifier(bottomBarHideSupport: $bottomBarHideSupport))
 					.toolbar(includeToolbar && bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .bottomBar)
-					.toolbar(bottomBarHideSupport?.isBottomBarPresented ?? true ? .visible : .hidden, for: .tabBar)
+					.toolbar(bottomBarHideSupport.map { $0.isBottomBarPresented && !$0.isCatalyst } ?? true ? .visible : .hidden, for: .tabBar)
 					.introspect(.viewController, on: .iOS(.v16, .v17, .v18)) { vc in
 						vc.navigationItem.backButtonTitle = String(localized: "Back")
 					}
@@ -647,94 +650,6 @@ struct PopupDemoViewModifier: ViewModifier {
 extension View {
 	func popupDemo(demoContent: DemoContent, isBarPresented: Binding<Bool>, isPopupOpen: Binding<Bool>? = nil, includeContextMenu: Bool) -> some View {
 		return self.modifier(PopupDemoViewModifier(demoContent: demoContent, isBarPresented: isBarPresented, isPopupOpen: isPopupOpen, includeContextMenu: includeContextMenu))
-	}
-}
-
-fileprivate struct FixBottomBarAppearanceModifier: ViewModifier {
-	@AppStorage(.barStyle, store: .settings) var barStyle: LNPopupBar.Style = .default
-	
-	func body(content: Content) -> some View {
-		content.introspect(.tabView, on: .iOS(.v16, .v17, .v18, .v26), scope: .ancestor) { tabBarController in
-			guard !LNPopupSettingsHasOS26Glass() else {
-				return
-			}
-			
-			let isFloating = barStyle == .floating || barStyle == .floatingCompact || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
-			tabBarController.tabBar.standardAppearance.backgroundEffect = UIBlurEffect(style: isFloating ? .systemThinMaterial : .systemChromeMaterial)
-		}.introspect(.navigationStack, on: .iOS(.v16, .v17, .v18, .v26), scope: .ancestor) { navBarController in
-			guard !LNPopupSettingsHasOS26Glass() else {
-				return
-			}
-			
-			let isFloating = barStyle == .floating || barStyle == .floatingCompact || barStyle == .default && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17
-			let effect = UIBlurEffect(style: isFloating ? .systemThinMaterial : .systemChromeMaterial)
-			navBarController.navigationBar.standardAppearance.backgroundEffect = effect
-			navBarController.navigationBar.compactAppearance?.backgroundEffect = effect
-			navBarController.toolbar.standardAppearance.backgroundEffect = effect
-			navBarController.toolbar.compactAppearance?.backgroundEffect = effect
-		}
-	}
-}
-
-extension View {
-	func fixBottomBarAppearance() -> some View {
-		return modifier(FixBottomBarAppearanceModifier())
-	}
-}
-
-struct MaterialTabView<Content: View>: View {
-	let tabView: any View
-	
-	init(@ViewBuilder content: () -> Content) {
-		tabView = TabView {
-			content().fixBottomBarAppearance()
-		}
-	}
-	
-	@available(iOS 18.0, *)
-	init<C>(@TabContentBuilder<Never> content: () -> C) where Content == TabContentBuilder<Never>.Content<C>, C : TabContent {
-		tabView = TabView.init(content: content)
-	}
-	
-	var body: some View {
-		AnyView(tabView)
-	}
-}
-
-struct MaterialNavigationStack<Content: View>: View {
-	let content: Content
-	
-	init(@ViewBuilder content: () -> Content) {
-		self.content = content()
-	}
-	
-	var body: some View {
-		NavigationStack {
-			content.fixBottomBarAppearance()
-		}
-	}
-}
-
-@available(iOS 17.0, *)
-struct MaterialNavigationSplitView<Sidebar: View, Detail: View>: View {
-	let sidebar: Sidebar
-	let detail: Detail
-	let columnVisibility: Binding<NavigationSplitViewVisibility>
-	let preferredCompactColumn: Binding<NavigationSplitViewColumn>
-	
-	init(columnVisibility: Binding<NavigationSplitViewVisibility>, preferredCompactColumn: Binding<NavigationSplitViewColumn>, @ViewBuilder sidebar: () -> Sidebar, @ViewBuilder detail: () -> Detail) {
-		self.sidebar = sidebar()
-		self.detail = detail()
-		self.columnVisibility = columnVisibility
-		self.preferredCompactColumn = preferredCompactColumn
-	}
-	
-	var body: some View {
-		NavigationSplitView(columnVisibility: columnVisibility, preferredCompactColumn: preferredCompactColumn) {
-			sidebar.fixBottomBarAppearance()
-		} detail: {
-			detail.fixBottomBarAppearance()
-		}
 	}
 }
 
