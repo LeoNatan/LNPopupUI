@@ -135,13 +135,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	func viewHandler(_ state: LNPopupState<PopupContent>) -> (() -> Void) {
-		let view = self.currentPopupState.content!()
+		let view = self.currentPopupState.content
 		
 		return {
 			if let popupViewController = LNPopupProxyViewController.cast(self.popupViewController, to: view.self) {
 				popupViewController.popupContentRootView = view
 			} else {
-				self.popupViewController = LNPopupContentHostingController(content: self.currentPopupState.content!)
+				self.popupViewController = LNPopupContentHostingController(content: self.currentPopupState.content)
 			}
 		}
 	}

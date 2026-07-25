@@ -12,8 +12,8 @@ import UIKit
 
 public class LNPopupContentHostingController<PopupContent> : UIHostingController<AnyView>, LNPopupBarDataSource, LNPopupBarDelegate where PopupContent: View {
 	public required
-	init(@ViewBuilder content: () -> PopupContent) {
-		self.popupContentRootView = content()
+	init(content: PopupContent) {
+		self.popupContentRootView = content
 		super.init(rootView: AnyView(EmptyView()))
 		rootView = transform(self.popupContentRootView)
 	}

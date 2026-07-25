@@ -23,7 +23,7 @@ internal struct LNPopupState<PopupContent: View> {
 	var isBarPresented: Binding<Bool>
 	var isPopupOpen: Binding<Bool>?
 	let environment: EnvironmentValues
-	let content: (() -> PopupContent)?
+	let content: PopupContent?
 	let contentController: UIViewController?
 	let onOpen: (() -> Void)?
 	let onClose: (() -> Void)?

@@ -13,29 +13,28 @@ import LNPopupController
 internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewControllerRepresentable where Content: View, PopupContent: View {
 	private var isBarPresented: Binding<Bool>
 	private var isPopupOpen: Binding<Bool>?
-	private let passthroughContent: () -> Content
-	private let popupContent: (() -> PopupContent)?
+	private let passthroughContent: Content
+	private let popupContent: PopupContent?
 	private let popupContentController: UIViewController?
 	private let onOpen: (() -> Void)?
 	private let onClose: (() -> Void)?
 	
-	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContent: (() -> PopupContent)? = nil, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
+	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, @ViewBuilder popupContent: () -> PopupContent, popupContentController: UIViewController? = nil, @ViewBuilder content: () -> Content) {
 		self.isBarPresented = isBarPresented
 		self.isPopupOpen = isOpen
-		passthroughContent = content
-		self.popupContent = popupContent
+		passthroughContent = content()
+		self.popupContent = popupContent()
 		self.popupContentController = popupContentController
 		self.onOpen = onOpen
 		self.onClose = onClose
 	}
 	
 	func makeUIViewController(context: UIViewControllerRepresentableContext<LNPopupContainerViewWrapper>) -> LNPopupProxyViewController<Content, PopupContent> {
-		return LNPopupProxyViewController(rootView: passthroughContent())
+		return LNPopupProxyViewController(rootView: passthroughContent)
 	}
 	
 	func updateUIViewController(_ uiViewController: LNPopupProxyViewController<Content, PopupContent>, context: UIViewControllerRepresentableContext<LNPopupContainerViewWrapper>) {
-		
-		uiViewController.rootView = passthroughContent()
+		uiViewController.rootView = passthroughContent
 		
 		let state = LNPopupState(isBarPresented: isBarPresented,
 								 isPopupOpen: isPopupOpen,
@@ -49,10 +48,10 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 }
 
 internal extension LNPopupContainerViewWrapper where PopupContent == Never {
-	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContentController: UIViewController? = nil, @ViewBuilder content: @escaping () -> Content) {
+	init(isBarPresented: Binding<Bool>, isOpen: Binding<Bool>?, onOpen: (() -> Void)?, onClose: (() -> Void)?, popupContentController: UIViewController? = nil, @ViewBuilder content: () -> Content) {
 		self.isBarPresented = isBarPresented
 		self.isPopupOpen = isOpen
-		passthroughContent = content
+		passthroughContent = content()
 		self.popupContent = nil
 		self.popupContentController = popupContentController
 		self.onOpen = onOpen
