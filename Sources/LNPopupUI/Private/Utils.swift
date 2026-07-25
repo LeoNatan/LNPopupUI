@@ -85,9 +85,9 @@ internal struct TitleContentView : View {
 
 internal
 extension View {
-	@ViewBuilder func accentTintIfNeeded() -> some View {
+	@ViewBuilder func accentTintIfNeeded(_ uiColor: UIColor?) -> some View {
 		if #available(iOS 26.0, *) {
-			self.tint(.accentColor)
+			self.tint(Color(uiColor: uiColor ?? .tintColor))
 		} else {
 			self
 		}
@@ -121,9 +121,9 @@ func barItemContainer<Content: ToolbarContent>(_ content: Content) -> AnyView {
 }
 
 internal
-func createOrUpdateBarItemAdapter(in popupItem: LNPopupItem, key: String, buttonKeyPath: ReferenceWritableKeyPath<LNPopupItem, [UIBarButtonItem]?>, userNavigationViewWrapper anyView: AnyView?) {
+func createOrUpdateBarItemAdapter(in popupItem: LNPopupItem, key: String, buttonKeyPath: ReferenceWritableKeyPath<LNPopupItem, [UIBarButtonItem]?>, userNavigationViewWrapper anyView: AnyView?, for popupBar: LNPopupBar) {
 	if let anyView {
-		let anyView = AnyView(anyView.accentTintIfNeeded())
+		let anyView = AnyView(anyView.accentTintIfNeeded(popupBar.tintColor))
 		if let adapter = popupItem.value(forKey: key) as? LNPopupBarItemAdapter {
 			adapter.rootView = anyView
 		} else {

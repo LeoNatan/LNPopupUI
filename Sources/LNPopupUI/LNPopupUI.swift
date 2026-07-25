@@ -385,7 +385,7 @@ extension View {
 	/// - Warning: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as ``SwiftUICore/View/popupItem(popupItem:)``, a multiple popup item providing modifier, such as ``SwiftUICore/View/popupItems(selection:items:)`` or modifiers to update the default popup item, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``.
 	/// - Parameters:
 	///   - popupItem: The popup item to display in a popup bar.
-	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, ButtonToolbarContent: ToolbarContent>(_ popupItem: PopupItem<Identifier, TitleContent, SubtitleContent, ButtonToolbarContent>) -> some View {
+	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, LeadingButtonToolbarContent: ToolbarContent, TrailingButtonToolbarContent: ToolbarContent>(_ popupItem: PopupItem<Identifier, TitleContent, SubtitleContent, LeadingButtonToolbarContent, TrailingButtonToolbarContent>) -> some View {
 		preference(key: LNPopupItemPreferenceKey.self, value: %%AnyPopupItem(popupItem).toAnyHashable())
 	}
 	
@@ -417,7 +417,7 @@ extension View {
 	/// - Warning: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as ``SwiftUICore/View/popupItem(popupItem:)``, a multiple popup item providing modifier, such as ``SwiftUICore/View/popupItems(selection:items:)`` or modifiers to update the default popup item, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``.
 	/// - Parameters:
 	///   - popupItem: The popup item to display in a popup bar.
-	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, ButtonToolbarContent: ToolbarContent>(popupItem: () -> PopupItem<Identifier, TitleContent, SubtitleContent, ButtonToolbarContent>) -> some View {
+	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, LeadingButtonToolbarContent: ToolbarContent, TrailingButtonToolbarContent: ToolbarContent>(popupItem: () -> PopupItem<Identifier, TitleContent, SubtitleContent, LeadingButtonToolbarContent, TrailingButtonToolbarContent>) -> some View {
 		preference(key: LNPopupItemPreferenceKey.self, value: %%AnyPopupItem(popupItem()).toAnyHashable())
 	}
 }

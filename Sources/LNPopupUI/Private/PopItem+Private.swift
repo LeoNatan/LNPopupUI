@@ -86,23 +86,40 @@ class EquatableViewTitleContainer<TitleContent: View & Equatable, SubtitleConten
 }
 
 internal
-struct ButtonContainer<Content: ToolbarContent> {
-	let content: Content
+struct ButtonContainer<LeadingContent: ToolbarContent, TrailingContent: ToolbarContent> {
+	let leadingContent: LeadingContent?
+	let trailingContent: TrailingContent?
 	
-	func update(_ popupItem: LNPopupItem) {
-		let wrapper = barItemContainer(content)
-		createOrUpdateBarItemAdapter(in: popupItem, key: "swiftuiHiddenTrailingController", buttonKeyPath: \.barButtonItems, userNavigationViewWrapper: wrapper)
+	func update(_ popupItem: LNPopupItem, for popupBar: LNPopupBar) {
+		let leadingView = leadingContent.map { barItemContainer($0) }
+		createOrUpdateBarItemAdapter(in: popupItem, key: "swiftuiHiddenLeadingController", buttonKeyPath: \.leadingBarButtonItems, userNavigationViewWrapper: leadingView, for: popupBar)
+		let trailingView = trailingContent.map { barItemContainer($0) }
+		createOrUpdateBarItemAdapter(in: popupItem, key: "swiftuiHiddenTrailingController", buttonKeyPath: \.trailingBarButtonItems, userNavigationViewWrapper: trailingView, for: popupBar)
 	}
 	
 	func eq(rhs: ButtonContainer) -> Bool {
 		false
-//		var lhs = String()
-//		dump(content, to: &lhs)
-//		
-//		var _rhs = String()
-//		dump(rhs.content, to: &_rhs)
-//		
-//		return lhs == _rhs
+	}
+}
+
+extension ButtonContainer where LeadingContent == Never {
+	init(trailingContent: TrailingContent) {
+		leadingContent = nil
+		self.trailingContent = trailingContent
+	}
+}
+
+extension ButtonContainer where TrailingContent == Never {
+	init(leadingContent: LeadingContent) {
+		self.leadingContent = leadingContent
+		trailingContent = nil
+	}
+}
+
+extension ButtonContainer where LeadingContent == Never, TrailingContent == Never {
+	init() {
+		leadingContent = nil
+		trailingContent = nil
 	}
 }
 
@@ -114,18 +131,13 @@ func emptyToolbarItem() -> some ToolbarContent {
 fileprivate let userInfoKey = "_lnpopup_ui_identifier"
 
 extension PopupItem {
-//	static
-//	func == (lhs: Self, rhs: Self) -> Bool {
-//		lhs.id == rhs.id && lhs.image == rhs.image && lhs.progress == rhs.progress && lhs.titleContainer.eq(rhs: rhs.titleContainer) && lhs.buttonContainer.eq(rhs: rhs.buttonContainer)
-//	}
-	
 	internal
-	init(id: Identifier, titleContainer: TitleContainer<TitleContent, SubtitleContent>, image: PopupItemImageType?, buttons: ButtonToolbarContent, progress: Float?, private: Void) {
-		self.init(id: id, titleContainer: titleContainer, image: image, buttonContainer: ButtonContainer(content: buttons), progress: progress, private: `private`)
+	init(id: Identifier, titleContainer: TitleContainer<TitleContent, SubtitleContent>, image: PopupItemImageType?, leadingButtons: LeadingButtonToolbarContent, trailingButtons: TrailingButtonToolbarContent, progress: Float?, private: Void) {
+		self.init(id: id, titleContainer: titleContainer, image: image, buttonContainer: ButtonContainer(leadingContent: leadingButtons, trailingContent: trailingButtons), progress: progress, private: `private`)
 	}
 	
 	internal
-	init(id: Identifier, titleContainer: TitleContainer<TitleContent, SubtitleContent>, image: PopupItemImageType?, buttonContainer: ButtonContainer<ButtonToolbarContent>, progress: Float?, private: Void) {
+	init(id: Identifier, titleContainer: TitleContainer<TitleContent, SubtitleContent>, image: PopupItemImageType?, buttonContainer: ButtonContainer<LeadingButtonToolbarContent, TrailingButtonToolbarContent>, progress: Float?, private: Void) {
 		self.id = id
 		self.titleContainer = titleContainer
 		self.image = image
@@ -134,8 +146,8 @@ extension PopupItem {
 	}
 	
 	internal
-	func toAnyHashable() -> PopupItem<AnyHashable, TitleContent, SubtitleContent, ButtonToolbarContent> {
-		PopupItem<AnyHashable, TitleContent, SubtitleContent, ButtonToolbarContent>(id: AnyHashable(id), titleContainer: titleContainer, image: image, buttonContainer: buttonContainer, progress: progress, private: ())
+	func toAnyHashable() -> PopupItem<AnyHashable, TitleContent, SubtitleContent, LeadingButtonToolbarContent, TrailingButtonToolbarContent> {
+		PopupItem<AnyHashable, TitleContent, SubtitleContent, LeadingButtonToolbarContent, TrailingButtonToolbarContent>(id: AnyHashable(id), titleContainer: titleContainer, image: image, buttonContainer: buttonContainer, progress: progress, private: ())
 	}
 	
 	internal
@@ -170,7 +182,7 @@ extension PopupItem {
 		}
 		createOrUpdateImageAdapter(in: popupItem, for: imageData)
 		
-		buttonContainer.update(popupItem)
+		buttonContainer.update(popupItem, for: popupBar)
 		
 		if let progress {
 			popupItem.progress = progress
@@ -185,6 +197,20 @@ extension PopupItem {
 	}
 }
 
+extension PopupItem where LeadingButtonToolbarContent == Never {
+	internal
+	init(id: Identifier, titleContainer: TitleContainer<TitleContent, SubtitleContent>, image: PopupItemImageType?, buttons: TrailingButtonToolbarContent, progress: Float?, private: Void) {
+		self.init(id: id, titleContainer: titleContainer, image: image, buttonContainer: ButtonContainer(trailingContent: buttons), progress: progress, private: `private`)
+	}
+}
+
+extension PopupItem where LeadingButtonToolbarContent == Never, TrailingButtonToolbarContent == Never {
+	internal
+	init(id: Identifier, titleContainer: TitleContainer<TitleContent, SubtitleContent>, image: PopupItemImageType?, buttons: TrailingButtonToolbarContent, progress: Float?, private: Void) {
+		self.init(id: id, titleContainer: titleContainer, image: image, buttonContainer: ButtonContainer(), progress: progress, private: `private`)
+	}
+}
+
 internal
 protocol PopupItemProtocol<Identifier> {
 	associatedtype Identifier: Hashable
@@ -196,19 +222,6 @@ protocol PopupItemProtocol<Identifier> {
 extension PopupItem: PopupItemProtocol {}
 
 extension AnyPopupItem {
-//	static func eqBase<T: Equatable, U: Equatable>(lhs: T, rhs: U) -> Bool {
-//		return lhs == rhs as! T
-//	}
-//	
-//	public
-//	static func == (lhs: Self, rhs: Self) -> Bool {
-//		guard type(of: lhs.base) == type(of: rhs.base) else {
-//			return false
-//		}
-//		
-//		return eqBase(lhs: lhs.base, rhs: rhs.base)
-//	}
-	
 	internal
 	func lnPopupItem(for popupBar: LNPopupBar) -> LNPopupItem {
 		base.lnPopupItem(for: popupBar)
@@ -220,6 +233,7 @@ extension AnyPopupItem {
 	}
 }
 
+internal
 func anyhashableID(from lnPopupItem: LNPopupItem) -> AnyHashable? {
 	lnPopupItem.userInfo?[userInfoKey] as? AnyHashable
 }
@@ -234,6 +248,7 @@ protocol ToAnyHashable {
 
 extension AnyPopupItem: ToAnyHashable, PopupItemProtocol {}
 
+internal
 extension Array<any ToAnyHashable> {
 	subscript(any index: Index) -> Element {
 		self[index].toAnyHashable()

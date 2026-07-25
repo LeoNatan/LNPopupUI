@@ -85,13 +85,13 @@ extension LNPopupContentHostingController {
 			
 			self?.popupItem.progress = progressWrapper.value!
 		}.onPreferenceChange(LNPopupLeadingBarItemsPreferenceKey.self) { [weak self] viewCreatorWrapper in
-			guard let self, let viewCreatorWrapper else {
+			guard let self, let viewCreatorWrapper, let container = self.popupPresentationContainer else {
 				return
 			}
 			
 			let work = {
 				let anyView = viewCreatorWrapper.value
-				createOrUpdateBarItemAdapter(in: self.popupItem, key: "swiftuiHiddenLeadingController", buttonKeyPath: \.leadingBarButtonItems, userNavigationViewWrapper: anyView)
+				createOrUpdateBarItemAdapter(in: self.popupItem, key: "swiftuiHiddenLeadingController", buttonKeyPath: \.leadingBarButtonItems, userNavigationViewWrapper: anyView, for: container.popupBar)
 			}
 			
 			if #available(iOS 27.0, *) {
@@ -101,13 +101,13 @@ extension LNPopupContentHostingController {
 				DispatchQueue.main.async(execute: work)
 			}
 		}.onPreferenceChange(LNPopupTrailingBarItemsPreferenceKey.self) { [weak self] viewCreatorWrapper in
-			guard let self, let viewCreatorWrapper else {
+			guard let self, let viewCreatorWrapper, let container = self.popupPresentationContainer else {
 				return
 			}
 			
 			let work = {
 				let anyView = viewCreatorWrapper.value
-				createOrUpdateBarItemAdapter(in: self.popupItem, key: "swiftuiHiddenTrailingController", buttonKeyPath: \.trailingBarButtonItems, userNavigationViewWrapper: anyView)
+				createOrUpdateBarItemAdapter(in: self.popupItem, key: "swiftuiHiddenTrailingController", buttonKeyPath: \.trailingBarButtonItems, userNavigationViewWrapper: anyView, for: container.popupBar)
 			}
 			
 			if #available(iOS 27.0, *) {
