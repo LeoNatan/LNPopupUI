@@ -29,20 +29,26 @@ internal struct LNPopupContainerViewWrapper<Content, PopupContent>: UIViewContro
 		self.onClose = onClose
 	}
 	
+	func state(context: UIViewControllerRepresentableContext<LNPopupContainerViewWrapper>) -> LNPopupState<PopupContent> {
+		LNPopupState(isBarPresented: isBarPresented,
+					 isPopupOpen: isPopupOpen,
+					 environment: context.environment,
+					 content: popupContent,
+					 contentController: popupContentController,
+					 onOpen: onOpen,
+					 onClose: onClose)
+	}
+	
 	func makeUIViewController(context: UIViewControllerRepresentableContext<LNPopupContainerViewWrapper>) -> LNPopupProxyViewController<Content, PopupContent> {
-		return LNPopupProxyViewController(rootView: passthroughContent)
+		let rv = LNPopupProxyViewController<Content, PopupContent>(rootView: passthroughContent)
+		let state = self.state(context: context)
+		rv.handlePopupState(state)
+		return rv
 	}
 	
 	func updateUIViewController(_ uiViewController: LNPopupProxyViewController<Content, PopupContent>, context: UIViewControllerRepresentableContext<LNPopupContainerViewWrapper>) {
 		uiViewController.rootView = passthroughContent
-		
-		let state = LNPopupState(isBarPresented: isBarPresented,
-								 isPopupOpen: isPopupOpen,
-								 environment: context.environment,
-								 content: popupContent,
-								 contentController: popupContentController,
-								 onOpen: onOpen,
-								 onClose: onClose)
+		let state = self.state(context: context)
 		uiViewController.handlePopupState(state)
 	}
 }

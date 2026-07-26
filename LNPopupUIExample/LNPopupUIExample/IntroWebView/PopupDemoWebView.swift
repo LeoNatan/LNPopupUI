@@ -44,7 +44,7 @@ struct PopupDemoWebView: View {
 			.popupItem {
 				PopupItem(id: "intro", image: Image("AppIconPopupBar")) {
 					HStack {
-						Text(NSLocalizedString("Welcome to ", comment: "")) + Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy) + Text("!")
+						Text("\(Text(NSLocalizedString("Welcome to", comment: ""))) \(Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy))\(Text("!"))")
 					}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(inheritedFont ?? .body)
 				} buttons: {
 					ToolbarItemGroup(placement: .popupBar) {

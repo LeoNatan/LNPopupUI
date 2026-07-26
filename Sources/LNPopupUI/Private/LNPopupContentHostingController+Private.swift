@@ -30,7 +30,7 @@ extension LNPopupContentHostingController {
 			}
 			
 			guard let container = self.popupPresentationContainer else {
-				fatalError()
+				return
 			}
 			
 			if let popupItemData = popupItemsWrapper.value {
@@ -51,7 +51,7 @@ extension LNPopupContentHostingController {
 			}
 			
 			guard let container = self.popupPresentationContainer else {
-				fatalError()
+				return
 			}
 			
 			container.popupBar.dataSource = nil

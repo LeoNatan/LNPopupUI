@@ -45,6 +45,8 @@ struct PopupItemImage: PopupItemImageType {
 	}
 }
 
+// MARK: - Popup Item
+
 /// A model that represents an item which can be displayed in a popup bar.
 public
 struct PopupItem<Identifier: Hashable, TitleContent, SubtitleContent, LeadingButtonToolbarContent: ToolbarContent, TrailingButtonToolbarContent: ToolbarContent>: Identifiable {
@@ -288,6 +290,198 @@ extension PopupItem where TitleContent: View & Equatable, SubtitleContent: View 
 	}
 }
 
+// MARK: - Default Popup Item Modifiers
+
+/// Modifiers for the default popup item
+///
+/// These modifiers should be applied to the view inside the popup content.
+public
+extension View {
+	/// Configures the default popup item's title and subtitle.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameters:
+	///   - localizedTitleKey: The localized title key to display.
+	///   - localizedSubtitleKey: The localized subtitle key to display. Defaults to `nil`.
+	///   - tableName: The name of the string table to search. If `nil`, use the table in the `Localizable.strings` file.
+	///   - bundle: The bundle containing the strings file. If `nil`, use the main bundle.
+	///   - titleComment: Contextual information about the title key-value pair.
+	///   - subtitleComment: Contextual information about the subtitle key-value pair.
+	func popupTitle(_ localizedTitleKey: LocalizedStringKey, subtitle localizedSubtitleKey: LocalizedStringKey? = nil, tableName: String? = nil, bundle: Bundle? = nil, titleComment: String? = nil, subtitleComment: String? = nil) -> some View {
+		let subtitle: String?
+		if let localizedSubtitleKey = localizedSubtitleKey {
+			subtitle = NSLocalizedString(localizedSubtitleKey.stringKey, tableName: tableName, bundle: bundle ?? .main, value: localizedSubtitleKey.stringKey, comment: subtitleComment ?? "")
+		} else {
+			subtitle = nil
+		}
+		
+		return popupTitle(verbatim: NSLocalizedString(localizedTitleKey.stringKey, tableName: tableName, bundle: bundle ?? .main, value: localizedTitleKey.stringKey, comment: titleComment ?? ""), subtitle: subtitle)
+	}
+	
+	@_disfavoredOverload
+	/// Configures the default popup item's title and subtitle.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameters:
+	///   - titleContent: The localized title key to display.
+	///   - subtitleContent: The localized subtitle key to display. Defaults to `nil`.
+	func popupTitle<S>(_ titleContent: S, subtitle subtitleContent: S? = nil) -> some View where S : StringProtocol {
+		let subtitle: String?
+		if let subtitleContent = subtitleContent {
+			subtitle = String(subtitleContent)
+		} else {
+			subtitle = nil
+		}
+		
+		return popupTitle(verbatim: String(titleContent), subtitle: subtitle)
+	}
+	
+	/// Configures the default popup item's title and subtitle with custom views.
+	///
+	/// When using custom labels, marquee scroll and text attributes settings have no effect.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameters:
+	///   - titleContent: A view that describes the popup's title.
+	///   - subtitleContent: A view that describes the popup's subtitle.
+	func popupTitle<TitleContent, SubtitleContent>(@ViewBuilder _ titleContent: () -> TitleContent, @ViewBuilder subtitle subtitleContent: () -> SubtitleContent = { EmptyView() }) -> some View where TitleContent : View, SubtitleContent : View {
+		preference(key: LNPopupTextTitlePreferenceKey.self, value: %%LNPopupTitleContentData(titleView: AnyView(erasing: titleContent()), subtitleView: AnyView(erasing: subtitleContent())))
+	}
+	
+	/// Configures the default popup item's title and subtitle.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameters:
+	///   - title: The title to display.
+	///   - subtitle: The subtitle to display. Defaults to `nil`.
+	func popupTitle<S>(verbatim title: S, subtitle: S? = nil) -> some View where S : StringProtocol {
+		popupTitle(verbatim: String(title), subtitle: subtitle == nil ? nil : String(subtitle!))
+	}
+	
+	/// Configures the default popup item's title and subtitle.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameters:
+	///   - title: The title to display.
+	///   - subtitle: The subtitle to display. Defaults to `nil`.
+	func popupTitle(verbatim title: String, subtitle: String? = nil) -> some View {
+		preference(key: LNPopupTitlePreferenceKey.self, value: %%LNPopupTitleData(title: title, subtitle: subtitle))
+	}
+	
+	/// Configures the default popup item's image.
+	///
+	/// Setting to `nil` will hide image from the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameters:
+	///   - image: The image to use.
+	///   - resizable: Mark the image as resizable. Defaults to `true`. If you'd like to control this on your own, set this parameter to `false`.
+	///   - aspectRatio: The ratio of width to height to use for the resulting popup bar image. Use `nil` to maintain the current aspect ratio.
+	///   - contentMode: A flag that indicates whether this view fits or fills the popup bar image view.
+	func popupImage(_ image: Image?, resizable: Bool = true, aspectRatio: CGFloat? = nil, contentMode: ContentMode = .fit) -> some View {
+		if let image {
+			preference(key: LNPopupImagePreferenceKey.self, value: %%LNPopupImageData(image: image, resizable: resizable, aspectRatio: aspectRatio, contentMode: contentMode))
+		} else {
+			preference(key: LNPopupImagePreferenceKey.self, value: nil)
+		}
+	}
+	
+	/// Configures the default popup item's progress.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameters:
+	///   - progress: The popup bar progress.
+	func popupProgress(_ progress: Float) -> some View {
+		preference(key: LNPopupProgressPreferenceKey.self, value: %%progress)
+	}
+	
+	/// Sets the bar buttons to display on the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter content: A view representing the bar buttons that appear on the popup bar.
+	func popupBarButtons<Content>(@ViewBuilder _ content: () -> Content) -> some View where Content : View {
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(content))
+	}
+	
+	/// Configures the default popup item's bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter content: Toolbar content representing the bar buttons that appear on the popup bar.
+	@available(iOS, introduced: 14.0)
+	func popupBarButtons<Content>(@ToolbarContentBuilder _ content: () -> Content) -> some View where Content : ToolbarContent {
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(content))
+	}
+	
+	/// Configures the default popup item's leading bar buttons.
+	///
+	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
+	func popupBarLeadingButtons<LeadingContent>(@ViewBuilder leading: () -> LeadingContent) -> some View where LeadingContent: View {
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+	}
+	
+	/// Configures the default popup item's leading bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// For prominent popup bars, leading bar items are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
+	func popupBarLeadingButtons<LeadingContent>(@ToolbarContentBuilder leading: () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+	}
+	
+	/// Configures the default popup item's trailing bar buttons.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
+	func popupBarTrailingButtons<TrailingContent>(@ViewBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: View {
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
+	}
+	
+	/// Configures the default popup item's trailing bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
+	func popupBarTrailingButtons<TrailingContent>(@ToolbarContentBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
+		return preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
+	}
+	
+	/// Configures the default popup item's leading and trailing bar buttons.
+	///
+	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
+	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
+	func popupBarButtons<LeadingContent, TrailingContent>(@ViewBuilder leading: () -> LeadingContent, @ViewBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
+	}
+	
+	/// Configures the default popup item's leading and trailing bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
+	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
+	func popupBarButtons<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: () -> LeadingContent, @ToolbarContentBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
+		return preference(key: LNPopupLeadingBarItemsPreferenceKey.self, value: %%barItemContainer(leading))
+			.preference(key: LNPopupTrailingBarItemsPreferenceKey.self, value: %%barItemContainer(trailing))
+	}
+}
+
+// MARK: - Utils
+
 /// A type-erased popup item.
 public
 struct AnyPopupItem<Identifier: Hashable>: Identifiable {
@@ -336,4 +530,101 @@ struct PopupItemBuilder<Identifier: Hashable> {
 	
 	public static
 	func buildLimitedAvailability(_ component: [AnyPopupItem<Identifier>]) -> [AnyPopupItem<Identifier>] { component }
+}
+
+// MARK: Deprecations
+
+/// Deprecations
+public extension View {
+	/// Configures the default popup item's bar buttons.
+	///
+	/// For compact popup bars, this is equivalent to trailing bar buttons.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter content: A view representing the bar buttons that appear on the popup bar.
+	@available(*, deprecated, renamed: "popupBarButtons(_:)")
+	func popupBarItems<Content>(@ViewBuilder _ content: () -> Content) -> some View where Content : View {
+		popupBarButtons(content)
+	}
+	
+	/// Configures the default popup item's bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// For compact popup bars, this is equivalent to trailing bar buttons.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter content: Toolbar content representing the bar buttons that appear on the popup bar.
+	@available(iOS, introduced: 14.0, deprecated, renamed: "popupBarButtons(_:)")
+	func popupBarItems<Content>(@ToolbarContentBuilder _ content: () -> Content) -> some View where Content : ToolbarContent {
+		popupBarButtons(content)
+	}
+	
+	/// Configures the default popup item's leading bar buttons.
+	///
+	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
+	@available(*, deprecated, renamed: "popupBarLeadingButtons(_:)")
+	func popupBarLeadingItems<LeadingContent>(@ViewBuilder leading: () -> LeadingContent) -> some View where LeadingContent: View {
+		popupBarLeadingButtons(leading: leading)
+	}
+	
+	/// Configures the default popup item's leading bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
+	@available(iOS, introduced: 14.0, deprecated, renamed: "popupBarLeadingButtons(_:)")
+	func popupBarLeadingItems<LeadingContent>(@ToolbarContentBuilder leading: () -> LeadingContent) -> some View where LeadingContent: ToolbarContent {
+		popupBarLeadingButtons(leading: leading)
+	}
+	
+	/// Configures the default popup item's trailing bar buttons.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
+	@available(*, deprecated, renamed: "popupBarTrailingButtons(_:)")
+	func popupBarTrailingItems<TrailingContent>(@ViewBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: View {
+		popupBarTrailingButtons(trailing: trailing)
+	}
+	
+	/// Configures the default popup item's trailing bar buttons.
+	///
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
+	@available(iOS, introduced: 14.0, deprecated, renamed: "popupBarTrailingButtons(_:)")
+	func popupBarTrailingItems<TrailingContent>(@ToolbarContentBuilder trailing: () -> TrailingContent) -> some View where TrailingContent: ToolbarContent {
+		popupBarTrailingButtons(trailing: trailing)
+	}
+	
+	/// Configures the default popup item's leading and trailing bar buttons.
+	///
+	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
+	/// - Parameter trailing: A view representing the bar buttons that appear on the trailing edge of the popup bar.
+	@available(*, deprecated, renamed: "popupBarButtons(leading:trailing:)")
+	func popupBarItems<LeadingContent, TrailingContent>(@ViewBuilder leading: () -> LeadingContent, @ViewBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: View, TrailingContent: View {
+		popupBarButtons(leading: leading, trailing: trailing)
+	}
+	
+	/// Configures the default popup item's leading and trailing bar buttons.
+	///
+	/// @note Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported. For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
+	///
+	/// - Warning: You should never mix direct popup item specifier modifiers, such as ``SwiftUICore/View/popupItem(_:)``, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
+	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
+	@available(iOS, introduced: 14.0, deprecated, renamed: "popupBarButtons(leading:trailing:)")
+	func popupBarItems<LeadingContent, TrailingContent>(@ToolbarContentBuilder leading: () -> LeadingContent, @ToolbarContentBuilder trailing: () -> TrailingContent) -> some View where LeadingContent: ToolbarContent, TrailingContent: ToolbarContent {
+		popupBarButtons(leading: leading, trailing: trailing)
+	}
 }

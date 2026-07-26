@@ -125,13 +125,6 @@ struct SceneSelection: View {
 								}
 							}
 						}
-						.disabled(horizontalSizeClass == .compact)
-						.onChange(of: horizontalSizeClass) { newValue in
-							if newValue == .compact {
-								splitViewPresented = false
-								splitViewGlobalPresented = false
-							}
-						}
 					}
 				} header: {
 					LNPopupText("Standard Scenes")
@@ -189,7 +182,7 @@ struct SceneSelection: View {
 				}
 			}
 			.foregroundStyle(.primary)
-			.listStyle(InsetGroupedListStyle())
+			.listStyle(.insetGrouped)
 			.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {

@@ -13,7 +13,9 @@ struct LNPopupUIExample: App {
 	var body: some Scene {
 		WindowGroup {
 #if targetEnvironment(macCatalyst)
-			DynamicBarContent(onDismiss: {})
+			if #available(iOS 17.0, *) {
+				DynamicBarContent(onDismiss: {})
+			}
 #else
 			SceneSelection()
 #endif

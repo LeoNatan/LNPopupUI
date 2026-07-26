@@ -68,6 +68,10 @@ prefix func ^?<T>(_ wrapped: T?) -> LNPopupEnvironmentNullableConsumer<T>? {
 	LNPopupEnvironmentNullableConsumer(wrapped)
 }
 
+private struct PopupBarLayoutObserversKey: EnvironmentKey {
+	static let defaultValue: [PopupBarLayoutObserver] = []
+}
+
 internal extension EnvironmentValues {
 	@Entry var popupInteractionStyle: LNPopupEnvironmentConsumer<UIViewController.PopupInteractionStyle>?
 	@Entry var popupCloseButtonStyle: LNPopupEnvironmentConsumer<LNPopupCloseButton.Style>?
@@ -98,6 +102,15 @@ internal extension EnvironmentValues {
 	@Entry var popupBarCustomBarPrefersFullBarWidth: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupBarInheritsBottomBarMetrics: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupContentAllowsContentTransition: LNPopupEnvironmentConsumer<Bool>?
+	
+	var popupBarLayoutObservers: Array<PopupBarLayoutObserver> {
+		get { self[PopupBarLayoutObserversKey.self] }
+		set {
+			var existing = self[PopupBarLayoutObserversKey.self]
+			existing.append(contentsOf: newValue)
+			self[PopupBarLayoutObserversKey.self] = existing
+		}
+	}
 }
 
 internal func UIImageOrientationToImageOrientation(_ o: UIImage.Orientation) -> Image.Orientation {

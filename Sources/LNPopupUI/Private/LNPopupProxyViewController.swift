@@ -11,7 +11,7 @@ import UIKit
 import LNPopupController
 import LNSwiftUIUtils
 
-internal class LNPopupImplicitAnimationController {
+internal class LNPopupImplicitAnimationController<Content: View, PopupContent: View> {
 	fileprivate var willNotificationName: NSNotification.Name = {
 		//UIWindowWillRotateNotification
 		let b64d = "VUlXaW5kb3dXaWxsUm90YXRlTm90aWZpY2F0aW9u".data(using: .utf8)!
@@ -26,15 +26,15 @@ internal class LNPopupImplicitAnimationController {
 		return NSNotification.Name(rawValue: str)
 	}()
 	
-	private weak var window: UIWindow?
+	private weak var proxyController: LNPopupProxyViewController<Content, PopupContent>?
 	private var count = 0
 	
-	init(withWindow window: UIWindow) {
-		self.window = window
+	init(proxyController: LNPopupProxyViewController<Content, PopupContent>) {
+		self.proxyController = proxyController
 	}
 	
 	func push() {
-		if count == 0, let window {
+		if count == 0, let window = proxyController?.view.window {
 			NotificationCenter.default.post(name: willNotificationName, object: window, userInfo: ["LNPopupIgnore": true])
 		}
 		
@@ -44,7 +44,7 @@ internal class LNPopupImplicitAnimationController {
 	func pop() {
 		count -= 1
 		
-		if count == 0, let window {
+		if count == 0, let window = proxyController?.view.window {
 			NotificationCenter.default.post(name: didNotificationName, object: window, userInfo: ["LNPopupIgnore": true])
 		}
 	}
@@ -124,14 +124,35 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		return value as? LNPopupContentHostingController<T>
 	}
 	
+	var previousTarget: UIViewController?
 	fileprivate var target: UIViewController {
 		let appropriateChild = children.first(where: { $0.view.frame == self.view.bounds })
 		
-		//Support NavigationSplitView
-		if appropriateChild == nil && self.splitViewController != nil && self.navigationController != nil {
-			return self.navigationController!
+		let newTarget: UIViewController
+		if appropriateChild == nil && self.splitViewController != nil, let navigationController = self.navigationController {
+			//NavigationSplitView wraps every child view in a NavigationStack.
+			newTarget = navigationController
+		} else {
+			newTarget = appropriateChild ?? self
 		}
-		return appropriateChild ?? self
+		
+		if let previousTarget, newTarget != previousTarget {
+			previousTarget.dismissPopupBar(animated: false)
+			previousTarget.popupBar.setValue(nil, forKey: "_barLayoutDelegate")
+		}
+		
+		previousTarget = newTarget
+		
+		return newTarget
+	}
+	
+	@objc(_popupBarDidLayout:)
+	func _popupBarDidLayout(_ popupBar: LNPopupBar) {
+		let layoutProxy = PopupBarLayoutProxy(effectiveBarStyle: popupBar.effectiveBarStyle,
+											  userInterfaceIdiom: popupBar.traitCollection.userInterfaceIdiom,
+											  horizontalSizeClass: UserInterfaceSizeClass(popupBar.traitCollection.horizontalSizeClass),
+											  effectiveBarContentSize: popupBar.effectiveContentSize)
+		notifyLayoutObservers(with: layoutProxy)
 	}
 	
 	func viewHandler(_ state: LNPopupState<PopupContent>) -> (() -> Void) {
@@ -155,13 +176,39 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	}
 	
 	lazy var implicitAnimationController: LNPopupImplicitAnimationController = {
-		return LNPopupImplicitAnimationController(withWindow: view.window!)
+		return LNPopupImplicitAnimationController(proxyController: self)
 	}()
+	
+	var layoutObservers: [PopupBarLayoutObserver] = []
+	func updateLayoutObservers(_ newObservers: [PopupBarLayoutObserver]) {
+		let previousIdentifiers = layoutObservers.map { $0.identifier }
+		let newIdentifiers = newObservers.map { $0.identifier }
+		
+		defer {
+			layoutObservers = newObservers
+		}
+		
+		guard previousIdentifiers.count == newIdentifiers.count, previousIdentifiers == newIdentifiers else {
+			return
+		}
+		
+		for (idx, oldObserver) in layoutObservers.enumerated() {
+			let newObserver = newObservers[idx]
+			oldObserver.transferOwnership(to: newObserver)
+		}
+	}
+	func notifyLayoutObservers(with layoutProxy: PopupBarLayoutProxy) {
+		for observer in layoutObservers {
+			observer.apply(layoutProxy)
+		}
+	}
 	
 	weak var lastKnownTarget: UIViewController?
 	var currentSmallPopupState: LNPopupSmallState = (false, nil)
 	func handlePopupState(_ state: LNPopupState<PopupContent>, animated: Bool = true) {
 		currentPopupState = state
+		
+		updateLayoutObservers(state.environment.popupBarLayoutObservers)
 			
 		let popupContentHandler = state.content != nil ? viewHandler(state) : viewControllerHandler(state)
 
@@ -333,6 +380,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 			self.lastKnownTarget = target
 			
 			if newSmallState.isBarPresented == true {
+				target.popupBar.setValue(self, forKey: "_barLayoutDelegate")
 				let targetPresentationState: UIViewController.PopupPresentationState = UIViewController.PopupPresentationState(rawValue: target.value(forKeyPath: "ln_popupController.popupControllerTargetState") as! Int)!
 				
 				if targetPresentationState.rawValue >= UIViewController.PopupPresentationState.barPresented.rawValue {
@@ -355,6 +403,7 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					}
 				}
 			} else {
+				target.popupBar.setValue(nil, forKey: "_barLayoutDelegate")
 				target.dismissPopupBar(animated: true) {
 					endImplicitAnims()
 				}
