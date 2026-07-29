@@ -116,6 +116,7 @@ struct _CloseButton: UIViewRepresentable {
 		let button = UIButton(configuration: config, primaryAction: UIAction(handler: { _ in
 			action()
 		}))
+		button.preferredBehavioralStyle = .pad
 		return button
 	}
 	

@@ -42,10 +42,11 @@ public class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopup
 	
 	fileprivate class func anyViewIgnoring(_ anyView: CustomBarContent) -> AnyView {
 		let anyViewIgnoring: AnyView
-		if #available(iOS 14, *) {
-			anyViewIgnoring = AnyView(erasing: anyView.ignoresSafeArea(.keyboard))
+		if #available(iOS 16.4, *) {
+			//Handled through hostingChild.safeAreaRegions = []
+			anyViewIgnoring = AnyView(anyView)
 		} else {
-			anyViewIgnoring = AnyView(erasing: anyView.edgesIgnoringSafeArea(.all))
+			anyViewIgnoring = AnyView(erasing: anyView.ignoresSafeArea(.all))
 		}
 		return anyViewIgnoring
 	}
@@ -79,6 +80,19 @@ public class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopup
 		}
 	}
 	
+	/// The safe area regions that this custom bar view controller adds to its view.
+	///
+	/// The default value is `[]`.
+	@available(iOS 16.4, *)
+	var safeAreaRegions: SafeAreaRegions {
+		get {
+			hostingChild.safeAreaRegions
+		}
+		set {
+			hostingChild.safeAreaRegions = newValue
+		}
+	}
+	
 	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
@@ -92,6 +106,9 @@ public class LNPopupCustomBarHostingController<CustomBarContent: View> : LNPopup
 		super.init(nibName: nil, bundle: nil)
 		
 		addChild(hostingChild)
+		if #available(iOS 16.4, *) {
+			hostingChild.safeAreaRegions = []
+		}
 		hostingChild.view.backgroundColor = nil
 		hostingChild.view.translatesAutoresizingMaskIntoConstraints = true
 		hostingChild.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]

@@ -57,16 +57,14 @@ struct DynamicBarContent: View {
 			} detail: {
 				paneContent(title: "Content")
 			}
-			Button {
+#if !targetEnvironment(macCatalyst)
+			CloseButton {
 				onDismiss()
-			} label: {
-				CloseButton {
-					onDismiss()
-				}
-				.fontWeight(.semibold)
-				.padding(7)
-				.hoverEffect()
 			}
+			.fontWeight(.semibold)
+			.padding(7)
+			.hoverEffect()
+#endif
 		}
 		.navigationSplitViewStyle(.balanced)
 		.navigationSplitViewColumnWidth(min: 270, ideal: 375, max: 450)
