@@ -64,103 +64,63 @@ struct SceneSelection: View {
 	
 	var body: some View {
 		NavigationStack {
-			List {
+			Form {
 				Section {
-					Button("Tab View + Navigation View") {
-						tabnavPresented.toggle()
-					}
-					.fullScreenCover(isPresented: $tabnavPresented, content: {
-						TabNavView(demoContent: DemoContent()) {
+					Group {
+						Button("Tab View + Navigation View") {
 							tabnavPresented.toggle()
 						}
-					})
-					Button("Tab View") {
-						tabPresented.toggle()
-					}
-					.fullScreenCover(isPresented: $tabPresented, content: {
-						TabDemoView(demoContent: DemoContent()) {
+						Button("Tab View") {
 							tabPresented.toggle()
 						}
-					})
-					Button("Navigation View") {
-						navPresented.toggle()
-					}
-					.fullScreenCover(isPresented: $navPresented, content: {
-						NavDemoView(title: nil, demoContent: DemoContent()) {
+						Button("Navigation View") {
 							navPresented.toggle()
 						}
-					})
-					Button("Navigation View (Sheet)") {
-						viewSheetPresented.toggle()
-					}
-					.sheet(isPresented: $viewSheetPresented, content: {
-						NavDemoView(title: nil, demoContent: DemoContent()) {
+						Button("Navigation View (Sheet)") {
 							viewSheetPresented.toggle()
 						}
-						.pagePresentationIfPossible()
-					})
-					Button("View") {
-						viewPresented.toggle()
-					}
-					.fullScreenCover(isPresented: $viewPresented, content: {
-						ViewDemoView(demoContent: DemoContent()) {
+						Button("View") {
 							viewPresented.toggle()
 						}
-					})
-					if #available(iOS 17, *) {
-						Group {
+						if #available(iOS 17, *) {
 							Button("Split View (All)") {
 								splitViewPresented.toggle()
-							}.fullScreenCover(isPresented: $splitViewPresented) {
-								SplitDemoView(isGlobal: false) {
-									splitViewPresented.toggle()
-								}
 							}
 							Button("Split View (Global)") {
 								splitViewGlobalPresented.toggle()
 							}
-							.fullScreenCover(isPresented: $splitViewGlobalPresented) {
-								SplitDemoView(isGlobal: true) {
-									splitViewGlobalPresented.toggle()
-								}
-							}
 						}
-					}
+					}.foregroundStyle(.primary)
 				} header: {
 					LNPopupText("Standard Scenes")
 				} footer: {
 					LNPopupText("Presents a standard test scene with a popup bar.")
 				}
-				if #available(iOS 17, *) {
-					Section {
+				Section {
+					if #available(iOS 26.0, *) {
 						Button("Dynamic Bar Content") {
 							dynamicBarContentPresented.toggle()
-						}
-						.fullScreenCover(isPresented: $dynamicBarContentPresented) {
-							DynamicBarContent {
-								dynamicBarContentPresented.toggle()
-							}
-						}
-					} header: {
-						LNPopupText("Dynamic Bar Content")
-					} footer: {
-						LNPopupText("Presents a scene where the popup bar content is dynamically updated, depending on available space")
-					}
-				}
-				Section {
-					if #available(iOS 18.0, *) {
-						Button("Music") {
-							musicSheetPresented.toggle()
-						}
-						.fullScreenCover(isPresented: $musicSheetPresented, content: {
-							MusicView {
-								musicSheetPresented.toggle()
-							}
-						})
+						}.foregroundStyle(.primary)
 					} else {
-						Button("Music") {}
+						Button("Dynamic Bar Content") {}
 							.disabled(true)
 					}
+				} header: {
+					LNPopupText("Dynamic Bar Content")
+				} footer: {
+					LNPopupText("Presents a scene where the popup bar content is dynamically updated, depending on available space")
+				}
+				Section {
+					Group {
+						if #available(iOS 18.0, *) {
+							Button("Music") {
+								musicSheetPresented.toggle()
+							}
+						} else {
+							Button("Music") {}
+								.disabled(true)
+						}
+					}.foregroundStyle(.primary)
 				} header: {
 					LNPopupText("Demo Apps")
 				} footer: {
@@ -169,19 +129,13 @@ struct SceneSelection: View {
 				Section {
 					Button("Maps") {
 						mapSheetPresented.toggle()
-					}
-					.fullScreenCover(isPresented: $mapSheetPresented, content: {
-						CustomBarMapView {
-							mapSheetPresented.toggle()
-						}
-					})
+					}.foregroundStyle(.primary)
 				} header: {
 					LNPopupText("Custom Popup Bar")
 				} footer: {
 					LNPopupText("Presents a scene with a custom popup bar view and a UIKit popup content controller")
 				}
 			}
-			.foregroundStyle(.primary)
 			.listStyle(.insetGrouped)
 			.navigationBarTitle(NSLocalizedString("LNPopupUI", comment: ""))
 			.toolbar {
@@ -205,6 +159,65 @@ struct SceneSelection: View {
 			}
 			.navigationBarTitleDisplayMode(.inline)
 		}
+		.fullScreenCover(isPresented: $tabnavPresented, content: {
+			TabNavView(demoContent: DemoContent()) {
+				tabnavPresented.toggle()
+			}
+		})
+		.fullScreenCover(isPresented: $tabPresented, content: {
+			TabDemoView(demoContent: DemoContent()) {
+				tabPresented.toggle()
+			}
+		})
+		.fullScreenCover(isPresented: $navPresented, content: {
+			NavDemoView(title: nil, demoContent: DemoContent()) {
+				navPresented.toggle()
+			}
+		})
+		.sheet(isPresented: $viewSheetPresented, content: {
+			NavDemoView(title: nil, demoContent: DemoContent()) {
+				viewSheetPresented.toggle()
+			}
+			.pagePresentationIfPossible()
+		})
+		.fullScreenCover(isPresented: $viewPresented, content: {
+			ViewDemoView(demoContent: DemoContent()) {
+				viewPresented.toggle()
+			}
+		})
+		.fullScreenCover(isPresented: $mapSheetPresented, content: {
+			CustomBarMapView {
+				mapSheetPresented.toggle()
+			}
+		})
+		.fullScreenCover(isPresented: $splitViewPresented) {
+			if #available(iOS 17.0, *) {
+				SplitDemoView(isGlobal: false) {
+					splitViewPresented.toggle()
+				}
+			}
+		}
+		.fullScreenCover(isPresented: $splitViewGlobalPresented) {
+			if #available(iOS 17.0, *) {
+				SplitDemoView(isGlobal: true) {
+					splitViewGlobalPresented.toggle()
+				}
+			}
+		}
+		.fullScreenCover(isPresented: $dynamicBarContentPresented) {
+			if #available(iOS 26.0, *) {
+				DynamicBarContent {
+					dynamicBarContentPresented.toggle()
+				}
+			}
+		}
+		.fullScreenCover(isPresented: $musicSheetPresented, content: {
+			if #available(iOS 18.0, *) {
+				MusicView {
+					musicSheetPresented.toggle()
+				}
+			}
+		})
 		.popup(isBarPresented: Binding.constant(true), popupContent: {
 			PopupDemoWebView()
 		})

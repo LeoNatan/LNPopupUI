@@ -582,6 +582,8 @@ struct PopupDemoViewModifier: ViewModifier {
 			return .snap
 		case 3:
 			return .scroll
+		case 0xAAAA:
+			return .automatic
 		case 0xFFFF:
 			return .none
 		default:
@@ -603,7 +605,7 @@ struct PopupDemoViewModifier: ViewModifier {
 				.popupProgress(0.5)
 				.popupBarButtons {
 					ToolbarItemGroup(placement: .popupBar) {
-						HStack(spacing: 20) {
+						HStack(spacing: 10) {
 							Button {
 								print("Play")
 								buttonShown.toggle()

@@ -11,7 +11,7 @@ import LNPopupUI
 import AVKit
 import ActivityView
 
-@available(iOS 17.0, *)
+@available(iOS 26.0, *)
 struct DynamicBarContent: View {
 	let onDismiss: () -> Void
 	
@@ -50,24 +50,42 @@ struct DynamicBarContent: View {
 	
 	@State var count = 0
 	
+	let isCatalyst = ProcessInfo.processInfo.isMacCatalystApp || ProcessInfo.processInfo.isiOSAppOnMac
+	
+	@State var showPicker: Bool = false
+	@AppStorage("useTabViewInDynamic") var useTabView = false
+	
 	var body: some View {
-		ZStack(alignment: .topTrailing) {
-			NavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.detail)) {
-				paneContent(title: "Sidebar")
-			} detail: {
-				paneContent(title: "Content")
+		ZStack(alignment: .top) {
+			if useTabView {
+				TabView {
+					ForEach(1..<5) { idx in
+						let title = "Content \(idx)"
+						Tab(title, systemImage: "\(idx).square") {
+							NavigationStack {
+								
+								paneContent(title: title, addToolbar: true)
+							}
+							.toolbar(isCatalyst ? .hidden : .automatic, for: .tabBar)
+						}
+					}
+				}
+				.tabViewSidebarFooter {
+					paneContent(title: "Sidebar")
+				}
+				.tabViewStyle(.sidebarAdaptable)
+			} else {
+				NavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.detail)) {
+					paneContent(title: "Sidebar")
+				} detail: {
+					NavigationStack {
+						paneContent(title: "Content", addToolbar: true)
+					}
+				}
+				.navigationSplitViewStyle(.balanced)
+				.navigationSplitViewColumnWidth(min: 270, ideal: 375, max: 450)
 			}
-#if !targetEnvironment(macCatalyst)
-			CloseButton {
-				onDismiss()
-			}
-			.fontWeight(.semibold)
-			.padding(7)
-			.hoverEffect()
-#endif
 		}
-		.navigationSplitViewStyle(.balanced)
-		.navigationSplitViewColumnWidth(min: 270, ideal: 375, max: 450)
 		.tint(.blue)
 		.popup(isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen) {
 			paneContent(title: "Popup Content")
@@ -80,28 +98,30 @@ struct DynamicBarContent: View {
 						ToolbarItemGroup(placement: .popupBar) {
 							if barButtonsStyle.isLarge {
 								Group {
-									barButtonsStyle.ifAtLeast(.large1) {
-										Button {
-											print("Shuffle")
-										} label: {
-											Image(systemName: "shuffle")
+									HStack(spacing: 12) {
+										barButtonsStyle.ifAtLeast(.large1) {
+											Button {
+												print("Shuffle")
+											} label: {
+												Image(systemName: "shuffle")
+											}
+											.foregroundStyle(Color(uiColor: .secondaryLabel))
 										}
-										.foregroundStyle(Color(uiColor: .secondaryLabel))
-									}
-									
-									prevStopNext(allowPrev: true, allowLargeSizes: barButtonsHeight == .allowLarge)
-									
-									barButtonsStyle.ifAtLeast(.large1) {
-										Button {
-											print("Repeat")
-										} label: {
-											Image(systemName: "repeat")
+										
+										prevStopNext(allowPrev: true, allowLargeSizes: barButtonsHeight == .allowLarge)
+										
+										barButtonsStyle.ifAtLeast(.large1) {
+											Button {
+												print("Repeat")
+											} label: {
+												Image(systemName: "repeat")
+											}
+											.foregroundStyle(Color(uiColor: .secondaryLabel))
 										}
-										.foregroundStyle(Color(uiColor: .secondaryLabel))
 									}
+									.buttonStyle(.borderless)
+									.imageScale(.small)
 								}
-								.buttonStyle(.borderless)
-								.imageScale(.small)
 							}
 						}
 					} trailingButtons: {
@@ -180,21 +200,76 @@ struct DynamicBarContent: View {
 	}
 	
 	@ViewBuilder
-	func paneContent(title: String) -> some View {
+	func paneContent(title: String, addToolbar: Bool = false) -> some View {
 		ContentUnavailableView {
-			LNPopupText("\(title) \(count)")
-				.foregroundStyle(.secondary)
-			HStack(spacing: 20) {
-				Button {
-					count -= 1
-				} label: {
-					Text("-")
+			VStack {
+				LNPopupText("\(title): \(count)")
+					.foregroundStyle(.secondary)
+				HStack(spacing: 20) {
+					Button {
+						count -= 1
+					} label: {
+						Text("-")
+							.frame(width: 20, height: 15)
+					}
+					Button {
+						count += 1
+					} label: {
+						Text("+")
+							.frame(width: 20, height: 15)
+					}
 				}
-				Button {
-					count += 1
-				} label: {
-					Text("+")
+				.buttonStyle(.bordered)
+				.buttonBorderShape(.roundedRectangle)
+			}
+		}
+		.toolbar {
+			if addToolbar {
+				if showPicker {
+					ToolbarItem(placement: .topBarTrailing) {
+						Picker(selection: $useTabView) {
+							Text("TabView").tag(true)
+							Text("SplitView").tag(false)
+						} label: {
+							EmptyView()
+						}
+						.pickerStyle(.segmented)
+						.controlSize(.mini)
+						.frame(height: 20)
+					}
+#if !targetEnvironment(macCatalyst)
+					.sharedBackgroundVisibility(.hidden)
+#endif
+					ToolbarSpacer(.fixed, placement: .topBarTrailing)
+					ToolbarItem(placement: .topBarTrailing) {
+						Button {
+							showPicker = false
+						} label: {
+							Label {} icon: {
+								Image(systemName: "chevron.forward")
+							}
+						}
+						.tint(nil)
+					}
+				} else {
+					ToolbarItem(placement: .topBarTrailing) {
+						Button {
+							showPicker = true
+						} label: {
+							Label {} icon: {
+								Image(systemName: "ellipsis")
+							}
+						}
+						.tint(nil)
+					}
 				}
+#if !targetEnvironment(macCatalyst)
+				ToolbarItem(placement: .confirmationAction) {
+					ToolbarCloseButton {
+						onDismiss()
+					}
+				}
+#endif
 			}
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
