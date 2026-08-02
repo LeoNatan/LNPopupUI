@@ -120,13 +120,23 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		readyForHandling = true
 	}
 	
+	override func addChild(_ childController: UIViewController) {
+		super.addChild(childController)
+		
+		DispatchQueue.main.async {
+			if let previousTarget = self.previousTarget, self.target != previousTarget {
+				self.handlePopupState(self.currentPopupState)
+			}
+		}
+	}
+	
 	static fileprivate func cast<T: View>(_ value: Any?, to type: T) -> LNPopupContentHostingController<T>? {
 		return value as? LNPopupContentHostingController<T>
 	}
 	
 	var previousTarget: UIViewController?
 	fileprivate var target: UIViewController {
-		let appropriateChild = children.first(where: { $0.view.frame == self.view.bounds })
+		let appropriateChild = children.first { $0.view.frame == self.view.bounds }
 		
 		let newTarget: UIViewController
 		if appropriateChild == nil && self.splitViewController != nil, let navigationController = self.navigationController {
@@ -135,13 +145,6 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 		} else {
 			newTarget = appropriateChild ?? self
 		}
-		
-		if let previousTarget, newTarget != previousTarget {
-			previousTarget.dismissPopupBar(animated: false)
-			previousTarget.popupBar.setValue(nil, forKey: "_barLayoutDelegate")
-		}
-		
-		previousTarget = newTarget
 		
 		return newTarget
 	}
@@ -214,6 +217,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 
 		let handler : (Bool) -> Void = { animated in
 			let target = self.target
+			
+			if let previousTarget = self.previousTarget, target != previousTarget {
+				previousTarget.dismissPopupBar(animated: false)
+				previousTarget.popupBar.setValue(nil, forKey: "_barLayoutDelegate")
+			}
+			
+			self.previousTarget = target
 			
 			UIView.performWithoutAnimation {
 				let appearance = target.popupBar.standardAppearance.copy()
