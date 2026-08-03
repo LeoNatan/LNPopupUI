@@ -90,63 +90,7 @@ struct DynamicBarContent: View {
 		.popup(isBarPresented: $isBarPresented, isPopupOpen: $isPopupOpen) {
 			paneContent(title: "Popup Content")
 				.popupItem {
-					PopupItem(id: "intro", image: Image("AppIconPopupBar"), progress: .random(in: 0.2..<0.4)) {
-						VStack {
-							Text("\(Text(NSLocalizedString("Welcome to", comment: ""))) \(Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy))\(Text("!"))")
-						}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(inheritedFont ?? .body)
-					} leadingButtons: {
-						ToolbarItemGroup(placement: .popupBar) {
-							if barButtonsStyle.isLarge {
-								Group {
-									HStack(spacing: 12) {
-										barButtonsStyle.ifAtLeast(.large1) {
-											Button {
-												print("Shuffle")
-											} label: {
-												Image(systemName: "shuffle")
-											}
-											.foregroundStyle(Color(uiColor: .secondaryLabel))
-										}
-										
-										prevStopNext(allowPrev: true, allowLargeSizes: barButtonsHeight == .allowLarge)
-										
-										barButtonsStyle.ifAtLeast(.large1) {
-											Button {
-												print("Repeat")
-											} label: {
-												Image(systemName: "repeat")
-											}
-											.foregroundStyle(Color(uiColor: .secondaryLabel))
-										}
-									}
-									.buttonStyle(.borderless)
-									.imageScale(.small)
-								}
-							}
-						}
-					} trailingButtons: {
-						ToolbarItemGroup(placement: .popupBar) {
-							if barButtonsStyle.isLarge {
-								Group {
-									promoMenu()
-									
-									barButtonsStyle.ifAtLeast(.large2) {
-										AirPlayView()
-										
-										Button {
-											print("Volume")
-										} label: {
-											Image(systemName: "speaker.wave.2.fill")
-										}
-									}
-								}
-								.medium(barButtonsHeight == .allowLarge)
-								.buttonStyle(.borderless)
-							} else {
-								prevStopNext(allowPrev: barButtonsStyle == .expandedMinimal, allowLargeSizes: barButtonsHeight == .allowLarge)
-							}
-						}
-					}
+					dynamicBarContentPopupItem()
 				}
 		}
 		.popupCloseButtonPositioning(.leading)
@@ -199,6 +143,66 @@ struct DynamicBarContent: View {
 		}
 	}
 	
+	func dynamicBarContentPopupItem() -> AnyPopupItem<String> {
+		PopupItem(id: "intro", image: Image("AppIconPopupBar"), progress: .random(in: 0.2..<0.4)) {
+			VStack {
+				Text("\(Text(NSLocalizedString("Welcome to", comment: ""))) \(Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy))\(Text("!"))")
+			}.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).font(inheritedFont ?? .body)
+		} leadingButtons: {
+			ToolbarItemGroup(placement: .popupBar) {
+				if barButtonsStyle.isLarge {
+					Group {
+						HStack(spacing: 12) {
+							barButtonsStyle.ifAtLeast(.large1) {
+								Button {
+									print("Shuffle")
+								} label: {
+									Image(systemName: "shuffle")
+								}
+								.foregroundStyle(Color(uiColor: .secondaryLabel))
+							}
+							
+							prevStopNext(allowPrev: true, allowLargeSizes: barButtonsHeight == .allowLarge)
+							
+							barButtonsStyle.ifAtLeast(.large1) {
+								Button {
+									print("Repeat")
+								} label: {
+									Image(systemName: "repeat")
+								}
+								.foregroundStyle(Color(uiColor: .secondaryLabel))
+							}
+						}
+						.buttonStyle(.borderless)
+						.imageScale(.small)
+					}
+				}
+			}
+		} trailingButtons: {
+			ToolbarItemGroup(placement: .popupBar) {
+				if barButtonsStyle.isLarge {
+					Group {
+						promoMenu()
+						
+						barButtonsStyle.ifAtLeast(.large2) {
+							AirPlayView()
+							
+							Button {
+								print("Volume")
+							} label: {
+								Image(systemName: "speaker.wave.2.fill")
+							}
+						}
+					}
+					.medium(barButtonsHeight == .allowLarge)
+					.buttonStyle(.borderless)
+				} else {
+					prevStopNext(allowPrev: barButtonsStyle == .expandedMinimal, allowLargeSizes: barButtonsHeight == .allowLarge)
+				}
+			}
+		}.eraseToAnyPopupItem()
+	}
+	
 	@ViewBuilder
 	func paneContent(title: String, addToolbar: Bool = false) -> some View {
 		ContentUnavailableView {
@@ -226,7 +230,7 @@ struct DynamicBarContent: View {
 		.toolbar {
 			if addToolbar {
 				if showPicker {
-					ToolbarItem(placement: .topBarTrailing) {
+					ToolbarItem(id: "chooser", placement: .topBarTrailing) {
 						Picker(selection: $useTabView) {
 							Text("TabView").tag(true)
 							Text("SplitView").tag(false)
@@ -241,7 +245,7 @@ struct DynamicBarContent: View {
 					.sharedBackgroundVisibility(.hidden)
 #endif
 					ToolbarSpacer(.fixed, placement: .topBarTrailing)
-					ToolbarItem(placement: .topBarTrailing) {
+					ToolbarItem(id: "open-close", placement: .topBarTrailing) {
 						Button {
 							showPicker = false
 						} label: {
@@ -252,7 +256,7 @@ struct DynamicBarContent: View {
 						.tint(nil)
 					}
 				} else {
-					ToolbarItem(placement: .topBarTrailing) {
+					ToolbarItem(id: "open-close", placement: .topBarTrailing) {
 						Button {
 							showPicker = true
 						} label: {
@@ -264,7 +268,7 @@ struct DynamicBarContent: View {
 					}
 				}
 #if !targetEnvironment(macCatalyst)
-				ToolbarItem(placement: .confirmationAction) {
+				ToolbarItem(id: "dismiss", placement: .confirmationAction) {
 					ToolbarCloseButton {
 						onDismiss()
 					}

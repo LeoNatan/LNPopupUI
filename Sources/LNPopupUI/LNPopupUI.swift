@@ -305,7 +305,7 @@ public extension View {
 	///
 	///	The popup bar customization closure is called after all other popup bar modifiers have been applied.
 	///
-	/// - Warning: If you've used the `popupBarCustomView()` modifier, do not access the popup bar's `customBarViewController` or modify its `barStyle`.
+	/// - Note: If you've used the `popupBarCustomView()` modifier, do not access the popup bar's `customBarViewController` or modify its `barStyle`.
 	/// - Parameters:
 	///   - customizer: A customizing closure that is called to customize the `LNPopupBar` popup bar object.
 	func popupBarCustomizer(_ customizer: @escaping (_ popupBar: LNPopupBar) -> Void) -> some View {
@@ -321,14 +321,14 @@ public extension View {
 	/// You should avoid updating large parts of your app whenever
 	/// the popup bar geometry changes. To aid in this, you provide two
 	/// closures to this modifier:
-	///   * transform: This converts a value of ``PopupBarLayoutProxy`` to
+	///   * transform: This converts a value of `PopupBarLayoutProxy` to
 	///     your own data type.
 	///   * action: This provides the data type you created in `of`
 	///     and is called whenever the data type changes.
 	///
 	/// - Parameters:
-	///   - type: The type of value transformed from a ``PopupBarLayoutProxy``.
-	///   - transform: A closure that transforms a ``PopupBarLayoutProxy``
+	///   - type: The type of value transformed from a `PopupBarLayoutProxy`.
+	///   - transform: A closure that transforms a `PopupBarLayoutProxy`
 	///     to your type.
 	///   - action: A closure to run when the transformed data changes.
 	///     - term newValue: The new value that failed the comparison check.
@@ -352,14 +352,14 @@ public extension View {
 	/// You should avoid updating large parts of your app whenever
 	/// the popup bar geometry changes. To aid in this, you provide two
 	/// closures to this modifier:
-	///   * transform: This converts a value of ``PopupBarLayoutProxy`` to
+	///   * transform: This converts a value of `PopupBarLayoutProxy` to
 	///     your own data type.
 	///   * action: This provides the data type you created in `of`
 	///     and is called whenever the data type changes.
 	///
 	/// - Parameters:
-	///   - type: The type of value transformed from a ``PopupBarLayoutProxy``.
-	///   - transform: A closure that transforms a ``PopupBarLayoutProxy``
+	///   - type: The type of value transformed from a `PopupBarLayoutProxy`.
+	///   - transform: A closure that transforms a `PopupBarLayoutProxy`
 	///     to your type.
 	///   - action: A closure to run when the transformed data changes.
 	///     - term oldValue: The old value that failed the comparison check.
@@ -464,11 +464,43 @@ public extension View {
 	///	}
 	///	 ```
 	///
-	/// - Warning: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as ``SwiftUICore/View/popupItem(popupItem:)``, a multiple popup item providing modifier, such as ``SwiftUICore/View/popupItems(selection:items:)`` or modifiers to update the default popup item, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``.
+	/// - Note: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as `View.popupItem(popupItem:)`, a multiple popup item providing modifier, such as `View.popupItems(selection:items:)` or modifiers to update the default popup item, such as `View.popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)`.
 	/// - Parameters:
 	///   - popupItem: The popup item to display in a popup bar.
 	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, LeadingButtonToolbarContent: ToolbarContent, TrailingButtonToolbarContent: ToolbarContent>(_ popupItem: PopupItem<Identifier, TitleContent, SubtitleContent, LeadingButtonToolbarContent, TrailingButtonToolbarContent>) -> some View {
 		preference(key: LNPopupItemPreferenceKey.self, value: %%AnyPopupItem(popupItem).toAnyHashable())
+	}
+	
+	/// Configures the view's popup item to be displayed in a popup bar.
+	///
+	/// Popup items are used to display in the popup containing view's popup bar.
+	///
+	/// ```swift
+	///	// Create a popup item with an image, a custom view title and a button.
+	/// let popupItem = PopupItem(id: "intro", image: Image("MyImage")) {
+	///		Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
+	/// } buttons: {
+	/// 	ToolbarItemGroup(placement: .popupBar) {
+	/// 	  Link(destination: url) {
+	/// 	  	Label("LNPopupUI", systemImage: "suit.heart.fill")
+	/// 	  }
+	/// 	}
+	/// }
+	///
+	///	TabView {
+	///	  // ...
+	///	}
+	///	.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	///	  ContentView()
+	///	    .popupItem(popupItem)
+	///	}
+	///	 ```
+	///
+	/// - Note: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as `View.popupItem(popupItem:)`, a multiple popup item providing modifier, such as `View.popupItems(selection:items:)` or modifiers to update the default popup item, such as `View.popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)`.
+	/// - Parameters:
+	///   - popupItem: The popup item to display in a popup bar.
+	func popupItem<Identifier: Hashable>(_ popupItem: AnyPopupItem<Identifier>) -> some View {
+		preference(key: LNPopupItemPreferenceKey.self, value: %%popupItem.toAnyHashable())
 	}
 	
 	/// Configures the view's popup item to be displayed in a popup bar.
@@ -496,15 +528,47 @@ public extension View {
 	///	}
 	///	 ```
 	///
-	/// - Warning: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as ``SwiftUICore/View/popupItem(popupItem:)``, a multiple popup item providing modifier, such as ``SwiftUICore/View/popupItems(selection:items:)`` or modifiers to update the default popup item, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``.
+	/// - Note: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as `View.popupItem(popupItem:)`, a multiple popup item providing modifier, such as `View.popupItems(selection:items:)` or modifiers to update the default popup item, such as `View.popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)`.
 	/// - Parameters:
 	///   - popupItem: The popup item to display in a popup bar.
 	func popupItem<Identifier: Hashable, TitleContent, SubtitleContent, LeadingButtonToolbarContent: ToolbarContent, TrailingButtonToolbarContent: ToolbarContent>(popupItem: () -> PopupItem<Identifier, TitleContent, SubtitleContent, LeadingButtonToolbarContent, TrailingButtonToolbarContent>) -> some View {
 		preference(key: LNPopupItemPreferenceKey.self, value: %%AnyPopupItem(popupItem()).toAnyHashable())
 	}
+	
+	/// Configures the view's popup item to be displayed in a popup bar.
+	///
+	/// Popup items are used to display in the popup containing view's popup bar.
+	///
+	/// ```swift
+	///	TabView {
+	///	  // ...
+	///	}
+	///	.popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
+	///	  ContentView()
+	///	    .popupItem {
+	///	      // Create a popup item with an image, a custom view title and a button.
+	///       PopupItem(id: "intro", image: Image("MyImage")) {
+	///	        Text("Welcome to ") + Text("LNPopupUI").fontWeight(.heavy) + Text("!")
+	///       } buttons: {
+	///         ToolbarItemGroup(placement: .popupBar) {
+	///       	  Link(destination: url) {
+	///             Label("LNPopupUI", systemImage: "suit.heart.fill")
+	///       	  }
+	///       	}
+	///       }
+	///	    }
+	///	}
+	///	 ```
+	///
+	/// - Note: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as `View.popupItem(popupItem:)`, a multiple popup item providing modifier, such as `View.popupItems(selection:items:)` or modifiers to update the default popup item, such as `View.popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)`.
+	/// - Parameters:
+	///   - popupItem: The popup item to display in a popup bar.
+	func popupItem<Identifier: Hashable>(popupItem: () -> AnyPopupItem<Identifier>) -> some View {
+		preference(key: LNPopupItemPreferenceKey.self, value: %%popupItem().toAnyHashable())
+	}
 }
 
-// MARK: - Multiple Popup Item + Paging
+// MARK: - Multiple Popup Items & Paging Support
 
 /// Modifiers for specifying multiple popup items with paging support.
 ///
@@ -535,7 +599,7 @@ public extension View {
 	/// }
 	///	 ```
 	///
-	/// - Warning: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as ``SwiftUICore/View/popupItem(popupItem:)``, a multiple popup item providing modifier, such as ``SwiftUICore/View/popupItems(selection:items:)`` or modifiers to update the default popup item, such as ``SwiftUICore/View/popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)``.
+	/// - Note: Never mix between the different popup item modifier families in the same popup content hierarchy. Either use a single popup item providing modifier, such as `View.popupItem(popupItem:)`, a multiple popup item providing modifier, such as `View.popupItems(selection:items:)` or modifiers to update the default popup item, such as `View.popupTitle(_:subtitle:tableName:bundle:titleComment:subtitleComment:)`.
 	/// - Parameters:
 	///   - selection: The selection in the popup item list. The value of this binding must match the `id` of the popup items provided by `items`.
 	///   - items: The popup items.

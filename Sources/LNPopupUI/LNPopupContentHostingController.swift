@@ -10,7 +10,12 @@
 import SwiftUI
 import UIKit
 
-public class LNPopupContentHostingController<PopupContent> : UIHostingController<AnyView>, LNPopupBarDataSource, LNPopupBarDelegate where PopupContent: View {
+public class LNPopupContentHostingController<PopupContent: View> : UIHostingController<AnyView>, LNPopupBarDataSource, LNPopupBarDelegate {
+	/// A UIKit popup content controller that manages a SwiftUI view hierarchy.
+	///
+	/// Create a `LNPopupContentHostingController` object when you want to integrate SwiftUI popup content into a UIKit view hierarchy.
+	///
+	/// - Parameter content: The root view of the SwiftUI view hierarchy that you want to manage using the popup content controller.
 	public required
 	init(content: PopupContent) {
 		self.popupContentRootView = content
@@ -18,16 +23,18 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 		rootView = transform(self.popupContentRootView)
 	}
 	
-	@objc(_ln_interactionLimitRect) private
-	var interactionLimitRect: CGRect = .zero
+	/// A UIKit popup content controller that manages a SwiftUI view hierarchy.
+	///
+	/// Create a `LNPopupContentHostingController` object when you want to integrate SwiftUI popup content into a UIKit view hierarchy.
+	///
+	/// - Parameter content: The root view of the SwiftUI view hierarchy that you want to manage using the popup content controller.
+	public convenience
+	init(@ViewBuilder content: () -> PopupContent) {
+		self.init(content: content())
+	}
 	
-	internal
-	var userContentBackgroundColor: UIColor? = nil
-	
-	internal
-	var popupItemData: LNPopupItemData? = nil
-	
-	public
+	/// The popup content root view of the SwiftUI view hierarchy managed by this popup content controller.
+	@MainActor public
 	var popupContentRootView: PopupContent {
 		didSet {
 			rootView = transform(popupContentRootView)
@@ -44,19 +51,14 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 		interactionLimitRect = view.convert(viewToLimitInteractionTo.bounds, from: viewToLimitInteractionTo)
 	}
 	
-	internal
-	var backgroundViewForTransitionViewLookup: UIView? = nil
-	internal
-	var foregroundViewForTransitionViewLookup: UIView? = nil
+	@objc(_ln_interactionLimitRect) private
+	var interactionLimitRect: CGRect = .zero
 	
-	@objc(_ln_transitionViewForPopupTransitionFromPresentationState:toPresentationState:view:) internal
-	func transitionViewForPopupTransition(from fromState: UIViewController.PopupPresentationState, to toState: UIViewController.PopupPresentationState, view outView: UnsafeMutablePointer<LNPopupTransitionView>) -> UIView? {
-		guard #available(iOS 26, *) else {
-			return viewBasedTransitionViewForPopupTransition(from: fromState, to: toState, view: outView)
-		}
-		
-		return layerBasedTransitionViewForPopupTransition(from: fromState, to: toState, view: outView)
-	}
+	internal
+	var userContentBackgroundColor: UIColor? = nil
+	
+	internal
+	var popupItemData: LNPopupItemData? = nil
 	
 	public
 	func popupBar(_ popupBar: LNPopupBar, popupItemBefore popupItem: LNPopupItem) -> LNPopupItem? {
@@ -71,6 +73,20 @@ public class LNPopupContentHostingController<PopupContent> : UIHostingController
 	public
 	func popupBar(_ popupBar: LNPopupBar, didDisplay newPopupItem: LNPopupItem, previous previousPopupItem: LNPopupItem?) {
 		updatePopupItemSelection(newPopupItem)
+	}
+	
+	internal
+	var backgroundViewForTransitionViewLookup: UIView? = nil
+	internal
+	var foregroundViewForTransitionViewLookup: UIView? = nil
+	
+	@objc(_ln_transitionViewForPopupTransitionFromPresentationState:toPresentationState:view:) internal
+	func transitionViewForPopupTransition(from fromState: UIViewController.PopupPresentationState, to toState: UIViewController.PopupPresentationState, view outView: UnsafeMutablePointer<LNPopupTransitionView>) -> UIView? {
+		guard #available(iOS 26, *) else {
+			return viewBasedTransitionViewForPopupTransition(from: fromState, to: toState, view: outView)
+		}
+		
+		return layerBasedTransitionViewForPopupTransition(from: fromState, to: toState, view: outView)
 	}
 	
 	required dynamic

@@ -13,7 +13,7 @@ import SwiftUI
 public extension UIViewController {
 	/// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation.
 	///
-	/// The popup bar is attached to the receiver's docking view. See ``UIViewController/bottomDockingViewForPopupBar`` for more information on the bottom docking view.
+	/// The popup bar is attached to the receiver's docking view. See `UIViewController.bottomDockingViewForPopupBar` for more information on the bottom docking view.
 	///
 	/// - Parameters:
 	///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
@@ -27,7 +27,7 @@ public extension UIViewController {
 	
 	/// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation.
 	///
-	/// The popup bar is attached to the receiver's docking view. See ``UIViewController/bottomDockingViewForPopupBar`` for more information on the bottom docking view.
+	/// The popup bar is attached to the receiver's docking view. See `UIViewController.bottomDockingViewForPopupBar` for more information on the bottom docking view.
 	///
 	/// - Parameters:
 	///   - popupContent: The popup content view
