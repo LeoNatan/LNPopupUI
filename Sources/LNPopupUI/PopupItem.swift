@@ -19,8 +19,8 @@ public
 struct PopupItemImage: PopupItemImageType {
 	/// The image that will be displayed in the popup bar.
 	public
-	let image: SwiftUI.Image?
-	/// Will the image be displayed as resizable.
+	let image: SwiftUI.Image
+	/// Is the image marked as resizable.
 	public
 	let resizable: Bool
 	/// The ratio of width to height to use for the resulting popup bar image.
@@ -35,9 +35,9 @@ struct PopupItemImage: PopupItemImageType {
 	///   - image: The image to use.
 	///   - resizable: Mark the image as resizable. Defaults to `true`. If you'd like to control this on your own, set this parameter to `false`.
 	///   - aspectRatio: The ratio of width to height to use for the resulting popup bar image. Use `nil` to maintain the current aspect ratio.
-	///   - contentMode: A flag that indicates whether this image fits or fills the popup bar image view.
+	///   - contentMode: A flag that indicates whether this image fits or fills the popup bar image view. Defaults to `.fit`.
 	public
-	init(_ image: Image?, resizable: Bool = true, aspectRatio: CGFloat? = nil, contentMode: ContentMode = .fit) {
+	init(_ image: Image, resizable: Bool = true, aspectRatio: CGFloat? = nil, contentMode: ContentMode = .fit) {
 		self.image = image
 		self.resizable = resizable
 		self.aspectRatio = aspectRatio
@@ -355,9 +355,25 @@ extension View {
 	///   - resizable: Mark the image as resizable. Defaults to `true`. If you'd like to control this on your own, set this parameter to `false`.
 	///   - aspectRatio: The ratio of width to height to use for the resulting popup bar image. Use `nil` to maintain the current aspect ratio.
 	///   - contentMode: A flag that indicates whether this view fits or fills the popup bar image view.
+	@_disfavoredOverload
 	func popupImage(_ image: Image?, resizable: Bool = true, aspectRatio: CGFloat? = nil, contentMode: ContentMode = .fit) -> some View {
 		if let image {
 			preference(key: LNPopupImagePreferenceKey.self, value: %%PopupItemImage(image, resizable: resizable, aspectRatio: aspectRatio, contentMode: contentMode))
+		} else {
+			preference(key: LNPopupImagePreferenceKey.self, value: nil)
+		}
+	}
+	
+	/// Configures the default popup item's image.
+	///
+	/// Setting to `nil` will hide image from the popup bar.
+	///
+	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
+	/// - Parameters:
+	///   - image: The image to use.
+	func popupImage(_ image: PopupItemImage?) -> some View {
+		if let image {
+			preference(key: LNPopupImagePreferenceKey.self, value: %%image)
 		} else {
 			preference(key: LNPopupImagePreferenceKey.self, value: nil)
 		}

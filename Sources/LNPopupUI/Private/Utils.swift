@@ -205,9 +205,9 @@ func createOrUpdateImageAdapter(in popupItem: LNPopupItem, for imageData: PopupI
 		let contentMode = imageData.contentMode
 		var image = imageData.image
 		if imageData.resizable {
-			image = image?.resizable()
+			image = image.resizable()
 		}
-		let view = AnyView(image?.aspectRatio(imageData.aspectRatio, contentMode: contentMode))
+		let view = AnyView(image.aspectRatio(imageData.aspectRatio, contentMode: contentMode))
 		
 		if let adapter = popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
 			adapter.rootView = view
