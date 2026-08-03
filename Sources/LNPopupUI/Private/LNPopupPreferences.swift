@@ -10,31 +10,6 @@ import SwiftUI
 import UIKit
 import LNPopupController
 
-internal struct LNPopupTitleData : Equatable {
-	let title: String
-	let subtitle: String?
-}
-
-internal struct LNPopupTitleContentData {
-	let titleView: AnyView
-	let subtitleView: AnyView?
-}
-
-internal struct LNPopupImageData: Equatable {
-	let image: Image
-	let resizable: Bool
-	let aspectRatio: CGFloat?
-	let contentMode: ContentMode
-	
-	init?(image: Image?, resizable: Bool, aspectRatio: CGFloat?, contentMode: ContentMode) {
-		guard let image else { return nil }
-		self.image = image
-		self.resizable = resizable
-		self.aspectRatio = aspectRatio
-		self.contentMode = contentMode
-	}
-}
-
 internal
 struct LNPopupItemData {
 	let selection: Binding<AnyHashable>
@@ -93,11 +68,11 @@ internal struct LNPopupItemsPreferenceKey: LNPopupNullablePreferenceKey {
 }
 
 internal struct LNPopupTitlePreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = LNPopupPreferenceValue<LNPopupTitleData>?
+	typealias Value = LNPopupPreferenceValue<StringTitleContainer>?
 }
 
 internal struct LNPopupTextTitlePreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = LNPopupPreferenceValue<LNPopupTitleContentData>?
+	typealias Value = LNPopupPreferenceValue<ViewTitleContainer>?
 }
 
 internal struct LNPopupProgressPreferenceKey: LNPopupNullablePreferenceKey {
@@ -105,7 +80,7 @@ internal struct LNPopupProgressPreferenceKey: LNPopupNullablePreferenceKey {
 }
 
 internal struct LNPopupImagePreferenceKey: LNPopupNullablePreferenceKey {
-	typealias Value = LNPopupPreferenceValue<LNPopupImageData>?
+	typealias Value = LNPopupPreferenceValue<PopupItemImage>?
 }
 
 internal struct LNPopupLeadingBarItemsPreferenceKey: LNPopupNullablePreferenceKey {

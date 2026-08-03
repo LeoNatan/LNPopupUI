@@ -303,6 +303,8 @@ struct DynamicBarContent: View {
 		} label: {
 			Image(systemName: "ellipsis")
 		}
+        .menuStyle(.button)
+        .buttonStyle(.plain)
 	}
 	
 	@ViewBuilder

@@ -322,7 +322,7 @@ extension View {
 	///   - titleContent: A view that describes the popup's title.
 	///   - subtitleContent: A view that describes the popup's subtitle.
 	func popupTitle<TitleContent, SubtitleContent>(@ViewBuilder _ titleContent: () -> TitleContent, @ViewBuilder subtitle subtitleContent: () -> SubtitleContent = { EmptyView() }) -> some View where TitleContent : View, SubtitleContent : View {
-		preference(key: LNPopupTextTitlePreferenceKey.self, value: %%LNPopupTitleContentData(titleView: AnyView(erasing: titleContent()), subtitleView: AnyView(erasing: subtitleContent())))
+		preference(key: LNPopupTextTitlePreferenceKey.self, value: %%ViewTitleContainer(titleView: AnyView(erasing: titleContent()), subtitleView: AnyView(erasing: subtitleContent())))
 	}
 	
 	/// Configures the default popup item's title and subtitle.
@@ -342,7 +342,7 @@ extension View {
 	///   - title: The title to display.
 	///   - subtitle: The subtitle to display. Defaults to `nil`.
 	func popupTitle(verbatim title: String, subtitle: String? = nil) -> some View {
-		preference(key: LNPopupTitlePreferenceKey.self, value: %%LNPopupTitleData(title: title, subtitle: subtitle))
+		preference(key: LNPopupTitlePreferenceKey.self, value: %%StringTitleContainer(title, subtitle))
 	}
 	
 	/// Configures the default popup item's image.
@@ -357,7 +357,7 @@ extension View {
 	///   - contentMode: A flag that indicates whether this view fits or fills the popup bar image view.
 	func popupImage(_ image: Image?, resizable: Bool = true, aspectRatio: CGFloat? = nil, contentMode: ContentMode = .fit) -> some View {
 		if let image {
-			preference(key: LNPopupImagePreferenceKey.self, value: %%LNPopupImageData(image: image, resizable: resizable, aspectRatio: aspectRatio, contentMode: contentMode))
+			preference(key: LNPopupImagePreferenceKey.self, value: %%PopupItemImage(image, resizable: resizable, aspectRatio: aspectRatio, contentMode: contentMode))
 		} else {
 			preference(key: LNPopupImagePreferenceKey.self, value: nil)
 		}

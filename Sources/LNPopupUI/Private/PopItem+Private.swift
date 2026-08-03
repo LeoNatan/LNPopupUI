@@ -11,19 +11,6 @@ import LNSwiftUIUtils
 
 // MARK: - Title Containers
 
-
-internal
-func makeButtonContainer<Trailing: ToolbarContent>(buttons: Trailing) -> ButtonContainer {
-    ButtonContainer(trailingView: barItemContainer(buttons))
-}
-
-internal
-func makeButtonContainer<Leading: ToolbarContent, Trailing: ToolbarContent>(leadingButtons: Leading, trailingButtons: Trailing) -> ButtonContainer {
-    let leadingView: AnyView? = Leading.self == EmptyPopupToolbarContent.self ? nil : barItemContainer(leadingButtons)
-    let trailingView: AnyView? = Trailing.self == EmptyPopupToolbarContent.self ? nil : barItemContainer(trailingButtons)
-    return ButtonContainer(leadingView: leadingView, trailingView: trailingView)
-}
-
 internal
 class TitleContainer {
 	dynamic
@@ -101,6 +88,18 @@ struct ButtonContainer {
 	}
 }
 
+internal
+func makeButtonContainer<Trailing: ToolbarContent>(buttons: Trailing) -> ButtonContainer {
+    ButtonContainer(trailingView: barItemContainer(buttons))
+}
+
+internal
+func makeButtonContainer<Leading: ToolbarContent, Trailing: ToolbarContent>(leadingButtons: Leading, trailingButtons: Trailing) -> ButtonContainer {
+    let leadingView: AnyView? = Leading.self == EmptyPopupToolbarContent.self ? nil : barItemContainer(leadingButtons)
+    let trailingView: AnyView? = Trailing.self == EmptyPopupToolbarContent.self ? nil : barItemContainer(trailingButtons)
+    return ButtonContainer(leadingView: leadingView, trailingView: trailingView)
+}
+
 @usableFromInline internal
 struct EmptyPopupToolbarContent: ToolbarContent {
 	@usableFromInline
@@ -131,11 +130,11 @@ extension PopupItem {
 
 		titleContainer.update(popupItem, popupBar: popupBar)
 
-		let imageData: LNPopupImageData?
+		let imageData: PopupItemImage?
 		if let image = image as? PopupItemImage {
-			imageData = LNPopupImageData(image: image.image, resizable: image.resizable, aspectRatio: image.aspectRatio, contentMode: image.contentMode)
+			imageData = image
 		} else if let image = image as? SwiftUI.Image {
-			imageData = LNPopupImageData(image: image, resizable: true, aspectRatio: nil, contentMode: .fit)
+			imageData = PopupItemImage(image, resizable: true, aspectRatio: nil, contentMode: .fit)
 		} else {
 			imageData = nil
 		}

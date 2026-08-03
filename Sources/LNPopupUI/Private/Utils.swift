@@ -62,7 +62,7 @@ internal struct TitleContentView : View {
 	
 	let titleView: AnyView
 	let subtitleView: AnyView?
-	let popupBar: LNPopupBar
+	unowned let popupBar: LNPopupBar
 	
 	init(titleView: AnyView, subtitleView: AnyView?, popupBar: LNPopupBar) {
 		self.titleView = titleView
@@ -152,7 +152,7 @@ func titleContentView(fromTitleView titleView: AnyView?, subtitleView: AnyView?,
 }
 
 internal
-func createOrUpdateTitleAdapter(in popupItem: LNPopupItem, for titleData: LNPopupTitleContentData?, popupBar: LNPopupBar) {
+func createOrUpdateTitleAdapter(in popupItem: LNPopupItem, for titleData: ViewTitleContainer?, popupBar: LNPopupBar) {
 	let view = titleContentView(fromTitleView: titleData?.titleView, subtitleView: titleData?.subtitleView, popupBar: popupBar)
 	createOrUpdateTitleAdapter(in: popupItem, for: view)
 }
@@ -175,14 +175,14 @@ func createOrUpdateTitleAdapter(in popupItem: LNPopupItem, for view: TitleConten
 }
 
 internal
-func createOrUpdateImageAdapter(in popupItem: LNPopupItem, for imageData: LNPopupImageData?) {
+func createOrUpdateImageAdapter(in popupItem: LNPopupItem, for imageData: PopupItemImage?) {
 	if let imageData {
 		let contentMode = imageData.contentMode
 		var image = imageData.image
 		if imageData.resizable {
-			image = image.resizable()
+			image = image?.resizable()
 		}
-		let view = AnyView(image.aspectRatio(imageData.aspectRatio, contentMode: contentMode))
+		let view = AnyView(image?.aspectRatio(imageData.aspectRatio, contentMode: contentMode))
 		
 		if let adapter = popupItem.value(forKey: "swiftuiImageController") as? LNPopupBarImageAdapter {
 			adapter.rootView = view
