@@ -11,6 +11,29 @@ import SwiftUI
 
 @objc(__LNPopupUI) fileprivate class __LNPopupUI: NSObject {}
 
+internal struct PopupBarGeometryChangeModifier<T: Equatable & Sendable>: ViewModifier {
+	let transform: @Sendable (PopupBarLayoutProxy) -> T
+	let oldNewAction: (T?, T) -> Void
+	@State private var identifier = UUID()
+	
+	init(transform: @escaping @Sendable (PopupBarLayoutProxy) -> T, action: @escaping (T) -> Void) {
+		self.transform = transform
+		self.oldNewAction = { _, newValue in action(newValue) }
+	}
+	
+	init(transform: @escaping @Sendable (PopupBarLayoutProxy) -> T, action: @escaping (T?, T) -> Void) {
+		self.transform = transform
+		self.oldNewAction = action
+	}
+	
+	func body(content: Content) -> some View {
+		let observer = TypedPopupBarLayoutObserver(identifier: identifier,
+												   transformer: transform,
+												   oldNewAction: oldNewAction)
+		content.environment(\.popupBarLayoutObservers, [observer])
+	}
+}
+
 internal class LNPopupBarTitleViewAdapter: UIHostingController<TitleContentView> {
 	@objc(_ln_popupUIRequiresZeroInsets) var popupUIRequiresZeroInsets: Bool {
 		true
@@ -62,7 +85,7 @@ internal struct TitleContentView : View {
 	
 	let titleView: AnyView
 	let subtitleView: AnyView?
-	unowned let popupBar: LNPopupBar
+	weak let popupBar: LNPopupBar?
 	
 	init(titleView: AnyView, subtitleView: AnyView?, popupBar: LNPopupBar) {
 		self.titleView = titleView
@@ -71,15 +94,17 @@ internal struct TitleContentView : View {
 	}
 	
 	var body: some View {
-		let titleFont = popupBar.value(forKey: "_titleFont") as! CTFont
-		let subtitleFont = popupBar.value(forKey: "_subtitleFont") as! CTFont
-		let titleColor = popupBar.value(forKey: "_titleColor") as! UIColor
-		let subtitleColor = popupBar.value(forKey: "_subtitleColor") as! UIColor
-		
-		VStack(spacing: 2) {
-			titleView.font(font ?? Font(titleFont)).foregroundColor(Color(titleColor))
-			subtitleView?.font(font ?? Font(subtitleFont)).foregroundColor(Color(subtitleColor))
-		}.lineLimit(1)
+		if let popupBar {
+			let titleFont = popupBar.value(forKey: "_titleFont") as! CTFont
+			let subtitleFont = popupBar.value(forKey: "_subtitleFont") as! CTFont
+			let titleColor = popupBar.value(forKey: "_titleColor") as! UIColor
+			let subtitleColor = popupBar.value(forKey: "_subtitleColor") as! UIColor
+			
+			VStack(spacing: 2) {
+				titleView.font(font ?? Font(titleFont)).foregroundColor(Color(titleColor))
+				subtitleView?.font(font ?? Font(subtitleFont)).foregroundColor(Color(subtitleColor))
+			}.lineLimit(1)
+		}
 	}
 }
 

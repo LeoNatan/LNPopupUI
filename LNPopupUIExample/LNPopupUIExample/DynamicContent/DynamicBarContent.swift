@@ -141,6 +141,9 @@ struct DynamicBarContent: View {
 		} action: { oldHeight, newHeight in
 			barButtonsHeight = newHeight
 		}
+		.onChange(of: useTabView) {
+			showPicker = false
+		}
 	}
 	
 	func dynamicBarContentPopupItem() -> PopupItem<String> {
@@ -151,15 +154,17 @@ struct DynamicBarContent: View {
 		} leadingButtons: {
 			ToolbarItemGroup(placement: .popupBar) {
 				if barButtonsStyle.isLarge {
-					Group {
-						HStack(spacing: 12) {
+					HStack(spacing: 0) {
+						Group {
 							barButtonsStyle.ifAtLeast(.large1) {
 								Button {
 									print("Shuffle")
 								} label: {
 									Image(systemName: "shuffle")
+										.padding(6)
 								}
 								.foregroundStyle(Color(uiColor: .secondaryLabel))
+								.contentShape(Capsule())
 							}
 							
 							prevStopNext(allowPrev: true, allowLargeSizes: barButtonsHeight == .allowLarge)
@@ -169,13 +174,17 @@ struct DynamicBarContent: View {
 									print("Repeat")
 								} label: {
 									Image(systemName: "repeat")
+										.padding(6)
 								}
 								.foregroundStyle(Color(uiColor: .secondaryLabel))
+								.contentShape(Capsule())
 							}
 						}
-						.buttonStyle(.borderless)
-						.imageScale(.small)
+						.hoverEffect()
+						.defaultHoverEffect(.highlight)
 					}
+					.buttonStyle(.borderless)
+					.imageScale(.small)
 				}
 			}
 		} trailingButtons: {
@@ -191,9 +200,13 @@ struct DynamicBarContent: View {
 								print("Volume")
 							} label: {
 								Image(systemName: "speaker.wave.2.fill")
+									.padding(6)
 							}
+							.contentShape(Capsule())
 						}
 					}
+					.hoverEffect()
+					.defaultHoverEffect(.highlight)
 					.medium(barButtonsHeight == .allowLarge)
 					.buttonStyle(.borderless)
 				} else {
@@ -303,8 +316,10 @@ struct DynamicBarContent: View {
 		} label: {
 			Image(systemName: "ellipsis")
 		}
+#if targetEnvironment(macCatalyst)
         .menuStyle(.button)
         .buttonStyle(.plain)
+#endif
 	}
 	
 	@ViewBuilder
@@ -314,20 +329,23 @@ struct DynamicBarContent: View {
 				print("Prev")
 			} label: {
 				Image(systemName: "backward.fill")
-			}.medium(allowLargeSizes)
+					.padding(6)
+			}.medium(allowLargeSizes).contentShape(Capsule())
 		}
 		
 		Button {
 			print("Play/pause")
 		} label: {
 			Image(systemName: "stop.fill")
-		}.large(allowLargeSizes)
+				.padding(6)
+		}.large(allowLargeSizes).contentShape(Capsule())
 		
 		Button {
 			print("Next")
 		} label: {
 			Image(systemName: "forward.fill")
-		}.medium(allowLargeSizes)
+				.padding(6)
+		}.medium(allowLargeSizes).contentShape(Capsule())
 	}
 }
 

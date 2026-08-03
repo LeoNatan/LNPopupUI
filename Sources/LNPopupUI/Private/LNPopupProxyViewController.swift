@@ -184,21 +184,13 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 	
 	var layoutObservers: [PopupBarLayoutObserver] = []
 	func updateLayoutObservers(_ newObservers: [PopupBarLayoutObserver]) {
-		let previousIdentifiers = layoutObservers.map { $0.identifier }
-		let newIdentifiers = newObservers.map { $0.identifier }
-		
-		defer {
-			layoutObservers = newObservers
+		let previousObservers = Dictionary(layoutObservers.map { ($0.identifier, $0) }, uniquingKeysWith: { first, _ in first })
+
+		for newObserver in newObservers {
+			previousObservers[newObserver.identifier]?.transferOwnership(to: newObserver)
 		}
-		
-		guard previousIdentifiers.count == newIdentifiers.count, previousIdentifiers == newIdentifiers else {
-			return
-		}
-		
-		for (idx, oldObserver) in layoutObservers.enumerated() {
-			let newObserver = newObservers[idx]
-			oldObserver.transferOwnership(to: newObserver)
-		}
+
+		layoutObservers = newObservers
 	}
 	func notifyLayoutObservers(with layoutProxy: PopupBarLayoutProxy) {
 		for observer in layoutObservers {

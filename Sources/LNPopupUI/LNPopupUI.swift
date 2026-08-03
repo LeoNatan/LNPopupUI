@@ -334,13 +334,9 @@ public extension View {
 	///     - term newValue: The new value that failed the comparison check.
 	func onPopupBarGeometryChange<T>(for type: T.Type,
 									 of transform: @escaping @Sendable (PopupBarLayoutProxy) -> T,
-									 action: @escaping (_ newValue: T) -> Void,
-									 file: StaticString = #fileID,
-									 line: Int = #line
+									 action: @escaping (_ newValue: T) -> Void
 	) -> some View where T: Equatable, T: Sendable {
-		let identifier = "\(file):\(line)"
-		let observer = TypedPopupBarLayoutObserver(identifier: identifier, transformer: transform, action: action)
-		return environment(\.popupBarLayoutObservers, [observer])
+        modifier(PopupBarGeometryChangeModifier(transform: transform, action: action))
 	}
 	
 	/// Adds an action to be performed when a value, created from a
@@ -366,13 +362,9 @@ public extension View {
 	///     - term newValue: The new value that failed the comparison check.
 	func onPopupBarGeometryChange<T>(for type: T.Type,
 									 of transform: @escaping @Sendable (PopupBarLayoutProxy) -> T,
-									 action: @escaping (_ oldValue: T?, _ newValue: T) -> Void,
-									 file: StaticString = #fileID,
-									 line: Int = #line
-	) -> some View where T: Equatable, T: Sendable {
-		let identifier = "\(file):\(line)"
-		let observer = TypedPopupBarLayoutObserver(identifier: identifier, transformer: transform, oldNewAction: action)
-		return environment(\.popupBarLayoutObservers, [observer])
+									 action: @escaping (_ oldValue: T?, _ newValue: T) -> Void
+    ) -> some View where T: Equatable, T: Sendable {
+        modifier(PopupBarGeometryChangeModifier(transform: transform, action: action))
 	}
 }
 

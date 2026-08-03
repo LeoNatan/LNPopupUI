@@ -5,23 +5,25 @@
 //  Created by Léo Natan on 26/7/26.
 //
 
+@MainActor
 protocol PopupBarLayoutObserver {
-	var identifier: String { get }
+	var identifier: UUID { get }
 	func apply(_ layoutProxy: PopupBarLayoutProxy)
 	func transferOwnership(to nextObserver: PopupBarLayoutObserver)
 }
 
+@MainActor
 class TypedPopupBarLayoutObserver<T: Equatable & Sendable>: PopupBarLayoutObserver {
-	let identifier: String
-	let transformer: @Sendable (PopupBarLayoutProxy) -> T
+	let identifier: UUID
+	let transformer: (PopupBarLayoutProxy) -> T
 	let action: ((T) -> Void)?
 	let oldNewAction: ((T?, T) -> Void)?
 	
 	var previousProxy: PopupBarLayoutProxy?
 	var previousTransformedValue: T?
 	
-	init(identifier: String,
-		 transformer: @escaping @Sendable (PopupBarLayoutProxy) -> T,
+	init(identifier: UUID,
+		 transformer: @escaping (PopupBarLayoutProxy) -> T,
 		 action: @escaping (T) -> Void) {
 		self.identifier = identifier
 		self.transformer = transformer
@@ -29,8 +31,8 @@ class TypedPopupBarLayoutObserver<T: Equatable & Sendable>: PopupBarLayoutObserv
 		oldNewAction = nil
 	}
 	
-	init(identifier: String,
-		 transformer: @escaping @Sendable (PopupBarLayoutProxy) -> T,
+	init(identifier: UUID,
+		 transformer: @escaping (PopupBarLayoutProxy) -> T,
 		 oldNewAction: @escaping (T?, T) -> Void) {
 		self.identifier = identifier
 		self.transformer = transformer
