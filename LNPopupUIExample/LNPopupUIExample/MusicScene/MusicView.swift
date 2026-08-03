@@ -239,6 +239,7 @@ struct MusicView: View {
 		.popup(isBarPresented: Binding.constant(true), isPopupOpen: $isPopupOpen) {
 			PlayerView(song: $currentSong, currentPlaylist: currentPlaylist)
 		}
+		.popupInteractionStyle(.automatic)
 		.popupBarShineEnabled(ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27)
 		.popupBarProgressViewStyle(.bottom)
 		.popupBarInheritsBottomBarMetrics(inheritsBottomBarMetrics)

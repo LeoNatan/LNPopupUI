@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3906A9F52C38C2560071EDAA /* SwiftUIIntrospect-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */; };
 		390E563D28F58C64001E8982 /* LNPopupUIExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E563C28F58C64001E8982 /* LNPopupUIExampleApp.swift */; };
 		394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */ = {isa = PBXBuildFile; productRef = 394E1AAB276C137400C5BE31 /* ActivityView */; };
 		395781DB24DC5D2800A604D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 395781DA24DC5D2800A604D1 /* Assets.xcassets */; };
@@ -19,6 +18,7 @@
 		39A8BE93300B478E001B1E10 /* LNPopupUI.icon in Resources */ = {isa = PBXBuildFile; fileRef = 39A8BE92300B478E001B1E10 /* LNPopupUI.icon */; };
 		39D6C8C62B2D06DA00F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8C52B2D06DA00F53E70 /* LNTouchVisualizer */; };
 		39D6C8C72B2D06E000F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8C52B2D06DA00F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39DB6D4B30214191004B9A34 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 39DB6D4A30214191004B9A34 /* SwiftUIIntrospect */; };
 		39E18E3C24F059F50096391B /* LNPopupUI in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */ = {isa = PBXBuildFile; productRef = 39E18E3A24F059F50096391B /* LNPopupUI */; };
 /* End PBXBuildFile section */
@@ -71,8 +71,8 @@
 				394E1AAC276C137400C5BE31 /* ActivityView in Frameworks */,
 				39F93B352863104000BAE9A9 /* LNPopupUI in Frameworks */,
 				3998CA55268BC3C300A60468 /* LoremIpsum in Frameworks */,
+				39DB6D4B30214191004B9A34 /* SwiftUIIntrospect in Frameworks */,
 				39D6C8C62B2D06DA00F53E70 /* LNTouchVisualizer in Frameworks */,
-				3906A9F52C38C2560071EDAA /* SwiftUIIntrospect-Static in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +151,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				39DB6D4930214186004B9A34 /* PBXTargetDependency */,
 				3998CA5C268CE8E300A60468 /* PBXTargetDependency */,
 				3998CA5A268CE8DF00A60468 /* PBXTargetDependency */,
 			);
@@ -169,6 +170,7 @@
 				394E1AAB276C137400C5BE31 /* ActivityView */,
 				39D6C8C52B2D06DA00F53E70 /* LNTouchVisualizer */,
 				3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */,
+				39DB6D4A30214191004B9A34 /* SwiftUIIntrospect */,
 			);
 			productName = LNPopupUIExample;
 			productReference = 395781D124DC5D2700A604D1 /* LNPopupUIExample.app */;
@@ -250,6 +252,10 @@
 		3998CA5C268CE8E300A60468 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 3998CA5B268CE8E300A60468 /* LoremIpsum */;
+		};
+		39DB6D4930214186004B9A34 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 39DB6D4830214186004B9A34 /* SwiftUIIntrospect */;
 		};
 /* End PBXTargetDependency section */
 
@@ -482,8 +488,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/siteline/swiftui-introspect";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 26.0.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 		394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */ = {
@@ -541,6 +547,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 39D6C8C42B2D06DA00F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
 			productName = LNTouchVisualizer;
+		};
+		39DB6D4830214186004B9A34 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3906A9F32C38C2560071EDAA /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
+		};
+		39DB6D4A30214191004B9A34 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3906A9F32C38C2560071EDAA /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
 		};
 		39E18E3A24F059F50096391B /* LNPopupUI */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -77,13 +77,13 @@ struct DynamicBarContent: View {
 			} else {
 				NavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.detail)) {
 					paneContent(title: "Sidebar")
+						.navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 400)
 				} detail: {
 					NavigationStack {
 						paneContent(title: "Content", addToolbar: true)
 					}
 				}
 				.navigationSplitViewStyle(.balanced)
-				.navigationSplitViewColumnWidth(min: 270, ideal: 375, max: 450)
 			}
 		}
 		.tint(.blue)

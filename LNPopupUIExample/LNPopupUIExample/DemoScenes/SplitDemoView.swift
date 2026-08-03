@@ -47,18 +47,34 @@ struct SplitDemoView: View {
 	}
 	
 	var body: some View {
-		let splitView = NavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.content)) {
+		if isGlobal {
+			globalSplitView()
+				.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
+		} else {
+			fullSplitView()
+		}
+	}
+	
+	@ViewBuilder
+	func globalSplitView() -> some View {
+		NavigationSplitView(columnVisibility: Binding.constant(.all), preferredCompactColumn: Binding.constant(.content)) {
 			SplitInnerView(title: "Sidebar", idx: 600, isGlobal: isGlobal, onDismiss: onDismiss)
-				.navigationSplitViewColumnWidth(min: 400, ideal: 400, max: 400)
+				.navigationSplitViewColumnWidth(min: 270, ideal: 320, max: 450)
 		} detail: {
 			SplitInnerView(title: "Detail", idx: 1, isGlobal: isGlobal, onDismiss: onDismiss)
 		}.navigationSplitViewStyle(.balanced)
-			.navigationSplitViewColumnWidth(min: 270, ideal: 375, max: 450)
-		
-		if isGlobal {
-			splitView.popupDemo(demoContent: DemoContent(), isBarPresented: Binding.constant(true), includeContextMenu: UserDefaults.settings.bool(forKey: .contextMenuEnabled))
-		} else {
-			splitView
-		}
+	}
+	
+	@ViewBuilder
+	func fullSplitView() -> some View {
+		NavigationSplitView(columnVisibility: Binding.constant(.doubleColumn), preferredCompactColumn: Binding.constant(.content)) {
+			SplitInnerView(title: "Sidebar", idx: 600, isGlobal: isGlobal, onDismiss: onDismiss)
+				.navigationSplitViewColumnWidth(320)
+		} content: {
+			SplitInnerView(title: "Content", idx: 16, isGlobal: isGlobal, onDismiss: onDismiss)
+				.navigationSplitViewColumnWidth(320)
+		} detail: {
+			SplitInnerView(title: "Detail", idx: 1, isGlobal: isGlobal, onDismiss: onDismiss)
+		}.navigationSplitViewStyle(.balanced)
 	}
 }
