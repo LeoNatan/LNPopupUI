@@ -48,26 +48,129 @@ struct PopupItemImage: PopupItemImageType {
 // MARK: - Popup Item
 
 /// A model that represents an item which can be displayed in a popup bar.
-public
-struct PopupItem<Identifier: Hashable, TitleContent, SubtitleContent, LeadingButtonToolbarContent: ToolbarContent, TrailingButtonToolbarContent: ToolbarContent>: Identifiable {
+@MainActor public
+struct PopupItem<Identifier: Hashable>: @MainActor Identifiable {
 	/// The stable identity of the popup item
 	public
 	let id: Identifier
-	
-	let titleContainer: TitleContainer<TitleContent, SubtitleContent>
+
+	let titleContainer: TitleContainer
 	let image: PopupItemImageType?
-	let buttonContainer: ButtonContainer<LeadingButtonToolbarContent, TrailingButtonToolbarContent>
+	let buttonContainer: ButtonContainer
 	let progress: Float?
-	
-	/// Creates a type-erased popup item that wraps the receiver.
-	public
-	func eraseToAnyPopupItem() -> AnyPopupItem<Identifier> {
-		return AnyPopupItem(self)
+
+	internal
+	init(id: Identifier, titleContainer: TitleContainer, image: PopupItemImageType?, buttonContainer: ButtonContainer, progress: Float?) {
+		self.id = id
+		self.titleContainer = titleContainer
+		self.image = image
+		self.buttonContainer = buttonContainer
+		self.progress = progress
 	}
 }
 
+// MARK: Initializers with Trailing Bar Buttons
+
 public
-extension PopupItem where TitleContent == String, SubtitleContent == String {
+extension PopupItem {
+	/// Creates a popup item with a localized string title and subtitle.
+	/// - Parameters:
+	///   - id: The popup item identifier.
+	///   - title: The key for a popup item title string in the table identified by `tableName`.
+	///   - subtitle: An optional key for a popup item subtitle string in the table identified by `tableName`.
+	///   - tableName: The name of the string table to search. If `nil`, use the table in the `Localizable.strings` file.
+	///   - bundle: The bundle containing the strings file. If `nil`, use the main bundle.
+	///   - image: An optional image of the popup item.
+	///   - progress: An optional progress of the popup item.
+	///   - buttons: Optional bar buttons of the popup item.
+    @_disfavoredOverload
+	init<Trailing: ToolbarContent>(id: Identifier, title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, tableName: String? = nil, bundle: Bundle? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> Trailing = { EmptyPopupToolbarContent() }) {
+		let subtitleToUse: String?
+		if let subtitle {
+			subtitleToUse = NSLocalizedString(subtitle.stringKey, tableName: tableName, bundle: bundle ?? .main, value: subtitle.stringKey, comment: "")
+		} else {
+			subtitleToUse = nil
+		}
+
+		let titleToUse = NSLocalizedString(title.stringKey, tableName: tableName, bundle: bundle ?? .main, value: title.stringKey, comment: "")
+
+		self.init(id: id, titleContainer: StringTitleContainer(titleToUse, subtitleToUse), image: image, buttonContainer: makeButtonContainer(buttons: buttons()), progress: progress)
+	}
+
+	/// Creates a popup item with a string title and subtitle without localization.
+	/// - Parameters:
+	///   - id: The popup item identifier.
+	///   - title: The title of the popup item.
+	///   - subtitle: An optional subtitle of the popup item.
+	///   - image: An optional image of the popup item.
+	///   - progress: An optional progress of the popup item.
+	///   - buttons: Optional bar buttons of the popup item.
+	@_disfavoredOverload
+	init<S, Trailing: ToolbarContent>(id: Identifier, title: S, subtitle: S? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> Trailing = { EmptyPopupToolbarContent() }) where S: StringProtocol {
+		self.init(id: id, titleContainer: StringTitleContainer(String(title), subtitle != nil ? String(subtitle!) : nil), image: image, buttonContainer: makeButtonContainer(buttons: buttons()), progress: progress)
+	}
+
+	/// Creates a popup item with a string title and subtitle without localization.
+	/// - Parameters:
+	///   - id: The popup item identifier.
+	///   - title: The title of the popup item.
+	///   - subtitle: An optional subtitle of the popup item.
+	///   - image: An optional image of the popup item.
+	///   - progress: An optional progress of the popup item.
+	///   - buttons: Optional bar buttons of the popup item.
+    @_disfavoredOverload
+    init<S, Trailing: ToolbarContent>(id: Identifier, verbatimTitle title: S, verbatimSubtitle subtitle: S? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> Trailing = { EmptyPopupToolbarContent() }) where S: StringProtocol {
+		self.init(id: id, titleContainer: StringTitleContainer(String(title), subtitle != nil ? String(subtitle!) : nil), image: image, buttonContainer: makeButtonContainer(buttons: buttons()), progress: progress)
+	}
+
+	/// Creates a popup item with a string title and subtitle without localization.
+	/// - Parameters:
+	///   - id: The popup item identifier.
+	///   - title: The title of the popup item.
+	///   - subtitle: An optional subtitle of the popup item.
+	///   - image: An optional image of the popup item.
+	///   - progress: An optional progress of the popup item.
+	///   - buttons: Optional bar buttons of the popup item.
+    @_disfavoredOverload
+    init<Trailing: ToolbarContent>(id: Identifier, verbatimTitle title: String, verbatimSubtitle subtitle: String? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> Trailing = { EmptyPopupToolbarContent() }) {
+		self.init(id: id, titleContainer: StringTitleContainer(title, subtitle), image: image, buttonContainer: makeButtonContainer(buttons: buttons()), progress: progress)
+	}
+
+	/// Creates a popup item with custom title and subtitle views.
+	/// - Parameters:
+	///   - id: The popup item identifier.
+	///   - image: An optional image of the popup item.
+	///   - progress: An optional progress of the popup item.
+	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's tile.
+	///   - subtitle: An optional `ViewBuilder` that you use to declare the views to draw as the popup item's subtitle.
+	///   - buttons: Optional bar buttons of the popup item.
+    @_disfavoredOverload
+    init<TitleContent: View, SubtitleContent: View, Trailing: ToolbarContent>(id: Identifier, image: PopupItemImageType? = nil, progress: Float? = nil, @ViewBuilder title: () -> TitleContent, @ViewBuilder subtitle: () -> SubtitleContent = { EmptyView() }, @ToolbarContentBuilder buttons: () -> Trailing = { EmptyPopupToolbarContent() }) {
+		self.init(id: id, titleContainer: ViewTitleContainer(titleView: AnyView(title()), subtitleView: AnyView(subtitle())), image: image, buttonContainer: makeButtonContainer(buttons: buttons()), progress: progress)
+	}
+}
+
+@available(iOS 15, *)
+public
+extension PopupItem {
+	/// Creates a popup item with an attributed string title and subtitle.
+	/// - Parameters:
+	///   - id: The popup item identifier.
+	///   - title: An attributed string to style and display as the popup item title, in accordance with its attributes.
+	///   - subtitle: An optional attributed string to style and display as the popup item subtitle, in accordance with its attributes.
+	///   - image: An optional image of the popup item.
+	///   - progress: An optional progress of the popup item.
+	///   - buttons: Optional bar buttons of the popup item.
+	@_disfavoredOverload
+	init<Trailing: ToolbarContent>(id: Identifier, title: AttributedString, subtitle: AttributedString? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> Trailing) {
+		self.init(id: id, titleContainer: AttributedStringTitleContainer(title, subtitle), image: image, buttonContainer: makeButtonContainer(buttons: buttons()), progress: progress)
+	}
+}
+
+// MARK: Initializers with Leading and Trailing Bar Buttons
+
+public
+extension PopupItem {
 	/// Creates a popup item with a localized string title and subtitle.
 	/// - Parameters:
 	///   - id: The popup item identifier.
@@ -79,19 +182,19 @@ extension PopupItem where TitleContent == String, SubtitleContent == String {
 	///   - progress: An optional progress of the popup item.
 	///   - leadingButtons: Optional leading bar buttons of the popup item.
 	///   - trailingButtons: Optional trailing bar buttons of the popup item.
-	init(id: Identifier, title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, tableName: String? = nil, bundle: Bundle? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> LeadingButtonToolbarContent = { emptyToolbarItem() }, @ToolbarContentBuilder trailingButtons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
+	init<Leading: ToolbarContent, Trailing: ToolbarContent>(id: Identifier, title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, tableName: String? = nil, bundle: Bundle? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> Leading = { EmptyPopupToolbarContent() }, @ToolbarContentBuilder trailingButtons: () -> Trailing = { EmptyPopupToolbarContent() }) {
 		let subtitleToUse: String?
 		if let subtitle {
 			subtitleToUse = NSLocalizedString(subtitle.stringKey, tableName: tableName, bundle: bundle ?? .main, value: subtitle.stringKey, comment: "")
 		} else {
 			subtitleToUse = nil
 		}
-		
+
 		let titleToUse = NSLocalizedString(title.stringKey, tableName: tableName, bundle: bundle ?? .main, value: title.stringKey, comment: "")
-		
-		self.init(id: id, titleContainer: StringTitleContainer(titleToUse, subtitleToUse), image: image, leadingButtons: leadingButtons(), trailingButtons: trailingButtons(), progress: progress, private: ())
+
+		self.init(id: id, titleContainer: StringTitleContainer(titleToUse, subtitleToUse), image: image, buttonContainer: makeButtonContainer(leadingButtons: leadingButtons(), trailingButtons: trailingButtons()), progress: progress)
 	}
-	
+
 	/// Creates a popup item with a string title and subtitle without localization.
 	/// - Parameters:
 	///   - id: The popup item identifier.
@@ -102,10 +205,10 @@ extension PopupItem where TitleContent == String, SubtitleContent == String {
 	///   - leadingButtons: Optional leading bar buttons of the popup item.
 	///   - trailingButtons: Optional trailing bar buttons of the popup item.
 	@_disfavoredOverload
-	init<S>(id: Identifier, title: S, subtitle: S? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> LeadingButtonToolbarContent = { emptyToolbarItem() }, @ToolbarContentBuilder trailingButtons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) where S: StringProtocol {
-		self.init(id: id, titleContainer: StringTitleContainer(String(title), subtitle != nil ? String(subtitle!) : nil), image: image, leadingButtons: leadingButtons(), trailingButtons: trailingButtons(), progress: progress, private: ())
+	init<S, Leading: ToolbarContent, Trailing: ToolbarContent>(id: Identifier, title: S, subtitle: S? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> Leading = { EmptyPopupToolbarContent() }, @ToolbarContentBuilder trailingButtons: () -> Trailing = { EmptyPopupToolbarContent() }) where S: StringProtocol {
+		self.init(id: id, titleContainer: StringTitleContainer(String(title), subtitle != nil ? String(subtitle!) : nil), image: image, buttonContainer: makeButtonContainer(leadingButtons: leadingButtons(), trailingButtons: trailingButtons()), progress: progress)
 	}
-	
+
 	/// Creates a popup item with a string title and subtitle without localization.
 	/// - Parameters:
 	///   - id: The popup item identifier.
@@ -115,10 +218,10 @@ extension PopupItem where TitleContent == String, SubtitleContent == String {
 	///   - progress: An optional progress of the popup item.
 	///   - leadingButtons: Optional leading bar buttons of the popup item.
 	///   - trailingButtons: Optional trailing bar buttons of the popup item.
-	init<S>(id: Identifier, verbatimTitle title: S, verbatimSubtitle subtitle: S? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> LeadingButtonToolbarContent = { emptyToolbarItem() }, @ToolbarContentBuilder trailingButtons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) where S: StringProtocol {
-		self.init(id: id, title: title, subtitle: subtitle, image: image, progress: progress, leadingButtons: leadingButtons, trailingButtons: trailingButtons)
+	init<S, Leading: ToolbarContent, Trailing: ToolbarContent>(id: Identifier, verbatimTitle title: S, verbatimSubtitle subtitle: S? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> Leading = { EmptyPopupToolbarContent() }, @ToolbarContentBuilder trailingButtons: () -> Trailing = { EmptyPopupToolbarContent() }) where S: StringProtocol {
+		self.init(id: id, titleContainer: StringTitleContainer(String(title), subtitle != nil ? String(subtitle!) : nil), image: image, buttonContainer: makeButtonContainer(leadingButtons: leadingButtons(), trailingButtons: trailingButtons()), progress: progress)
 	}
-	
+
 	/// Creates a popup item with a string title and subtitle without localization.
 	/// - Parameters:
 	///   - id: The popup item identifier.
@@ -128,14 +231,27 @@ extension PopupItem where TitleContent == String, SubtitleContent == String {
 	///   - progress: An optional progress of the popup item.
 	///   - leadingButtons: Optional leading bar buttons of the popup item.
 	///   - trailingButtons: Optional trailing bar buttons of the popup item.
-	init(id: Identifier, verbatimTitle title: String, verbatimSubtitle subtitle: String? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> LeadingButtonToolbarContent = { emptyToolbarItem() }, @ToolbarContentBuilder trailingButtons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		self.init(id: id, title: title, subtitle: subtitle, image: image, progress: progress, leadingButtons: leadingButtons, trailingButtons: trailingButtons)
+	init<Leading: ToolbarContent, Trailing: ToolbarContent>(id: Identifier, verbatimTitle title: String, verbatimSubtitle subtitle: String? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> Leading = { EmptyPopupToolbarContent() }, @ToolbarContentBuilder trailingButtons: () -> Trailing = { EmptyPopupToolbarContent() }) {
+		self.init(id: id, titleContainer: StringTitleContainer(title, subtitle), image: image, buttonContainer: makeButtonContainer(leadingButtons: leadingButtons(), trailingButtons: trailingButtons()), progress: progress)
+	}
+
+	/// Creates a popup item with custom title and subtitle views.
+	/// - Parameters:
+	///   - id: The popup item identifier.
+	///   - image: An optional image of the popup item.
+	///   - progress: An optional progress of the popup item.
+	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's tile.
+	///   - subtitle: An optional `ViewBuilder` that you use to declare the views to draw as the popup item's subtitle.
+	///   - leadingButtons: Optional leading bar buttons of the popup item.
+	///   - trailingButtons: Optional trailing bar buttons of the popup item.
+	init<TitleContent: View, SubtitleContent: View, Leading: ToolbarContent, Trailing: ToolbarContent>(id: Identifier, image: PopupItemImageType? = nil, progress: Float? = nil, @ViewBuilder title: () -> TitleContent, @ViewBuilder subtitle: () -> SubtitleContent = { EmptyView() }, @ToolbarContentBuilder leadingButtons: () -> Leading = { EmptyPopupToolbarContent() }, @ToolbarContentBuilder trailingButtons: () -> Trailing = { EmptyPopupToolbarContent() }) {
+		self.init(id: id, titleContainer: ViewTitleContainer(titleView: AnyView(title()), subtitleView: AnyView(subtitle())), image: image, buttonContainer: makeButtonContainer(leadingButtons: leadingButtons(), trailingButtons: trailingButtons()), progress: progress)
 	}
 }
 
 @available(iOS 15, *)
 public
-extension PopupItem where TitleContent == AttributedString, SubtitleContent == AttributedString {
+extension PopupItem {
 	/// Creates a popup item with an attributed string title and subtitle.
 	/// - Parameters:
 	///   - id: The popup item identifier.
@@ -146,153 +262,8 @@ extension PopupItem where TitleContent == AttributedString, SubtitleContent == A
 	///   - leadingButtons: Optional leading bar buttons of the popup item.
 	///   - trailingButtons: Optional trailing bar buttons of the popup item.
 	@_disfavoredOverload
-	init(id: Identifier, title: AttributedString, subtitle: AttributedString? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> LeadingButtonToolbarContent = { emptyToolbarItem() }, @ToolbarContentBuilder trailingButtons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		self.init(id: id, titleContainer: AttributedStringTitleContainer(title, subtitle), image: image, leadingButtons: leadingButtons(), trailingButtons: trailingButtons(), progress: progress, private: ())
-	}
-}
-
-public
-extension PopupItem where TitleContent: View, SubtitleContent: View {
-	/// Creates a popup item with custom title and subtitle views.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's tile.
-	///   - subtitle: An optional `ViewBuilder` that you use to declare the views to draw as the popup item's subtitle.
-	///   - leadingButtons: Optional leading bar buttons of the popup item.
-	///   - trailingButtons: Optional trailing bar buttons of the popup item.
-	@_disfavoredOverload
-	init(id: Identifier, image: PopupItemImageType? = nil, progress: Float? = nil, @ViewBuilder title: () -> TitleContent, @ViewBuilder subtitle: () -> SubtitleContent = { EmptyView() }, @ToolbarContentBuilder leadingButtons: () -> LeadingButtonToolbarContent = { emptyToolbarItem() }, @ToolbarContentBuilder trailingButtons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		self.init(id: id, titleContainer: ViewTitleContainer(title(), subtitle()), image: image, leadingButtons: leadingButtons(), trailingButtons: trailingButtons(), progress: progress, private: ())
-	}
-}
-
-public
-extension PopupItem where TitleContent: View & Equatable, SubtitleContent: View & Equatable {
-	/// Creates a popup item with custom title and subtitle views.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's tile.
-	///   - subtitle: An optional `ViewBuilder` that you use to declare the views to draw as the popup item's subtitle.
-	///   - leadingButtons: Optional leading bar buttons of the popup item.
-	///   - trailingButtons: Optional trailing bar buttons of the popup item.
-	init(id: Identifier, image: PopupItemImageType? = nil, progress: Float? = nil, @ViewBuilder title: () -> TitleContent, @ViewBuilder subtitle: () -> SubtitleContent = { EquatableEmptyView() }, @ToolbarContentBuilder leadingButtons: () -> LeadingButtonToolbarContent = { emptyToolbarItem() }, @ToolbarContentBuilder trailingButtons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		self.init(id: id, titleContainer: EquatableViewTitleContainer(title(), subtitle()), image: image, leadingButtons: leadingButtons(), trailingButtons: trailingButtons(), progress: progress, private: ())
-	}
-}
-
-public
-extension PopupItem where TitleContent == String, SubtitleContent == String, LeadingButtonToolbarContent == Never {
-	/// Creates a popup item with a localized string title and subtitle.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - title: The key for a popup item title string in the table identified by `tableName`.
-	///   - subtitle: An optional key for a popup item subtitle string in the table identified by `tableName`.
-	///   - tableName: The name of the string table to search. If `nil`, use the table in the `Localizable.strings` file.
-	///   - bundle: The bundle containing the strings file. If `nil`, use the main bundle.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - buttons: Optional bar buttons of the popup item.
-	init(id: Identifier, title: LocalizedStringKey, subtitle: LocalizedStringKey? = nil, tableName: String? = nil, bundle: Bundle? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		let subtitleToUse: String?
-		if let subtitle {
-			subtitleToUse = NSLocalizedString(subtitle.stringKey, tableName: tableName, bundle: bundle ?? .main, value: subtitle.stringKey, comment: "")
-		} else {
-			subtitleToUse = nil
-		}
-		
-		let titleToUse = NSLocalizedString(title.stringKey, tableName: tableName, bundle: bundle ?? .main, value: title.stringKey, comment: "")
-		
-		self.init(id: id, titleContainer: StringTitleContainer(titleToUse, subtitleToUse), image: image, buttons: buttons(), progress: progress, private: ())
-	}
-	
-	/// Creates a popup item with a string title and subtitle without localization.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - title: The title of the popup item.
-	///   - subtitle: An optional subtitle of the popup item.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - buttons: Optional bar buttons of the popup item.
-	@_disfavoredOverload
-	init<S>(id: Identifier, title: S, subtitle: S? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) where S: StringProtocol {
-		
-		self.init(id: id, titleContainer: StringTitleContainer(String(title), subtitle != nil ? String(subtitle!) : nil), image: image, buttons: buttons(), progress: progress, private: ())
-	}
-	
-	/// Creates a popup item with a string title and subtitle without localization.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - title: The title of the popup item.
-	///   - subtitle: An optional subtitle of the popup item.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - buttons: Optional bar buttons of the popup item.
-	init<S>(id: Identifier, verbatimTitle title: S, verbatimSubtitle subtitle: S? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) where S: StringProtocol {
-		self.init(id: id, title: title, subtitle: subtitle, image: image, progress: progress, buttons: buttons)
-	}
-	
-	/// Creates a popup item with a string title and subtitle without localization.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - title: The title of the popup item.
-	///   - subtitle: An optional subtitle of the popup item.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - buttons: Optional bar buttons of the popup item.
-	init(id: Identifier, verbatimTitle title: String, verbatimSubtitle subtitle: String? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		self.init(id: id, title: title, subtitle: subtitle, image: image, progress: progress, buttons: buttons)
-	}
-}
-
-@available(iOS 15, *)
-public
-extension PopupItem where TitleContent == AttributedString, SubtitleContent == AttributedString, LeadingButtonToolbarContent == Never {
-	/// Creates a popup item with an attributed string title and subtitle.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - title: An attributed string to style and display as the popup item title, in accordance with its attributes.
-	///   - subtitle: An optional attributed string to style and display as the popup item subtitle, in accordance with its attributes.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - buttons: Optional bar buttons of the popup item.
-	@_disfavoredOverload
-	init(id: Identifier, title: AttributedString, subtitle: AttributedString? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder buttons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		self.init(id: id, titleContainer: AttributedStringTitleContainer(title, subtitle), image: image, buttons: buttons(), progress: progress, private: ())
-	}
-}
-
-public
-extension PopupItem where TitleContent: View, SubtitleContent: View, LeadingButtonToolbarContent == Never {
-	/// Creates a popup item with custom title and subtitle views.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's tile.
-	///   - subtitle: An optional `ViewBuilder` that you use to declare the views to draw as the popup item's subtitle.
-	///   - buttons: Optional bar buttons of the popup item.
-	@_disfavoredOverload
-	init(id: Identifier, image: PopupItemImageType? = nil, progress: Float? = nil, @ViewBuilder title: () -> TitleContent, @ViewBuilder subtitle: () -> SubtitleContent = { EmptyView() }, @ToolbarContentBuilder buttons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		self.init(id: id, titleContainer: ViewTitleContainer(title(), subtitle()), image: image, buttons: buttons(), progress: progress, private: ())
-	}
-}
-
-public
-extension PopupItem where TitleContent: View & Equatable, SubtitleContent: View & Equatable, LeadingButtonToolbarContent == Never {
-	/// Creates a popup item with custom title and subtitle views.
-	/// - Parameters:
-	///   - id: The popup item identifier.
-	///   - image: An optional image of the popup item.
-	///   - progress: An optional progress of the popup item.
-	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's tile.
-	///   - subtitle: An optional `ViewBuilder` that you use to declare the views to draw as the popup item's subtitle.
-	///   - buttons: Optional bar buttons of the popup item.
-	init(id: Identifier, image: PopupItemImageType? = nil, progress: Float? = nil, @ViewBuilder title: () -> TitleContent, @ViewBuilder subtitle: () -> SubtitleContent = { EquatableEmptyView() }, @ToolbarContentBuilder buttons: () -> TrailingButtonToolbarContent = { emptyToolbarItem() }) {
-		self.init(id: id, titleContainer: EquatableViewTitleContainer(title(), subtitle()), image: image, buttons: buttons(), progress: progress, private: ())
+	init<Leading: ToolbarContent, Trailing: ToolbarContent>(id: Identifier, title: AttributedString, subtitle: AttributedString? = nil, image: PopupItemImageType? = nil, progress: Float? = nil, @ToolbarContentBuilder leadingButtons: () -> Leading = { EmptyPopupToolbarContent() }, @ToolbarContentBuilder trailingButtons: () -> Trailing = { EmptyPopupToolbarContent() }) {
+		self.init(id: id, titleContainer: AttributedStringTitleContainer(title, subtitle), image: image, buttonContainer: makeButtonContainer(leadingButtons: leadingButtons(), trailingButtons: trailingButtons()), progress: progress)
 	}
 }
 
@@ -489,65 +460,46 @@ extension View {
 
 // MARK: - Utils
 
-/// A type-erased popup item.
-public
-struct AnyPopupItem<Identifier: Hashable>: Identifiable {
-	internal
-	let base: any PopupItemProtocol<Identifier>
-	internal
-	let toAnyHashable: () -> AnyPopupItem<AnyHashable>
-	
-	/// The stable identity of the popup item
-	public var id: Identifier {
-		base.id
-	}
-	
-	var anyId: AnyHashable {
-		AnyHashable(base.id)
-	}
-	
-	/// Creates a type-erased popup item that wraps the given instance.
-	/// - Parameter base: A popup item to wrap.
-	public
-	init<TitleContent, SubtitleContent, LeadingButtonToolbarContent: ToolbarContent, TrailingButtonToolbarContent: ToolbarContent>(_ base: PopupItem<Identifier, TitleContent, SubtitleContent, LeadingButtonToolbarContent, TrailingButtonToolbarContent>) {
-		self.base = base
-		self.toAnyHashable = {
-			AnyPopupItem<AnyHashable>(base.toAnyHashable())
-		}
-	}
-}
-
 @resultBuilder public
 struct PopupItemBuilder<Identifier: Hashable> {
 	public static
-	func buildBlock(_ components: [AnyPopupItem<Identifier>]...) -> [AnyPopupItem<Identifier>] { components.flatMap { $0 } }
-	
-	public static
-	func buildExpression<TitleContent, SubtitleContent, LeadingButtonToolbarContent: ToolbarContent, TrailingButtonToolbarContent: ToolbarContent>(_ expression: PopupItem<Identifier, TitleContent, SubtitleContent, LeadingButtonToolbarContent, TrailingButtonToolbarContent>?) -> [AnyPopupItem<Identifier>] { if let expression { [AnyPopupItem<Identifier>(expression)] } else { [] } }
+	func buildBlock(_ components: [PopupItem<Identifier>]...) -> [PopupItem<Identifier>] { components.flatMap { $0 } }
 
 	public static
-	func buildExpression(_ expression: AnyPopupItem<Identifier>?) -> [AnyPopupItem<Identifier>] { if let expression { [expression] } else { [] } }
+	func buildExpression(_ expression: PopupItem<Identifier>?) -> [PopupItem<Identifier>] { if let expression { [expression] } else { [] } }
 
 	public static
-	func buildExpression(_ expression: [AnyPopupItem<Identifier>]) -> [AnyPopupItem<Identifier>] { expression }
+	func buildExpression(_ expression: [PopupItem<Identifier>]) -> [PopupItem<Identifier>] { expression }
 
 	public static
-	func buildOptional(_ component: [AnyPopupItem<Identifier>]?) -> [AnyPopupItem<Identifier>] { component ?? [] }
-	
+	func buildOptional(_ component: [PopupItem<Identifier>]?) -> [PopupItem<Identifier>] { component ?? [] }
+
 	public static
-	func buildEither(first component: [AnyPopupItem<Identifier>]) -> [AnyPopupItem<Identifier>] { component }
-	
+	func buildEither(first component: [PopupItem<Identifier>]) -> [PopupItem<Identifier>] { component }
+
 	public static
-	func buildEither(second component: [AnyPopupItem<Identifier>]) -> [AnyPopupItem<Identifier>] { component }
-	
+	func buildEither(second component: [PopupItem<Identifier>]) -> [PopupItem<Identifier>] { component }
+
 	public static
-	func buildArray(_ components: [[AnyPopupItem<Identifier>]]) -> [AnyPopupItem<Identifier>] { components.flatMap { $0 } }
-	
+	func buildArray(_ components: [[PopupItem<Identifier>]]) -> [PopupItem<Identifier>] { components.flatMap { $0 } }
+
 	public static
-	func buildLimitedAvailability(_ component: [AnyPopupItem<Identifier>]) -> [AnyPopupItem<Identifier>] { component }
+	func buildLimitedAvailability(_ component: [PopupItem<Identifier>]) -> [PopupItem<Identifier>] { component }
 }
 
 // MARK: Deprecations
+
+/// A type-erased popup item.
+@available(*, deprecated, renamed: "PopupItem")
+public typealias AnyPopupItem<Identifier: Hashable> = PopupItem<Identifier>
+
+extension PopupItem {
+    /// Creates a type-erased popup item that wraps the receiver.
+    @available(*, deprecated, message: "No longer needed")
+    public func eraseToAnyPopupItem() -> AnyPopupItem<Identifier> {
+        return self
+    }
+}
 
 /// Deprecations
 public extension View {

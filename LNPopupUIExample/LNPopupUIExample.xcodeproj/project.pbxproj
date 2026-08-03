@@ -55,6 +55,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		3949066A3020B8D700FA9EA4 /* DynamicContent */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DynamicContent; sourceTree = "<group>"; };
 		39B0CADB301488B500D09CB0 /* DemoScenes */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DemoScenes; sourceTree = "<group>"; };
 		39B0CAE4301488BD00D09CB0 /* ColorUtils */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ColorUtils; sourceTree = "<group>"; };
 		39B0CAE8301488C200D09CB0 /* MusicScene */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MusicScene; sourceTree = "<group>"; };
@@ -113,6 +114,7 @@
 				39D6C89A2B2CC40A00F53E70 /* LNPopupUIExample.entitlements */,
 				39B0CAE4301488BD00D09CB0 /* ColorUtils */,
 				39B0CADB301488B500D09CB0 /* DemoScenes */,
+				3949066A3020B8D700FA9EA4 /* DynamicContent */,
 				39B0CAE8301488C200D09CB0 /* MusicScene */,
 				39B0CAED301488CB00D09CB0 /* MapScene */,
 				39B0CAF1301488CE00D09CB0 /* IntroWebView */,
@@ -153,6 +155,7 @@
 				3998CA5A268CE8DF00A60468 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				3949066A3020B8D700FA9EA4 /* DynamicContent */,
 				39B0CADB301488B500D09CB0 /* DemoScenes */,
 				39B0CAE4301488BD00D09CB0 /* ColorUtils */,
 				39B0CAE8301488C200D09CB0 /* MusicScene */,

@@ -143,7 +143,7 @@ struct DynamicBarContent: View {
 		}
 	}
 	
-	func dynamicBarContentPopupItem() -> AnyPopupItem<String> {
+	func dynamicBarContentPopupItem() -> PopupItem<String> {
 		PopupItem(id: "intro", image: Image("AppIconPopupBar"), progress: .random(in: 0.2..<0.4)) {
 			VStack {
 				Text("\(Text(NSLocalizedString("Welcome to", comment: ""))) \(Text(NSLocalizedString("LNPopupUI", comment: "")).fontWeight(.heavy))\(Text("!"))")
@@ -200,7 +200,7 @@ struct DynamicBarContent: View {
 					prevStopNext(allowPrev: barButtonsStyle == .expandedMinimal, allowLargeSizes: barButtonsHeight == .allowLarge)
 				}
 			}
-		}.eraseToAnyPopupItem()
+		}
 	}
 	
 	@ViewBuilder

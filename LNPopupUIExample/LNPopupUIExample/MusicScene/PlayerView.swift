@@ -173,7 +173,7 @@ struct PlayerView: View {
 	
 	@State var selectedPopupItemIdentifier = ""
 	
-	func popupItem(for song: RandomTitleSong) -> AnyPopupItem<RandomTitleSong> {
+	func popupItem(for song: RandomTitleSong) -> PopupItem<RandomTitleSong> {
 		PopupItem(id: song, title: song.title, subtitle: song.albumName, image: Image(song.imageName), progress: playbackState.progress) {
 			let isPlaying = song.isNotPlaying == false && playbackState.isPlaying
 			
@@ -202,7 +202,7 @@ struct PlayerView: View {
 				.animation(.spring(duration: 0.1), value: popupBarPlacement)
 				.contentTransition(.symbolEffect(.replace))
 			}
-        }.eraseToAnyPopupItem()
+        }
 	}
 	
 	var body: some View {

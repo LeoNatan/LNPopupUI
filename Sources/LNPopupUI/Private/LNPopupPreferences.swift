@@ -38,13 +38,14 @@ internal struct LNPopupImageData: Equatable {
 internal
 struct LNPopupItemData {
 	let selection: Binding<AnyHashable>
-	let popupItems: [any PopupItemProtocol & ToAnyHashable]
-	
+	let popupItems: [TypeErasedPopupItem]
+
+	@MainActor
 	func selectedPopupItem() -> TypeErasedPopupItem? {
-		if let item = popupItems.first(where: { $0.anyId == selection.wrappedValue }) {
-			return item.toAnyHashable()
+		if let item = popupItems.first(where: { $0.id == selection.wrappedValue }) {
+			return item
 		} else {
-			let directPopupItem = popupItems.first?.toAnyHashable()
+			let directPopupItem = popupItems.first
 			selection.wrappedValue = directPopupItem?.id
 			
 			return directPopupItem
