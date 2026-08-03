@@ -162,6 +162,9 @@ extension PopupItem {
 		let imageController = LNPopupBarImageAdapter(rootView: view)
 		imageController.contentMode = contentMode
 		imageController.aspectRatio = imageSettings.aspectRatio
+		if #available(iOS 16.4, *) {
+			imageController.safeAreaRegions = []
+		}
 		
 		return imageController
 	}

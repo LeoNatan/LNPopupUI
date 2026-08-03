@@ -131,6 +131,9 @@ func createOrUpdateBarItemAdapter(in popupItem: LNPopupItem, key: String, button
 				guard let popupItem, popupItem[keyPath: buttonKeyPath] != buttonItems else { return }
 				popupItem[keyPath: buttonKeyPath] = buttonItems
 			}
+			if #available(iOS 16.4, *) {
+				adapter.safeAreaRegions = []
+			}
 			popupItem.setValue(adapter, forKey: key)
 		}
 	} else {
@@ -161,6 +164,9 @@ func createOrUpdateTitleAdapter(in popupItem: LNPopupItem, for view: TitleConten
 			adapter.rootView = view
 		} else {
 			let adapter = LNPopupBarTitleViewAdapter(rootView: view)
+			if #available(iOS 16.4, *) {
+				adapter.safeAreaRegions = []
+			}
 			popupItem.setValue(adapter, forKey: "swiftuiTitleContentViewController")
 		}
 	} else {
@@ -186,6 +192,9 @@ func createOrUpdateImageAdapter(in popupItem: LNPopupItem, for imageData: LNPopu
 			let adapter = LNPopupBarImageAdapter(rootView: view)
 			adapter.contentMode = contentMode
 			adapter.aspectRatio = imageData.aspectRatio
+			if #available(iOS 16.4, *) {
+				adapter.safeAreaRegions = []
+			}
 			popupItem.setValue(adapter, forKey: "swiftuiImageController")
 		}
 	} else {
