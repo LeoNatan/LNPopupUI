@@ -169,7 +169,6 @@
 				3998CA54268BC3C300A60468 /* LoremIpsum */,
 				394E1AAB276C137400C5BE31 /* ActivityView */,
 				39D6C8C52B2D06DA00F53E70 /* LNTouchVisualizer */,
-				3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */,
 				39DB6D4A30214191004B9A34 /* SwiftUIIntrospect */,
 			);
 			productName = LNPopupUIExample;
@@ -519,11 +518,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3906A9F42C38C2560071EDAA /* SwiftUIIntrospect-Static */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3906A9F32C38C2560071EDAA /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
-			productName = "SwiftUIIntrospect-Static";
-		};
 		394E1AAB276C137400C5BE31 /* ActivityView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 394E1AAA276C137400C5BE31 /* XCRemoteSwiftPackageReference "ActivityView" */;
