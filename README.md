@@ -552,4 +552,10 @@ Additionally, the demo project uses:
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=LeoNatan/LNPopupUI&type=Date)](https://star-history.com/#LeoNatan/LNPopupUI&Date)
+<a href="https://www.star-history.com/?repos=LeoNatan%2FLNPopupUI&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=LeoNatan/LNPopupUI&type=date&theme=dark&legend=top-left&sealed_token=jxY5OzDEfgqKlq7nDBOHs3y3AXui6YOLJsqxkIFiM3zjoARmM5KDRDeBIzsjoNXcAMsaQUxHKgO6r-ByuD5DTkQfT53Tdi03tAakE3z_B8sruDiwUWBsEFhWP0F1SxSu0ubvYoANvwMoLm1r1O0AfHxmSQYklbYYrIBN_i30gK_J37LA6FfF2vmdKtJ2" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=LeoNatan/LNPopupUI&type=date&legend=top-left&sealed_token=jxY5OzDEfgqKlq7nDBOHs3y3AXui6YOLJsqxkIFiM3zjoARmM5KDRDeBIzsjoNXcAMsaQUxHKgO6r-ByuD5DTkQfT53Tdi03tAakE3z_B8sruDiwUWBsEFhWP0F1SxSu0ubvYoANvwMoLm1r1O0AfHxmSQYklbYYrIBN_i30gK_J37LA6FfF2vmdKtJ2" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=LeoNatan/LNPopupUI&type=date&legend=top-left&sealed_token=jxY5OzDEfgqKlq7nDBOHs3y3AXui6YOLJsqxkIFiM3zjoARmM5KDRDeBIzsjoNXcAMsaQUxHKgO6r-ByuD5DTkQfT53Tdi03tAakE3z_B8sruDiwUWBsEFhWP0F1SxSu0ubvYoANvwMoLm1r1O0AfHxmSQYklbYYrIBN_i30gK_J37LA6FfF2vmdKtJ2" />
+ </picture>
+</a>
