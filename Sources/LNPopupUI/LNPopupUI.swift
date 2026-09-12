@@ -312,6 +312,25 @@ public extension View {
 		environment(\.popupBarCustomizer, ^^customizer)
 	}
 	
+	/// Controls whether the popup bar and popup content open over the entire split view, instead of a single column.
+	///
+	/// This has an effect only when the popup is opened in a view that is part of a `NavigationSplitView` column.
+	///
+	/// - Parameter opensOverSplitView: Open the popup over the entire split view.
+	func popupOpensOverSplitView(_ opensOverSplitView: Bool?) -> some View {
+		environment(\.popupOpensOverSplitView, ^^opensOverSplitView)
+	}
+	
+	/// Controls whether the popup bar avoids the primary column of the split view, so that it is displayed only over the secondary column.
+	///
+	/// This has an effect only when the popup is presented from a `NavigationSplitView`.
+	///
+	/// - Parameter avoidsPrimaryColumn: Avoid the primary column of the split view.
+	func popupBarAvoidsSplitViewPrimaryColumn(_ avoidsPrimaryColumn: Bool?) -> some View {
+		environment(\.popupBarAvoidsSplitViewPrimaryColumn, ^^avoidsPrimaryColumn)
+	}
+	
+	
 	/// Adds an action to be performed when a value, created from a
 	/// popup bar layout proxy, changes.
 	///
@@ -607,25 +626,6 @@ public extension View {
 	func popupBarShouldExtendPopupBarUnderSafeArea(_ enabled: Bool?) -> some View {
 		environment(\.popupBarShouldExtendPopupBarUnderSafeArea, ^^enabled)
 	}
-	
-	/// Controls whether the popup bar and popup content open over the entire split view, instead of a single column.
-	///
-	/// This has an effect only when the popup is opened in a view that is part of a `NavigationSplitView` column.
-	///
-	/// - Parameter opensOverSplitView: Open the popup over the entire split view.
-	func popupOpensOverSplitView(_ opensOverSplitView: Bool?) -> some View {
-		environment(\.popupOpensOverSplitView, ^^opensOverSplitView)
-	}
-
-	/// Controls whether the popup bar avoids the primary column of the split view, so that it is displayed only over the secondary column.
-	///
-	/// This has an effect only when the popup is presented from a `NavigationSplitView`.
-	///
-	/// - Parameter avoidsPrimaryColumn: Avoid the primary column of the split view.
-	func popupBarAvoidsSplitViewPrimaryColumn(_ avoidsPrimaryColumn: Bool?) -> some View {
-		environment(\.popupBarAvoidsSplitViewPrimaryColumn, ^^avoidsPrimaryColumn)
-	}
-	
 	
 	/// Sets the popup bar's background style. Use `nil` to use the most appropriate background style for the environment.
 	///
