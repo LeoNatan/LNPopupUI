@@ -610,7 +610,7 @@ public extension View {
 	
 	/// Controls whether the popup bar and popup content open over the entire split view, instead of a single column.
 	///
-	/// This has an effect only when the popup is presented from a `NavigationSplitView`.
+	/// This has an effect only when the popup is opened in a view that is part of a `NavigationSplitView` column.
 	///
 	/// - Parameter opensOverSplitView: Open the popup over the entire split view.
 	func popupOpensOverSplitView(_ opensOverSplitView: Bool?) -> some View {
