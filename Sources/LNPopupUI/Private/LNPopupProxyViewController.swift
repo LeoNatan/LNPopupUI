@@ -226,9 +226,11 @@ internal class LNPopupProxyViewController<Content, PopupContent> : UIHostingCont
 					target.popupBar.setValue(self.currentPopupState.environment.uiFont, forKey: "swiftuiInheritedFont")
 				}
 				
-				target.popupOpensOverSplitViewController = true
-				if let target = target as? UISplitViewController {
-					target.popupBarAvoidsPrimaryColumn = true
+				if let opensOverSplitView = self.currentPopupState.environment.popupOpensOverSplitView?.consume(self) {
+					target.popupOpensOverSplitViewController = opensOverSplitView
+				}
+				if let target = target as? UISplitViewController, let barAvoidsPrimaryColumn = self.currentPopupState.environment.popupBarAvoidsSplitViewPrimaryColumn?.consume(self) {
+					target.popupBarAvoidsPrimaryColumn = barAvoidsPrimaryColumn
 				}
 				
 				if let closeButtonStyle = self.currentPopupState.environment.popupCloseButtonStyle?.consume(self) {

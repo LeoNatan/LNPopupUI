@@ -102,6 +102,8 @@ internal extension EnvironmentValues {
 	@Entry var popupBarCustomBarPrefersFullBarWidth: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupBarInheritsBottomBarMetrics: LNPopupEnvironmentConsumer<Bool>?
 	@Entry var popupContentAllowsContentTransition: LNPopupEnvironmentConsumer<Bool>?
+	@Entry var popupOpensOverSplitView: LNPopupEnvironmentConsumer<Bool>?
+	@Entry var popupBarAvoidsSplitViewPrimaryColumn: LNPopupEnvironmentConsumer<Bool>?
 	
 	var popupBarLayoutObservers: Array<PopupBarLayoutObserver> {
 		get { self[PopupBarLayoutObserversKey.self] }

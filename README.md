@@ -24,9 +24,37 @@ Check the demo project for a quick recreation of Apple’s music app.
 ### Features
 
 * Supports iOS 27 & iOS 26 glass design, while maintaining an appropriate look and feel on previous iOS versions
+* Supports window resize on iPadOS and Mac Catalyst and iOS resize under iPhone Duo and iPhone Mirroring
 * Full support for iOS, iPadOS and Mac Catalyst (*Mac Catalyst* with *Optimize for Mac* or *Scaled to Match iPad*,  and *Designed for iPad*)
 * Available for iOS 14 and above, as an SPM package for SwiftUI
 * For UIKit, check out the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController)
+
+## Table of Contents
+
+- [Adding to Your Project](#adding-to-your-project-and-using-the-framework)
+- [Managing a Popup Presentation](#managing-a-popup-presentation)
+  - [Popup Items](#popup-items)
+    - [Single Popup Item](#single-popup-item)
+    - [Multiple Popup Items With Paging Support](#multiple-popup-items-with-paging-support)
+    - [Default Popup Item](#default-popup-item)
+- [Appearance and Behavior](#appearance-and-behavior)
+  - [Bar Style](#bar-style)
+    - [Legacy Bar Styles](#legacy-bar-styles)
+  - [Interaction Style](#interaction-style)
+  - [Progress View Style](#progress-view-style)
+  - [Close Button Style](#close-button-style)
+  - [Text Marquee Scroll](#text-marquee-scroll)
+  - [Popup Bar Minimization](#popup-bar-minimization)
+  - [Split Views](#split-views)
+  - [Popup Transitions](#popup-transitions)
+  - [Popup Bar Customization](#popup-bar-customization)
+  - [Context Menus](#context-menus)
+  - [ProMotion Support](#promotion-support)
+  - [Full Right-to-Left Support](#full-right-to-left-support)
+  - [Custom Popup Bar View](#custom-popup-bar-view)
+  - [Low-Level Bar Customization](#low-level-bar-customization)
+- [`LNPopupController` SwiftUI additions](#lnpopupcontroller-swiftui-additions)
+- [Acknowledgements](#acknowledgements)
 
 ## Adding to Your Project and Using the Framework
 
@@ -58,7 +86,7 @@ A popup presentation consists of the following concepts:
 
 - **Popup container view** —the `View` that hosts the popup presentation. Normally this is the outer-most tab or navigation view, but can be any view.
 - **Popup content controller**—a `View` that represents the content, when the popup is open.
-- **Popup bar**—a bar, docked to the bottom of the container view, either above the container’s bottom bar (tab bar or toolbar) or directly at the bottom of the screen, presenting at-a-glance information to the user and allows interaction by the user. Can be a default system popup bar style or a completely custom implementation.
+- **Popup bar**—a bar, docked to the bottom of the container view, either above the container’s bottom bar (tab bar or toolbar) or directly at the bottom of the screen, presenting at-a-glance information to the user and allowing interaction by the user. Can be a default system popup bar style or a completely custom implementation.
 - **Popup items**—the source of data that is displayed on the popup bar at any given time.
 - **Custom popup bar view**—optional, when presenting a custom popup bar
 
@@ -195,11 +223,11 @@ TabView {
 
 The defaults are:
 
-- iOS 26:
+- iOS 26 and later:
 
   - Floating compact bar style
-  - Snap interaction style
-  - Grabber close button style
+  - Automatic interaction style
+  - Prominent glass close button style
 
 - iOS 17-18:
 
@@ -207,11 +235,16 @@ The defaults are:
   - Snap interaction style
   - Grabber close button style
 
-- iOS 16 and below:
+- iOS 16 and prior:
 
   - Prominent bar style
   - Snap interaction style
   - Chevron close button style
+
+> [!NOTE]
+> On iOS 26 and later, `UIDesignRequiresCompatibility` is supported[^1], and the framework will use legacy styles and appearance when the key is present in your app’s Info.plist and is set to `YES`.
+>
+> [^1]: Starting with iOS 27, iPadOS 27 and macOS 27, `UIDesignRequiresCompatibility` is no longer honored when building with Xcode 27 and later. It is recommended to implement the Liquid Glass design.
 
 You can also present completely custom popup bars. For more information, see [Custom Popup Bar View](#custom-popup-bar-view).
 
@@ -242,7 +275,7 @@ Starting with iOS 26, the framework supports primarily a floating and a compact 
 
 #### Legacy Bar Styles
 
-On iOS 18 and below, the framework presents popup bar styles and animations that are appropriate for the user's operating system. Non-floating prominent and compact bar styles are also available.
+On iOS 18 and prior, the framework presents popup bar styles, animations and transitions that are appropriate for the user's operating system. Non-floating prominent and compact bar styles are also available.
 
 ##### Floating:
 <p align="center"><img src="./Supplements/legacy_floating_no_scroll.gif" width="414"/>
@@ -260,14 +293,26 @@ On iOS 18 and below, the framework presents popup bar styles and animations that
 
 Customizing the popup interaction style is achieved by calling the `.popupInteractionStyle(_:)` modifier.
 
+By default, the `.automatic` style is selected. Automatic mode selects an appropriate interaction style for presentation and dismissal, and supports full content transitions.
+
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
   //Popup content view
 }
-.popupInteractionStyle(.drag)
+.popupInteractionStyle(.automatic)
 ```
 
-<p align="center"><img src="./Supplements/interaction_snap.gif" width="414"/> <img src="./Supplements/interaction_drag.gif" width="414"/></p>
+###### Automatic:
+
+<p align="center"><img src="./Supplements/interaction_automatic.gif" width="300" alt="Automatic interaction"/></p>
+
+###### Snap:
+
+<p align="center"><img src="./Supplements/interaction_snap.gif" width="300" alt="Snap interaction"/></p>
+
+###### Drag:
+
+<p align="center"><img src="./Supplements/interaction_drag.gif" width="300" alt="Drag interaction"/></p>
 
 ### Progress View Style
 
@@ -299,7 +344,7 @@ Hide the popup close button by calling the `popupCloseButtonStyle(_:)` modifier 
 
 To set the position of the popup close button, use the `popupCloseButtonPositioning(_:)` modifier.
 
-<p align="center"><img src="./Supplements/close_button_grabber.png" width="414"/><br/><br/><img src="./Supplements/close_button_glass.png" width="414"/> <img src="./Supplements/close_button_chevron.png" width="414"/><br/><br/><img src="./Supplements/close_button_round.png" width="414"/> <img src="./Supplements/close_button_none.png" width="414"/></p>
+<p align="center"><img src="./Supplements/close_button_grabber.png" width="414" alt="Grabber close button"> <img src="./Supplements/close_button_glass.png" width="414" alt="Glass close button"><br><br><img src="./Supplements/close_button_chevron.png" width="414" alt="Chevron close button"> <img src="./Supplements/close_button_round.png" width="414" alt="Round close button"><br><br><img src="./Supplements/close_button_none.png" width="414" alt="No close button"></p>
 
 ### Text Marquee Scroll
 
@@ -371,6 +416,18 @@ TabView {
 .popupBarInheritsBottomBarMetrics(false)
 ```
 
+### Split Views
+
+By default, a popup bar presented over a `NavigationSplitView` avoids the primary column.
+
+<p align="center"><img src="./Supplements/splitview_avoid_primary_floating.gif" width="600"/></p>
+
+To disable this behavior, use the `popupBarAvoidsSplitViewPrimaryColumn(_:)` modifier with a value of `false`.
+
+By default, a popup is opened over the entire `NavigationSplitView`, rather than over a single column. To disable this, use the `popupOpensOverSplitView(_:)` modifier with a value of `false`.
+
+<p align="center"><img src="./Supplements/splitview_over_splitviewcontroller_floating.gif" width="414"/> <img src="./Supplements/splitview_over_column_floating.gif" width="414"/></p>
+
 ### Popup Transitions
 
 The library supports popup image transitions:
@@ -398,7 +455,7 @@ The system supports `.clipShape()` with basic shapes and a single `shadow()` mod
 > [!CAUTION]
 > Using a complex clip shapes and/or multiple calls to `.shadow()` can result in undefined behavior the transition may not be accurate.
 
-Transitions are only available for drag interaction style, or transition targets are ignored.
+Transitions are only available for automatic or drag interaction styles, or transition targets are ignored.
 
 ### Popup Bar Customization
 
@@ -483,7 +540,7 @@ The `wantsDefaultTapGesture`, `wantsDefaultPanGesture` and `wantsDefaultHighligh
 <p align="center"><img src="./Supplements/custom_bar.png" width="414"/></p>
 
 > [!TIP]
-> Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the SwiftUI view system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar view of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the [many customization APIs](#popup-bar-customization) to tweak the standard bar styles to fit your app’s design.
+> Only implement a custom popup bar if you need a design that is significantly different from the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the SwiftUI view system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar view of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the [many customization APIs](#popup-bar-customization) to tweak the standard bar styles to fit your app’s design.
 
 The included demo project includes an example custom popup bar scene.
 
