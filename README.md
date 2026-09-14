@@ -84,8 +84,8 @@ import LNPopupUI
 
 A popup presentation consists of the following concepts:
 
-- **Popup container view** —the `View` that hosts the popup presentation. Normally this is the outer-most tab or navigation view, but can be any view.
-- **Popup content controller**—a `View` that represents the content, when the popup is open.
+- **Popup container view**—the `View` that hosts the popup presentation. Normally this is the outer-most tab or navigation view, but can be any view.
+- **Popup content view**—a `View` that represents the content, when the popup is open.
 - **Popup bar**—a bar, docked to the bottom of the container view, either above the container’s bottom bar (tab bar or toolbar) or directly at the bottom of the screen, presenting at-a-glance information to the user and allowing interaction by the user. Can be a default system popup bar style or a completely custom implementation.
 - **Popup items**—the source of data that is displayed on the popup bar at any given time.
 - **Custom popup bar view**—optional, when presenting a custom popup bar
@@ -127,7 +127,7 @@ TabView {
 
 ### Popup Items
 
-Popup items provide the information that is displayed in the popup bar. In LNPopupUI, you can provide popup item information with three different family if `View` modifiers. You place a call to one of these modifier families inside your popup content hierarchy.
+Popup items provide the information that is displayed in the popup bar. In LNPopupUI, you can provide popup item information with three different families of `View` modifiers. You place a call to one of these modifier families inside your popup content hierarchy.
 
 If you do not provide a popup item, the popup bar will remain empty.
 
@@ -164,7 +164,7 @@ TabView {
 
 #### **Multiple** **Popup** **Items** With **Paging** Support
 
-This family of modifiers allows provding one or more popup items, representing a collection of data. A single popup item is displayed on a popup bar at a time, and the user can page between popup items by swiping left and right on the popup bar. If a single item is provided, paging is disabled.
+This family of modifiers allows provding one or more popup items, representing a collection of data. The popup bar displays a  single item at a time, and the user can page between popup items by swiping left and right on the popup bar. If a single item is provided, paging is disabled.
 
 <p align="center"><img style="border: 1px solid #555555;" src="./Supplements/floating_paging.gif" width="414"/></p>
 
@@ -366,7 +366,7 @@ TabView {
 }.tabBarMinimizeBehavior(.onScrollDown)
 ```
 
-To adjust the content of the accessory view based on the placement of the popup bar, add the `popupBarPlacement` environment variable to your popup content view or your custom popup bar view.
+To adjust the content of the popup bar based on the placement of the popup bar, add the `popupBarPlacement` environment value to your popup content view or your custom popup bar view.
 
 
 Content view:
@@ -391,7 +391,8 @@ struct PlayerView: View {
 }
 ```
 
-Custom bar view:
+Similarly, in a custom bar view, use the `popupBarPlacement` environment value to adjust the view hierarchy of your custom bar:
+
 ```swift
 struct CustomBarView: View {
   @Environment(\.popupBarPlacement) var popupBarPlacement
@@ -418,13 +419,13 @@ TabView {
 
 ### Split Views
 
-By default, a popup bar presented over a `NavigationSplitView` avoids the primary column.
+By default, a popup bar, presented with a `NavigationSplitView` container, avoids the primary column:
 
 <p align="center"><img src="./Supplements/splitview_avoid_primary_floating.gif" width="600"/></p>
 
 To disable this behavior, use the `popupBarAvoidsSplitViewPrimaryColumn(_:)` modifier with a value of `false`.
 
-By default, a popup is opened over the entire `NavigationSplitView`, rather than over a single column. To disable this, use the `popupOpensOverSplitView(_:)` modifier with a value of `false`.
+By default, a popup, opened within a column of a `NavigationSplitView`, opens over the entire split view, rather than just the column container. To limit the popup to its column container, use the `popupOpensOverSplitView(_:)` modifier with a value of `false`.
 
 <p align="center"><img src="./Supplements/splitview_over_splitviewcontroller_floating.gif" width="414"/> <img src="./Supplements/splitview_over_column_floating.gif" width="414"/></p>
 
@@ -434,12 +435,12 @@ The library supports popup image transitions:
 
 <p align="center"><img src="./Supplements/popup_transitions.gif"/></p>
 
-Transitions are opt-in and require you apply the `.popupTransitionTarget()` modifier to your `Image` view in your popup content view, which is discovered automatically by the system and used as the target/source view for popup transitions.
+Transitions are opt-in and require you apply the `.popupTransitionTarget()` modifier to your `Image` view inside your popup content view. The image view is then discovered automatically by the system and used as the target/source view for the popup open/close transitions.
 
 > [!TIP]
-> There must be a single `.popupTransitionTarget()` call inside your popup content view, or results will be undefined.
+> You should only place a single `.popupTransitionTarget()` modifier call inside your popup content view, or results will be undefined.
 
-The system supports `.clipShape()` with basic shapes and a single `shadow()` modifier applied to the `Image` view.
+The system supports `.clipShape()` modifier call with a basic shape and/pr a single `shadow()` modifier call applied to the image view. When the popup transition occurs, the system will attemt to smoothly transition between the values for the content image view and the popup bar image.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -453,13 +454,13 @@ The system supports `.clipShape()` with basic shapes and a single `shadow()` mod
 ```
 
 > [!CAUTION]
-> Using a complex clip shapes and/or multiple calls to `.shadow()` can result in undefined behavior the transition may not be accurate.
+> Using a complex clip shapes and/or multiple calls to `.shadow()` can result in undefined behavior, and the transition may not be accurate.
 
-Transitions are only available for automatic or drag interaction styles, or transition targets are ignored.
+Transitions are only available for automatic or drag interaction styles. In all other cases, transition targets inside popup content views are ignored.
 
 ### Popup Bar Customization
 
-`LNPopupUI` exposes many APIs to customize the default popup bar's appearance. 
+`LNPopupUI` exposes many modifier APIs to customize the default popup bar's appearance. 
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -483,9 +484,11 @@ Transitions are only available for automatic or drag interaction styles, or tran
 
 <p align="center"><img src="./Supplements/floating_custom.png" width="414"/></p>
 
+Make sure to read the documentation for each.
+
 ### Context Menus
 
-You can add a context menu to your popup bar by calling the `.popupBarContextMenu(menuItems:)` modifier.
+You can add a context menu to your popup bar using the `.popupBarContextMenu(menuItems:)` modifier.
 
 ```swift
 .popup(isBarPresented: $isPopupPresented, isPopupOpen: $isPopupOpen) {
@@ -559,7 +562,9 @@ The included demo project includes an example custom popup bar scene.
 ```
 
 > [!TIP]
-> The `.popupBarCustomizer(_:)` modifier exposes the underlying `LNPopupBar` from the `LNPopupController` framework. This framework allows modifying properties that are not exposed natively in SwiftUI, such as direct gesture recognizer control. While it is possible to customize the appearance the bar using this modifier, this API only accepts UIKit data types, such as `UIColor` and `UIFont`. Instead, use the SwiftUI-native customization APIs, which support SwiftUI-native data types, such as `Color` and `Font`, and are better integrated with rest of the SwiftUI view model.
+> The `.popupBarCustomizer(_:)` modifier exposes the underlying `LNPopupBar` from the `LNPopupController` framework. This modifier allows modifying properties that are not exposed directly in SwiftUI, such as direct gesture recognizer control. While it is possible to customize the appearance of the bar using this modifier, this API only accepts UIKit data types, such as `UIColor` and `UIFont`. When possible, try to use the SwiftUI-native customization APIs, which support SwiftUI-native data types, such as `Color` and `Font`, and are better integrated with rest of the SwiftUI view system.
+
+The closure provided to the `popupBarCustomizer()` modifier is called after all other customizations are applied to the popup bar.
 
 ## `LNPopupController` SwiftUI additions
 
@@ -578,7 +583,7 @@ let controller = LNPopupContentHostingController {
 tabBarController?.presentPopupBar(with: controller)
 ```
 
-Or use `UIViewController.presentPopupBar(with:animated:)` directly:
+Or use `UIViewController.presentPopupBar(animated:openPopup:popupContent:completion:)` directly:
 
 ```swift
 tabBarController?.presentPopupBar {
@@ -599,7 +604,7 @@ tabBarController?.popupBar.customBarViewController = LNPopupCustomBarHostingCont
 
 ## Acknowledgements
 
-The library uses:
+The library, through LNPopupController, uses:
 * [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel) Copyright (c) 2011-2020 Charles Powell
 
 Additionally, the demo project uses:
@@ -610,6 +615,7 @@ Additionally, the demo project uses:
 ## Star History
 
 <a href="https://www.star-history.com/?repos=LeoNatan%2FLNPopupUI&type=date&legend=top-left">
+
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=LeoNatan/LNPopupUI&type=date&theme=dark&legend=top-left&sealed_token=jxY5OzDEfgqKlq7nDBOHs3y3AXui6YOLJsqxkIFiM3zjoARmM5KDRDeBIzsjoNXcAMsaQUxHKgO6r-ByuD5DTkQfT53Tdi03tAakE3z_B8sruDiwUWBsEFhWP0F1SxSu0ubvYoANvwMoLm1r1O0AfHxmSQYklbYYrIBN_i30gK_J37LA6FfF2vmdKtJ2" />
    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=LeoNatan/LNPopupUI&type=date&legend=top-left&sealed_token=jxY5OzDEfgqKlq7nDBOHs3y3AXui6YOLJsqxkIFiM3zjoARmM5KDRDeBIzsjoNXcAMsaQUxHKgO6r-ByuD5DTkQfT53Tdi03tAakE3z_B8sruDiwUWBsEFhWP0F1SxSu0ubvYoANvwMoLm1r1O0AfHxmSQYklbYYrIBN_i30gK_J37LA6FfF2vmdKtJ2" />
