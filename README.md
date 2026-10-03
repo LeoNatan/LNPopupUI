@@ -24,8 +24,9 @@ Check the demo project for a quick recreation of Apple’s music app.
 ### Features
 
 * Supports iOS 27 & iOS 26 glass design, while maintaining an appropriate look and feel on previous iOS versions
-* Supports window resize on iPadOS and Mac Catalyst and iOS resize under iPhone Duo and iPhone Mirroring
 * Full support for iOS, iPadOS and Mac Catalyst (*Mac Catalyst* with *Optimize for Mac* or *Scaled to Match iPad*,  and *Designed for iPad*)
+    * Supports window resize on iPadOS, Mac Catalyst and iOS, on iPhone Duo and in iPhone Mirroring
+    * iPhone Duo is fully supported when targetting iOS 27.1 SDK and later
 * Available for iOS 14 and above, as an SPM package for SwiftUI
 * For UIKit, check out the [LNPopupController framework](https://github.com/LeoNatan/LNPopupController)
 

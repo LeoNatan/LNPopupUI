@@ -329,7 +329,9 @@ struct DynamicBarContent: View {
 				print("Prev")
 			} label: {
 				Image(systemName: "backward.fill")
+#if targetEnvironment(macCatalyst)
 					.padding(6)
+#endif
 			}.medium(allowLargeSizes).contentShape(Capsule())
 		}
 		
@@ -337,14 +339,18 @@ struct DynamicBarContent: View {
 			print("Play/pause")
 		} label: {
 			Image(systemName: "stop.fill")
+#if targetEnvironment(macCatalyst)
 				.padding(6)
+#endif
 		}.large(allowLargeSizes).contentShape(Capsule())
 		
 		Button {
 			print("Next")
 		} label: {
 			Image(systemName: "forward.fill")
+#if targetEnvironment(macCatalyst)
 				.padding(6)
+#endif
 		}.medium(allowLargeSizes).contentShape(Capsule())
 	}
 }
