@@ -141,7 +141,7 @@ extension PopupItem {
 	///   - id: The popup item identifier.
 	///   - image: An optional image of the popup item.
 	///   - progress: An optional progress of the popup item.
-	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's tile.
+	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's title.
 	///   - subtitle: An optional `ViewBuilder` that you use to declare the views to draw as the popup item's subtitle.
 	///   - buttons: Optional bar buttons of the popup item.
     @_disfavoredOverload
@@ -240,7 +240,7 @@ extension PopupItem {
 	///   - id: The popup item identifier.
 	///   - image: An optional image of the popup item.
 	///   - progress: An optional progress of the popup item.
-	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's tile.
+	///   - title: A `ViewBuilder` that you use to declare the views to draw as the popup item's title.
 	///   - subtitle: An optional `ViewBuilder` that you use to declare the views to draw as the popup item's subtitle.
 	///   - leadingButtons: Optional leading bar buttons of the popup item.
 	///   - trailingButtons: Optional trailing bar buttons of the popup item.
@@ -398,7 +398,7 @@ extension View {
 	
 	/// Configures the default popup item's bar buttons.
 	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placement are supported.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter content: Toolbar content representing the bar buttons that appear on the popup bar.
@@ -409,8 +409,6 @@ extension View {
 	
 	/// Configures the default popup item's leading bar buttons.
 	///
-	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.
-	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
 	func popupBarLeadingButtons<LeadingContent>(@ViewBuilder leading: () -> LeadingContent) -> some View where LeadingContent: View {
@@ -419,9 +417,7 @@ extension View {
 	
 	/// Configures the default popup item's leading bar buttons.
 	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
-	///
-	/// For prominent popup bars, leading bar items are positioned in the trailing edge of the popup bar.
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placement are supported.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
@@ -439,7 +435,7 @@ extension View {
 	
 	/// Configures the default popup item's trailing bar buttons.
 	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placement are supported.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
@@ -448,8 +444,6 @@ extension View {
 	}
 	
 	/// Configures the default popup item's leading and trailing bar buttons.
-	///
-	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
@@ -461,9 +455,7 @@ extension View {
 	
 	/// Configures the default popup item's leading and trailing bar buttons.
 	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
-	///
-	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placement are supported.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
@@ -532,7 +524,7 @@ public extension View {
 	
 	/// Configures the default popup item's bar buttons.
 	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placement are supported.
 	///
 	/// For compact popup bars, this is equivalent to trailing bar buttons.
 	///
@@ -545,8 +537,6 @@ public extension View {
 	
 	/// Configures the default popup item's leading bar buttons.
 	///
-	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.
-	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
 	@available(*, deprecated, renamed: "popupBarLeadingButtons(_:)")
@@ -556,9 +546,7 @@ public extension View {
 	
 	/// Configures the default popup item's leading bar buttons.
 	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
-	///
-	/// For prominent popup bars, leading bar buttons are positioned in the trailing edge of the popup bar.
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placement are supported.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.
@@ -578,7 +566,7 @@ public extension View {
 	
 	/// Configures the default popup item's trailing bar buttons.
 	///
-	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported.
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placement are supported.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter trailing: Toolbar content representing the bar buttons that appear on the trailing edge of the popup bar.
@@ -588,8 +576,6 @@ public extension View {
 	}
 	
 	/// Configures the default popup item's leading and trailing bar buttons.
-	///
-	/// For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter leading: A view representing the bar buttons that appear on the leading edge of the popup bar.
@@ -601,7 +587,7 @@ public extension View {
 	
 	/// Configures the default popup item's leading and trailing bar buttons.
 	///
-	/// @note Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placements are supported. For prominent popup bars, leading and trailing bar buttons are positioned in the trailing edge of the popup bar.
+	/// Only `ToolbarItem` and `ToolbarItemGroup` with a `.popupBar` placement are supported.
 	///
 	/// - Note: You should never mix direct popup item specifier modifiers, such as `View.popupItem(_:)`, with default popup item modifiers in the same popup content hierarchy.
 	/// - Parameter leading: Toolbar content representing the bar buttons that appear on the leading edge of the popup bar.

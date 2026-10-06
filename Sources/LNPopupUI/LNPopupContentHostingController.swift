@@ -10,10 +10,11 @@
 import SwiftUI
 import UIKit
 
+/// A UIKit popup content controller that manages a SwiftUI view hierarchy.
+///
+/// Create a `LNPopupContentHostingController` object when you want to integrate SwiftUI popup content into a UIKit view hierarchy.
 public class LNPopupContentHostingController<PopupContent: View> : UIHostingController<AnyView>, LNPopupBarDataSource, LNPopupBarDelegate {
-	/// A UIKit popup content controller that manages a SwiftUI view hierarchy.
-	///
-	/// Create a `LNPopupContentHostingController` object when you want to integrate SwiftUI popup content into a UIKit view hierarchy.
+	/// Creates a popup content controller with the provided SwiftUI root view.
 	///
 	/// - Parameter content: The root view of the SwiftUI view hierarchy that you want to manage using the popup content controller.
 	public required
@@ -22,10 +23,8 @@ public class LNPopupContentHostingController<PopupContent: View> : UIHostingCont
 		super.init(rootView: AnyView(EmptyView()))
 		rootView = transform(self.popupContentRootView)
 	}
-	
-	/// A UIKit popup content controller that manages a SwiftUI view hierarchy.
-	///
-	/// Create a `LNPopupContentHostingController` object when you want to integrate SwiftUI popup content into a UIKit view hierarchy.
+
+	/// Creates a popup content controller with the provided SwiftUI root view.
 	///
 	/// - Parameter content: The root view of the SwiftUI view hierarchy that you want to manage using the popup content controller.
 	public convenience

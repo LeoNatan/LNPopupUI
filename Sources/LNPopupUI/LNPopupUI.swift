@@ -89,7 +89,7 @@ public extension View {
 public extension View {
 	/// Sets the popup bar style.
 	///
-	/// Setting a custom popup bar view will methis this modifier have no effect.
+	/// Setting a custom popup bar view will make this modifier have no effect.
 	///
 	/// - Parameter style: The popup bar style.
 	func popupBarStyle(_ style: LNPopupBar.Style) -> some View {
@@ -407,7 +407,7 @@ public extension View {
 		environment(\.popupCloseButtonStyle, ^^style)
 	}
 	
-	/// Gets or sets the positioning of the popup close button.
+	/// Sets the positioning of the popup close button.
 	///
 	/// - Parameter positioning: The popup close button positioning
 	func popupCloseButtonPositioning(_ positioning: LNPopupCloseButton.Positioning) -> some View {
@@ -575,7 +575,7 @@ public extension View {
 public extension View {
 	/// Designates this view as the popup interaction container. Only gestures within this view will be considered for popup interaction, such as dismissal.
 	///
-	/// @note This method layers a background view behind this view. The background view might interfere with interaction of elements behind it. Use with care.
+	/// - Note: This method layers a background view behind this view. The background view might interfere with interaction of elements behind it. Use with care.
 	func popupInteractionContainer() -> some View {
 		background(LNPopupUIInteractionContainerBackgroundView().accessibilityHidden(true))
 	}
@@ -593,17 +593,42 @@ public extension View {
 		return background(LNPopupUITransitionBackground().accessibilityHidden(true)).overlay(LNPopupUITransitionForeground().accessibilityHidden(true))
 	}
 	
-	/// Sets the popup content background color. Provider `nil`, `.clear` or any color with opacity less than 1.0 to have a translucent background.
+	/// Sets the popup content background color. Provide `nil`, `.clear` or any color with opacity less than 1.0 to have a translucent background.
 	/// - Parameter color: The color to use or `nil`.
 	func popupContentBackgroundColor(_ color: Color?) -> some View {
 		preference(key: LNPopupContentBackgroundColorPreferenceKey.self, value: %%color.map { UIColor($0) })
 	}
 	
-	/// Sets the popup content background color. Provider `nil`, `.clearColor` or any color with alpha less than 1.0 to have a translucent background.
+	/// Sets the popup content background color. Provide `nil`, `.clear` or any color with alpha less than 1.0 to have a translucent background.
 	/// - Parameter color: The color to use or `nil`.
 	@_disfavoredOverload
 	func popupContentBackgroundColor(_ color: UIColor?) -> some View {
 		preference(key: LNPopupContentBackgroundColorPreferenceKey.self, value: %%color)
+	}
+}
+
+// MARK: - Split View
+
+/// Modifiers for popup presentation in split view containers.
+///
+/// These modifiers should be applied to the same view you used for presentation.
+public extension View {
+	/// Controls whether the popup bar and popup content open over the entire split view, instead of a single column.
+	///
+	/// This has an effect only when the popup is presented from a `NavigationSplitView`.
+	///
+	/// - Parameter opensOverSplitView: Open the popup over the entire split view.
+	func popupOpensOverSplitView(_ opensOverSplitView: Bool?) -> some View {
+		environment(\.popupOpensOverSplitView, ^^opensOverSplitView)
+	}
+
+	/// Controls whether the popup bar avoids the primary column of the split view, so that it is displayed only over the secondary column.
+	///
+	/// This has an effect only when the popup is presented from a `NavigationSplitView`.
+	///
+	/// - Parameter avoidsPrimaryColumn: Avoid the primary column of the split view.
+	func popupBarAvoidsSplitViewPrimaryColumn(_ avoidsPrimaryColumn: Bool?) -> some View {
+		environment(\.popupBarAvoidsSplitViewPrimaryColumn, ^^avoidsPrimaryColumn)
 	}
 }
 
