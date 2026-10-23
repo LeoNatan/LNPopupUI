@@ -3,6 +3,7 @@
 //  LNPopupUI
 //
 //  Created by Léo Natan on 26/7/26.
+//  Copyright © 2020-2026 Léo Natan. All rights reserved.
 //
 
 @MainActor
